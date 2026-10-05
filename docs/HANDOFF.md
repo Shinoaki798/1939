@@ -315,9 +315,35 @@ down immediately; it still satisfies every success criterion.
   interruptible annotation/eval work.
 
 ## 11. Open questions (ask the user; do not decide alone)
-- Which remote machine runs translation, and its GPU (affects NLLB size:
-  600 M distilled vs 1.3 B).
+- Which machine runs translation, and its GPU (affects NLLB size:
+  600 M distilled vs 1.3 B). The 5080 is the training box (§12), so it can
+  translate only while not training; the local PC has an RTX 2080 SUPER 8 GB.
 - Whether the instructor approves keeping the ~180 translated RQ3 contexts
   (he was asked by email; default: keep).
 - Exact OCR-quality drop threshold (set after the week-1 histogram).
 - Bulk-access status of Gallica and Deutsches Zeitungsportal.
+
+## 12. Decisions log
+
+Dated entries; each supersedes anything above it that it contradicts.
+
+- **2026-10-05 — machines.** The RTX 5080 is the *remote* box (SSH alias
+  `gpu`, Windows 11 + WSL2, in China; `config/paths.yaml`). It downloads,
+  processes all data and trains. The local PC (RTX 2080 SUPER 8 GB) is the
+  fallback downloader. huggingface.co is reachable from the 5080 only through
+  the Windows-side proxy; `src/data/download.py` handles this.
+- **2026-10-05 — data volume and policy.** American Stories 1900–1955 is
+  182 GB compressed; 1900–1922 is ~6 GB/year, 1923–1955 ~1 GB/year. A 10 MB
+  sample of 1938 gave ~167 M words per compressed GB, so the pre-cutoff pool
+  is roughly 28 B words before dedup/cleaning — far more than the ~6.7 B
+  tokens the s335m rung consumes. Model size is therefore compute-bound, not
+  data-bound. User policy: collect as much pre-cutoff text as possible, always
+  deduplicated and cleaned; the year mix is not a design variable. Corpora
+  beyond American Stories enter only with the user's explicit approval, are
+  training-only, and obey every cutoff rule.
+- **2026-10-05 — dedup before holdout.** §5.2 is authoritative: MinHash
+  near-dedup runs on the full pool first; the per-year 2 % holdout is then
+  drawn from the deduplicated pool, before OCR filtering and tokenisation.
+  `CLAUDE.md` rule 4 was reworded to match.
+- **2026-10-05 — repo.** Git repo at https://github.com/Shinoaki798/1939;
+  the remote box pulls via `scripts/remote_pull.sh`. Data stays gitignored.

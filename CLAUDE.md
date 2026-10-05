@@ -24,10 +24,11 @@ with is Junlei An (goes by Andrew), an individual student on this project.
    exception: embargo-window articles may be used as *conditioning context
    only* in the RQ3 proposition scorer. Nothing dated ≥ 1939-09-01 is ever in
    training.
-4. **Splits are by publication date. Never shuffle the pooled corpus.** From
-   every year 1900–1955, a fixed 2 % of articles is held out *before*
-   dedup/filtering/tokenisation and never trained on. Val is a disjoint 2 %
-   ≤ cutoff. MinHash near-dedup runs *before* splitting.
+4. **Splits are by publication date. Never shuffle the pooled corpus.**
+   MinHash near-dedup runs first, on the full pool. Then from every year
+   1900–1955 a fixed 2 % of the deduplicated articles is held out *before*
+   OCR filtering/tokenisation and never trained on. Val is a disjoint 2 %
+   ≤ cutoff.
 5. **Translated text is never scored.** It enters (a) training data and
    (b) RQ3 conditioning contexts, nothing else. Every scored evaluation set
    (per-year bpb, RQ1 probe contexts, RQ2 calibration corpora, RQ3 scored
@@ -90,6 +91,7 @@ src/
   train/    train.py, resume.py
   eval/     bpb_by_year.py, probes.py (RQ1), detector.py (RQ2), foresight.py (RQ3), sanity_caqa.py
   tools/    corpus_audit CLI (the RQ2 deliverable)
+scripts/                remote-box helpers (remote_pull.sh)
 tests/                  unit tests for every src/data stage and the model forward pass
 runs/                   per-run manifests (checkpoints gitignored)
 reports/                generated tables/figures
@@ -116,10 +118,11 @@ reports/                generated tables/figures
 
 ## Hardware
 
-- Training machine: single RTX 5080 (16 GB). This card has previously blacked
-  out under sustained training load. Therefore: checkpoint often, keep runs
-  resumable, log GPU temperature every 100 steps, and never schedule a run
-  longer than 8 h without a resume test having passed.
-- Translation machine: a separate remote GPU box reached over SSH (see
-  `config/paths.yaml` for the host alias). Translation is inference only and
-  runs there in parallel so it never competes with training on the 5080.
+- Training machine: single RTX 5080 (16 GB) on the **remote** box (SSH alias
+  `gpu`, WSL2 Ubuntu, code in `/home/an/1939`; see `config/paths.yaml` and
+  HANDOFF §12). It also downloads and processes all data. This card has
+  previously blacked out under sustained training load. Therefore: checkpoint
+  often, keep runs resumable, log GPU temperature every 100 steps, and never
+  schedule a run longer than 8 h without a resume test having passed.
+- Translation machine: undecided (HANDOFF §11). Translation is inference only
+  and must never compete with training on the 5080.

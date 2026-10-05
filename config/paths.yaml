@@ -12,12 +12,29 @@ runs: ./runs
 reports: ./reports
 probes: ./probes
 
-# HuggingFace dataset id for the native-English backbone
-american_stories_hf: dell-research-harvard/AmericanStories   # verify exact id in Phase 1
+# HuggingFace dataset id for the native-English backbone (verified 2026-10-05).
+# Pinned revision; per-year archive sizes + sha256 in american_stories_files.
+american_stories_hf: dell-research-harvard/AmericanStories
+american_stories_revision: 77e27fa69c4788dfaad1c9efd8a226d5a32d3e9a
+american_stories_files: ./config/american_stories_files.tsv
+raw_american_stories: ./data/raw/american_stories
 
-# Remote translation machine (SSH alias from ~/.ssh/config). Inference only.
-translate_host: "[[TODO: ssh alias]]"
-translate_workdir: "[[TODO: path on remote box]]"
+# Machines (decided 2026-10-05, HANDOFF §12): the RTX 5080 box is the remote
+# host; it downloads, processes all data and trains. Code lives in WSL there.
+remote_host: gpu                 # SSH alias; login shell is Windows cmd, Linux via `wsl -d Ubuntu --`
+remote_workdir: /home/an/1939
+
+# Downloads on the remote box (src/data/download.py). WSL (NAT mode) cannot
+# reach the Windows-side proxy; Windows curl.exe launched from WSL can.
+download:
+  proxy: http://127.0.0.1:7890
+  hf_endpoint: https://huggingface.co
+  hf_mirror: https://hf-mirror.com
+  years: "1923-1955,1922-1900"   # boundary decades first
+
+# Translation machine: still open (HANDOFF §11). Inference only.
+translate_host: "[[TODO: undecided]]"
+translate_workdir: "[[TODO: undecided]]"
 
 # Translator pin (fill with the exact HF revision hash once chosen)
 nmt_model: facebook/nllb-200-distilled-600M

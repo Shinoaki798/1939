@@ -5,7 +5,7 @@ until the gate is met and recorded in `reports/`. Check boxes as you go.
 Dates are hard (see HANDOFF §4, §9).
 
 ## Phase 0 — repo bootstrap (today)
-- [ ] `git init`, add `.gitignore`, `requirements.txt`, `config/paths.yaml`
+- [x] `git init`, add `.gitignore`, `requirements.txt`, `config/paths.yaml`
       with real paths filled in by the user.
 - [ ] `tests/` runs green on an empty repo (pytest discovers nothing).
 - [ ] Verify the 5080 is visible (`torch.cuda.is_available()`), log driver +
