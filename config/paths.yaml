@@ -12,12 +12,9 @@ runs: ./runs
 reports: ./reports
 probes: ./probes
 
-# HuggingFace dataset id for the native-English backbone (verified 2026-10-05).
-# Pinned revision; per-year archive sizes + sha256 in american_stories_files.
-american_stories_hf: dell-research-harvard/AmericanStories
-american_stories_revision: 77e27fa69c4788dfaad1c9efd8a226d5a32d3e9a
-american_stories_files: ./config/american_stories_files.tsv
-raw_american_stories: ./data/raw/american_stories
+# Approved corpora (HF repo, pinned revision, file table, raw destination).
+# The native-English backbone is `american_stories`; the rest are training-only.
+sources: ./config/sources.yaml
 ingested_american_stories: ./data/ingested/american_stories
 
 # Machines (decided 2026-10-05, HANDOFF §12): the RTX 5080 box is the remote

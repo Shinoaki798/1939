@@ -13,7 +13,7 @@ def test_parse_years_ranges_order_and_dedup():
 def test_file_table_covers_study_years_with_sha256():
     table = load_file_table(REPO / "config" / "american_stories_files.tsv")
     for year in range(1900, 1956):
-        spec = table[year]
+        spec = table[str(year)]
         assert spec["file"] == f"faro_{year}.tar.gz"
         assert spec["bytes"] > 0
         assert len(spec["sha256"]) == 64

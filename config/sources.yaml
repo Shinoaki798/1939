@@ -1,0 +1,30 @@
+# Corpora the user has approved for download (HANDOFF §12). Every source is pinned
+# to one HF revision; `files` lists each file's size and sha256 at that revision.
+# Extra sources (everything except american_stories) are TRAINING ONLY: never in
+# the tokenizer's training text unless native English, never in any scored set.
+
+american_stories:
+  hf_repo: dell-research-harvard/AmericanStories
+  revision: 77e27fa69c4788dfaad1c9efd8a226d5a32d3e9a
+  files: ./config/american_stories_files.tsv
+  dest: ./data/raw/american_stories
+  approved: 2026-10-01            # backbone, in the proposal
+  role: backbone (US newspapers, article level); the only source of scored sets
+
+hmd_newspapers:
+  hf_repo: biglam/hmd_newspapers
+  revision: 6c892e1bee3fc78527d31d4183c11f343c2fcb23
+  files: ./config/hmd_newspapers_files.tsv
+  dest: ./data/raw/hmd_newspapers
+  approved: 2026-10-05
+  role: training only. British Library Heritage Made Digital, UK newspapers 1800-1896,
+        issue dates, CC0; filter on ocr_quality_mean
+
+congressional_record:
+  hf_repo: yeeder/congressional-record-parquet
+  revision: f3352e5eddac0f4596ba68a0e5bfbcd225449b6c
+  files: ./config/congressional_record_files.tsv   # Congresses 43-76 only (1873-1941)
+  dest: ./data/raw/congressional_record
+  approved: 2026-10-05
+  role: training only. US Congressional Record speeches, day dates, ODC-BY;
+        Congress 76 straddles the cutoff -> keep date <= 1939-06-30 at ingest

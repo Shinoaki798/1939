@@ -347,3 +347,22 @@ Dated entries; each supersedes anything above it that it contradicts.
   `CLAUDE.md` rule 4 was reworded to match.
 - **2026-10-05 — repo.** Git repo at https://github.com/Shinoaki798/1939;
   the remote box pulls via `scripts/remote_pull.sh`. Data stays gitignored.
+- **2026-10-05 — model size may exceed the ladder.** User: the parameter count
+  may grow beyond s335m; enrich the training content first. The rung is still
+  chosen after the audit (≤ 2 epochs, ≈ 20 tokens/param); the binding limit is
+  compute — the run must converge before 2026-11-02 on one 5080.
+- **2026-10-05 — extra corpora approved (training only).** British Library
+  Heritage Made Digital newspapers (`biglam/hmd_newspapers`, UK, 1800–1896) and
+  the US Congressional Record (Congresses 43–76, kept ≤ 1939-06-30 by day).
+  Pinned in `config/sources.yaml`. Rejected by the user: Old Bailey (too
+  narrow). Requested: more academic and everyday-life English text, and
+  non-English pre-cutoff text (Chinese, German, Japanese, Italian, …) — each
+  candidate goes to the user for approval first.
+- **2026-10-05 — open: how non-English text is used.** §5 translates foreign
+  text into English (v2) and rule 10 keeps the tokenizer English-only. Training
+  on original-language text directly would change rule 10, the tokenizer and
+  the proposal's corpus description. Collect first; ask before deciding.
+- **2026-10-05 — language filter for American Stories.** American Stories
+  contains foreign-language titles (e.g. Puerto Rican Spanish, Cleveland Czech).
+  Article rule + per-title-year rule in `src/data/filters.py`, calibrated on
+  1923. Scans without an `lccn` block (~5 %) are kept; LCCN from the filename.

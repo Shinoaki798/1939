@@ -92,16 +92,18 @@ def guess_lang(text: str, max_words: int = 400) -> tuple[str, float]:
     return lang, en_share
 
 
-def parse_scan_name(name: str) -> tuple[str, str, str] | None:
-    """'faro_1938/1938-05-20_p4_sn83025247_00393340095_1938052001_0455.json' -> (date, page, edition)."""
+def parse_scan_name(name: str) -> tuple[str, str, str, str] | None:
+    """'faro_1938/1938-05-20_p4_sn83025247_00393340095_1938052001_0455.json'
+    -> (date, page, edition, lccn) = ('1938-05-20', 'p4', '01', 'sn83025247')."""
     base = name.rsplit("/", 1)[-1]
     m = _FNAME.match(base)
     if not m:
         return None
     date, page = m.group(1), m.group(2)
     parts = base[:-5].split("_")
-    edition = parts[-2][8:] if len(parts) >= 2 else ""
-    return date, page, edition
+    edition = parts[-2][8:] if len(parts) >= 5 else ""
+    lccn = parts[2] if len(parts) >= 3 else ""
+    return date, page, edition, lccn
 
 
 def valid_date(s: str, year: int) -> bool:
@@ -125,15 +127,17 @@ def iter_articles(tar_path: Path, year: int, stats: Counter, max_scans: int | No
             except Exception:
                 stats["scans_bad_json"] += 1
                 continue
-            if "lccn" not in data:
-                stats["scans_no_lccn"] += 1
-                continue
             stats["scans"] += 1
             if meta is None or not valid_date(meta[0], year):
                 stats["scans_bad_date"] += 1
                 continue
-            date, page, edition = meta
-            lccn = data["lccn"] or {}
+            date, page, edition, lccn_from_name = meta
+            # ~5 % of scans carry articles but no "lccn" block. The HF loading script drops
+            # them; we keep them (the date comes from the filename either way) and take the
+            # LCCN from the filename. Their title is empty until filled from other scans.
+            if "lccn" not in data:
+                stats["scans_no_lccn"] += 1
+            lccn = data.get("lccn") or {}
             scan_id = member.name.rsplit("/", 1)[-1][:-5]
             lccn_lang = ";".join(lccn.get("language") or [])
             for art in data.get("full articles") or []:
@@ -154,7 +158,7 @@ def iter_articles(tar_path: Path, year: int, stats: Counter, max_scans: int | No
                     "year": year,
                     "date": date,
                     "newspaper": lccn.get("title") or "",
-                    "lccn": lccn.get("lccn") or "",
+                    "lccn": lccn.get("lccn") or lccn_from_name,
                     "state": lccn.get("state") or "",
                     "page": page,
                     "edition": edition,
@@ -214,7 +218,7 @@ def main() -> None:
     args = ap.parse_args()
 
     cfg = load_config(Path(args.config) if args.config else repo_path("config/paths.yaml"))
-    raw_dir = repo_path(cfg["raw_american_stories"])
+    raw_dir = repo_path(load_config(repo_path(cfg["sources"]))[SOURCE]["dest"])
     out_dir = repo_path(cfg["ingested_american_stories"])
     raw_manifest = json.loads((raw_dir / "MANIFEST.json").read_text(encoding="utf-8"))
     mpath = out_dir / "MANIFEST.json"
