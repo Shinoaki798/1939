@@ -95,6 +95,14 @@ def rows_hmd_newspapers(path: Path, key: str, cutoff: dt.date, stats: Counter):
 ADAPTERS = {"congressional_record": rows_congressional_record, "hmd_newspapers": rows_hmd_newspapers}
 
 
+def ingested_dir(cfg: dict, name: str, src: dict) -> Path:
+    """English: <ingested_root>/<name>. Foreign (user: stored apart): <foreign_root>/<lang>/ingested/<name>."""
+    lang = src.get("lang", "en")
+    if lang == "en":
+        return repo_path(cfg["ingested_root"]) / name
+    return repo_path(cfg["foreign_root"]) / lang / "ingested" / name
+
+
 def ingest_file(job: tuple) -> dict:
     source, key, path, out_dir, cutoff_iso, dry_run = job
     t0 = time.time()
@@ -135,7 +143,7 @@ def main() -> None:
     cfg = load_config(Path(args.config) if args.config else repo_path("config/paths.yaml"))
     src = load_config(repo_path(cfg["sources"]))[args.source]
     raw_dir = repo_path(src["dest"])
-    out_dir = repo_path(cfg["ingested_root"]) / args.source
+    out_dir = ingested_dir(cfg, args.source, src)
     raw_manifest = json.loads((raw_dir / "MANIFEST.json").read_text(encoding="utf-8"))
     mpath = out_dir / "MANIFEST.json"
     manifest = json.loads(mpath.read_text(encoding="utf-8")) if mpath.exists() else {

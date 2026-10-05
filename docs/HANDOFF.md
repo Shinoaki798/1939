@@ -362,6 +362,14 @@ Dated entries; each supersedes anything above it that it contradicts.
   text into English (v2) and rule 10 keeps the tokenizer English-only. Training
   on original-language text directly would change rule 10, the tokenizer and
   the proposal's corpus description. Collect first; ask before deciding.
+- **2026-10-05 — second round approved.** English: JSTOR Early Journal
+  Content, Royal Society Corpus, Evans/ECCO-TCP, NCSE, pre-1929 books, LoC PD
+  books. Foreign: German only (DDB newspapers, Europeana German newspapers
+  1900–1939, Deutsches Textarchiv), on condition that downloads are text, not
+  scans (verified: OCR/hand-keyed text, no page images). Foreign text is stored
+  apart from English under `data/foreign/<lang>/`; how it is used stays open.
+  The user allows deleting the raw downloads of supplementary corpora after a
+  verified ingest (`src/data/prune_raw.py`); American Stories raw is kept.
 - **2026-10-05 — language filter for American Stories.** American Stories
   contains foreign-language titles (e.g. Puerto Rican Spanish, Cleveland Czech).
   Article rule + per-title-year rule in `src/data/filters.py`, calibrated on
