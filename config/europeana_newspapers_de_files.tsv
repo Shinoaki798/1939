@@ -1,0 +1,6 @@
+# biglam/europeana_newspapers at HF revision d27f7fa9092e255832ca1d496574967add680f7d. sha256 = git-lfs oid. Generated 2026-10-05 from the HF tree API.
+key	file	bytes	sha256
+de-1900	data/de-1900.parquet	7920768181	e309b23fa71461eff98b20ac76d99e083e915852a2b0e84fbe059e4d8b63c126
+de-1910	data/de-1910.parquet	7236339013	e40b11dac8d7ae676aebd27c2b202aa6482ce5d883503dfe6d2f78006af4877f
+de-1920	data/de-1920.parquet	5443149107	0bd94d653e31ae9b3fbc5ac9f0095f8ffb005207cb4cbb0d5e783bd7dc1e6515
+de-1930	data/de-1930.parquet	2280801103	66587b5a70380ec00aea292dbf3e2ddb9ee663ab1ecbd1961e207294f1c3817d

@@ -1,0 +1,5 @@
+# royal_society_corpus: direct downloads (not on HF). checksum = publisher's md5 where published, '-' if none
+# (then size is checked and our own sha256 is recorded in the MANIFEST). Generated 2026-10-05.
+key	url	bytes	checksum
+texts_txt	https://fedora.clarin-d.uni-saarland.de/rsc_v6/data/texts/Royal_Society_Corpus_open_v6.0.4_texts_txt.zip	139103846	-
+meta	https://fedora.clarin-d.uni-saarland.de/rsc_v6/data/Royal_Society_Corpus_open_v6.0.4_meta.tsv.zip	1842051	-

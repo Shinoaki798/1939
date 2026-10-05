@@ -1,0 +1,4 @@
+# dta: direct downloads (not on HF). checksum = publisher's md5 where published, '-' if none
+# (then size is checked and our own sha256 is recorded in the MANIFEST). Generated 2026-10-05.
+key	url	bytes	checksum
+dta_komplett_2026-02-10	https://www.deutschestextarchiv.de/media/download/dta_komplett_2026-02-10.zip	606937636	md5:21731464d8a42692106d4bea636b0dd6

@@ -1,13 +1,16 @@
-# Corpora the user has approved for download (HANDOFF §12). Every source is pinned
-# to one HF revision; `files` lists each file's size and sha256 at that revision.
-# Extra sources (everything except american_stories) are TRAINING ONLY: never in
-# the tokenizer's training text unless native English, never in any scored set.
+# Corpora the user has approved for download (HANDOFF §12). HF sources are pinned to one
+# revision and `files` lists each file's size and sha256 there; `kind: url` sources list
+# direct URLs with the publisher's checksum where one is published.
+# Extra sources (everything except american_stories) are TRAINING ONLY: never in any
+# scored set. Foreign-language sources live under data/foreign/<lang>/ (user, 2026-10-05);
+# how they will be used (translation or direct) is NOT decided.
 
 american_stories:
   hf_repo: dell-research-harvard/AmericanStories
   revision: 77e27fa69c4788dfaad1c9efd8a226d5a32d3e9a
   files: ./config/american_stories_files.tsv
   dest: ./data/raw/american_stories
+  lang: en
   approved: 2026-10-01            # backbone, in the proposal
   role: backbone (US newspapers, article level); the only source of scored sets
 
@@ -16,6 +19,7 @@ hmd_newspapers:
   revision: 6c892e1bee3fc78527d31d4183c11f343c2fcb23
   files: ./config/hmd_newspapers_files.tsv
   dest: ./data/raw/hmd_newspapers
+  lang: en
   approved: 2026-10-05
   role: training only. British Library Heritage Made Digital, UK newspapers 1800-1896,
         issue dates, CC0; filter on ocr_quality_mean
@@ -25,6 +29,107 @@ congressional_record:
   revision: f3352e5eddac0f4596ba68a0e5bfbcd225449b6c
   files: ./config/congressional_record_files.tsv   # Congresses 43-76 only (1873-1941)
   dest: ./data/raw/congressional_record
+  lang: en
   approved: 2026-10-05
   role: training only. US Congressional Record speeches, day dates, ODC-BY;
         Congress 76 straddles the cutoff -> keep date <= 1939-06-30 at ingest
+
+# ---- approved 2026-10-05 (second round): English academic / everyday ----
+
+jstor_ejc:
+  kind: url
+  files: ./config/jstor_ejc_files.tsv
+  dest: ./data/raw/jstor_ejc
+  lang: en
+  approved: 2026-10-05
+  role: training only. JSTOR Early Journal Content (US journals before 1923, elsewhere before 1870),
+        one XML per article with day-level pubdate and OCR text; non-commercial terms
+
+royal_society_corpus:
+  kind: url
+  files: ./config/royal_society_corpus_files.tsv
+  dest: ./data/raw/royal_society_corpus
+  lang: en
+  approved: 2026-10-05
+  role: training only. Royal Society Corpus 6.0.4 open, Philosophical Transactions 1665-1920,
+        plain-text release + metadata TSV; CC BY-NC-SA 4.0
+
+evans_tcp:
+  hf_repo: Vintage-LLM/EVANS
+  revision: e9bb9246d6c48e933805d912f47b983192f8df45
+  files: ./config/evans_tcp_files.tsv
+  dest: ./data/raw/evans_tcp
+  lang: en
+  approved: 2026-10-05
+  role: training only. Evans-TCP, hand-keyed early American imprints (almanacs, sermons,
+        broadsides), year; strip illegibility markers; CC0
+
+ecco_tcp:
+  hf_repo: Vintage-LLM/ECCO
+  revision: c1b29ff0968abf2ceebab5e90474c4c17dba8d3b
+  files: ./config/ecco_tcp_files.tsv
+  dest: ./data/raw/ecco_tcp
+  lang: en
+  approved: 2026-10-05
+  role: training only. ECCO-TCP, hand-keyed 18th-century British texts, year; CC0
+
+ncse:
+  hf_repo: Vintage-LLM/NCSE
+  revision: 7729e7b5fda2a7488ed227c29eca1647e367b775
+  files: ./config/ncse_files.tsv
+  dest: ./data/raw/ncse
+  lang: en
+  approved: 2026-10-05
+  role: training only. Nineteenth-Century Serials Edition (6 UK periodicals 1806-1890), day
+        dates; text re-OCR'd by a vision-language model -> spot-check before use; CC BY 4.0
+
+pre_1929_books:
+  hf_repo: common-pile/pre_1929_books
+  revision: a158135b4765f01d321b5cbe1ff90ebbd354b00f
+  files: ./config/pre_1929_books_files.tsv
+  dest: ./data/raw/pre_1929_books
+  lang: en
+  approved: 2026-10-05
+  role: training only. US public-domain books (IA scans of HathiTrust items), year <= 1928;
+        strip digitisation boilerplate; US PD
+
+loc_pd_books:
+  hf_repo: storytracer/LoC-PD-Books
+  revision: 5f1f4ee054362bcddbb56640c6beb67a92a0bf41
+  files: ./config/loc_pd_books_files.tsv
+  dest: ./data/raw/loc_pd_books
+  lang: en
+  approved: 2026-10-05
+  role: training only. Library of Congress public-domain books, year; ~2 % are 1940+ -> keep
+        year <= 1938; CC0
+
+# ---- approved 2026-10-05: German (foreign; use undecided) ----
+
+ddb_newspapers_de:
+  hf_repo: storytracer/German-PD-Newspapers
+  revision: da43f53f0e3cbb7dbab6a77cf116b8f8f2bff8e1
+  files: ./config/ddb_newspapers_de_files.tsv
+  dest: ./data/foreign/de/raw/ddb_newspapers_de
+  lang: de
+  approved: 2026-10-05
+  role: German newspapers from the Deutsches Zeitungsportal, page-level OCR text, issue dates;
+        keep date <= 1939-06-30; Fraktur OCR is noisy; CC0 dataset
+
+europeana_newspapers_de:
+  hf_repo: biglam/europeana_newspapers
+  revision: d27f7fa9092e255832ca1d496574967add680f7d
+  files: ./config/europeana_newspapers_de_files.tsv   # data/de-1900 ... de-1930 only
+  dest: ./data/foreign/de/raw/europeana_newspapers_de
+  lang: de
+  approved: 2026-10-05
+  role: German/Austrian newspapers 1900-1939 from Europeana, OCR text + mean_ocr, issue dates;
+        dedupe against ddb_newspapers_de on title + date
+
+dta:
+  kind: url
+  files: ./config/dta_files.tsv
+  dest: ./data/foreign/de/raw/dta
+  lang: de
+  approved: 2026-10-05
+  role: Deutsches Textarchiv core + supplementary texts (2026-02-10), hand-keyed TEI-XML in
+        original orthography, first-edition year; drop the ~19 post-1939 texts; CC BY-SA 4.0

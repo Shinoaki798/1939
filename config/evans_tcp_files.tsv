@@ -1,0 +1,6 @@
+# Vintage-LLM/EVANS at HF revision e9bb9246d6c48e933805d912f47b983192f8df45. sha256 = git-lfs oid. Generated 2026-10-05 from the HF tree API.
+key	file	bytes	sha256
+part-0000	data/part-0000.parquet	56190379	33fb17d6f0358112cc476c33714f2eb3b1b1bdc8949ff0e926a40d303b8c64d5
+part-0001	data/part-0001.parquet	61899614	8c199bd98125d5e5defe2195da349f6dc7d161b05c88f44c2c2a157cf5d1a60e
+part-0002	data/part-0002.parquet	96940664	e68688ffd8121f6cb69ead3528e2cf79f141c6b17b1c6b2d7a3b2f9539e30fa0
+part-0003	data/part-0003.parquet	16188321	41edb1a63468713525d451c61b9052fe7d5f0ade7bcdd5317828fe1a76029427

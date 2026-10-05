@@ -1,0 +1,5 @@
+# Vintage-LLM/ECCO at HF revision c1b29ff0968abf2ceebab5e90474c4c17dba8d3b. sha256 = git-lfs oid. Generated 2026-10-05 from the HF tree API.
+key	file	bytes	sha256
+part-0000	data/part-0000.parquet	78520048	59cdd3d812ea8dc1d6d33517f4173675905c7b2f26d51ddfc6ac95e1b841250d
+part-0001	data/part-0001.parquet	162961363	9be36c2e7558371bd8e4afdc64d5864fd88ba293bfcf94d2dee30aaffbd5d1f5
+part-0002	data/part-0002.parquet	6869849	7239c49155b04ac3f9be80ec232b39e7eee53813d0797b62c0bd54d7b09546b9

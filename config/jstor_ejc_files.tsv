@@ -1,0 +1,5 @@
+# jstor_ejc: direct downloads (not on HF). checksum = publisher's md5 where published, '-' if none
+# (then size is checked and our own sha256 is recorded in the MANIFEST). Generated 2026-10-05.
+key	url	bytes	checksum
+ejc	https://archive.org/download/jstor_ejc_data_bundle/ejc.tar.bz2	1823863963	md5:5db95e6c683e2b737ebb53f92cfb3d30
+readme	https://archive.org/download/jstor_ejc_data_bundle/readme.txt	2831	md5:14820e66c862def5944dc75d36699119

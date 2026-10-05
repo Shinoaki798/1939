@@ -16,6 +16,6 @@ for a in "$@"; do
   [ "$prev" = "--source" ] && src="$a"
   prev="$a"
 done
-log="logs/download_${src}.log"
+log="logs/download_${src//,/+}.log"
 echo "$(date -Is) start (pid $$) args: $*" >> "$log"
 exec "$HOME/miniconda3/envs/torch-gpu/bin/python" -u -m src.data.download "$@" >> "$log" 2>&1
