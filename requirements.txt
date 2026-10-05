@@ -1,0 +1,18 @@
+torch>=2.4
+numpy
+pandas
+pyarrow
+datasets
+tokenizers
+datasketch
+scikit-learn
+matplotlib
+pyyaml
+pytest
+# baselines
+https://github.com/kpu/kenlm/archive/master.zip
+# translation (remote box only)
+transformers
+ctranslate2
+sentencepiece
+sacremoses

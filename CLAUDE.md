@@ -1,0 +1,125 @@
+# CLAUDE.md — APS360 project: The Shape of a Knowledge Boundary
+
+Read `docs/HANDOFF.md` fully before doing anything, then `docs/TASKS.md`.
+HANDOFF holds the research design, every locked decision with its rationale,
+the instructor's constraints and the schedule. This file holds only the rules
+that must never be violated and the conventions of the repo.
+
+State as of 2026-10-01. Proposal due 2026-10-16. The person you are working
+with is Junlei An (goes by Andrew), an individual student on this project.
+
+## Hard constraints (never violate, never "improve")
+
+1. **Exactly one Transformer is trained.** No control Transformer, no
+   ablation, no second scale, no seed sweep, no instruction-tuning stage. All
+   controls are constructed at evaluation time on that one model. Baselines
+   (vanilla RNN, LSTM, GRU, n-gram) are not Transformers and may be retrained.
+2. **The Transformer is decoder-only with causal self-attention, trained with
+   next-token cross-entropy from random initialisation.** No encoder, no
+   masked-LM objective, no pretrained weights anywhere in the model. The only
+   pretrained component in the whole project is the NMT translator used for
+   data preprocessing; it never touches the model. Target: GPT-2-class.
+3. **Cutoff = 1939-06-30. Embargo = 1939-07-01 … 1939-08-31.** Embargo text
+   is never in training and never in any scored evaluation set. One explicit
+   exception: embargo-window articles may be used as *conditioning context
+   only* in the RQ3 proposition scorer. Nothing dated ≥ 1939-09-01 is ever in
+   training.
+4. **Splits are by publication date. Never shuffle the pooled corpus.** From
+   every year 1900–1955, a fixed 2 % of articles is held out *before*
+   dedup/filtering/tokenisation and never trained on. Val is a disjoint 2 %
+   ≤ cutoff. MinHash near-dedup runs *before* splitting.
+5. **Translated text is never scored.** It enters (a) training data and
+   (b) RQ3 conditioning contexts, nothing else. Every scored evaluation set
+   (per-year bpb, RQ1 probe contexts, RQ2 calibration corpora, RQ3 scored
+   continuations, ChroniclingAmericaQA sanity) is native English from the
+   American Stories backbone.
+6. **Any translated sentence containing an RQ1 probe term (or inflection) is
+   dropped whole.** Never drop just the word.
+7. **≤ 2 epochs.** If data is short, pick a smaller model from the size ladder;
+   never add passes. Model size ≈ tokens / 20.
+8. **Report bits-per-byte, never per-token perplexity, for any cross-model
+   number.** Every reported number carries a bootstrap 95 % CI over items.
+9. **Probe set and proposition set are frozen (checksummed) before the model
+   is evaluated on them.** If a change is genuinely required after that,
+   version it and report both.
+10. **No pretrained tokenizer** (GPT-2, Llama, etc.) anywhere. The BPE is
+    trained on native-English pre-cutoff text only.
+11. **The translation stage can never block graded work.** Corpus v1 (native
+    English) is frozen first and is sufficient for everything; v2 adds
+    translation only if frozen by its date.
+
+## Reproducibility conventions
+
+- Every run writes `runs/<name>/{config.yaml, data_manifest.json, seed.txt,
+  git_sha.txt, env.txt}`. A number that cannot be traced to a manifest is not
+  reported.
+- Checkpoint every 500 steps with optimizer state; all long runs are resumable;
+  a resume test must pass before any run longer than 8 h is launched.
+- Data files are content-addressed: `data/<stage>/<sha256[:12]>.parquet`, with
+  a `MANIFEST.json` per stage listing sources, date ranges, counts, filters.
+- Translator model name + revision hash go in the manifest of every
+  translated shard.
+- OCR quality score is a column on every article and is reported by year and
+  language in `reports/`.
+- Dates are ISO (`1939-06-30`). Years in filenames are four digits.
+
+## Repo layout
+
+```
+CLAUDE.md
+README.md
+requirements.txt
+.gitignore
+docs/
+  HANDOFF.md            full context — read first
+  TASKS.md              ordered task list with gates
+  proposal.pdf / .tex / references.bib / figures/
+config/
+  paths.yaml            all paths; never hard-code paths
+  model_ladder.yaml     size-by-data rule
+  train_defaults.yaml   optimiser / schedule defaults
+probes/
+  README.md             probe-set construction rules
+  rq1_terms.csv         (to build; frozen with CHECKSUMS before eval)
+  rq3_propositions.csv  (to build; frozen with CHECKSUMS before eval)
+  CHECKSUMS
+data/                   gitignored: raw/ dedup/ filtered/ translated/ tokenized/
+src/
+  data/     ingest, dedup, ocr_quality, splits, translate, tokenizer
+  model/    transformer.py (the one model), rnn.py, lstm.py, gru.py, ngram.py
+  train/    train.py, resume.py
+  eval/     bpb_by_year.py, probes.py (RQ1), detector.py (RQ2), foresight.py (RQ3), sanity_caqa.py
+  tools/    corpus_audit CLI (the RQ2 deliverable)
+tests/                  unit tests for every src/data stage and the model forward pass
+runs/                   per-run manifests (checkpoints gitignored)
+reports/                generated tables/figures
+```
+
+## Working style
+
+- One task per branch, named `data/<thing>`, `model/<thing>`, `eval/<thing>`.
+- Before writing code for a stage, print the plan and the exit gate for that
+  stage from `docs/TASKS.md`, then implement.
+- Prefer small, testable modules. Every `src/data` stage has a `--dry-run`
+  that reports counts without writing.
+- Dependencies are limited to `requirements.txt`. Do not add a dependency
+  without saying why.
+- Never hard-code paths; read from `config/paths.yaml`.
+- Reference implementations (nanoGPT, nanochat) may be read and cited. Do not
+  fork or copy them. The attention, training loop and evaluation harness are
+  written here. This is a course requirement (plagiarism is checked against
+  public projects).
+- When uncertain about a design point, check `docs/HANDOFF.md` §Decisions
+  first; if it is not there, stop and ask — do not guess.
+- The user communicates with the instructor by email only; never draft
+  Quercus posts.
+
+## Hardware
+
+- Training machine: single RTX 5080 (16 GB). This card has previously blacked
+  out under sustained training load. Therefore: checkpoint often, keep runs
+  resumable, log GPU temperature every 100 steps, and never schedule a run
+  longer than 8 h without a resume test having passed.
+- Translation machine: a separate remote GPU box reached over SSH (see
+  `config/paths.yaml` for the host alias). Translation is inference only and
+  runs there in parallel so it never competes with training on the 5080.

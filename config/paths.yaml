@@ -1,0 +1,33 @@
+# All paths live here. Never hard-code a path in src/.
+# Fill in the [[TODO]] values before Phase 0.
+
+data_root: ./data
+raw: ./data/raw
+dedup: ./data/dedup
+filtered: ./data/filtered
+translated: ./data/translated
+tokenized: ./data/tokenized
+splits_manifest: ./data/splits/MANIFEST.json
+runs: ./runs
+reports: ./reports
+probes: ./probes
+
+# HuggingFace dataset id for the native-English backbone
+american_stories_hf: dell-research-harvard/AmericanStories   # verify exact id in Phase 1
+
+# Remote translation machine (SSH alias from ~/.ssh/config). Inference only.
+translate_host: "[[TODO: ssh alias]]"
+translate_workdir: "[[TODO: path on remote box]]"
+
+# Translator pin (fill with the exact HF revision hash once chosen)
+nmt_model: facebook/nllb-200-distilled-600M
+nmt_revision: "[[TODO: commit hash]]"
+
+# Temporal boundary (ISO dates; do not change without updating HANDOFF.md)
+cutoff: 1939-06-30
+embargo_start: 1939-07-01
+embargo_end: 1939-08-31
+test_start: 1939-09-01
+year_range: [1900, 1955]
+holdout_fraction_per_year: 0.02
+val_fraction: 0.02

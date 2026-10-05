@@ -1,0 +1,43 @@
+# Model size follows data: ~20 tokens / parameter, never more than 2 epochs.
+# After the Phase-1 audit, set `selected` to the rung whose token range
+# contains the usable pre-1939 token count (v2 if frozen, else v1).
+
+tokens_per_param: 20
+max_epochs: 2
+context_length: 1024
+vocab_size: 32768
+
+rungs:
+  - name: s90m
+    max_tokens_b: 1.5
+    n_layer: 12
+    d_model: 640
+    n_head: 10
+    est_hours_5080: 4
+  - name: s160m
+    max_tokens_b: 3.0
+    n_layer: 16
+    d_model: 768
+    n_head: 12
+    est_hours_5080: 8
+  - name: s250m
+    max_tokens_b: 6.0
+    n_layer: 20
+    d_model: 896
+    n_head: 14
+    est_hours_5080: 18
+  - name: s335m
+    max_tokens_b: 99
+    n_layer: 24
+    d_model: 1024
+    n_head: 16
+    est_hours_5080: 40
+
+selected: null   # set after reports/audit_v1.md
+
+baselines:
+  # instructor-mandated progression; same tokenizer and token budget
+  - {name: ngram_kn5, type: kenlm, order: 5}
+  - {name: rnn_50m,  type: rnn,  n_layer: 2, target_params_m: 50}
+  - {name: lstm_50m, type: lstm, n_layer: 2, target_params_m: 50}
+  - {name: gru_50m,  type: gru,  n_layer: 2, target_params_m: 50}
