@@ -1,4 +1,4 @@
-data/
+/data/
 runs/*/checkpoints/
 runs/*/*.pt
 *.pyc
