@@ -133,10 +133,12 @@ def fetch_one(key: str, spec: dict, src: dict, dl: dict, out_dir: Path, via: str
     name = spec["file"].rsplit("/", 1)[-1]
     final = out_dir / name
     part = out_dir / (name + ".part")
-    endpoint = dl["hf_endpoint"] if via == "proxy" else dl["hf_mirror"]
-    url = f"{endpoint}/datasets/{src['hf_repo']}/resolve/{src['revision']}/{spec['file']}"
 
     for attempt in range(1, max_attempts + 1):
+        # "auto" is resolved before every attempt: proxy whenever it answers, mirror otherwise.
+        cur = via if via != "auto" else ("proxy" if proxy_alive(dl["proxy"], dl["hf_endpoint"]) else "mirror")
+        endpoint = dl["hf_endpoint"] if cur == "proxy" else dl["hf_mirror"]
+        url = f"{endpoint}/datasets/{src['hf_repo']}/resolve/{src['revision']}/{spec['file']}"
         have = part.stat().st_size if part.exists() else 0
         if have > spec["bytes"]:
             print(f"[{key}] .part larger than expected ({have} > {spec['bytes']}); restarting", flush=True)
@@ -144,8 +146,8 @@ def fetch_one(key: str, spec: dict, src: dict, dl: dict, out_dir: Path, via: str
             have = 0
         if have < spec["bytes"]:
             t0 = time.time()
-            print(f"[{key}] attempt {attempt}: {have/1e9:.2f}/{spec['bytes']/1e9:.2f} GB via {via}", flush=True)
-            r = subprocess.run(curl_cmd(via, url, part, dl["proxy"]), stdin=subprocess.DEVNULL)
+            print(f"[{key}] attempt {attempt}: {have/1e9:.2f}/{spec['bytes']/1e9:.2f} GB via {cur}", flush=True)
+            r = subprocess.run(curl_cmd(cur, url, part, dl["proxy"]), stdin=subprocess.DEVNULL)
             got = (part.stat().st_size if part.exists() else 0) - have
             secs = max(time.time() - t0, 1e-6)
             print(f"[{key}] curl exit {r.returncode}; +{got/1e6:.0f} MB in {secs:.0f}s ({got/secs/1e6:.1f} MB/s)",
@@ -160,7 +162,7 @@ def fetch_one(key: str, spec: dict, src: dict, dl: dict, out_dir: Path, via: str
             continue
         os.replace(part, final)
         manifest["files"][key] = {
-            "file": name, "bytes": spec["bytes"], "sha256": digest, "url": url, "via": via,
+            "file": name, "bytes": spec["bytes"], "sha256": digest, "url": url, "via": cur,
             "verified_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
         }
         save_manifest(mpath, manifest)
@@ -220,17 +222,9 @@ def main() -> None:
     except BlockingIOError:
         sys.exit(f"[{args.source}] another downloader holds {out_dir}/.download.lock; not starting")
 
-    via = args.via
-    if via == "auto":
-        via = "proxy" if proxy_alive(dl["proxy"], dl["hf_endpoint"]) else "mirror"
-    print(f"[{args.source}] transport: {via}", flush=True)
-
     failed = []
     for k in todo:
-        if args.via == "auto" and via == "proxy" and not proxy_alive(dl["proxy"], dl["hf_endpoint"]):
-            via = "mirror"
-            print("proxy stopped answering; falling back to mirror", flush=True)
-        if not fetch_one(k, table[k], src, dl, out_dir, via, manifest, mpath, args.max_attempts):
+        if not fetch_one(k, table[k], src, dl, out_dir, args.via, manifest, mpath, args.max_attempts):
             failed.append(k)
     print(f"[{args.source}] done. failed: {failed or 'none'}", flush=True)
     sys.exit(1 if failed else 0)
