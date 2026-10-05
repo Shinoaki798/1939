@@ -16,6 +16,7 @@ probes: ./probes
 # The native-English backbone is `american_stories`; the rest are training-only.
 sources: ./config/sources.yaml
 ingested_american_stories: ./data/ingested/american_stories
+ingested_root: ./data/ingested           # <root>/<source>/ for every source
 
 # Machines (decided 2026-10-05, HANDOFF §12): the RTX 5080 box is the remote
 # host; it downloads, processes all data and trains. Code lives in WSL there.
