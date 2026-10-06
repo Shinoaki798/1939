@@ -6,7 +6,8 @@ zbMATH Open content is CC BY-SA 4.0. zbmath.org itself blocks AI crawlers in rob
 OAI endpoint is used, one request at a time, --delay seconds apart. Every response page is kept raw
 (gzip) under data/foreign/de/raw/jfm/pages/ and listed with its sha256 in the source MANIFEST.json;
 the resumption token is saved after every page, so an interrupted run continues where it stopped
-(tokens expire after about a day; then the run starts over and skips pages it already has).
+(tokens expire after about a day, or are lost server-side and answered with HTTP 500; then the run
+starts over once and skips pages it already has).
 Selection (JFM volume <= 61, reviews only) happens at ingest, not here.
 
     python -m src.data.jfm_harvest --delay 2
@@ -79,9 +80,17 @@ def main() -> None:
     state = json.loads(state_path.read_text(encoding="utf-8")) if state_path.exists() else {}
     params = {"verb": "ListRecords", "resumptionToken": state["token"]} if state.get("token") else \
              {"verb": "ListRecords", "metadataPrefix": "oai_zb_preview", "set": "JFM"}
-    cursor, new = state.get("cursor", 0), 0
+    cursor, new, restarted = state.get("cursor", 0), 0, False
     while True:
-        body = fetch(params, proxy=cfg["download"]["proxy"])
+        try:
+            body = fetch(params, tries=3 if "resumptionToken" in params else 8, proxy=cfg["download"]["proxy"])
+        except SystemExit:
+            # zbMATH answers a token it no longer knows with HTTP 500, not with badResumptionToken
+            if "resumptionToken" not in params or restarted:
+                raise
+            print("resumption token keeps failing; restarting from the first page", flush=True)
+            params, cursor, restarted = {"verb": "ListRecords", "metadataPrefix": "oai_zb_preview", "set": "JFM"}, 0, True
+            continue
         text = body.decode("utf-8", "replace")
         if "<error" in text and "badResumptionToken" in text:
             print("resumption token expired; restarting from the first page", flush=True)
