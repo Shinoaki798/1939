@@ -41,3 +41,26 @@ def test_word_share_penalises_tables_and_fragments():
 def test_word_share_ignores_spaced_punctuation():
     spaced = "Beerdigte den 12 . Juli Peter Müller , Bäckermeister , alt 73 Jahre . " * 4
     assert word_share(spaced) > 0.75
+
+
+def test_gate_order_and_thresholds():
+    from src.data.ocr_quality import gate
+
+    lex = {"die", "stadt", "hat", "einen", "neuen", "bahnhof"}
+    good = "Die Stadt hat einen neuen Bahnhof . " * 10
+    assert gate(good, lex, "de")[0] is None
+    assert gate("Die Stadt hat einen neuen Bahnhof", lex, "de")[0] == "short"
+    assert gate("Dle Stabt hnt elnen ncuen Bahuhof " * 10, lex, "de")[0] == "hit_rate"
+    table = "Die Stadt 12,50 hat 3 einen 44 neuen 7 Bahnhof 1919 " * 6
+    assert gate(table, lex, "de")[0] == "word_share"
+
+
+def test_clean_segments_drops_tables_keeps_prose():
+    from src.data.ocr_quality import clean_segments
+
+    prose = "Die Versammlung des Ortsvereins findet am Sonntag im Saale statt und alle sind herzlich eingeladen worden ."
+    table = "Hindenburg 279 353 Marx 371 074 Thälmann 23 246 34 294 506 281 624 68 804 35 242 657 151 405 15 000 12 9"
+    text = "\n\n".join([prose, prose, table, table, prose, prose, "Ende ."])
+    out, n_in, n_kept = clean_segments(text)
+    assert "Thälmann" not in out and out.count("Versammlung") == 4 and out.rstrip().endswith("Ende .")
+    assert n_in == len(text.split()) and n_kept == len(out.split())

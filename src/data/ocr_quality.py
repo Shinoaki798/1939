@@ -23,7 +23,7 @@ Nothing is dropped by this module: thresholds are chosen from the histograms and
 confirmed by the user (TASKS Phase 1), then applied in the filter stage.
 
     python -m src.data.ocr_quality build-lexicon --lang de
-    python -m src.data.ocr_quality histogram --lang de --per-cell 400
+    python -m src.data.ocr_quality histogram --lang de --per-cell 400   # + reports/ocr_gates_de.md
 """
 
 from __future__ import annotations
@@ -53,8 +53,18 @@ POOL_MIN_DF = 50
 POOL_MIN_TITLES = 5
 POOL_SAMPLE_PER_FILE = 1500
 GERMAN_SOURCES = ["ddb_newspapers_de", "europeana_newspapers_de", "voelkischer_beobachter_de"]
-# Hit-rate thresholds confirmed by the user (reports/ocr_quality_<lang>.md).
-HIT_THRESHOLD = {"de": 0.75}   # 2026-10-05
+# Gates confirmed by the user (reports/ocr_quality_<lang>.md; HANDOFF §12, 2026-10-05/06). A document is
+# kept only if it has >= MIN_DOC_TOKENS tokens, hit rate >= HIT_THRESHOLD and word share >= WORD_SHARE_THRESHOLD.
+# English uses the same values unless its own histogram shows they do not fit (then both are reported).
+SCORER_VERSION = "2026-10-06.1"
+HIT_THRESHOLD = {"de": 0.75}
+WORD_SHARE_THRESHOLD = 0.70
+MIN_DOC_TOKENS = 50
+# Issue-level sources (one row = a whole issue, columns run together) are cleaned per segment instead of
+# being gated whole: blank-line blocks are merged into segments of >= SEGMENT_MIN_TOKENS tokens and a
+# segment is dropped if its word share < WORD_SHARE_THRESHOLD (user, 2026-10-06).
+SEGMENT_SOURCES = {"voelkischer_beobachter_de"}
+SEGMENT_MIN_TOKENS = 30
 WORD_SHARE_CANDIDATES = (0.5, 0.6, 0.7, 0.8)
 _EDGE = "\"'.,;:!?()[]{}<>*„“”‚‘’»«›‹/|"
 _INNER_HYPHEN = re.compile(r"[-⸗¬]")
@@ -82,6 +92,63 @@ def word_share(text: str) -> float:
         core = _INNER_HYPHEN.sub("", w.strip(_EDGE))
         words += len(core) >= 2 and core.isalpha()
     return words / len(ws)
+
+
+# ---- gates -----------------------------------------------------------------------------
+
+def gate(text: str, lexicon: set[str], lang: str) -> tuple[str | None, float, float, int]:
+    """(reason the document is dropped or None, hit rate, word share, tokens). Gates are checked in
+    order short -> hit_rate -> word_share; the first that fails is the reason. NaN scores fail."""
+    n = len(text.split())
+    hit, ws = score(text, lexicon), word_share(text)
+    if n < MIN_DOC_TOKENS:
+        return "short", hit, ws, n
+    if not hit >= HIT_THRESHOLD[lang]:
+        return "hit_rate", hit, ws, n
+    if not ws >= WORD_SHARE_THRESHOLD:
+        return "word_share", hit, ws, n
+    return None, hit, ws, n
+
+
+_BLANK = re.compile(r"\n\s*\n")
+
+
+def clean_segments(text: str) -> tuple[str, int, int]:
+    """Segment cleanup for issue-level text: merge consecutive blank-line blocks until a segment has
+    >= SEGMENT_MIN_TOKENS tokens (a short tail joins the last segment), drop segments whose word share
+    is below WORD_SHARE_THRESHOLD (or undefined), rejoin. Returns (text, tokens in, tokens kept)."""
+    segs = segments(text)
+    kept = [s for s in segs if word_share(s) >= WORD_SHARE_THRESHOLD]
+    n_in = sum(len(s.split()) for s in segs)
+    return "\n\n".join(kept), n_in, sum(len(s.split()) for s in kept)
+
+
+def segments(text: str) -> list[str]:
+    segs, cur, cur_n = [], [], 0
+    for block in (b.strip() for b in _BLANK.split(text)):
+        if not block:
+            continue
+        cur.append(block)
+        cur_n += len(block.split())
+        if cur_n >= SEGMENT_MIN_TOKENS:
+            segs.append("\n".join(cur))
+            cur, cur_n = [], 0
+    if cur:
+        if segs:
+            segs[-1] += "\n" + "\n".join(cur)
+        else:
+            segs.append("\n".join(cur))
+    return segs
+
+
+def gate_params(cfg: dict, lang: str) -> dict:
+    """Everything needed to reproduce a filter decision; goes into every filtered shard's MANIFEST."""
+    m = json.loads((lexicon_dir(cfg, lang) / "MANIFEST.json").read_text(encoding="utf-8"))
+    return {"scorer_version": SCORER_VERSION, "lang": lang, "lexicon_file": m["file"],
+            "lexicon_sha256": m["sha256"], "hit_threshold": HIT_THRESHOLD[lang],
+            "word_share_threshold": WORD_SHARE_THRESHOLD, "min_doc_tokens": MIN_DOC_TOKENS,
+            "segment_sources": sorted(SEGMENT_SOURCES), "segment_min_tokens": SEGMENT_MIN_TOKENS,
+            "gate_order": ["short", "hit_rate", "word_share"]}
 
 
 # ---- lexicon ---------------------------------------------------------------------------
@@ -221,9 +288,8 @@ def _hist_job(args: tuple) -> dict:
             if len(cells[y]) >= per_cell or not _keep(aid, rate):
                 continue
             text = text or ""
-            s = score(text, _LEX)
-            if not math.isnan(s):
-                cells[y].append((aid, s, word_share(text), nw, _snippet(text)))
+            # NaN scores (too few tokens) are kept: they count as drops in the gate report
+            cells[y].append((aid, score(text, _LEX), word_share(text), nw, _snippet(text)))
     return {(src, y): v for y, v in cells.items()}
 
 
@@ -268,15 +334,109 @@ def _table(by: dict, idx: int, thresholds: tuple, weighted: bool) -> list[str]:
     return lines
 
 
+PERIODS = [(1900, 1919), (1920, 1929), (1930, 1933), (1934, 1936), (1937, 1939), (1940, 1955)]
+
+
+def _period(y: int) -> str | None:
+    return next((f"{a}-{b}" for a, b in PERIODS if a <= y <= b), None)
+
+
+def segment_report(cfg: dict, lang: str) -> tuple[dict, list]:
+    """Run the segment cleanup over every document of the segment sources: tokens in/kept per
+    (source, period), plus (source, word share, kept, segment text) for every segment near the cut."""
+    sources = load_config(repo_path(cfg["sources"]))
+    stats, boundary = defaultdict(lambda: [0, 0, 0, 0]), []
+    for src in sorted(SEGMENT_SOURCES):
+        for f in sorted(ingested_dir(cfg, src, sources[src]).glob("*.parquet")):
+            for r in pq.read_table(f, columns=["year", "text", "lang"]).to_pylist():
+                per = _period(r["year"])
+                if r["lang"] != lang or per is None:
+                    continue
+                st = stats[(src, per)]
+                for s in segments(r["text"] or ""):
+                    n, ws = len(s.split()), word_share(s)
+                    ok = ws >= WORD_SHARE_THRESHOLD
+                    st[0] += 1; st[1] += n; st[2] += (not ok); st[3] += 0 if ok else n
+                    if WORD_SHARE_THRESHOLD - 0.05 <= ws < WORD_SHARE_THRESHOLD + 0.05:
+                        boundary.append((src, ws, ok, _snippet(s)))
+    return dict(stats), boundary
+
+
+def write_gates_report(lang: str, cells: dict, seg_stats: dict, seg_boundary: list, params: dict,
+                       out_md: Path, out_boundary: Path) -> None:
+    import random
+    thr = WORD_SHARE_THRESHOLD
+    reasons = ("short", "hit_rate", "word_share")
+    agg = defaultdict(lambda: {"docs": 0, "words": 0, **{f"d_{r}": 0 for r in reasons}, **{f"w_{r}": 0 for r in reasons}})
+    near_keep, near_drop = defaultdict(list), defaultdict(list)
+    for k, rows in cells.items():
+        src, y = k.split("|")
+        per = _period(int(y))
+        if src in SEGMENT_SOURCES or per is None:
+            continue
+        for hit, ws, nw, snip in rows:
+            nw = nw or 0
+            reason = ("short" if nw < MIN_DOC_TOKENS else "hit_rate" if not hit >= HIT_THRESHOLD[lang]
+                      else "word_share" if not ws >= thr else None)
+            a = agg[(src, per)]
+            a["docs"] += 1; a["words"] += nw
+            if reason:
+                a[f"d_{reason}"] += 1; a[f"w_{reason}"] += nw
+            if int(y) <= 1939 and thr <= ws < thr + 0.05 and reason is None:
+                near_keep[src].append((hit, ws, nw, snip))
+            if int(y) <= 1939 and thr - 0.05 <= ws < thr and reason == "word_share":
+                near_drop[src].append((hit, ws, nw, snip))
+    pct = lambda x, n: f"{x / n:.1%}" if n else "-"
+    lines = [f"# OCR gates, {lang}", "", "Gate parameters (also written to every filtered shard's MANIFEST):", "",
+             "```json", json.dumps(params, indent=1), "```", "",
+             "## Page / article gates", "",
+             "Same deterministic sample as reports/ocr_quality_*.md, including documents too short to score. "
+             "Gates are applied in order; each drop is attributed to the first gate it fails.", "",
+             "| source | period | docs | docs: short | docs: hit rate | docs: word share | docs: total "
+             "| words: short | words: hit rate | words: word share | words: total |",
+             "|---|---|---|---|---|---|---|---|---|---|---|"]
+    for (src, per), a in sorted(agg.items()):
+        d_tot = sum(a[f"d_{r}"] for r in reasons); w_tot = sum(a[f"w_{r}"] for r in reasons)
+        lines.append(f"| {src} | {per} | {a['docs']} | " + " | ".join(pct(a[f'd_{r}'], a['docs']) for r in reasons)
+                     + f" | {pct(d_tot, a['docs'])} | " + " | ".join(pct(a[f'w_{r}'], a['words']) for r in reasons)
+                     + f" | {pct(w_tot, a['words'])} |")
+    lines += ["", f"## Segment cleanup (issue-level sources: {', '.join(sorted(SEGMENT_SOURCES))})", "",
+              f"Every document, not a sample. Blank-line blocks merged to >= {SEGMENT_MIN_TOKENS} tokens; "
+              f"segments with word share < {thr} dropped.", "",
+              "| source | period | segments | segments dropped | tokens | tokens dropped |", "|---|---|---|---|---|---|"]
+    for (src, per), (n_seg, n_tok, d_seg, d_tok) in sorted(seg_stats.items()):
+        lines.append(f"| {src} | {per} | {n_seg} | {pct(d_seg, n_seg)} | {n_tok:,} | {pct(d_tok, n_tok)} |")
+    lines += ["", f"Boundary samples ({thr - 0.05:.2f}-{thr + 0.05:.2f} word share, dated <= 1939): "
+              f"logs/{out_boundary.name}.", ""]
+    out_md.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    rnd = random.Random(0)
+    b = [f"# OCR gate boundary samples, {lang}", "",
+         f"10 random kept ({thr:.2f}-{thr + 0.05:.2f}) and 10 random dropped ({thr - 0.05:.2f}-{thr:.2f}) per source, "
+         "by word share; text from the middle of the document or segment.", ""]
+    for src in sorted(set(near_keep) | set(near_drop)):
+        for label, pool in (("kept", near_keep[src]), ("dropped", near_drop[src])):
+            b.append(f"## {src}: {label} ({len(pool)} in band)")
+            b += [f"- hit {h:.2f}, share {w:.2f}, {n} words: {s}" for h, w, n, s in rnd.sample(pool, min(10, len(pool)))]
+            b.append("")
+    for src in sorted({x[0] for x in seg_boundary}):
+        for label, ok in (("kept", True), ("dropped", False)):
+            pool = [x for x in seg_boundary if x[0] == src and x[2] == ok]
+            b.append(f"## {src} segments: {label} ({len(pool)} in band)")
+            b += [f"- share {w:.2f}: {s}" for _, w, _, s in rnd.sample(pool, min(10, len(pool)))]
+            b.append("")
+    out_boundary.write_text("\n".join(b) + "\n", encoding="utf-8")
+
+
 def write_report(cfg: dict, lang: str, cells: dict, out_md: Path, out_png: Path, out_examples: Path) -> None:
-    periods = [(1900, 1919), (1920, 1929), (1930, 1933), (1934, 1936), (1937, 1939), (1940, 1955)]
+    periods = PERIODS
     hit_thr = HIT_THRESHOLD[lang]
     by, passed = defaultdict(list), defaultdict(list)
     for k, rows in cells.items():
         src, y = k.split("|"); y = int(y)
         for a, b in periods:
             if a <= y <= b:
-                by[(src, f"{a}-{b}")].extend(rows)
+                by[(src, f"{a}-{b}")].extend(r for r in rows if not math.isnan(r[0]))
                 passed[(src, f"{a}-{b}")].extend(r for r in rows if r[0] >= hit_thr and not math.isnan(r[1]))
     lines = [f"# OCR quality, {lang}", "",
              f"Sampled documents per source x year (deterministic hash sample), lang = {lang} only, "
@@ -352,7 +512,11 @@ def main() -> None:
             json.dumps({k: [r[:3] for r in v] for k, v in cells.items()}), encoding="utf-8")
         write_report(cfg, args.lang, cells, rep / f"ocr_quality_{args.lang}.md", rep / f"ocr_quality_{args.lang}.png",
                      logs / f"ocr_quality_{args.lang}_examples.md")
+        seg_stats, seg_boundary = segment_report(cfg, args.lang)
+        write_gates_report(args.lang, cells, seg_stats, seg_boundary, gate_params(cfg, args.lang),
+                           rep / f"ocr_gates_{args.lang}.md", logs / f"ocr_gates_{args.lang}_boundary.md")
         print((rep / f"ocr_quality_{args.lang}.md").read_text(encoding="utf-8"))
+        print((rep / f"ocr_gates_{args.lang}.md").read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":
