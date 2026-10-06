@@ -37,6 +37,7 @@ import os
 import subprocess
 import sys
 import time
+from collections import Counter
 from pathlib import Path
 
 import yaml
@@ -77,17 +78,24 @@ def parse_years(spec: str) -> list[int]:
 def load_file_table(path: Path) -> dict[str, dict]:
     """TSV (comment lines start with #) whose header is either
     `key file bytes sha256` (HF sources; the first column may be named `year`) or
-    `key url bytes checksum` (url sources; checksum = md5:/sha1:/sha256:<hex> or '-').
-    Returns {key: {"file", "bytes", "sha256" | "url" + "checksum"}}."""
+    `key url bytes checksum [file]` (url sources; checksum = md5:/sha1:/sha256:<hex> or '-'; the local
+    file name defaults to the URL's last path segment).
+    Returns {key: {"file", "bytes", "sha256" | "url" + "checksum"}}. Two keys may never share a local
+    file name (e.g. static.case.law/ad/210.zip and /cal/210.zip): that would overwrite downloads."""
     with open(path, encoding="utf-8") as f:
         rows = [line.rstrip("\n").split("\t") for line in f if line.strip() and not line.startswith("#")]
     header, table = rows[0], {}
     for r in rows[1:]:
         rec = dict(zip(header[1:], r[1:]))
         rec["bytes"] = None if rec["bytes"] in ("?", "-", "") else int(rec["bytes"])   # None: size unpublished
-        if "url" in rec:
+        if "url" in rec and not rec.get("file"):
             rec["file"] = rec["url"].rsplit("/", 1)[-1]
         table[r[0]] = rec
+    names = Counter(rec["file"].rsplit("/", 1)[-1] for rec in table.values())
+    clash = [n for n, c in names.items() if c > 1]
+    if clash:
+        sys.exit(f"{path}: {len(clash)} local file names used by more than one key (e.g. {clash[0]}); "
+                 f"add a distinct `file` column")
     return table
 
 

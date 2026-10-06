@@ -40,6 +40,22 @@ def test_url_table_and_publisher_checksum(tmp_path):
     assert verify(table["meta"], f)[2] == "size only"
 
 
+def test_url_table_file_column_and_name_clash(tmp_path):
+    import pytest
+
+    tsv = tmp_path / "t.tsv"
+    tsv.write_text("key\turl\tbytes\tchecksum\tfile\n"
+                   "ad__210\thttps://static.case.law/ad/210.zip\t?\t-\tad__210.zip\n"
+                   "cal__210\thttps://static.case.law/cal/210.zip\t?\t-\tcal__210.zip\n", encoding="utf-8")
+    table = load_file_table(tsv)
+    assert table["cal__210"]["file"] == "cal__210.zip" and table["ad__210"]["bytes"] is None
+    tsv.write_text("key\turl\tbytes\tchecksum\n"
+                   "ad__210\thttps://static.case.law/ad/210.zip\t?\t-\n"
+                   "cal__210\thttps://static.case.law/cal/210.zip\t?\t-\n", encoding="utf-8")
+    with pytest.raises(SystemExit):
+        load_file_table(tsv)
+
+
 def test_record_in_manifest_merges_concurrent_writers(tmp_path):
     import json
 
