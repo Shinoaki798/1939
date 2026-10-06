@@ -1,0 +1,151 @@
+key	kind	verdict	locc	title	authors
+pg10914	science	check	TL	Die Brüder Wright Eine Studie ueber die Entwicklung der Flugmaschine von Lilienthal bis Wright	Hildebrandt, A. (Alfred), 1870-1949
+pg11925	science	safe	QA	Elementare Arithmetik und Algebra	Schubert, Hermann, 1848-1911
+pg16718	science	safe	QD; QE	Mineralogia Polyglotta	Keferstein, Christian, 1784-1866
+pg17153	science	safe	QA	Synthetische Geometrie der Kugeln und linearen Kugelsysteme mit einer Einleitung in die analytische Geometrie der Kugelsysteme	Reye, Theodor, 1838-1919
+pg18471	science	safe	QB	Ueber die schrecklichen Wirkungen des Aufsturzes eines Kometen auf die Erde und über die vor fünftausend Jahren gehabte Erscheinung dieser Art	Gelpke, August Heinrich Christian, 1769-1842
+pg19673	science	safe	QL; QR; SF	Parasiten der Honigbiene und die durch dieselben bedingten Krankheiten dieses Insects.	Assmuss, Eduard Philibert, 1838-1882
+pg20313	science	safe	QA	Ueber Riemann's Theorie der Algebraischen Functionen	Klein, Felix, 1849-1925
+pg22492	science	safe	G; QE; QH; F2201; F2301	Reise in die Aequinoctial-Gegenden des neuen Continents. Band 1.	Humboldt, Alexander von, 1769-1859; Hauff, Hermann, 1800-1865 [Translator]
+pg22659	science	safe	Q	Rede, gehalten bei der Eröffnung der Versammlung deutscher Naturforscher und Ärzte in Berlin, am 18. September 1828	Humboldt, Alexander von, 1769-1859
+pg22761	science	safe	QK	Ideen zu einer Physiognomik der Gewächse	Humboldt, Alexander von, 1769-1859
+pg23672	science	safe	QK	Die epiphytische Vegetation Amerikas	Schimper, A. F. W. (Andreas Franz Wilhelm), 1856-1901
+pg24618	science	check	QH301; QP	Warum wir sterben	Lipschütz, Alejandro, 1883-1980
+pg24746	science	safe	G; QE; QH; F2201; F2301	Reise in die Aequinoctial-Gegenden des neuen Continents. Band 2.	Humboldt, Alexander von, 1769-1859; Hauff, Hermann, 1800-1865 [Translator]
+pg24817	science	safe	CB; QA	Über die Geometrie der alten Aegypter. Vortrag, gehalten in der feierlichen Sitzung der Kaiserlichen Akademie der Wissenschaften am 29. Mai 1884.	Weyr, Emil, 1848-1894
+pg25157	science	safe	QA	Über Integralinvarianten und Differentialgleichungen	Lie, Sophus, 1842-1899
+pg25783	science	check	QR	Experimentelle Untersuchungen über die Frage »Ist die Furcht vor Krankheitsübertragung durch das Telephon berechtigt«? Inaugural-Dissertation zur Erlangung der Doktorwürde in der Medizin, Chirurgie und Geburtshülfe der Hohen Medizinischen Fakultät der Königlichen Universität Greifswald	Weiss, Carl, 1887-
+pg27254	science	check	QD	Die Romantik der Chemie	Nagel, Oskar, 1874-
+pg28664	science	check	TF	Langsam-Schnellzüge in Österreich	Ignotus
+pg29780	science	safe	QA	Theorie der Abel'schen Functionen	Weierstrass, Karl, 1815-1897
+pg29806	science	safe	QA	Elemente der Absoluten Geometrie	Frischauf, Johannes, 1837-1924
+pg30005	science	safe	QA	Zur Geschichte der Theorie der Elliptischen Transcendenten In den Jahren 1826-29	Koenigsberger, Leo, 1837-1921
+pg30042	science	safe	QK	Streifzüge an der Riviera	Strasburger, Eduard, 1844-1912
+pg31564	science	check	QC	Vorlesungen über Thermodynamik Siebente Auflage	Planck, Max, 1858-1947
+pg31856	science	safe	QK	Führer für Pilzfreunde	Michael, Edmund, 1849-1920
+pg31911	science	safe	QA	Synthetische Theorie der Cliffordschen Parallelen und der Linearen Linienörter des Elliptischen Raumes	Vogt, Wolfgang, 1883-1916
+pg32201	science	safe	QE	Geologische Beobachtungen über die Vulcanischen Inseln Mit kurzen Bemerkungen über die Geologie von Australien und dem Cap der guten Hoffnung	Darwin, Charles, 1809-1882
+pg32634	science	safe	QA	Die Potentialfunction und das Potentiall; ein Beitrag zur mathematischen Physik	Clausius, R. (Rudolf), 1822-1888
+pg32766	science	safe	QA	Einleitung in die Theorie der Elliptischen Funktionen	Bobek, Karl Joseph, 1855-1899
+pg33202	science	safe	QA	Einführung in die Hauptgesetze der Zeichnerischen Darstellungsmethoden	Schoenflies, A. (Arthur), 1853-1928
+pg33317	science	check	QA	Abriss einer Theorie der Abelschen Functionen von drei Variabeln	Schottky, Friedrich, 1851-1935
+pg33330	science	check	QA	Randwertaufgaben bei Systemen von linearen partiellen Differentialgleichungen erster Ordnung	Hurwitz, Wallie Abraham, 1886-1958
+pg33369	science	safe	QA	Vorlesungen ueber die Theorie der Hyperelliptischen Integrale	Koenigsberger, Leo, 1837-1921
+pg33726	science	check	QA	Die hauptsächlichsten Theorien der Geometrie	Loria, Gino, 1862-1954; Schütte, Fritz, 1864- [Translator]
+pg34032	science	check	QA	Über die Picard'schen Gruppen aus dem Zahlkörper der dritten und der vierten Einheitswurzel	Bohler, Otto
+pg34137	science	safe	QH	Zeugnisse für die Stellung des Menschen in der Natur	Huxley, Thomas Henry, 1825-1895; Carus, Julius Victor, 1823-1903 [Translator]
+pg36310	science	check	QA	Die Analyse des Zufalls	Timerding, H. E. (Heinrich Emil), 1873-1945
+pg37945	science	check	QC	Untersuchungen über die radioaktiven Substanzen von Marie Curie, übersetzt und mit Litteratur-Ergänzungen versehen von W. Kaufmann	Curie, Marie, 1867-1934; Kaufmann, Walter, 1871-1947 [Translator]
+pg38033	science	safe	QA	Vergleichende Betrachtungen über neuere geometrische Forschungen	Klein, Felix, 1849-1925
+pg38157	science	safe	QC	Moderne Probleme der Physik	Sieveking, Hermann, 1875-1914
+pg38755	science	safe	QB	Über die Vulkane im Monde	Kant, Immanuel, 1724-1804
+pg38986	science	check	QA	Zahlentheorie	Hensel, Kurt, 1861-1941
+pg39553	science	safe	QB	Einiges aus der Geschichte der Astronomie im Alterthum Rede zur Feier des Geburtstags Sr. Maj. des Deutschen Kaisers Königs von Preussen Wilhelm I. gehalten an der Christian-Albrechts	Blass, Friedrich, 1843-1907
+pg39763	science	check	QL	Einheimische Fische; Die Süßwasserfische unsrer Heimat	Floericke, Kurt, 1869-1934
+pg40543	science	check	QP	Die Zelle	Kahn, Fritz, 1888-1968; Helbig, Georg [Illustrator]
+pg40854	science	safe	QH	Versuche über Pflanzenhybriden	Mendel, Gregor, 1822-1884
+pg42489	science	check	TL	Die Luftschiffahrt der Gegenwart	Hoernes, Hermann, 1858-1948
+pg42745	science	safe	QA	Gauss, ein Umriss seines Lebens und Wirkens	Winnecke, Friedrich August Theodor, 1835-1897
+pg42937	science	safe	QE	Einfache Erzählung von dem schrecklichen Absturze des Schrofenberges und der dadurch erfolgten Verwüstung bei Brannenburg im August 1851 Zum Beßten der Verunglückten	Dachauer, Sebastian, 1778-1863
+pg43191	science	check	QL	Pflege und Zucht der Zwergpapageien und Sittiche Kurze Anleitung zur Behandlung und Pflege	Bungartz, Jean, 1854-1934
+pg45460	science	safe	GB; QE	Die Entstehung der Kontinente und Ozeane	Wegener, Alfred, 1880-1930
+pg46781	science	check	Q	Aus den Tiefen des Weltmeeres Schilderungen von der deutschen Tiefsee-Expedition	Chun, Carl, 1852-1914; Gansberg, Fritz, 1871-1950 [Editor]
+pg46878	science	safe	QD; RC	Ueber die Arsenikvergiftung ihre Hülfe und gerichtliche Ausmittelung	Hahnemann, Samuel, 1755-1843
+pg46896	science	check	Q	Beitrag zur Beurteilung der Lehren Machs	Musil, Robert, 1880-1942
+pg47251	science	safe	TA	Schöpfungen der Ingenieurtechnik der Neuzeit	Geitel, Max, 1853-1926
+pg47733	science	safe	TK	Werner von Siemens, der Begründer der modernen Elektrotechnik	Fürst, Artur, 1880-1926
+pg47843	science	safe	QD	Anleitung zur quantitativen chemischen Analyse	Fresenius, C. Remigius, 1818-1897
+pg48120	science	check	TP	Der deutsche Durst: Methyologische Skizzen der deutschen Kulturgeschichte	Bauer, Max, 1861-1932
+pg48312	science	safe	QA	Die Grundlagen der Arithmetik Eine logische mathematische Untersuchung über den Begriff der Zahl	Frege, Gottlob, 1848-1925
+pg48450	science	safe	QH	Das Mikroskop und seine Anwendung Ein Leitfaden bei mikroskopischen Untersuchungen	Hager, Hermann, 1816-1897
+pg48570	science	safe	QL	Wasserjungfern: Geschichten von Sommerboten und Sonnenkündern	Löns, Hermann, 1866-1914
+pg48798	science	safe	QH	Mein buntes Buch: Naturschilderungen	Löns, Hermann, 1866-1914
+pg48965	science	safe	QL	Fauna der Nassauischen Mollusken	Kobelt, Wilhelm, 1840-1916
+pg49774	science	check	QH	Grundriß der menschlichen Erblichkeitslehre und Rassenhygiene (1/2) Menschliche Erblichkeitslehre	Baur, Erwin, 1875-1933; Fischer, Eugen, 1874-1967; Lenz, Fritz, 1887-1976
+pg49775	science	check	QH	Grundriß der menschlichen Erblichkeitslehre und Rassenhygiene (2/2) Menschliche Auslese und Rassenhygiene	Lenz, Fritz, 1887-1976
+pg50003	science	check	QH	Schutz- und Trutzbündnisse in der Natur	Bölsche, Wilhelm, 1861-1939
+pg50081	science	check	QH	Natur und Mensch Sechs Abschnitte aus Werken von Ernst Haeckel	Haeckel, Ernst, 1834-1919; Neumann, Carl W. (Carl Wilhelm), 1871-1939 [Editor]
+pg51567	science	safe	TJ	Die Geschichte der Dampfmaschine bis James Watt	Geitel, Max, 1853-1926
+pg51638	science	check	TK	Die Akkumulatoren: ihre Theorie, Herstellung, Behandlung und Verwendung.	Bermbach, Willibald, 1860-
+pg51929	science	safe	QR	Die Protozoen als Krankheitserreger des Menschen und der Hausthiere Für Ärzte, Thierärzte und Zoologen	Schneidemühl, Georg, 1853-1928
+pg52373	science	check	QB	Die Milchstraße	Kahn, Fritz, 1888-1968; Helbig, Georg [Illustrator]; Oeffinger, Rudolf, 1870-1952 [Illustrator]
+pg52492	science	safe	TA	James Watt und die Erfindung der Dampfmaschine	Biedenkapp, Georg, 1868-1924
+pg53428	science	check	Q	Die Naturwissenschaften in ihrer Entwicklung und in ihrem Zusammenhange, I. Band Von den Anfängen bis zum Wiederaufleben der Wissenschaften	Dannemann, Friedrich, 1859-1936
+pg53514	science	safe	TF	Die Welt auf Schienen Eine Darstellung der Einrichtungen und des Betriebs auf den Eisenbahnen des Fernverkehrs, Nebst einer Geschichte der Eisenbahn	Fürst, Artur, 1880-1926
+pg53973	science	check	QL	Max Butziwackel der Ameisenkaiser: Ein Buch für Kinder und große Leute	Vamba, 1860-1920; Elleder, Karl, 1860-1941 [Illustrator]; Koch, Luise von [Translator]
+pg54127	science	check	Q	Die Naturwissenschaften in ihrer Entwicklung und in ihrem Zusammenhange, II. Band Von Galilei bis zur Mitte des XVIII. Jahrhunderts	Dannemann, Friedrich, 1859-1936
+pg54357	science	check	QC	Lehrbuch der Physik zum Schulgebrauche.	Winter, Wilhelm
+pg54565	science	safe	TL	Der Vogelflug als Grundlage der Fliegekunst Ein Beitrag zur Systematik der Flugtechnik	Lilienthal, Otto, 1848-1896
+pg54762	science	safe	QR	Die krankheiterregenden Bakterien Entstehung, Heilung und Bekämpfung der bakteriellen Infektionskrankheiten des Menschen	Löhlein, Max, 1877-1921
+pg55462	science	safe	QP	Die organische Chemie in ihrer Anwendung auf Physiologie und Pathologie	Liebig, Justus, Freiherr von, 1803-1873
+pg55559	science	check	QL	Von Wundern und Tieren: Neue naturwissenschaftliche Plaudereien	Bölsche, Wilhelm, 1861-1939
+pg56239	science	check	QE	Festländer und Meere im Wechsel der Zeiten	Bölsche, Wilhelm, 1861-1939
+pg56330	science	safe	TP	Handbuch der chemischen Technologie Achte Auflage	Wagner, Johannes Rudolf, 1822-1880
+pg57240	science	check	QC	Relativitätstheorie und Erkenntnis Apriori	Reichenbach, Hans, 1891-1953
+pg57636	science	check	TJ	Die Technik der Lastenförderung einst und jetzt Eine Studie über die Entwicklung der Hebemaschinen und ihren Einfluß auf Wirtschaftsleben und Kulturgeschichte	Kammerer, Otto, 1865-1951
+pg57952	science	check	Q	Die Naturwissenschaften in ihrer Entwicklung und in ihrem Zusammenhange, III. Band Das Emporblühen der modernen Naturwissenschaften bis zur Entdeckung des Energieprinzipes	Dannemann, Friedrich, 1859-1936
+pg58148	science	check	TA	Darstellende Geometrie des Geländes und verwandte Anwendungen der Methode der kotierten Projektionen	Rothe, Rudolf, 1873-1942
+pg58399	science	safe	QB	Die Welt der Planeten	Meyer, M. W. (Max Wilhelm), 1853-1910
+pg58506	science	check	QB	Was mir das Sternenlicht erzählt: Eine populäre Himmelskunde für die Jugend	Erber, Felix
+pg58683	science	check	QK	Flora von Deutschland Ein Hilfsbuch zum Bestimmen der zwischen den deutschen Meeren und den Alpen wildwachsenden und angebauten Pflanzen	Schmeil, O. (Otto), 1860-1943; Fitschen, Jost, 1869-1947
+pg58989	science	check	QL	Tiere und Pflanzen in Wald und Feld	Buckley, Arabella B. (Arabella Burton), 1840-1929; Muckley, Angelo Fairfax, 1859-1920 [Illustrator]; Kriete, Fritz, 1858- [Translator]; Rabes, O. (Otto), 1873- [Translator]
+pg59161	science	check	QE	Eiszeit und Klimawechsel	Bölsche, Wilhelm, 1861-1939
+pg59268	science	safe	ND; TA	Leonardo da Vinci als Ingenieur und Philosoph Ein Beitrag zur Geschichte der Technik und der induktiven Wissenschaften	Grothe, Hermann, 1839-1885
+pg59493	science	check	Q	Die Naturwissenschaften in ihrer Entwicklung und in ihrem Zusammenhange, IV. Band Das Emporblühen der modernen Naturwissenschaften seit der Entdeckung des Energieprinzips	Dannemann, Friedrich, 1859-1936
+pg59659	science	check	TJ	Die Säge: Ein Rückblick auf vier Jahrtausende	Feldhaus, Franz M. (Franz Maria), 1874-1959?
+pg60930	science	check	QB	Komet und Erde: Eine astronomische Erzählung	Flammarion, Camille, 1842-1925; Cassirer, J. [Translator]
+pg61584	science	check	PQ; QL	Das Leben der Bienen	Maeterlinck, Maurice, 1862-1949; Müller-Schönefeld, Wilh., 1867-1944 [Illustrator]; Oppeln-Bronikowski, Friedrich von, 1873-1936 [Translator]
+pg61850	science	safe	QE	Riesen und Drachen der Vorzeit. Geschichte der Erde, Dritter Teil	Bommeli, R. (Rudolf), 1859-1926
+pg61873	science	check	QC	Warum und Weil. Physikalischer Teil. Fragen und Antworten aus den wichtigsten Gebieten der gesammten Naturlehre.	Ule, Otto, 1820-1876; Langhoff, F. [Editor]
+pg61928	science	check	QB	Komet und Weltuntergang	Bölsche, Wilhelm, 1861-1939
+pg61997	science	safe	QH	Über den Bildungstrieb	Blumenbach, Johann Friedrich, 1752-1840
+pg62131	science	safe	QA	Geschichte der Mathematik im Altertum in Verbindung mit antiker Kulturgeschichte	Simon, Max, 1844-1918
+pg62311	science	check	QL	»Meine Brüder im stillen Busch, in Luft und Wasser«	Braess, Martin, 1860-1942
+pg63371	science	safe	QK	Lehrbuch der Botanik für Hochschulen	Strasburger, Eduard, 1844-1912; Noll, Fritz, 1858-1908; Schenck, H. (Heinrich), 1860-1927; Schimper, A. F. W. (Andreas Franz Wilhelm), 1856-1901
+pg64085	science	check	QB	Mathematische Geographie für Lehrerbildungsanstalten	Eggert, Erwin, 1879-
+pg64204	science	check	QM	Abnormitäten	Saltarino, Signor, 1863-1941
+pg65211	science	safe	QB	Sonne und Sterne	Meyer, M. W. (Max Wilhelm), 1853-1910
+pg68258	science	check	QE	Jahreszahlen der Erdgeschichte	Lotze, Reinhold, 1887-1951
+pg68593	science	check	QL	Aus dem Leben der Insekten	Buckley, Arabella B. (Arabella Burton), 1840-1929; Muckley, Angelo Fairfax, 1859-1920 [Illustrator]; Kriete, Fritz, 1858- [Translator]; Rabes, O. (Otto), 1873- [Translator]
+pg68838	science	check	QD	Der Graf von Saint-Germain: Das Leben eines Alchimisten	Volz, Gustav Berthold, 1871-1938
+pg68947	science	safe	QK	Das Protoplasma der Rhizopoden und der Pflanzenzellen ein Beitrag zur Theorie der Zelle	Schultze, Max, 1825-1874
+pg69172	science	safe	QH	Über die Entstehung der Arten im Thier- und Pflanzen-Reich durch natürliche Züchtung	Darwin, Charles, 1809-1882; Bronn, H. G. (Heinrich Georg), 1800-1862 [Translator]
+pg69267	science	check	QL	Zwischen Pol und Äquator: Tiergeographische Lebensbilder	Floericke, Kurt, 1869-1934; Oeffinger, Rudolf, 1870-1952 [Illustrator]
+pg69320	science	check	QH	Aus der Schneegrube	Bölsche, Wilhelm, 1861-1939
+pg69469	science	check	QK	Bäume und Sträucher	Buckley, Arabella B. (Arabella Burton), 1840-1929; Muckley, Angelo Fairfax, 1859-1920 [Illustrator]; Kriete, Fritz, 1858- [Translator]; Rabes, O. (Otto), 1873- [Translator]
+pg69470	science	check	QH	Am Teich- und Flußufer	Buckley, Arabella B. (Arabella Burton), 1840-1929; Muckley, Angelo Fairfax, 1859-1920 [Illustrator]; Kriete, Fritz, 1858- [Translator]; Rabes, O. (Otto), 1873- [Translator]
+pg69472	science	check	QL	Aus dem Leben unserer Vögel	Buckley, Arabella B. (Arabella Burton), 1840-1929; Muckley, Angelo Fairfax, 1859-1920 [Illustrator]; Kriete, Fritz, 1858- [Translator]; Rabes, O. (Otto), 1873- [Translator]
+pg69522	science	check	QC	Elektrotechnisches Experimentierbuch: Eine Anleitung zur Ausführung elektrotechnischer Experimente unter Verwendung einfachster, meist selbst herzustellender Hilfsmittel	Schnetzler, Eberhard
+pg69524	science	check	QK	Pflanzenleben in Feld und Garten	Buckley, Arabella B. (Arabella Burton), 1840-1929; Muckley, Angelo Fairfax, 1859-1920 [Illustrator]; Kriete, Fritz, 1858- [Translator]; Rabes, O. (Otto), 1873- [Translator]
+pg70435	science	check	QL	Bingo und andere Tiergeschichten	Seton, Ernest Thompson, 1860-1946
+pg70567	science	safe	QE	Grundzüge der Paläontologie (Paläozoologie). 1. Abteilung: Invertebrata.	Zittel, Karl Alfred von, 1839-1904
+pg70687	science	safe	QD	Naturgeschichte einer Kerze	Faraday, Michael, 1791-1867; Meyer, Richard E., 1846-1926 [Editor]
+pg70692	science	check	QH	Naturstudien im Hause	Kraepelin, Karl, 1848-1915; Schmidt, C. W. (Carl Walter), 1892-1946 [Editor]; Schwindrazheim, Oskar, 1865-1952 [Illustrator]
+pg71303	science	safe	QH	Mazedonien	Doflein, Franz, 1873-1924
+pg71616	science	safe	QL	Säugethiere vom Celebes- und Philippinen-Archipel	Meyer, Adolf Bernhard, 1840-1911
+pg72876	science	safe	QK	Arabische Pflanzennamen aus Aegypten, Algerien und Jemen	Schweinfurth, Georg August, 1836-1925
+pg72951	science	check	QH	Die Tier- und Pflanzenwelt des Süsswassers. Erster Band.	Zacharias, Otto, 1846-1916 [Editor]; Forel, F. A. (François Alphonse), 1841-1912; Gruber, August, 1853-1938; Ludwig, Friedrich, 1851-1918; Migula, W. (Walter), 1863-1938; Plate, Ludwig, 1862-1937; Vosseler, Julius, 1861-1933; Weltner, Wilhelm, 1854-1917
+pg72952	science	check	QH	Die Tier- und Pflanzenwelt des Süsswassers. Zweiter Band.	Zacharias, Otto, 1846-1916 [Editor]; Apstein, C. (Carl Heinrich), 1862-1950; Borcherding, Friedrich, 1849-1924; Clessin, Stephan, 1833-1911; Kramer, Paul, 1842-1898; Schmidt-Schwedt, E.; Seligo, Arthur, 1859-1932; Zschokke, Friedrich, 1860-1936
+pg73374	science	safe	QL	Geschichte der Zoologie	Burckhardt, Rudolf, 1866-1908
+pg74363	science	check	QL	Im Zauber des Tierlebens	Lucanus, Friedrich von, 1869-1947
+pg75055	science	check	QD	Aus meinem Leben	Fischer, Emil, 1852-1919; Bergmann, M. (Max), 1886-1944 [Editor]
+pg75185	science	safe	QL	Der Ameisenlöwe	Doflein, Franz, 1873-1924
+pg75312	science	check	QE	Grundzüge der Paläontologie (Paläozoologie). 2. Abteilung: Vertebrata.	Zittel, Karl Alfred von, 1839-1904; Broili, Ferdinand, 1874-1946 [Editor]; Koken, E. (Ernst Friedrich Rudolph Karl), 1860-1912 [Editor]; Schlosser, Max, 1854-1932 [Editor]
+pg75352	science	safe	QH	Das Protistenreich	Haeckel, Ernst, 1834-1919
+pg75670	science	check	QD	Chemische Unterhaltungen	Wunder, Ludwig, 1878-1949
+pg75805	science	check	QL	Raubwild und Dickhäuter in Deutsch-Ostafrika	Besser, Hans
+pg76062	science	check	DT; QL; SK	Auf Großtierfang für Hagenbeck	Schulz, Chr. (Christoph); Elven, Eduard, 1882- [Author of introduction, etc.]
+pg76878	science	check	Q	Von Sonnen und Sonnenstäubchen	Bölsche, Wilhelm, 1861-1939
+pg76968	science	safe	QL	Straußenpolitik	Zell, Th. (Theodor), 1862-1924
+pg77002	science	check	QL	Tiervater Brehm	Floericke, Kurt, 1869-1934; Planck, Willy, 1870-1956 [Illustrator]; Wagner, A. [Illustrator]
+pg77208	science	safe	QK	Aufzählung und Beschreibung der Acacien-Arten des Nilgebiets	Schweinfurth, Georg August, 1836-1925
+pg77678	science	safe	QH	Die Zelle und die Gewebe (Vol. 1/2)	Hertwig, Oscar, 1849-1922
+pg77679	science	safe	QH	Die Zelle und die Gewebe (Vol. 2/2)	Hertwig, Oscar, 1849-1922
+pg77700	science	check	QD	Entstehung und Ausbreitung der Alchemie, mit einem Anhange	Lippmann, Edmund O. von (Edmund Oskar), 1857-1940
+pg77785	science	check	QL	Aussterbende Tiere	Floericke, Kurt, 1869-1934
+pg77850	science	check	QC	Über die spezielle und die allgemeine Relativitätstheorie	Einstein, Albert, 1879-1955; Scheel, Karl, 1866-1936 [Editor]
+pg78079	science	safe	QP	Allgemeine Physiologie	Verworn, Max, 1863-1921
+pg78608	science	check	QE	Elemente der Paläontologie	Steinmann, G. (Gustav), 1856-1929 [Editor]; Döderlein, Ludwig, 1855-1936 [Editor]
+pg79185	science	check	QL	Vögel auf der Reise	Floericke, Kurt, 1869-1934; Bessinger, Kurt [Illustrator]
+pg79232	science	check	QM	Lehrbuch der Histologie und der mikroskopischen Anatomie des Menschen, mit Einschluss der mikroskopischen Technik	Stöhr, Philipp, 1849-1911; Möllendorff, Wilhelm von, 1887-1944 [Editor]
+pg79674	science	safe	QL	Lehrbuch der Protozoenkunde	Doflein, Franz, 1873-1924

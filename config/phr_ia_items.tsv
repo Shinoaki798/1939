@@ -1,0 +1,997 @@
+key	date	precision	year	volume	title	language
+sim_public-health-reports_1923-01-05_38_1	1923-01-05	day	1923	38	Public Health Reports 1923-01-05: Vol 38 Iss 1	English
+sim_public-health-reports_1923-01-12_38_2	1923-01-12	day	1923	38	Public Health Reports 1923-01-12: Vol 38 Iss 2	English
+sim_public-health-reports_1923-01-19_38_3	1923-01-19	day	1923	38	Public Health Reports 1923-01-19: Vol 38 Iss 3	English
+sim_public-health-reports_1923-01-26_38_4	1923-01-26	day	1923	38	Public Health Reports 1923-01-26: Vol 38 Iss 4	English
+sim_public-health-reports_1923-02-02_38_5	1923-02-02	day	1923	38	Public Health Reports 1923-02-02: Vol 38 Iss 5	English
+sim_public-health-reports_1923-02-09_38_6	1923-02-09	day	1923	38	Public Health Reports 1923-02-09: Vol 38 Iss 6	English
+sim_public-health-reports_1923-02-16_38_7	1923-02-16	day	1923	38	Public Health Reports 1923-02-16: Vol 38 Iss 7	English
+sim_public-health-reports_1923-02-23_38_8	1923-02-23	day	1923	38	Public Health Reports 1923-02-23: Vol 38 Iss 8	English
+sim_public-health-reports_1923-03-02_38_9	1923-03-02	day	1923	38	Public Health Reports 1923-03-02: Vol 38 Iss 9	English
+sim_public-health-reports_1923-03-09_38_10	1923-03-09	day	1923	38	Public Health Reports 1923-03-09: Vol 38 Iss 10	English
+sim_public-health-reports_1923-03-16_38_11	1923-03-16	day	1923	38	Public Health Reports 1923-03-16: Vol 38 Iss 11	English
+sim_public-health-reports_1923-03-23_38_12	1923-03-23	day	1923	38	Public Health Reports 1923-03-23: Vol 38 Iss 12	English
+sim_public-health-reports_1923-03-30_38_13	1923-03-30	day	1923	38	Public Health Reports 1923-03-30: Vol 38 Iss 13	English
+sim_public-health-reports_1923-04-06_38_14	1923-04-06	day	1923	38	Public Health Reports 1923-04-06: Vol 38 Iss 14	English
+sim_public-health-reports_1923-04-13_38_15	1923-04-13	day	1923	38	Public Health Reports 1923-04-13: Vol 38 Iss 15	English
+sim_public-health-reports_1923-04-20_38_16	1923-04-20	day	1923	38	Public Health Reports 1923-04-20: Vol 38 Iss 16	English
+sim_public-health-reports_1923-04-27_38_17	1923-04-27	day	1923	38	Public Health Reports 1923-04-27: Vol 38 Iss 17	English
+sim_public-health-reports_1923-05-04_38_18	1923-05-04	day	1923	38	Public Health Reports 1923-05-04: Vol 38 Iss 18	English
+sim_public-health-reports_1923-05-11_38_19	1923-05-11	day	1923	38	Public Health Reports 1923-05-11: Vol 38 Iss 19	English
+sim_public-health-reports_1923-05-18_38_20	1923-05-18	day	1923	38	Public Health Reports 1923-05-18: Vol 38 Iss 20	English
+sim_public-health-reports_1923-05-25_38_21	1923-05-25	day	1923	38	Public Health Reports 1923-05-25: Vol 38 Iss 21	English
+sim_public-health-reports_1923-06-01_38_22	1923-06-01	day	1923	38	Public Health Reports 1923-06-01: Vol 38 Iss 22	English
+sim_public-health-reports_1923-06-08_38_23	1923-06-08	day	1923	38	Public Health Reports 1923-06-08: Vol 38 Iss 23	English
+sim_public-health-reports_1923-06-15_38_24	1923-06-15	day	1923	38	Public Health Reports 1923-06-15: Vol 38 Iss 24	English
+sim_public-health-reports_1923-06-22_38_25	1923-06-22	day	1923	38	Public Health Reports 1923-06-22: Vol 38 Iss 25	English
+sim_public-health-reports_1923-06-29_38_26	1923-06-29	day	1923	38	Public Health Reports 1923-06-29: Vol 38 Iss 26	English
+sim_public-health-reports_1923-07-06_38_27	1923-07-06	day	1923	38	Public Health Reports 1923-07-06: Vol 38 Iss 27	English
+sim_public-health-reports_1923-07-13_38_28	1923-07-13	day	1923	38	Public Health Reports 1923-07-13: Vol 38 Iss 28	English
+sim_public-health-reports_1923-07-20_38_29	1923-07-20	day	1923	38	Public Health Reports 1923-07-20: Vol 38 Iss 29	English
+sim_public-health-reports_1923-07-27_38_30	1923-07-27	day	1923	38	Public Health Reports 1923-07-27: Vol 38 Iss 30	English
+sim_public-health-reports_1923-08-03_38_31	1923-08-03	day	1923	38	Public Health Reports 1923-08-03: Vol 38 Iss 31	English
+sim_public-health-reports_1923-08-10_38_32	1923-08-10	day	1923	38	Public Health Reports 1923-08-10: Vol 38 Iss 32	English
+sim_public-health-reports_1923-08-17_38_33	1923-08-17	day	1923	38	Public Health Reports 1923-08-17: Vol 38 Iss 33	English
+sim_public-health-reports_1923-08-24_38_34	1923-08-24	day	1923	38	Public Health Reports 1923-08-24: Vol 38 Iss 34	English
+sim_public-health-reports_1923-08-31_38_35	1923-08-31	day	1923	38	Public Health Reports 1923-08-31: Vol 38 Iss 35	English
+sim_public-health-reports_1923-09-07_38_36	1923-09-07	day	1923	38	Public Health Reports 1923-09-07: Vol 38 Iss 36	English
+sim_public-health-reports_1923-09-14_38_37	1923-09-14	day	1923	38	Public Health Reports 1923-09-14: Vol 38 Iss 37	English
+sim_public-health-reports_1923-09-21_38_38	1923-09-21	day	1923	38	Public Health Reports 1923-09-21: Vol 38 Iss 38	English
+sim_public-health-reports_1923-09-28_38_39	1923-09-28	day	1923	38	Public Health Reports 1923-09-28: Vol 38 Iss 39	English
+sim_public-health-reports_1923-10-05_38_40	1923-10-05	day	1923	38	Public Health Reports 1923-10-05: Vol 38 Iss 40	English
+sim_public-health-reports_1923-10-12_38_41	1923-10-12	day	1923	38	Public Health Reports 1923-10-12: Vol 38 Iss 41	English
+sim_public-health-reports_1923-10-19_38_42	1923-10-19	day	1923	38	Public Health Reports 1923-10-19: Vol 38 Iss 42	English
+sim_public-health-reports_1923-10-26_38_43	1923-10-26	day	1923	38	Public Health Reports 1923-10-26: Vol 38 Iss 43	English
+sim_public-health-reports_1923-11-02_38_44	1923-11-02	day	1923	38	Public Health Reports 1923-11-02: Vol 38 Iss 44	English
+sim_public-health-reports_1923-11-09_38_45	1923-11-09	day	1923	38	Public Health Reports 1923-11-09: Vol 38 Iss 45	English
+sim_public-health-reports_1923-11-16_38_46	1923-11-16	day	1923	38	Public Health Reports 1923-11-16: Vol 38 Iss 46	English
+sim_public-health-reports_1923-11-23_38_47	1923-11-23	day	1923	38	Public Health Reports 1923-11-23: Vol 38 Iss 47	English
+sim_public-health-reports_1923-11-30_38_48	1923-11-30	day	1923	38	Public Health Reports 1923-11-30: Vol 38 Iss 48	English
+sim_public-health-reports_1923-12-07_38_49	1923-12-07	day	1923	38	Public Health Reports 1923-12-07: Vol 38 Iss 49	English
+sim_public-health-reports_1923-12-14_38_50	1923-12-14	day	1923	38	Public Health Reports 1923-12-14: Vol 38 Iss 50	English
+sim_public-health-reports_1923-12-21_38_51	1923-12-21	day	1923	38	Public Health Reports 1923-12-21: Vol 38 Iss 51	English
+sim_public-health-reports_1923-12-28_38_52	1923-12-28	day	1923	38	Public Health Reports 1923-12-28: Vol 38 Iss 52	English
+sim_public-health-reports_1923_index	1923-01-01	year	1923		Public Health Reports 1923: Index	English
+sim_public-health-reports_1923_supplement-43	1923-01-01	year	1923		Public Health Reports 1923: Supplement	English
+sim_public-health-reports_1924-01-04_39_1	1924-01-04	day	1924	39	Public Health Reports 1924-01-04: Vol 39 Iss 1	English
+sim_public-health-reports_1924-01-11_39_2	1924-01-11	day	1924	39	Public Health Reports 1924-01-11: Vol 39 Iss 2	English
+sim_public-health-reports_1924-01-18_39_3	1924-01-18	day	1924	39	Public Health Reports 1924-01-18: Vol 39 Iss 3	English
+sim_public-health-reports_1924-01-25_39_4	1924-01-25	day	1924	39	Public Health Reports 1924-01-25: Vol 39 Iss 4	English
+sim_public-health-reports_1924-02-01_39_5	1924-02-01	day	1924	39	Public Health Reports 1924-02-01: Vol 39 Iss 5	English
+sim_public-health-reports_1924-02-08_39_6	1924-02-08	day	1924	39	Public Health Reports 1924-02-08: Vol 39 Iss 6	English
+sim_public-health-reports_1924-02-15_39_7	1924-02-15	day	1924	39	Public Health Reports 1924-02-15: Vol 39 Iss 7	English
+sim_public-health-reports_1924-02-22_39_8	1924-02-22	day	1924	39	Public Health Reports 1924-02-22: Vol 39 Iss 8	English
+sim_public-health-reports_1924-02-29_39_9	1924-02-29	day	1924	39	Public Health Reports 1924-02-29: Vol 39 Iss 9	English
+sim_public-health-reports_1924-03-07_39_10	1924-03-07	day	1924	39	Public Health Reports 1924-03-07: Vol 39 Iss 10	English
+sim_public-health-reports_1924-03-14_39_11	1924-03-14	day	1924	39	Public Health Reports 1924-03-14: Vol 39 Iss 11	English
+sim_public-health-reports_1924-03-21_39_12	1924-03-21	day	1924	39	Public Health Reports 1924-03-21: Vol 39 Iss 12	English
+sim_public-health-reports_1924-03-28_39_13	1924-03-28	day	1924	39	Public Health Reports 1924-03-28: Vol 39 Iss 13	English
+sim_public-health-reports_1924-04-04_39_14	1924-04-04	day	1924	39	Public Health Reports 1924-04-04: Vol 39 Iss 14	English
+sim_public-health-reports_1924-04-11_39_15	1924-04-11	day	1924	39	Public Health Reports 1924-04-11: Vol 39 Iss 15	English
+sim_public-health-reports_1924-04-18_39_16	1924-04-18	day	1924	39	Public Health Reports 1924-04-18: Vol 39 Iss 16	English
+sim_public-health-reports_1924-04-25_39_17	1924-04-25	day	1924	39	Public Health Reports 1924-04-25: Vol 39 Iss 17	English
+sim_public-health-reports_1924-05-02_39_18	1924-05-02	day	1924	39	Public Health Reports 1924-05-02: Vol 39 Iss 18	English
+sim_public-health-reports_1924-05-09_39_19	1924-05-09	day	1924	39	Public Health Reports 1924-05-09: Vol 39 Iss 19	English
+sim_public-health-reports_1924-05-16_39_20	1924-05-16	day	1924	39	Public Health Reports 1924-05-16: Vol 39 Iss 20	English
+sim_public-health-reports_1924-05-16_supplement-46	1924-05-16	day	1924		Public Health Reports 1924-05-16: Supplement	English
+sim_public-health-reports_1924-05-23_39_21	1924-05-23	day	1924	39	Public Health Reports 1924-05-23: Vol 39 Iss 21	English
+sim_public-health-reports_1924-05-30_39_22	1924-05-30	day	1924	39	Public Health Reports 1924-05-30: Vol 39 Iss 22	English
+sim_public-health-reports_1924-06-06_39_23	1924-06-06	day	1924	39	Public Health Reports 1924-06-06: Vol 39 Iss 23	English
+sim_public-health-reports_1924-06-13_39_24	1924-06-13	day	1924	39	Public Health Reports 1924-06-13: Vol 39 Iss 24	English
+sim_public-health-reports_1924-06-20_39_25	1924-06-20	day	1924	39	Public Health Reports 1924-06-20: Vol 39 Iss 25	English
+sim_public-health-reports_1924-06-27_39_26	1924-06-27	day	1924	39	Public Health Reports 1924-06-27: Vol 39 Iss 26	English
+sim_public-health-reports_1924-07-04_39_27	1924-07-04	day	1924	39	Public Health Reports 1924-07-04: Vol 39 Iss 27	English
+sim_public-health-reports_1924-07-11_39_28	1924-07-11	day	1924	39	Public Health Reports 1924-07-11: Vol 39 Iss 28	English
+sim_public-health-reports_1924-07-18_39_29	1924-07-18	day	1924	39	Public Health Reports 1924-07-18: Vol 39 Iss 29	English
+sim_public-health-reports_1924-07-25_39_30	1924-07-25	day	1924	39	Public Health Reports 1924-07-25: Vol 39 Iss 30	English
+sim_public-health-reports_1924-08-01_39_31	1924-08-01	day	1924	39	Public Health Reports 1924-08-01: Vol 39 Iss 31	English
+sim_public-health-reports_1924-08-08_39_32	1924-08-08	day	1924	39	Public Health Reports 1924-08-08: Vol 39 Iss 32	English
+sim_public-health-reports_1924-08-15_39_33	1924-08-15	day	1924	39	Public Health Reports 1924-08-15: Vol 39 Iss 33	English
+sim_public-health-reports_1924-08-22_39_34	1924-08-22	day	1924	39	Public Health Reports 1924-08-22: Vol 39 Iss 34	English
+sim_public-health-reports_1924-08-29_39_35	1924-08-29	day	1924	39	Public Health Reports 1924-08-29: Vol 39 Iss 35	English
+sim_public-health-reports_1924-09-05_39_36	1924-09-05	day	1924	39	Public Health Reports 1924-09-05: Vol 39 Iss 36	English
+sim_public-health-reports_1924-09-12_39_37	1924-09-12	day	1924	39	Public Health Reports 1924-09-12: Vol 39 Iss 37	English
+sim_public-health-reports_1924-09-19_39_38	1924-09-19	day	1924	39	Public Health Reports 1924-09-19: Vol 39 Iss 38	English
+sim_public-health-reports_1924-09-26_39_39	1924-09-26	day	1924	39	Public Health Reports 1924-09-26: Vol 39 Iss 39	English
+sim_public-health-reports_1924-10-03_39_40	1924-10-03	day	1924	39	Public Health Reports 1924-10-03: Vol 39 Iss 40	English
+sim_public-health-reports_1924-10-10_39_41	1924-10-10	day	1924	39	Public Health Reports 1924-10-10: Vol 39 Iss 41	English
+sim_public-health-reports_1924-10-17_39_42	1924-10-17	day	1924	39	Public Health Reports 1924-10-17: Vol 39 Iss 42	English
+sim_public-health-reports_1924-10-24_39_43	1924-10-24	day	1924	39	Public Health Reports 1924-10-24: Vol 39 Iss 43	English
+sim_public-health-reports_1924-10-31_39_44	1924-10-31	day	1924	39	Public Health Reports 1924-10-31: Vol 39 Iss 44	English
+sim_public-health-reports_1924-11-07_39_45	1924-11-07	day	1924	39	Public Health Reports 1924-11-07: Vol 39 Iss 45	English
+sim_public-health-reports_1924-11-14_39_46	1924-11-14	day	1924	39	Public Health Reports 1924-11-14: Vol 39 Iss 46	English
+sim_public-health-reports_1924-11-21_39_47	1924-11-21	day	1924	39	Public Health Reports 1924-11-21: Vol 39 Iss 47	English
+sim_public-health-reports_1924-11-28_39_48	1924-11-28	day	1924	39	Public Health Reports 1924-11-28: Vol 39 Iss 48	English
+sim_public-health-reports_1924-12-05_39_49	1924-12-05	day	1924	39	Public Health Reports 1924-12-05: Vol 39 Iss 49	English
+sim_public-health-reports_1924-12-12_39_50	1924-12-12	day	1924	39	Public Health Reports 1924-12-12: Vol 39 Iss 50	English
+sim_public-health-reports_1924-12-19_39_51	1924-12-19	day	1924	39	Public Health Reports 1924-12-19: Vol 39 Iss 51	English
+sim_public-health-reports_1924-12-26_39_52	1924-12-26	day	1924	39	Public Health Reports 1924-12-26: Vol 39 Iss 52	English
+sim_public-health-reports_1924_index	1924-01-01	year	1924		Public Health Reports 1924: Index	English
+sim_public-health-reports_1924_index_0	1924-01-01	year	1924		Public Health Reports 1924: Index	English
+sim_public-health-reports_1924_supplement-44	1924-01-01	year	1924		Public Health Reports 1924: Supplement	English
+sim_public-health-reports_1924_supplement-45	1924-01-01	year	1924		Public Health Reports 1924: Supplement	English
+sim_public-health-reports_1924_supplement-48	1924-01-01	year	1924		Public Health Reports 1924: Supplement	English
+sim_public-health-reports_1925-01-02_40_1	1925-01-02	day	1925	40	Public Health Reports 1925-01-02: Vol 40 Iss 1	English
+sim_public-health-reports_1925-01-09_40_2	1925-01-09	day	1925	40	Public Health Reports 1925-01-09: Vol 40 Iss 2	English
+sim_public-health-reports_1925-01-16_40_3	1925-01-16	day	1925	40	Public Health Reports 1925-01-16: Vol 40 Iss 3	English
+sim_public-health-reports_1925-01-23_40_4	1925-01-23	day	1925	40	Public Health Reports 1925-01-23: Vol 40 Iss 4	English
+sim_public-health-reports_1925-01-30_40_5	1925-01-30	day	1925	40	Public Health Reports 1925-01-30: Vol 40 Iss 5	English
+sim_public-health-reports_1925-02-06_40_6	1925-02-06	day	1925	40	Public Health Reports 1925-02-06: Vol 40 Iss 6	English
+sim_public-health-reports_1925-02-13_40_7	1925-02-13	day	1925	40	Public Health Reports 1925-02-13: Vol 40 Iss 7	English
+sim_public-health-reports_1925-02-20_40_8	1925-02-20	day	1925	40	Public Health Reports 1925-02-20: Vol 40 Iss 8	English
+sim_public-health-reports_1925-02-27_40_9	1925-02-27	day	1925	40	Public Health Reports 1925-02-27: Vol 40 Iss 9	English
+sim_public-health-reports_1925-03-06_40_10	1925-03-06	day	1925	40	Public Health Reports 1925-03-06: Vol 40 Iss 10	English
+sim_public-health-reports_1925-03-13_40_11	1925-03-13	day	1925	40	Public Health Reports 1925-03-13: Vol 40 Iss 11	English
+sim_public-health-reports_1925-03-20_40_12	1925-03-20	day	1925	40	Public Health Reports 1925-03-20: Vol 40 Iss 12	English
+sim_public-health-reports_1925-03-27_40_13	1925-03-27	day	1925	40	Public Health Reports 1925-03-27: Vol 40 Iss 13	English
+sim_public-health-reports_1925-04-03_40_14	1925-04-03	day	1925	40	Public Health Reports 1925-04-03: Vol 40 Iss 14	English
+sim_public-health-reports_1925-04-10_40_15	1925-04-10	day	1925	40	Public Health Reports 1925-04-10: Vol 40 Iss 15	English
+sim_public-health-reports_1925-04-17_40_16	1925-04-17	day	1925	40	Public Health Reports 1925-04-17: Vol 40 Iss 16	English
+sim_public-health-reports_1925-04-24_40_17	1925-04-24	day	1925	40	Public Health Reports 1925-04-24: Vol 40 Iss 17	English
+sim_public-health-reports_1925-05-01_40_18	1925-05-01	day	1925	40	Public Health Reports 1925-05-01: Vol 40 Iss 18	English
+sim_public-health-reports_1925-05-08_40_19	1925-05-08	day	1925	40	Public Health Reports 1925-05-08: Vol 40 Iss 19	English
+sim_public-health-reports_1925-05-15_40_20	1925-05-15	day	1925	40	Public Health Reports 1925-05-15: Vol 40 Iss 20	English
+sim_public-health-reports_1925-05-22_40_21	1925-05-22	day	1925	40	Public Health Reports 1925-05-22: Vol 40 Iss 21	English
+sim_public-health-reports_1925-05-29_40_22	1925-05-29	day	1925	40	Public Health Reports 1925-05-29: Vol 40 Iss 22	English
+sim_public-health-reports_1925-06-05_40_23	1925-06-05	day	1925	40	Public Health Reports 1925-06-05: Vol 40 Iss 23	English
+sim_public-health-reports_1925-06-12_40_24	1925-06-12	day	1925	40	Public Health Reports 1925-06-12: Vol 40 Iss 24	English
+sim_public-health-reports_1925-06-19_40_25	1925-06-19	day	1925	40	Public Health Reports 1925-06-19: Vol 40 Iss 25	English
+sim_public-health-reports_1925-06-26_40_26	1925-06-26	day	1925	40	Public Health Reports 1925-06-26: Vol 40 Iss 26	English
+sim_public-health-reports_1925-07-03_40_27	1925-07-03	day	1925	40	Public Health Reports 1925-07-03: Vol 40 Iss 27	English
+sim_public-health-reports_1925-07-10_40_28	1925-07-10	day	1925	40	Public Health Reports 1925-07-10: Vol 40 Iss 28	English
+sim_public-health-reports_1925-07-17_40_29	1925-07-17	day	1925	40	Public Health Reports 1925-07-17: Vol 40 Iss 29	English
+sim_public-health-reports_1925-07-24_40_30	1925-07-24	day	1925	40	Public Health Reports 1925-07-24: Vol 40 Iss 30	English
+sim_public-health-reports_1925-07-31_40_31	1925-07-31	day	1925	40	Public Health Reports 1925-07-31: Vol 40 Iss 31	English
+sim_public-health-reports_1925-08-07_40_32	1925-08-07	day	1925	40	Public Health Reports 1925-08-07: Vol 40 Iss 32	English
+sim_public-health-reports_1925-08-14_40_33	1925-08-14	day	1925	40	Public Health Reports 1925-08-14: Vol 40 Iss 33	English
+sim_public-health-reports_1925-08-21_40_34	1925-08-21	day	1925	40	Public Health Reports 1925-08-21: Vol 40 Iss 34	English
+sim_public-health-reports_1925-08-28_40_35	1925-08-28	day	1925	40	Public Health Reports 1925-08-28: Vol 40 Iss 35	English
+sim_public-health-reports_1925-09-04_40_36	1925-09-04	day	1925	40	Public Health Reports 1925-09-04: Vol 40 Iss 36	English
+sim_public-health-reports_1925-09-11_40_37	1925-09-11	day	1925	40	Public Health Reports 1925-09-11: Vol 40 Iss 37	English
+sim_public-health-reports_1925-09-18_40_38	1925-09-18	day	1925	40	Public Health Reports 1925-09-18: Vol 40 Iss 38	English
+sim_public-health-reports_1925-09-25_40_39	1925-09-25	day	1925	40	Public Health Reports 1925-09-25: Vol 40 Iss 39	English
+sim_public-health-reports_1925-10-02_40_40	1925-10-02	day	1925	40	Public Health Reports 1925-10-02: Vol 40 Iss 40	English
+sim_public-health-reports_1925-10-09_40_41	1925-10-09	day	1925	40	Public Health Reports 1925-10-09: Vol 40 Iss 41	English
+sim_public-health-reports_1925-10-16_40_42	1925-10-16	day	1925	40	Public Health Reports 1925-10-16: Vol 40 Iss 42	English
+sim_public-health-reports_1925-10-23_40_43	1925-10-23	day	1925	40	Public Health Reports 1925-10-23: Vol 40 Iss 43	English
+sim_public-health-reports_1925-10-30_40_44	1925-10-30	day	1925	40	Public Health Reports 1925-10-30: Vol 40 Iss 44	English
+sim_public-health-reports_1925-11-06_40_45	1925-11-06	day	1925	40	Public Health Reports 1925-11-06: Vol 40 Iss 45	English
+sim_public-health-reports_1925-11-13_40_46	1925-11-13	day	1925	40	Public Health Reports 1925-11-13: Vol 40 Iss 46	English
+sim_public-health-reports_1925-11-20_40_47	1925-11-20	day	1925	40	Public Health Reports 1925-11-20: Vol 40 Iss 47	English
+sim_public-health-reports_1925-11-27_40_48	1925-11-27	day	1925	40	Public Health Reports 1925-11-27: Vol 40 Iss 48	English
+sim_public-health-reports_1925-12-04_40_49	1925-12-04	day	1925	40	Public Health Reports 1925-12-04: Vol 40 Iss 49	English
+sim_public-health-reports_1925-12-11_40_50	1925-12-11	day	1925	40	Public Health Reports 1925-12-11: Vol 40 Iss 50	English
+sim_public-health-reports_1925-12-18_40_51	1925-12-18	day	1925	40	Public Health Reports 1925-12-18: Vol 40 Iss 51	English
+sim_public-health-reports_1925-12-25_40_52	1925-12-25	day	1925	40	Public Health Reports 1925-12-25: Vol 40 Iss 52	English
+sim_public-health-reports_1925_index	1925-01-01	year	1925		Public Health Reports 1925: Index	English
+sim_public-health-reports_1925_index_0	1925-01-01	year	1925		Public Health Reports 1925: Index	English
+sim_public-health-reports_1925_index_1	1925-01-01	year	1925		Public Health Reports 1925: Index	English
+sim_public-health-reports_1925_supplement-47	1925-01-01	year	1925		Public Health Reports 1925: Supplement	English
+sim_public-health-reports_1925_supplement-49	1925-01-01	year	1925		Public Health Reports 1925: Supplement	English
+sim_public-health-reports_1925_supplement-50	1925-01-01	year	1925		Public Health Reports 1925: Supplement	English
+sim_public-health-reports_1925_supplement-51	1925-01-01	year	1925		Public Health Reports 1925: Supplement	English
+sim_public-health-reports_1925_supplement-52	1925-01-01	year	1925		Public Health Reports 1925: Supplement	English
+sim_public-health-reports_1925_supplement-53	1925-01-01	year	1925		Public Health Reports 1925: Supplement	English
+sim_public-health-reports_1926-01-01_41_1	1926-01-01	day	1926	41	Public Health Reports 1926-01-01: Vol 41 Iss 1	English
+sim_public-health-reports_1926-01-08_41_2	1926-01-08	day	1926	41	Public Health Reports 1926-01-08: Vol 41 Iss 2	English
+sim_public-health-reports_1926-01-15_41_3	1926-01-15	day	1926	41	Public Health Reports 1926-01-15: Vol 41 Iss 3	English
+sim_public-health-reports_1926-01-22_41_4	1926-01-22	day	1926	41	Public Health Reports 1926-01-22: Vol 41 Iss 4	English
+sim_public-health-reports_1926-01-29_41_5	1926-01-29	day	1926	41	Public Health Reports 1926-01-29: Vol 41 Iss 5	English
+sim_public-health-reports_1926-02-05_41_6	1926-02-05	day	1926	41	Public Health Reports 1926-02-05: Vol 41 Iss 6	English
+sim_public-health-reports_1926-02-12_41_7	1926-02-12	day	1926	41	Public Health Reports 1926-02-12: Vol 41 Iss 7	English
+sim_public-health-reports_1926-02-19_41_8	1926-02-19	day	1926	41	Public Health Reports 1926-02-19: Vol 41 Iss 8	English
+sim_public-health-reports_1926-02-26_41_9	1926-02-26	day	1926	41	Public Health Reports 1926-02-26: Vol 41 Iss 9	English
+sim_public-health-reports_1926-03-05_41_10	1926-03-05	day	1926	41	Public Health Reports 1926-03-05: Vol 41 Iss 10	English
+sim_public-health-reports_1926-03-12_41_11	1926-03-12	day	1926	41	Public Health Reports 1926-03-12: Vol 41 Iss 11	English
+sim_public-health-reports_1926-03-19_41_12	1926-03-19	day	1926	41	Public Health Reports 1926-03-19: Vol 41 Iss 12	English
+sim_public-health-reports_1926-03-26_41_13	1926-03-26	day	1926	41	Public Health Reports 1926-03-26: Vol 41 Iss 13	English
+sim_public-health-reports_1926-04-02_41_14	1926-04-02	day	1926	41	Public Health Reports 1926-04-02: Vol 41 Iss 14	English
+sim_public-health-reports_1926-04-09_41_15	1926-04-09	day	1926	41	Public Health Reports 1926-04-09: Vol 41 Iss 15	English
+sim_public-health-reports_1926-04-16_41_16	1926-04-16	day	1926	41	Public Health Reports 1926-04-16: Vol 41 Iss 16	English
+sim_public-health-reports_1926-04-23_41_17	1926-04-23	day	1926	41	Public Health Reports 1926-04-23: Vol 41 Iss 17	English
+sim_public-health-reports_1926-04-30_41_18	1926-04-30	day	1926	41	Public Health Reports 1926-04-30: Vol 41 Iss 18	English
+sim_public-health-reports_1926-05-07_41_19	1926-05-07	day	1926	41	Public Health Reports 1926-05-07: Vol 41 Iss 19	English
+sim_public-health-reports_1926-05-14_41_20	1926-05-14	day	1926	41	Public Health Reports 1926-05-14: Vol 41 Iss 20	English
+sim_public-health-reports_1926-05-21_41_21	1926-05-21	day	1926	41	Public Health Reports 1926-05-21: Vol 41 Iss 21	English
+sim_public-health-reports_1926-05-28_41_22	1926-05-28	day	1926	41	Public Health Reports 1926-05-28: Vol 41 Iss 22	English
+sim_public-health-reports_1926-06-04_41_23	1926-06-04	day	1926	41	Public Health Reports 1926-06-04: Vol 41 Iss 23	English
+sim_public-health-reports_1926-06-11_41_24	1926-06-11	day	1926	41	Public Health Reports 1926-06-11: Vol 41 Iss 24	English
+sim_public-health-reports_1926-06-18_41_25	1926-06-18	day	1926	41	Public Health Reports 1926-06-18: Vol 41 Iss 25	English
+sim_public-health-reports_1926-06-25_41_26	1926-06-25	day	1926	41	Public Health Reports 1926-06-25: Vol 41 Iss 26	English
+sim_public-health-reports_1926-07-02_41_27	1926-07-02	day	1926	41	Public Health Reports 1926-07-02: Vol 41 Iss 27	English
+sim_public-health-reports_1926-07-09_41_28	1926-07-09	day	1926	41	Public Health Reports 1926-07-09: Vol 41 Iss 28	English
+sim_public-health-reports_1926-07-16_41_29	1926-07-16	day	1926	41	Public Health Reports 1926-07-16: Vol 41 Iss 29	English
+sim_public-health-reports_1926-07-23_41_30	1926-07-23	day	1926	41	Public Health Reports 1926-07-23: Vol 41 Iss 30	English
+sim_public-health-reports_1926-07-30_41_31	1926-07-30	day	1926	41	Public Health Reports 1926-07-30: Vol 41 Iss 31	English
+sim_public-health-reports_1926-08-06_41_32	1926-08-06	day	1926	41	Public Health Reports 1926-08-06: Vol 41 Iss 32	English
+sim_public-health-reports_1926-08-13_41_33	1926-08-13	day	1926	41	Public Health Reports 1926-08-13: Vol 41 Iss 33	English
+sim_public-health-reports_1926-08-20_41_34	1926-08-20	day	1926	41	Public Health Reports 1926-08-20: Vol 41 Iss 34	English
+sim_public-health-reports_1926-08-27_41_35	1926-08-27	day	1926	41	Public Health Reports 1926-08-27: Vol 41 Iss 35	English
+sim_public-health-reports_1926-09-03_41_36	1926-09-03	day	1926	41	Public Health Reports 1926-09-03: Vol 41 Iss 36	English
+sim_public-health-reports_1926-09-10_41_37	1926-09-10	day	1926	41	Public Health Reports 1926-09-10: Vol 41 Iss 37	English
+sim_public-health-reports_1926-09-17_41_38	1926-09-17	day	1926	41	Public Health Reports 1926-09-17: Vol 41 Iss 38	English
+sim_public-health-reports_1926-09-24_41_39	1926-09-24	day	1926	41	Public Health Reports 1926-09-24: Vol 41 Iss 39	English
+sim_public-health-reports_1926-10-01_41_40	1926-10-01	day	1926	41	Public Health Reports 1926-10-01: Vol 41 Iss 40	English
+sim_public-health-reports_1926-10-08_41_41	1926-10-08	day	1926	41	Public Health Reports 1926-10-08: Vol 41 Iss 41	English
+sim_public-health-reports_1926-10-15_41_42	1926-10-15	day	1926	41	Public Health Reports 1926-10-15: Vol 41 Iss 42	English
+sim_public-health-reports_1926-10-22_41_43	1926-10-22	day	1926	41	Public Health Reports 1926-10-22: Vol 41 Iss 43	English
+sim_public-health-reports_1926-10-29_41_44	1926-10-29	day	1926	41	Public Health Reports 1926-10-29: Vol 41 Iss 44	English
+sim_public-health-reports_1926-11-05_41_45	1926-11-05	day	1926	41	Public Health Reports 1926-11-05: Vol 41 Iss 45	English
+sim_public-health-reports_1926-11-12_41_46	1926-11-12	day	1926	41	Public Health Reports 1926-11-12: Vol 41 Iss 46	English
+sim_public-health-reports_1926-11-19_41_47	1926-11-19	day	1926	41	Public Health Reports 1926-11-19: Vol 41 Iss 47	English
+sim_public-health-reports_1926-11-26_41_48	1926-11-26	day	1926	41	Public Health Reports 1926-11-26: Vol 41 Iss 48	English
+sim_public-health-reports_1926-12-03_41_49	1926-12-03	day	1926	41	Public Health Reports 1926-12-03: Vol 41 Iss 49	English
+sim_public-health-reports_1926-12-10_41_50	1926-12-10	day	1926	41	Public Health Reports 1926-12-10: Vol 41 Iss 50	English
+sim_public-health-reports_1926-12-17_41_51	1926-12-17	day	1926	41	Public Health Reports 1926-12-17: Vol 41 Iss 51	English
+sim_public-health-reports_1926-12-24_41_52	1926-12-24	day	1926	41	Public Health Reports 1926-12-24: Vol 41 Iss 52	English
+sim_public-health-reports_1926-12-31_41_53	1926-12-31	day	1926	41	Public Health Reports 1926-12-31: Vol 41 Iss 53	English
+sim_public-health-reports_1926_supplement-54	1926-01-01	year	1926		Public Health Reports 1926: Supplement	English
+sim_public-health-reports_1926_supplement-55	1926-01-01	year	1926		Public Health Reports 1926: Supplement	English
+sim_public-health-reports_1926_supplement-56	1926-01-01	year	1926		Public Health Reports 1926: Supplement	English
+sim_public-health-reports_1926_supplement-57	1926-01-01	year	1926		Public Health Reports 1926: Supplement	English
+sim_public-health-reports_1926_supplement-58	1926-01-01	year	1926		Public Health Reports 1926: Supplement	English
+sim_public-health-reports_1927-01-07_42_1	1927-01-07	day	1927	42	Public Health Reports 1927-01-07: Vol 42 Iss 1	English
+sim_public-health-reports_1927-01-14_42_2	1927-01-14	day	1927	42	Public Health Reports 1927-01-14: Vol 42 Iss 2	English
+sim_public-health-reports_1927-01-21_42_3	1927-01-21	day	1927	42	Public Health Reports 1927-01-21: Vol 42 Iss 3	English
+sim_public-health-reports_1927-01-28_42_4	1927-01-28	day	1927	42	Public Health Reports 1927-01-28: Vol 42 Iss 4	English
+sim_public-health-reports_1927-02-04_42_5	1927-02-04	day	1927	42	Public Health Reports 1927-02-04: Vol 42 Iss 5	English
+sim_public-health-reports_1927-02-11_42_6	1927-02-11	day	1927	42	Public Health Reports 1927-02-11: Vol 42 Iss 6	English
+sim_public-health-reports_1927-02-18_42_7	1927-02-18	day	1927	42	Public Health Reports 1927-02-18: Vol 42 Iss 7	English
+sim_public-health-reports_1927-02-25_42_8	1927-02-25	day	1927	42	Public Health Reports 1927-02-25: Vol 42 Iss 8	English
+sim_public-health-reports_1927-03-04_42_9	1927-03-04	day	1927	42	Public Health Reports 1927-03-04: Vol 42 Iss 9	English
+sim_public-health-reports_1927-03-11_42_10	1927-03-11	day	1927	42	Public Health Reports 1927-03-11: Vol 42 Iss 10	English
+sim_public-health-reports_1927-03-18_42_11	1927-03-18	day	1927	42	Public Health Reports 1927-03-18: Vol 42 Iss 11	English
+sim_public-health-reports_1927-03-25_42_12	1927-03-25	day	1927	42	Public Health Reports 1927-03-25: Vol 42 Iss 12	English
+sim_public-health-reports_1927-04-01_42_13	1927-04-01	day	1927	42	Public Health Reports 1927-04-01: Vol 42 Iss 13	English
+sim_public-health-reports_1927-04-08_42_14	1927-04-08	day	1927	42	Public Health Reports 1927-04-08: Vol 42 Iss 14	English
+sim_public-health-reports_1927-04-15_42_15	1927-04-15	day	1927	42	Public Health Reports 1927-04-15: Vol 42 Iss 15	English
+sim_public-health-reports_1927-04-22_42_16	1927-04-22	day	1927	42	Public Health Reports 1927-04-22: Vol 42 Iss 16	English
+sim_public-health-reports_1927-04-29_42_17	1927-04-29	day	1927	42	Public Health Reports 1927-04-29: Vol 42 Iss 17	English
+sim_public-health-reports_1927-05-06_42_18	1927-05-06	day	1927	42	Public Health Reports 1927-05-06: Vol 42 Iss 18	English
+sim_public-health-reports_1927-05-13_42_19	1927-05-13	day	1927	42	Public Health Reports 1927-05-13: Vol 42 Iss 19	English
+sim_public-health-reports_1927-05-20_42_20	1927-05-20	day	1927	42	Public Health Reports 1927-05-20: Vol 42 Iss 20	English
+sim_public-health-reports_1927-05-27_42_21	1927-05-27	day	1927	42	Public Health Reports 1927-05-27: Vol 42 Iss 21	English
+sim_public-health-reports_1927-06-03_42_22	1927-06-03	day	1927	42	Public Health Reports 1927-06-03: Vol 42 Iss 22	English
+sim_public-health-reports_1927-06-10_42_23	1927-06-10	day	1927	42	Public Health Reports 1927-06-10: Vol 42 Iss 23	English
+sim_public-health-reports_1927-06-17_42_24	1927-06-17	day	1927	42	Public Health Reports 1927-06-17: Vol 42 Iss 24	English
+sim_public-health-reports_1927-06-24_42_25	1927-06-24	day	1927	42	Public Health Reports 1927-06-24: Vol 42 Iss 25	English
+sim_public-health-reports_1927-07-01_42_26	1927-07-01	day	1927	42	Public Health Reports 1927-07-01: Vol 42 Iss 26	English
+sim_public-health-reports_1927-07-08_42_27	1927-07-08	day	1927	42	Public Health Reports 1927-07-08: Vol 42 Iss 27	English
+sim_public-health-reports_1927-07-15_42_28	1927-07-15	day	1927	42	Public Health Reports 1927-07-15: Vol 42 Iss 28	English
+sim_public-health-reports_1927-07-22_42_29	1927-07-22	day	1927	42	Public Health Reports 1927-07-22: Vol 42 Iss 29	English
+sim_public-health-reports_1927-07-29_42_30	1927-07-29	day	1927	42	Public Health Reports 1927-07-29: Vol 42 Iss 30	English
+sim_public-health-reports_1927-08-05_42_31	1927-08-05	day	1927	42	Public Health Reports 1927-08-05: Vol 42 Iss 31	English
+sim_public-health-reports_1927-08-12_42_32	1927-08-12	day	1927	42	Public Health Reports 1927-08-12: Vol 42 Iss 32	English
+sim_public-health-reports_1927-08-19_42_33	1927-08-19	day	1927	42	Public Health Reports 1927-08-19: Vol 42 Iss 33	English
+sim_public-health-reports_1927-08-26_42_34	1927-08-26	day	1927	42	Public Health Reports 1927-08-26: Vol 42 Iss 34	English
+sim_public-health-reports_1927-09-02_42_35	1927-09-02	day	1927	42	Public Health Reports 1927-09-02: Vol 42 Iss 35	English
+sim_public-health-reports_1927-09-09_42_36	1927-09-09	day	1927	42	Public Health Reports 1927-09-09: Vol 42 Iss 36	English
+sim_public-health-reports_1927-09-16_42_37	1927-09-16	day	1927	42	Public Health Reports 1927-09-16: Vol 42 Iss 37	English
+sim_public-health-reports_1927-09-23_42_38	1927-09-23	day	1927	42	Public Health Reports 1927-09-23: Vol 42 Iss 38	English
+sim_public-health-reports_1927-09-30_42_39	1927-09-30	day	1927	42	Public Health Reports 1927-09-30: Vol 42 Iss 39	English
+sim_public-health-reports_1927-10-07_42_40	1927-10-07	day	1927	42	Public Health Reports 1927-10-07: Vol 42 Iss 40	English
+sim_public-health-reports_1927-10-14_42_41	1927-10-14	day	1927	42	Public Health Reports 1927-10-14: Vol 42 Iss 41	English
+sim_public-health-reports_1927-10-21_42_42	1927-10-21	day	1927	42	Public Health Reports 1927-10-21: Vol 42 Iss 42	English
+sim_public-health-reports_1927-10-28_42_43	1927-10-28	day	1927	42	Public Health Reports 1927-10-28: Vol 42 Iss 43	English
+sim_public-health-reports_1927-11-04_42_44	1927-11-04	day	1927	42	Public Health Reports 1927-11-04: Vol 42 Iss 44	English
+sim_public-health-reports_1927-11-11_42_45	1927-11-11	day	1927	42	Public Health Reports 1927-11-11: Vol 42 Iss 45	English
+sim_public-health-reports_1927-11-18_42_46	1927-11-18	day	1927	42	Public Health Reports 1927-11-18: Vol 42 Iss 46	English
+sim_public-health-reports_1927-11-25_42_47	1927-11-25	day	1927	42	Public Health Reports 1927-11-25: Vol 42 Iss 47	English
+sim_public-health-reports_1927-12-02_42_48	1927-12-02	day	1927	42	Public Health Reports 1927-12-02: Vol 42 Iss 48	English
+sim_public-health-reports_1927-12-09_42_49	1927-12-09	day	1927	42	Public Health Reports 1927-12-09: Vol 42 Iss 49	English
+sim_public-health-reports_1927-12-16_42_50	1927-12-16	day	1927	42	Public Health Reports 1927-12-16: Vol 42 Iss 50	English
+sim_public-health-reports_1927-12-23_42_51	1927-12-23	day	1927	42	Public Health Reports 1927-12-23: Vol 42 Iss 51	English
+sim_public-health-reports_1927-12-30_42_52	1927-12-30	day	1927	42	Public Health Reports 1927-12-30: Vol 42 Iss 52	English
+sim_public-health-reports_1927_index	1927-01-01	year	1927		Public Health Reports 1927: Index	English
+sim_public-health-reports_1927_index_0	1927-01-01	year	1927		Public Health Reports 1927: Index	English
+sim_public-health-reports_1927_supplement-59	1927-01-01	year	1927		Public Health Reports 1927: Supplement	English
+sim_public-health-reports_1927_supplement-60	1927-01-01	year	1927		Public Health Reports 1927: Supplement	English
+sim_public-health-reports_1927_supplement-61	1927-01-01	year	1927		Public Health Reports 1927: Supplement	English
+sim_public-health-reports_1927_supplement-62	1927-01-01	year	1927		Public Health Reports 1927: Supplement	English
+sim_public-health-reports_1927_supplement-63	1927-01-01	year	1927		Public Health Reports 1927: Supplement	English
+sim_public-health-reports_1927_supplement-64	1927-01-01	year	1927		Public Health Reports 1927: Supplement	English
+sim_public-health-reports_1927_supplement-65	1927-01-01	year	1927		Public Health Reports 1927: Supplement	English
+sim_public-health-reports_1927_supplement-66	1927-01-01	year	1927		Public Health Reports 1927: Supplement	English
+sim_public-health-reports_1927_supplement-67	1927-01-01	year	1927		Public Health Reports 1927: Supplement	English
+sim_public-health-reports_1928-01-06_43_1	1928-01-06	day	1928	43	Public Health Reports 1928-01-06: Vol 43 Iss 1	English
+sim_public-health-reports_1928-01-13_43_2	1928-01-13	day	1928	43	Public Health Reports 1928-01-13: Vol 43 Iss 2	English
+sim_public-health-reports_1928-01-20_43_3	1928-01-20	day	1928	43	Public Health Reports 1928-01-20: Vol 43 Iss 3	English
+sim_public-health-reports_1928-01-27_43_4	1928-01-27	day	1928	43	Public Health Reports 1928-01-27: Vol 43 Iss 4	English
+sim_public-health-reports_1928-02-03_43_5	1928-02-03	day	1928	43	Public Health Reports 1928-02-03: Vol 43 Iss 5	English
+sim_public-health-reports_1928-02-10_43_6	1928-02-10	day	1928	43	Public Health Reports 1928-02-10: Vol 43 Iss 6	English
+sim_public-health-reports_1928-02-17_43_7	1928-02-17	day	1928	43	Public Health Reports 1928-02-17: Vol 43 Iss 7	English
+sim_public-health-reports_1928-02-24_43_8	1928-02-24	day	1928	43	Public Health Reports 1928-02-24: Vol 43 Iss 8	English
+sim_public-health-reports_1928-03-02_43_9	1928-03-02	day	1928	43	Public Health Reports 1928-03-02: Vol 43 Iss 9	English
+sim_public-health-reports_1928-03-09_43_10	1928-03-09	day	1928	43	Public Health Reports 1928-03-09: Vol 43 Iss 10	English
+sim_public-health-reports_1928-03-16_43_11	1928-03-16	day	1928	43	Public Health Reports 1928-03-16: Vol 43 Iss 11	English
+sim_public-health-reports_1928-03-23_43_12	1928-03-23	day	1928	43	Public Health Reports 1928-03-23: Vol 43 Iss 12	English
+sim_public-health-reports_1928-03-30_43_13	1928-03-30	day	1928	43	Public Health Reports 1928-03-30: Vol 43 Iss 13	English
+sim_public-health-reports_1928-04-06_43_14	1928-04-06	day	1928	43	Public Health Reports 1928-04-06: Vol 43 Iss 14	English
+sim_public-health-reports_1928-04-13_43_15	1928-04-13	day	1928	43	Public Health Reports 1928-04-13: Vol 43 Iss 15	English
+sim_public-health-reports_1928-04-20_43_16	1928-04-20	day	1928	43	Public Health Reports 1928-04-20: Vol 43 Iss 16	English
+sim_public-health-reports_1928-04-27_43_17	1928-04-27	day	1928	43	Public Health Reports 1928-04-27: Vol 43 Iss 17	English
+sim_public-health-reports_1928-05-04_43_18	1928-05-04	day	1928	43	Public Health Reports 1928-05-04: Vol 43 Iss 18	English
+sim_public-health-reports_1928-05-11_43_19	1928-05-11	day	1928	43	Public Health Reports 1928-05-11: Vol 43 Iss 19	English
+sim_public-health-reports_1928-05-18_43_20	1928-05-18	day	1928	43	Public Health Reports 1928-05-18: Vol 43 Iss 20	English
+sim_public-health-reports_1928-05-25_43_21	1928-05-25	day	1928	43	Public Health Reports 1928-05-25: Vol 43 Iss 21	English
+sim_public-health-reports_1928-06-01_43_22	1928-06-01	day	1928	43	Public Health Reports 1928-06-01: Vol 43 Iss 22	English
+sim_public-health-reports_1928-06-08_43_23	1928-06-08	day	1928	43	Public Health Reports 1928-06-08: Vol 43 Iss 23	English
+sim_public-health-reports_1928-06-15_43_24	1928-06-15	day	1928	43	Public Health Reports 1928-06-15: Vol 43 Iss 24	English
+sim_public-health-reports_1928-06-22_43_25	1928-06-22	day	1928	43	Public Health Reports 1928-06-22: Vol 43 Iss 25	English
+sim_public-health-reports_1928-06-29_43_26	1928-06-29	day	1928	43	Public Health Reports 1928-06-29: Vol 43 Iss 26	English
+sim_public-health-reports_1928-07-06_43_27	1928-07-06	day	1928	43	Public Health Reports 1928-07-06: Vol 43 Iss 27	English
+sim_public-health-reports_1928-07-13_43_28	1928-07-13	day	1928	43	Public Health Reports 1928-07-13: Vol 43 Iss 28	English
+sim_public-health-reports_1928-07-20_43_29	1928-07-20	day	1928	43	Public Health Reports 1928-07-20: Vol 43 Iss 29	English
+sim_public-health-reports_1928-07-27_43_30	1928-07-27	day	1928	43	Public Health Reports 1928-07-27: Vol 43 Iss 30	English
+sim_public-health-reports_1928-08-03_43_31	1928-08-03	day	1928	43	Public Health Reports 1928-08-03: Vol 43 Iss 31	English
+sim_public-health-reports_1928-08-10_43_32	1928-08-10	day	1928	43	Public Health Reports 1928-08-10: Vol 43 Iss 32	English
+sim_public-health-reports_1928-08-17_43_33	1928-08-17	day	1928	43	Public Health Reports 1928-08-17: Vol 43 Iss 33	English
+sim_public-health-reports_1928-08-24_43_34	1928-08-24	day	1928	43	Public Health Reports 1928-08-24: Vol 43 Iss 34	English
+sim_public-health-reports_1928-08-31_43_35	1928-08-31	day	1928	43	Public Health Reports 1928-08-31: Vol 43 Iss 35	English
+sim_public-health-reports_1928-09-07_43_36	1928-09-07	day	1928	43	Public Health Reports 1928-09-07: Vol 43 Iss 36	English
+sim_public-health-reports_1928-09-14_43_37	1928-09-14	day	1928	43	Public Health Reports 1928-09-14: Vol 43 Iss 37	English
+sim_public-health-reports_1928-09-21_43_38	1928-09-21	day	1928	43	Public Health Reports 1928-09-21: Vol 43 Iss 38	English
+sim_public-health-reports_1928-09-28_43_39	1928-09-28	day	1928	43	Public Health Reports 1928-09-28: Vol 43 Iss 39	English
+sim_public-health-reports_1928-10-05_43_40	1928-10-05	day	1928	43	Public Health Reports 1928-10-05: Vol 43 Iss 40	English
+sim_public-health-reports_1928-10-12_43_41	1928-10-12	day	1928	43	Public Health Reports 1928-10-12: Vol 43 Iss 41	English
+sim_public-health-reports_1928-10-19_43_42	1928-10-19	day	1928	43	Public Health Reports 1928-10-19: Vol 43 Iss 42	English
+sim_public-health-reports_1928-10-26_43_43	1928-10-26	day	1928	43	Public Health Reports 1928-10-26: Vol 43 Iss 43	English
+sim_public-health-reports_1928-11-02_43_44	1928-11-02	day	1928	43	Public Health Reports 1928-11-02: Vol 43 Iss 44	English
+sim_public-health-reports_1928-11-09_43_45	1928-11-09	day	1928	43	Public Health Reports 1928-11-09: Vol 43 Iss 45	English
+sim_public-health-reports_1928-11-16_43_46	1928-11-16	day	1928	43	Public Health Reports 1928-11-16: Vol 43 Iss 46	English
+sim_public-health-reports_1928-11-23_43_47	1928-11-23	day	1928	43	Public Health Reports 1928-11-23: Vol 43 Iss 47	English
+sim_public-health-reports_1928-11-30_43_48	1928-11-30	day	1928	43	Public Health Reports 1928-11-30: Vol 43 Iss 48	English
+sim_public-health-reports_1928-12-07_43_49	1928-12-07	day	1928	43	Public Health Reports 1928-12-07: Vol 43 Iss 49	English
+sim_public-health-reports_1928-12-14_43_50	1928-12-14	day	1928	43	Public Health Reports 1928-12-14: Vol 43 Iss 50	English
+sim_public-health-reports_1928-12-21_43_51	1928-12-21	day	1928	43	Public Health Reports 1928-12-21: Vol 43 Iss 51	English
+sim_public-health-reports_1928-12-28_43_52	1928-12-28	day	1928	43	Public Health Reports 1928-12-28: Vol 43 Iss 52	English
+sim_public-health-reports_1928-1929_index	1928-01-01	year	1928		Public Health Reports 1928 - 1929: Index	English
+sim_public-health-reports_1928-1929_supplement-68-74	1928-01-01	year	1928		Public Health Reports 1928 - 1929: Supplement	English
+sim_public-health-reports_1929-01-04_44_1	1929-01-04	day	1929	44	Public Health Reports 1929-01-04: Vol 44 Iss 1	English
+sim_public-health-reports_1929-01-11_44_2	1929-01-11	day	1929	44	Public Health Reports 1929-01-11: Vol 44 Iss 2	English
+sim_public-health-reports_1929-01-18_44_3	1929-01-18	day	1929	44	Public Health Reports 1929-01-18: Vol 44 Iss 3	English
+sim_public-health-reports_1929-01-25_44_4	1929-01-25	day	1929	44	Public Health Reports 1929-01-25: Vol 44 Iss 4	English
+sim_public-health-reports_1929-02-01_44_5	1929-02-01	day	1929	44	Public Health Reports 1929-02-01: Vol 44 Iss 5	English
+sim_public-health-reports_1929-02-08_44_6	1929-02-08	day	1929	44	Public Health Reports 1929-02-08: Vol 44 Iss 6	English
+sim_public-health-reports_1929-02-15_44_7	1929-02-15	day	1929	44	Public Health Reports 1929-02-15: Vol 44 Iss 7	English
+sim_public-health-reports_1929-02-22_44_8	1929-02-22	day	1929	44	Public Health Reports 1929-02-22: Vol 44 Iss 8	English
+sim_public-health-reports_1929-03-01_44_9	1929-03-01	day	1929	44	Public Health Reports 1929-03-01: Vol 44 Iss 9	English
+sim_public-health-reports_1929-03-08_44_10	1929-03-08	day	1929	44	Public Health Reports 1929-03-08: Vol 44 Iss 10	English
+sim_public-health-reports_1929-03-15_44_11	1929-03-15	day	1929	44	Public Health Reports 1929-03-15: Vol 44 Iss 11	English
+sim_public-health-reports_1929-03-22_44_12	1929-03-22	day	1929	44	Public Health Reports 1929-03-22: Vol 44 Iss 12	English
+sim_public-health-reports_1929-03-29_44_13	1929-03-29	day	1929	44	Public Health Reports 1929-03-29: Vol 44 Iss 13	English
+sim_public-health-reports_1929-04-05_44_14	1929-04-05	day	1929	44	Public Health Reports 1929-04-05: Vol 44 Iss 14	English
+sim_public-health-reports_1929-04-12_44_15	1929-04-12	day	1929	44	Public Health Reports 1929-04-12: Vol 44 Iss 15	English
+sim_public-health-reports_1929-04-19_44_16	1929-04-19	day	1929	44	Public Health Reports 1929-04-19: Vol 44 Iss 16	English
+sim_public-health-reports_1929-04-26_44_17	1929-04-26	day	1929	44	Public Health Reports 1929-04-26: Vol 44 Iss 17	English
+sim_public-health-reports_1929-05-03_44_18	1929-05-03	day	1929	44	Public Health Reports 1929-05-03: Vol 44 Iss 18	English
+sim_public-health-reports_1929-05-10_44_19	1929-05-10	day	1929	44	Public Health Reports 1929-05-10: Vol 44 Iss 19	English
+sim_public-health-reports_1929-05-17_44_20	1929-05-17	day	1929	44	Public Health Reports 1929-05-17: Vol 44 Iss 20	English
+sim_public-health-reports_1929-05-24_44_21	1929-05-24	day	1929	44	Public Health Reports 1929-05-24: Vol 44 Iss 21	English
+sim_public-health-reports_1929-05-31_44_22	1929-05-31	day	1929	44	Public Health Reports 1929-05-31: Vol 44 Iss 22	English
+sim_public-health-reports_1929-06-07_44_23	1929-06-07	day	1929	44	Public Health Reports 1929-06-07: Vol 44 Iss 23	English
+sim_public-health-reports_1929-06-14_44_24	1929-06-14	day	1929	44	Public Health Reports 1929-06-14: Vol 44 Iss 24	English
+sim_public-health-reports_1929-06-21_44_25	1929-06-21	day	1929	44	Public Health Reports 1929-06-21: Vol 44 Iss 25	English
+sim_public-health-reports_1929-06-28_44_26	1929-06-28	day	1929	44	Public Health Reports 1929-06-28: Vol 44 Iss 26	English
+sim_public-health-reports_1929-07-05_44_27	1929-07-05	day	1929	44	Public Health Reports 1929-07-05: Vol 44 Iss 27	English
+sim_public-health-reports_1929-07-12_44_28	1929-07-12	day	1929	44	Public Health Reports 1929-07-12: Vol 44 Iss 28	English
+sim_public-health-reports_1929-07-19_44_29	1929-07-19	day	1929	44	Public Health Reports 1929-07-19: Vol 44 Iss 29	English
+sim_public-health-reports_1929-07-26_44_30	1929-07-26	day	1929	44	Public Health Reports 1929-07-26: Vol 44 Iss 30	English
+sim_public-health-reports_1929-08-02_44_31	1929-08-02	day	1929	44	Public Health Reports 1929-08-02: Vol 44 Iss 31	English
+sim_public-health-reports_1929-08-09_44_32	1929-08-09	day	1929	44	Public Health Reports 1929-08-09: Vol 44 Iss 32	English
+sim_public-health-reports_1929-08-16_44_33	1929-08-16	day	1929	44	Public Health Reports 1929-08-16: Vol 44 Iss 33	English
+sim_public-health-reports_1929-08-23_44_34	1929-08-23	day	1929	44	Public Health Reports 1929-08-23: Vol 44 Iss 34	English
+sim_public-health-reports_1929-08-30_44_35	1929-08-30	day	1929	44	Public Health Reports 1929-08-30: Vol 44 Iss 35	English
+sim_public-health-reports_1929-09-06_44_36	1929-09-06	day	1929	44	Public Health Reports 1929-09-06: Vol 44 Iss 36	English
+sim_public-health-reports_1929-09-13_44_37	1929-09-13	day	1929	44	Public Health Reports 1929-09-13: Vol 44 Iss 37	English
+sim_public-health-reports_1929-09-20_44_38	1929-09-20	day	1929	44	Public Health Reports 1929-09-20: Vol 44 Iss 38	English
+sim_public-health-reports_1929-09-27_44_39	1929-09-27	day	1929	44	Public Health Reports 1929-09-27: Vol 44 Iss 39	English
+sim_public-health-reports_1929-10-04_44_40	1929-10-04	day	1929	44	Public Health Reports 1929-10-04: Vol 44 Iss 40	English
+sim_public-health-reports_1929-10-11_44_41	1929-10-11	day	1929	44	Public Health Reports 1929-10-11: Vol 44 Iss 41	English
+sim_public-health-reports_1929-10-18_44_42	1929-10-18	day	1929	44	Public Health Reports 1929-10-18: Vol 44 Iss 42	English
+sim_public-health-reports_1929-10-25_44_43	1929-10-25	day	1929	44	Public Health Reports 1929-10-25: Vol 44 Iss 43	English
+sim_public-health-reports_1929-11-01_44_44	1929-11-01	day	1929	44	Public Health Reports 1929-11-01: Vol 44 Iss 44	English
+sim_public-health-reports_1929-11-08_44_45	1929-11-08	day	1929	44	Public Health Reports 1929-11-08: Vol 44 Iss 45	English
+sim_public-health-reports_1929-11-15_44_46	1929-11-15	day	1929	44	Public Health Reports 1929-11-15: Vol 44 Iss 46	English
+sim_public-health-reports_1929-11-22_44_47	1929-11-22	day	1929	44	Public Health Reports 1929-11-22: Vol 44 Iss 47	English
+sim_public-health-reports_1929-11-29_44_48	1929-11-29	day	1929	44	Public Health Reports 1929-11-29: Vol 44 Iss 48	English
+sim_public-health-reports_1929-12-06_44_49	1929-12-06	day	1929	44	Public Health Reports 1929-12-06: Vol 44 Iss 49	English
+sim_public-health-reports_1929-12-13_44_50	1929-12-13	day	1929	44	Public Health Reports 1929-12-13: Vol 44 Iss 50	English
+sim_public-health-reports_1929-12-20_44_51	1929-12-20	day	1929	44	Public Health Reports 1929-12-20: Vol 44 Iss 51	English
+sim_public-health-reports_1929-12-27_44_52	1929-12-27	day	1929	44	Public Health Reports 1929-12-27: Vol 44 Iss 52	English
+sim_public-health-reports_1929_supplement-76	1929-01-01	year	1929		Public Health Reports 1929: Supplement	English
+sim_public-health-reports_1929_supplement-77	1929-01-01	year	1929		Public Health Reports 1929: Supplement	English
+sim_public-health-reports_1929_supplement-78	1929-01-01	year	1929		Public Health Reports 1929: Supplement	English
+sim_public-health-reports_1929_supplement-80	1929-01-01	year	1929		Public Health Reports 1929: Supplement	English
+sim_public-health-reports_1929_supplement-81	1929-01-01	year	1929		Public Health Reports 1929: Supplement	English
+sim_public-health-reports_1930-01-03_45_1	1930-01-03	day	1930	45	Public Health Reports 1930-01-03: Vol 45 Iss 1	English
+sim_public-health-reports_1930-01-10_45_2	1930-01-10	day	1930	45	Public Health Reports 1930-01-10: Vol 45 Iss 2	English
+sim_public-health-reports_1930-01-17_45_3	1930-01-17	day	1930	45	Public Health Reports 1930-01-17: Vol 45 Iss 3	English
+sim_public-health-reports_1930-01-24_45_4	1930-01-24	day	1930	45	Public Health Reports 1930-01-24: Vol 45 Iss 4	English
+sim_public-health-reports_1930-01-31_45_5	1930-01-31	day	1930	45	Public Health Reports 1930-01-31: Vol 45 Iss 5	English
+sim_public-health-reports_1930-02-07_45_6	1930-02-07	day	1930	45	Public Health Reports 1930-02-07: Vol 45 Iss 6	English
+sim_public-health-reports_1930-02-14_45_7	1930-02-14	day	1930	45	Public Health Reports 1930-02-14: Vol 45 Iss 7	English
+sim_public-health-reports_1930-02-21_45_8	1930-02-21	day	1930	45	Public Health Reports 1930-02-21: Vol 45 Iss 8	English
+sim_public-health-reports_1930-02-28_45_9	1930-02-28	day	1930	45	Public Health Reports 1930-02-28: Vol 45 Iss 9	English
+sim_public-health-reports_1930-03-07_45_10	1930-03-07	day	1930	45	Public Health Reports 1930-03-07: Vol 45 Iss 10	English
+sim_public-health-reports_1930-03-14_45_11	1930-03-14	day	1930	45	Public Health Reports 1930-03-14: Vol 45 Iss 11	English
+sim_public-health-reports_1930-03-21_45_12	1930-03-21	day	1930	45	Public Health Reports 1930-03-21: Vol 45 Iss 12	English
+sim_public-health-reports_1930-03-28_45_13	1930-03-28	day	1930	45	Public Health Reports 1930-03-28: Vol 45 Iss 13	English
+sim_public-health-reports_1930-04-04_45_14	1930-04-04	day	1930	45	Public Health Reports 1930-04-04: Vol 45 Iss 14	English
+sim_public-health-reports_1930-04-11_45_15	1930-04-11	day	1930	45	Public Health Reports 1930-04-11: Vol 45 Iss 15	English
+sim_public-health-reports_1930-04-18_45_16	1930-04-18	day	1930	45	Public Health Reports 1930-04-18: Vol 45 Iss 16	English
+sim_public-health-reports_1930-04-25_45_17	1930-04-25	day	1930	45	Public Health Reports 1930-04-25: Vol 45 Iss 17	English
+sim_public-health-reports_1930-05-02_45_18	1930-05-02	day	1930	45	Public Health Reports 1930-05-02: Vol 45 Iss 18	English
+sim_public-health-reports_1930-05-16_45_20	1930-05-16	day	1930	45	Public Health Reports 1930-05-16: Vol 45 Iss 20	English
+sim_public-health-reports_1930-05-23_45_21	1930-05-23	day	1930	45	Public Health Reports 1930-05-23: Vol 45 Iss 21	English
+sim_public-health-reports_1930-05-30_45_22	1930-05-30	day	1930	45	Public Health Reports 1930-05-30: Vol 45 Iss 22	English
+sim_public-health-reports_1930-06-06_45_23	1930-06-06	day	1930	45	Public Health Reports 1930-06-06: Vol 45 Iss 23	English
+sim_public-health-reports_1930-06-13_45_24	1930-06-13	day	1930	45	Public Health Reports 1930-06-13: Vol 45 Iss 24	English
+sim_public-health-reports_1930-06-20_45_25	1930-06-20	day	1930	45	Public Health Reports 1930-06-20: Vol 45 Iss 25	English
+sim_public-health-reports_1930-06-27_45_26	1930-06-27	day	1930	45	Public Health Reports 1930-06-27: Vol 45 Iss 26	English
+sim_public-health-reports_1930-07-04_45_27	1930-07-04	day	1930	45	Public Health Reports 1930-07-04: Vol 45 Iss 27	English
+sim_public-health-reports_1930-07-11_45_28	1930-07-11	day	1930	45	Public Health Reports 1930-07-11: Vol 45 Iss 28	English
+sim_public-health-reports_1930-07-18_45_29	1930-07-18	day	1930	45	Public Health Reports 1930-07-18: Vol 45 Iss 29	English
+sim_public-health-reports_1930-07-25_45_30	1930-07-25	day	1930	45	Public Health Reports 1930-07-25: Vol 45 Iss 30	English
+sim_public-health-reports_1930-08-01_45_31	1930-08-01	day	1930	45	Public Health Reports 1930-08-01: Vol 45 Iss 31	English
+sim_public-health-reports_1930-08-08_45_32	1930-08-08	day	1930	45	Public Health Reports 1930-08-08: Vol 45 Iss 32	English
+sim_public-health-reports_1930-08-15_45_33	1930-08-15	day	1930	45	Public Health Reports 1930-08-15: Vol 45 Iss 33	English
+sim_public-health-reports_1930-08-22_45_34	1930-08-22	day	1930	45	Public Health Reports 1930-08-22: Vol 45 Iss 34	English
+sim_public-health-reports_1930-08-29_45_35	1930-08-29	day	1930	45	Public Health Reports 1930-08-29: Vol 45 Iss 35	English
+sim_public-health-reports_1930-09-05_45_36	1930-09-05	day	1930	45	Public Health Reports 1930-09-05: Vol 45 Iss 36	English
+sim_public-health-reports_1930-09-12_45_37	1930-09-12	day	1930	45	Public Health Reports 1930-09-12: Vol 45 Iss 37	English
+sim_public-health-reports_1930-09-19_45_38	1930-09-19	day	1930	45	Public Health Reports 1930-09-19: Vol 45 Iss 38	English
+sim_public-health-reports_1930-09-26_45_39	1930-09-26	day	1930	45	Public Health Reports 1930-09-26: Vol 45 Iss 39	English
+sim_public-health-reports_1930-10-03_45_40	1930-10-03	day	1930	45	Public Health Reports 1930-10-03: Vol 45 Iss 40	English
+sim_public-health-reports_1930-10-10_45_41	1930-10-10	day	1930	45	Public Health Reports 1930-10-10: Vol 45 Iss 41	English
+sim_public-health-reports_1930-10-17_45_42	1930-10-17	day	1930	45	Public Health Reports 1930-10-17: Vol 45 Iss 42	English
+sim_public-health-reports_1930-10-24_45_43	1930-10-24	day	1930	45	Public Health Reports 1930-10-24: Vol 45 Iss 43	English
+sim_public-health-reports_1930-10-31_45_44	1930-10-31	day	1930	45	Public Health Reports 1930-10-31: Vol 45 Iss 44	English
+sim_public-health-reports_1930-11-07_45_45	1930-11-07	day	1930	45	Public Health Reports 1930-11-07: Vol 45 Iss 45	English
+sim_public-health-reports_1930-11-14_45_46	1930-11-14	day	1930	45	Public Health Reports 1930-11-14: Vol 45 Iss 46	English
+sim_public-health-reports_1930-11-21_45_47	1930-11-21	day	1930	45	Public Health Reports 1930-11-21: Vol 45 Iss 47	English
+sim_public-health-reports_1930-11-28_45_48	1930-11-28	day	1930	45	Public Health Reports 1930-11-28: Vol 45 Iss 48	English
+sim_public-health-reports_1930-12-05_45_49	1930-12-05	day	1930	45	Public Health Reports 1930-12-05: Vol 45 Iss 49	English
+sim_public-health-reports_1930-12-12_45_50	1930-12-12	day	1930	45	Public Health Reports 1930-12-12: Vol 45 Iss 50	English
+sim_public-health-reports_1930-12-19_45_51	1930-12-19	day	1930	45	Public Health Reports 1930-12-19: Vol 45 Iss 51	English
+sim_public-health-reports_1930-12-26_45_52	1930-12-26	day	1930	45	Public Health Reports 1930-12-26: Vol 45 Iss 52	English
+sim_public-health-reports_1930_index	1930-01-01	year	1930		Public Health Reports 1930: Index	English
+sim_public-health-reports_1930_supplement-75	1930-01-01	year	1930		Public Health Reports 1930: Supplement	English
+sim_public-health-reports_1930_supplement-79	1930-01-01	year	1930		Public Health Reports 1930: Supplement	English
+sim_public-health-reports_1930_supplement-82	1930-01-01	year	1930		Public Health Reports 1930: Supplement	English
+sim_public-health-reports_1930_supplement-83	1930-01-01	year	1930		Public Health Reports 1930: Supplement	English
+sim_public-health-reports_1930_supplement-84	1930-01-01	year	1930		Public Health Reports 1930: Supplement	English
+sim_public-health-reports_1930_supplement-85	1930-01-01	year	1930		Public Health Reports 1930: Supplement	English
+sim_public-health-reports_1930_supplement-86	1930-01-01	year	1930		Public Health Reports 1930: Supplement	English
+sim_public-health-reports_1930_supplement-87	1930-01-01	year	1930		Public Health Reports 1930: Supplement	English
+sim_public-health-reports_1931-01-02_46_1	1931-01-02	day	1931	46	Public Health Reports 1931-01-02: Vol 46 Iss 1	English
+sim_public-health-reports_1931-01-09_46_2	1931-01-09	day	1931	46	Public Health Reports 1931-01-09: Vol 46 Iss 2	English
+sim_public-health-reports_1931-01-16_46_3	1931-01-16	day	1931	46	Public Health Reports 1931-01-16: Vol 46 Iss 3	English
+sim_public-health-reports_1931-01-23_46_4	1931-01-23	day	1931	46	Public Health Reports 1931-01-23: Vol 46 Iss 4	English
+sim_public-health-reports_1931-01-30_46_5	1931-01-30	day	1931	46	Public Health Reports 1931-01-30: Vol 46 Iss 5	English
+sim_public-health-reports_1931-02-06_46_6	1931-02-06	day	1931	46	Public Health Reports 1931-02-06: Vol 46 Iss 6	English
+sim_public-health-reports_1931-02-13_46_7	1931-02-13	day	1931	46	Public Health Reports 1931-02-13: Vol 46 Iss 7	English
+sim_public-health-reports_1931-02-20_46_8	1931-02-20	day	1931	46	Public Health Reports 1931-02-20: Vol 46 Iss 8	English
+sim_public-health-reports_1931-02-27_46_9	1931-02-27	day	1931	46	Public Health Reports 1931-02-27: Vol 46 Iss 9	English
+sim_public-health-reports_1931-03-06_46_10	1931-03-06	day	1931	46	Public Health Reports 1931-03-06: Vol 46 Iss 10	English
+sim_public-health-reports_1931-03-13_46_11	1931-03-13	day	1931	46	Public Health Reports 1931-03-13: Vol 46 Iss 11	English
+sim_public-health-reports_1931-03-20_46_12	1931-03-20	day	1931	46	Public Health Reports 1931-03-20: Vol 46 Iss 12	English
+sim_public-health-reports_1931-03-27_46_13	1931-03-27	day	1931	46	Public Health Reports 1931-03-27: Vol 46 Iss 13	English
+sim_public-health-reports_1931-04-03_46_14	1931-04-03	day	1931	46	Public Health Reports 1931-04-03: Vol 46 Iss 14	English
+sim_public-health-reports_1931-04-10_46_15	1931-04-10	day	1931	46	Public Health Reports 1931-04-10: Vol 46 Iss 15	English
+sim_public-health-reports_1931-04-17_46_16	1931-04-17	day	1931	46	Public Health Reports 1931-04-17: Vol 46 Iss 16	English
+sim_public-health-reports_1931-04-24_46_17	1931-04-24	day	1931	46	Public Health Reports 1931-04-24: Vol 46 Iss 17	English
+sim_public-health-reports_1931-05-01_46_18	1931-05-01	day	1931	46	Public Health Reports 1931-05-01: Vol 46 Iss 18	English
+sim_public-health-reports_1931-05-08_46_19	1931-05-08	day	1931	46	Public Health Reports 1931-05-08: Vol 46 Iss 19	English
+sim_public-health-reports_1931-05-15_46_20	1931-05-15	day	1931	46	Public Health Reports 1931-05-15: Vol 46 Iss 20	English
+sim_public-health-reports_1931-05-22_46_21	1931-05-22	day	1931	46	Public Health Reports 1931-05-22: Vol 46 Iss 21	English
+sim_public-health-reports_1931-05-29_46_22	1931-05-29	day	1931	46	Public Health Reports 1931-05-29: Vol 46 Iss 22	English
+sim_public-health-reports_1931-06-05_46_23	1931-06-05	day	1931	46	Public Health Reports 1931-06-05: Vol 46 Iss 23	English
+sim_public-health-reports_1931-06-12_46_24	1931-06-12	day	1931	46	Public Health Reports 1931-06-12: Vol 46 Iss 24	English
+sim_public-health-reports_1931-06-19_46_25	1931-06-19	day	1931	46	Public Health Reports 1931-06-19: Vol 46 Iss 25	English
+sim_public-health-reports_1931-06-26_46_26	1931-06-26	day	1931	46	Public Health Reports 1931-06-26: Vol 46 Iss 26	English
+sim_public-health-reports_1931-07-03_46_27	1931-07-03	day	1931	46	Public Health Reports 1931-07-03: Vol 46 Iss 27	English
+sim_public-health-reports_1931-07-10_46_28	1931-07-10	day	1931	46	Public Health Reports 1931-07-10: Vol 46 Iss 28	English
+sim_public-health-reports_1931-07-17_46_29	1931-07-17	day	1931	46	Public Health Reports 1931-07-17: Vol 46 Iss 29	English
+sim_public-health-reports_1931-07-24_46_30	1931-07-24	day	1931	46	Public Health Reports 1931-07-24: Vol 46 Iss 30	English
+sim_public-health-reports_1931-07-31_46_31	1931-07-31	day	1931	46	Public Health Reports 1931-07-31: Vol 46 Iss 31	English
+sim_public-health-reports_1931-08-07_46_32	1931-08-07	day	1931	46	Public Health Reports 1931-08-07: Vol 46 Iss 32	English
+sim_public-health-reports_1931-08-14_46_33	1931-08-14	day	1931	46	Public Health Reports 1931-08-14: Vol 46 Iss 33	English
+sim_public-health-reports_1931-08-21_46_34	1931-08-21	day	1931	46	Public Health Reports 1931-08-21: Vol 46 Iss 34	English
+sim_public-health-reports_1931-08-28_46_35	1931-08-28	day	1931	46	Public Health Reports 1931-08-28: Vol 46 Iss 35	English
+sim_public-health-reports_1931-09-04_46_36	1931-09-04	day	1931	46	Public Health Reports 1931-09-04: Vol 46 Iss 36	English
+sim_public-health-reports_1931-09-11_46_37	1931-09-11	day	1931	46	Public Health Reports 1931-09-11: Vol 46 Iss 37	English
+sim_public-health-reports_1931-09-18_46_38	1931-09-18	day	1931	46	Public Health Reports 1931-09-18: Vol 46 Iss 38	English
+sim_public-health-reports_1931-09-25_46_39	1931-09-25	day	1931	46	Public Health Reports 1931-09-25: Vol 46 Iss 39	English
+sim_public-health-reports_1931-10-02_46_40	1931-10-02	day	1931	46	Public Health Reports 1931-10-02: Vol 46 Iss 40	English
+sim_public-health-reports_1931-10-09_46_41	1931-10-09	day	1931	46	Public Health Reports 1931-10-09: Vol 46 Iss 41	English
+sim_public-health-reports_1931-10-16_46_42	1931-10-16	day	1931	46	Public Health Reports 1931-10-16: Vol 46 Iss 42	English
+sim_public-health-reports_1931-10-23_46_43	1931-10-23	day	1931	46	Public Health Reports 1931-10-23: Vol 46 Iss 43	English
+sim_public-health-reports_1931-10-30_46_44	1931-10-30	day	1931	46	Public Health Reports 1931-10-30: Vol 46 Iss 44	English
+sim_public-health-reports_1931-11-06_46_45	1931-11-06	day	1931	46	Public Health Reports 1931-11-06: Vol 46 Iss 45	English
+sim_public-health-reports_1931-11-13_46_46	1931-11-13	day	1931	46	Public Health Reports 1931-11-13: Vol 46 Iss 46	English
+sim_public-health-reports_1931-11-20_46_47	1931-11-20	day	1931	46	Public Health Reports 1931-11-20: Vol 46 Iss 47	English
+sim_public-health-reports_1931-11-27_46_48	1931-11-27	day	1931	46	Public Health Reports 1931-11-27: Vol 46 Iss 48	English
+sim_public-health-reports_1931-12-04_46_49	1931-12-04	day	1931	46	Public Health Reports 1931-12-04: Vol 46 Iss 49	English
+sim_public-health-reports_1931-12-11_46_50	1931-12-11	day	1931	46	Public Health Reports 1931-12-11: Vol 46 Iss 50	English
+sim_public-health-reports_1931-12-18_46_51	1931-12-18	day	1931	46	Public Health Reports 1931-12-18: Vol 46 Iss 51	English
+sim_public-health-reports_1931-12-25_46_52	1931-12-25	day	1931	46	Public Health Reports 1931-12-25: Vol 46 Iss 52	English
+sim_public-health-reports_1931_supplement-101	1931-01-01	year	1931		Public Health Reports 1931: Supplement	English
+sim_public-health-reports_1931_supplement-102	1931-01-01	year	1931		Public Health Reports 1931: Supplement	English
+sim_public-health-reports_1931_supplement-88	1931-01-01	year	1931		Public Health Reports 1931: Supplement	English
+sim_public-health-reports_1931_supplement-89	1931-01-01	year	1931		Public Health Reports 1931: Supplement	English
+sim_public-health-reports_1931_supplement-90	1931-01-01	year	1931		Public Health Reports 1931: Supplement	English
+sim_public-health-reports_1931_supplement-91	1931-01-01	year	1931		Public Health Reports 1931: Supplement	English
+sim_public-health-reports_1931_supplement-92	1931-01-01	year	1931		Public Health Reports 1931: Supplement	English
+sim_public-health-reports_1931_supplement-93	1931-01-01	year	1931		Public Health Reports 1931: Supplement	English
+sim_public-health-reports_1931_supplement-94	1931-01-01	year	1931		Public Health Reports 1931: Supplement	English
+sim_public-health-reports_1931_supplement-95	1931-01-01	year	1931		Public Health Reports 1931: Supplement	English
+sim_public-health-reports_1931_supplement-96	1931-01-01	year	1931		Public Health Reports 1931: Supplement	English
+sim_public-health-reports_1931_supplement-97	1931-01-01	year	1931		Public Health Reports 1931: Supplement	English
+sim_public-health-reports_1931_supplement-98	1931-01-01	year	1931		Public Health Reports 1931: Supplement	English
+sim_public-health-reports_1932-01-01_47_1	1932-01-01	day	1932	47	Public Health Reports 1932-01-01: Vol 47 Iss 1	English
+sim_public-health-reports_1932-01-08_47_2	1932-01-08	day	1932	47	Public Health Reports 1932-01-08: Vol 47 Iss 2	English
+sim_public-health-reports_1932-01-15_47_3	1932-01-15	day	1932	47	Public Health Reports 1932-01-15: Vol 47 Iss 3	English
+sim_public-health-reports_1932-01-22_47_4	1932-01-22	day	1932	47	Public Health Reports 1932-01-22: Vol 47 Iss 4	English
+sim_public-health-reports_1932-01-29_47_5	1932-01-29	day	1932	47	Public Health Reports 1932-01-29: Vol 47 Iss 5	English
+sim_public-health-reports_1932-02-05_47_6	1932-02-05	day	1932	47	Public Health Reports 1932-02-05: Vol 47 Iss 6	English
+sim_public-health-reports_1932-02-12_47_7	1932-02-12	day	1932	47	Public Health Reports 1932-02-12: Vol 47 Iss 7	English
+sim_public-health-reports_1932-02-19_47_8	1932-02-19	day	1932	47	Public Health Reports 1932-02-19: Vol 47 Iss 8	English
+sim_public-health-reports_1932-02-26_47_9	1932-02-26	day	1932	47	Public Health Reports 1932-02-26: Vol 47 Iss 9	English
+sim_public-health-reports_1932-03-04_47_10	1932-03-04	day	1932	47	Public Health Reports 1932-03-04: Vol 47 Iss 10	English
+sim_public-health-reports_1932-03-11_47_11	1932-03-11	day	1932	47	Public Health Reports 1932-03-11: Vol 47 Iss 11	English
+sim_public-health-reports_1932-03-18_47_12	1932-03-18	day	1932	47	Public Health Reports 1932-03-18: Vol 47 Iss 12	English
+sim_public-health-reports_1932-03-25_47_13	1932-03-25	day	1932	47	Public Health Reports 1932-03-25: Vol 47 Iss 13	English
+sim_public-health-reports_1932-04-01_47_14	1932-04-01	day	1932	47	Public Health Reports 1932-04-01: Vol 47 Iss 14	English
+sim_public-health-reports_1932-04-08_47_15	1932-04-08	day	1932	47	Public Health Reports 1932-04-08: Vol 47 Iss 15	English
+sim_public-health-reports_1932-04-15_47_16	1932-04-15	day	1932	47	Public Health Reports 1932-04-15: Vol 47 Iss 16	English
+sim_public-health-reports_1932-04-22_47_17	1932-04-22	day	1932	47	Public Health Reports 1932-04-22: Vol 47 Iss 17	English
+sim_public-health-reports_1932-04-29_47_18	1932-04-29	day	1932	47	Public Health Reports 1932-04-29: Vol 47 Iss 18	English
+sim_public-health-reports_1932-05-06_47_19	1932-05-06	day	1932	47	Public Health Reports 1932-05-06: Vol 47 Iss 19	English
+sim_public-health-reports_1932-05-13_47_20	1932-05-13	day	1932	47	Public Health Reports 1932-05-13: Vol 47 Iss 20	English
+sim_public-health-reports_1932-05-20_47_21	1932-05-20	day	1932	47	Public Health Reports 1932-05-20: Vol 47 Iss 21	English
+sim_public-health-reports_1932-05-27_47_22	1932-05-27	day	1932	47	Public Health Reports 1932-05-27: Vol 47 Iss 22	English
+sim_public-health-reports_1932-06-03_47_23	1932-06-03	day	1932	47	Public Health Reports 1932-06-03: Vol 47 Iss 23	English
+sim_public-health-reports_1932-06-10_47_24	1932-06-10	day	1932	47	Public Health Reports 1932-06-10: Vol 47 Iss 24	English
+sim_public-health-reports_1932-06-17_47_25	1932-06-17	day	1932	47	Public Health Reports 1932-06-17: Vol 47 Iss 25	English
+sim_public-health-reports_1932-06-24_47_26	1932-06-24	day	1932	47	Public Health Reports 1932-06-24: Vol 47 Iss 26	English
+sim_public-health-reports_1932-07-01_47_27	1932-07-01	day	1932	47	Public Health Reports 1932-07-01: Vol 47 Iss 27	English
+sim_public-health-reports_1932-07-08_47_28	1932-07-08	day	1932	47	Public Health Reports 1932-07-08: Vol 47 Iss 28	English
+sim_public-health-reports_1932-07-15_47_29	1932-07-15	day	1932	47	Public Health Reports 1932-07-15: Vol 47 Iss 29	English
+sim_public-health-reports_1932-07-22_47_30	1932-07-22	day	1932	47	Public Health Reports 1932-07-22: Vol 47 Iss 30	English
+sim_public-health-reports_1932-07-29_47_31	1932-07-29	day	1932	47	Public Health Reports 1932-07-29: Vol 47 Iss 31	English
+sim_public-health-reports_1932-08-05_47_32	1932-08-05	day	1932	47	Public Health Reports 1932-08-05: Vol 47 Iss 32	English
+sim_public-health-reports_1932-08-12_47_33	1932-08-12	day	1932	47	Public Health Reports 1932-08-12: Vol 47 Iss 33	English
+sim_public-health-reports_1932-08-19_47_34	1932-08-19	day	1932	47	Public Health Reports 1932-08-19: Vol 47 Iss 34	English
+sim_public-health-reports_1932-08-26_47_35	1932-08-26	day	1932	47	Public Health Reports 1932-08-26: Vol 47 Iss 35	English
+sim_public-health-reports_1932-09-02_47_36	1932-09-02	day	1932	47	Public Health Reports 1932-09-02: Vol 47 Iss 36	English
+sim_public-health-reports_1932-09-09_47_37	1932-09-09	day	1932	47	Public Health Reports 1932-09-09: Vol 47 Iss 37	English
+sim_public-health-reports_1932-09-16_47_38	1932-09-16	day	1932	47	Public Health Reports 1932-09-16: Vol 47 Iss 38	English
+sim_public-health-reports_1932-09-23_47_39	1932-09-23	day	1932	47	Public Health Reports 1932-09-23: Vol 47 Iss 39	English
+sim_public-health-reports_1932-09-30_47_40	1932-09-30	day	1932	47	Public Health Reports 1932-09-30: Vol 47 Iss 40	English
+sim_public-health-reports_1932-10-07_47_41	1932-10-07	day	1932	47	Public Health Reports 1932-10-07: Vol 47 Iss 41	English
+sim_public-health-reports_1932-10-14_47_42	1932-10-14	day	1932	47	Public Health Reports 1932-10-14: Vol 47 Iss 42	English
+sim_public-health-reports_1932-10-21_47_43	1932-10-21	day	1932	47	Public Health Reports 1932-10-21: Vol 47 Iss 43	English
+sim_public-health-reports_1932-10-28_47_44	1932-10-28	day	1932	47	Public Health Reports 1932-10-28: Vol 47 Iss 44	English
+sim_public-health-reports_1932-11-04_47_45	1932-11-04	day	1932	47	Public Health Reports 1932-11-04: Vol 47 Iss 45	English
+sim_public-health-reports_1932-11-11_47_46	1932-11-11	day	1932	47	Public Health Reports 1932-11-11: Vol 47 Iss 46	English
+sim_public-health-reports_1932-11-18_47_47	1932-11-18	day	1932	47	Public Health Reports 1932-11-18: Vol 47 Iss 47	English
+sim_public-health-reports_1932-11-25_47_48	1932-11-25	day	1932	47	Public Health Reports 1932-11-25: Vol 47 Iss 48	English
+sim_public-health-reports_1932-12-02_47_49	1932-12-02	day	1932	47	Public Health Reports 1932-12-02: Vol 47 Iss 49	English
+sim_public-health-reports_1932-12-09_47_50	1932-12-09	day	1932	47	Public Health Reports 1932-12-09: Vol 47 Iss 50	English
+sim_public-health-reports_1932-12-16_47_51	1932-12-16	day	1932	47	Public Health Reports 1932-12-16: Vol 47 Iss 51	English
+sim_public-health-reports_1932-12-23_47_52	1932-12-23	day	1932	47	Public Health Reports 1932-12-23: Vol 47 Iss 52	English
+sim_public-health-reports_1932-12-30_47_53	1932-12-30	day	1932	47	Public Health Reports 1932-12-30: Vol 47 Iss 53	English
+sim_public-health-reports_1932_supplement-103	1932-01-01	year	1932		Public Health Reports 1932: Supplement	English
+sim_public-health-reports_1932_supplement-104	1932-01-01	year	1932		Public Health Reports 1932: Supplement	English
+sim_public-health-reports_1932_supplement-105	1932-01-01	year	1932		Public Health Reports 1932: Supplement	English
+sim_public-health-reports_1933-01-06_48_1	1933-01-06	day	1933	48	Public Health Reports 1933-01-06: Vol 48 Iss 1	English
+sim_public-health-reports_1933-01-13_48_2	1933-01-13	day	1933	48	Public Health Reports 1933-01-13: Vol 48 Iss 2	English
+sim_public-health-reports_1933-01-20_48_3	1933-01-20	day	1933	48	Public Health Reports 1933-01-20: Vol 48 Iss 3	English
+sim_public-health-reports_1933-01-27_48_4	1933-01-27	day	1933	48	Public Health Reports 1933-01-27: Vol 48 Iss 4	English
+sim_public-health-reports_1933-02-03_48_5	1933-02-03	day	1933	48	Public Health Reports 1933-02-03: Vol 48 Iss 5	English
+sim_public-health-reports_1933-02-10_48_6	1933-02-10	day	1933	48	Public Health Reports 1933-02-10: Vol 48 Iss 6	English
+sim_public-health-reports_1933-02-17_48_7	1933-02-17	day	1933	48	Public Health Reports 1933-02-17: Vol 48 Iss 7	English
+sim_public-health-reports_1933-02-24_48_8	1933-02-24	day	1933	48	Public Health Reports 1933-02-24: Vol 48 Iss 8	English
+sim_public-health-reports_1933-03-03_48_9	1933-03-03	day	1933	48	Public Health Reports 1933-03-03: Vol 48 Iss 9	English
+sim_public-health-reports_1933-03-10_48_10	1933-03-10	day	1933	48	Public Health Reports 1933-03-10: Vol 48 Iss 10	English
+sim_public-health-reports_1933-03-17_48_11	1933-03-17	day	1933	48	Public Health Reports 1933-03-17: Vol 48 Iss 11	English
+sim_public-health-reports_1933-03-24_48_12	1933-03-24	day	1933	48	Public Health Reports 1933-03-24: Vol 48 Iss 12	English
+sim_public-health-reports_1933-03-31_48_13	1933-03-31	day	1933	48	Public Health Reports 1933-03-31: Vol 48 Iss 13	English
+sim_public-health-reports_1933-04-07_48_14	1933-04-07	day	1933	48	Public Health Reports 1933-04-07: Vol 48 Iss 14	English
+sim_public-health-reports_1933-04-14_48_15	1933-04-14	day	1933	48	Public Health Reports 1933-04-14: Vol 48 Iss 15	English
+sim_public-health-reports_1933-04-21_48_16	1933-04-21	day	1933	48	Public Health Reports 1933-04-21: Vol 48 Iss 16	English
+sim_public-health-reports_1933-04-28_48_17	1933-04-28	day	1933	48	Public Health Reports 1933-04-28: Vol 48 Iss 17	English
+sim_public-health-reports_1933-05-05_48_18	1933-05-05	day	1933	48	Public Health Reports 1933-05-05: Vol 48 Iss 18	English
+sim_public-health-reports_1933-05-12_48_19	1933-05-12	day	1933	48	Public Health Reports 1933-05-12: Vol 48 Iss 19	English
+sim_public-health-reports_1933-05-19_48_20	1933-05-19	day	1933	48	Public Health Reports 1933-05-19: Vol 48 Iss 20	English
+sim_public-health-reports_1933-05-26_48_21	1933-05-26	day	1933	48	Public Health Reports 1933-05-26: Vol 48 Iss 21	English
+sim_public-health-reports_1933-06-02_48_22	1933-06-02	day	1933	48	Public Health Reports 1933-06-02: Vol 48 Iss 22	English
+sim_public-health-reports_1933-06-09_48_23	1933-06-09	day	1933	48	Public Health Reports 1933-06-09: Vol 48 Iss 23	English
+sim_public-health-reports_1933-06-16_48_24	1933-06-16	day	1933	48	Public Health Reports 1933-06-16: Vol 48 Iss 24	English
+sim_public-health-reports_1933-06-23_48_25	1933-06-23	day	1933	48	Public Health Reports 1933-06-23: Vol 48 Iss 25	English
+sim_public-health-reports_1933-06-30_48_26	1933-06-30	day	1933	48	Public Health Reports 1933-06-30: Vol 48 Iss 26	English
+sim_public-health-reports_1933-07-07_48_27	1933-07-07	day	1933	48	Public Health Reports 1933-07-07: Vol 48 Iss 27	English
+sim_public-health-reports_1933-07-14_48_28	1933-07-14	day	1933	48	Public Health Reports 1933-07-14: Vol 48 Iss 28	English
+sim_public-health-reports_1933-07-21_48_29	1933-07-21	day	1933	48	Public Health Reports 1933-07-21: Vol 48 Iss 29	English
+sim_public-health-reports_1933-07-28_48_30	1933-07-28	day	1933	48	Public Health Reports 1933-07-28: Vol 48 Iss 30	English
+sim_public-health-reports_1933-08-04_48_31	1933-08-04	day	1933	48	Public Health Reports 1933-08-04: Vol 48 Iss 31	English
+sim_public-health-reports_1933-08-11_48_32	1933-08-11	day	1933	48	Public Health Reports 1933-08-11: Vol 48 Iss 32	English
+sim_public-health-reports_1933-08-18_48_33	1933-08-18	day	1933	48	Public Health Reports 1933-08-18: Vol 48 Iss 33	English
+sim_public-health-reports_1933-08-25_48_34	1933-08-25	day	1933	48	Public Health Reports 1933-08-25: Vol 48 Iss 34	English
+sim_public-health-reports_1933-09-01_48_35	1933-09-01	day	1933	48	Public Health Reports 1933-09-01: Vol 48 Iss 35	English
+sim_public-health-reports_1933-09-08_48_36	1933-09-08	day	1933	48	Public Health Reports 1933-09-08: Vol 48 Iss 36	English
+sim_public-health-reports_1933-09-15_48_37	1933-09-15	day	1933	48	Public Health Reports 1933-09-15: Vol 48 Iss 37	English
+sim_public-health-reports_1933-09-22_48_38	1933-09-22	day	1933	48	Public Health Reports 1933-09-22: Vol 48 Iss 38	English
+sim_public-health-reports_1933-09-29_48_39	1933-09-29	day	1933	48	Public Health Reports 1933-09-29: Vol 48 Iss 39	English
+sim_public-health-reports_1933-10-06_48_40	1933-10-06	day	1933	48	Public Health Reports 1933-10-06: Vol 48 Iss 40	English
+sim_public-health-reports_1933-10-13_48_41	1933-10-13	day	1933	48	Public Health Reports 1933-10-13: Vol 48 Iss 41	English
+sim_public-health-reports_1933-10-20_48_42	1933-10-20	day	1933	48	Public Health Reports 1933-10-20: Vol 48 Iss 42	English
+sim_public-health-reports_1933-10-27_48_43	1933-10-27	day	1933	48	Public Health Reports 1933-10-27: Vol 48 Iss 43	English
+sim_public-health-reports_1933-11-03_48_44	1933-11-03	day	1933	48	Public Health Reports 1933-11-03: Vol 48 Iss 44	English
+sim_public-health-reports_1933-11-10_48_45	1933-11-10	day	1933	48	Public Health Reports 1933-11-10: Vol 48 Iss 45	English
+sim_public-health-reports_1933-11-17_48_46	1933-11-17	day	1933	48	Public Health Reports 1933-11-17: Vol 48 Iss 46	English
+sim_public-health-reports_1933-11-24_48_47	1933-11-24	day	1933	48	Public Health Reports 1933-11-24: Vol 48 Iss 47	English
+sim_public-health-reports_1933-12-01_48_48	1933-12-01	day	1933	48	Public Health Reports 1933-12-01: Vol 48 Iss 48	English
+sim_public-health-reports_1933-12-08_48_49	1933-12-08	day	1933	48	Public Health Reports 1933-12-08: Vol 48 Iss 49	English
+sim_public-health-reports_1933-12-15_48_50	1933-12-15	day	1933	48	Public Health Reports 1933-12-15: Vol 48 Iss 50	English
+sim_public-health-reports_1933-12-22_48_51	1933-12-22	day	1933	48	Public Health Reports 1933-12-22: Vol 48 Iss 51	English
+sim_public-health-reports_1933-12-29_48_52	1933-12-29	day	1933	48	Public Health Reports 1933-12-29: Vol 48 Iss 52	English
+sim_public-health-reports_1933_supplement-100	1933-01-01	year	1933		Public Health Reports 1933: Supplement	English
+sim_public-health-reports_1933_supplement-106	1933-01-01	year	1933		Public Health Reports 1933: Supplement	English
+sim_public-health-reports_1933_supplement-107	1933-01-01	year	1933		Public Health Reports 1933: Supplement	English
+sim_public-health-reports_1933_supplement-108	1933-01-01	year	1933		Public Health Reports 1933: Supplement	English
+sim_public-health-reports_1933_supplement-109	1933-01-01	year	1933		Public Health Reports 1933: Supplement	English
+sim_public-health-reports_1933_supplement-99	1933-01-01	year	1933		Public Health Reports 1933: Supplement	English
+sim_public-health-reports_1934-01-05_49_1	1934-01-05	day	1934	49	Public Health Reports 1934-01-05: Vol 49 Iss 1	English
+sim_public-health-reports_1934-01-12_49_2	1934-01-12	day	1934	49	Public Health Reports 1934-01-12: Vol 49 Iss 2	English
+sim_public-health-reports_1934-01-19_49_3	1934-01-19	day	1934	49	Public Health Reports 1934-01-19: Vol 49 Iss 3	English
+sim_public-health-reports_1934-01-26_49_4	1934-01-26	day	1934	49	Public Health Reports 1934-01-26: Vol 49 Iss 4	English
+sim_public-health-reports_1934-02-02_49_5	1934-02-02	day	1934	49	Public Health Reports 1934-02-02: Vol 49 Iss 5	English
+sim_public-health-reports_1934-02-09_49_6	1934-02-09	day	1934	49	Public Health Reports 1934-02-09: Vol 49 Iss 6	English
+sim_public-health-reports_1934-02-16_49_7	1934-02-16	day	1934	49	Public Health Reports 1934-02-16: Vol 49 Iss 7	English
+sim_public-health-reports_1934-02-23_49_8	1934-02-23	day	1934	49	Public Health Reports 1934-02-23: Vol 49 Iss 8	English
+sim_public-health-reports_1934-03-02_49_9	1934-03-02	day	1934	49	Public Health Reports 1934-03-02: Vol 49 Iss 9	English
+sim_public-health-reports_1934-03-09_49_10	1934-03-09	day	1934	49	Public Health Reports 1934-03-09: Vol 49 Iss 10	English
+sim_public-health-reports_1934-03-16_49_11	1934-03-16	day	1934	49	Public Health Reports 1934-03-16: Vol 49 Iss 11	English
+sim_public-health-reports_1934-03-23_49_12	1934-03-23	day	1934	49	Public Health Reports 1934-03-23: Vol 49 Iss 12	English
+sim_public-health-reports_1934-03-30_49_13	1934-03-30	day	1934	49	Public Health Reports 1934-03-30: Vol 49 Iss 13	English
+sim_public-health-reports_1934-04-06_49_14	1934-04-06	day	1934	49	Public Health Reports 1934-04-06: Vol 49 Iss 14	English
+sim_public-health-reports_1934-04-13_49_15	1934-04-13	day	1934	49	Public Health Reports 1934-04-13: Vol 49 Iss 15	English
+sim_public-health-reports_1934-04-20_49_16	1934-04-20	day	1934	49	Public Health Reports 1934-04-20: Vol 49 Iss 16	English
+sim_public-health-reports_1934-04-27_49_17	1934-04-27	day	1934	49	Public Health Reports 1934-04-27: Vol 49 Iss 17	English
+sim_public-health-reports_1934-05-04_49_18	1934-05-04	day	1934	49	Public Health Reports 1934-05-04: Vol 49 Iss 18	English
+sim_public-health-reports_1934-05-11_49_19	1934-05-11	day	1934	49	Public Health Reports 1934-05-11: Vol 49 Iss 19	English
+sim_public-health-reports_1934-05-18_49_20	1934-05-18	day	1934	49	Public Health Reports 1934-05-18: Vol 49 Iss 20	English
+sim_public-health-reports_1934-06-01_49_22	1934-06-01	day	1934	49	Public Health Reports 1934-06-01: Vol 49 Iss 22	English
+sim_public-health-reports_1934-06-08_49_23	1934-06-08	day	1934	49	Public Health Reports 1934-06-08: Vol 49 Iss 23	English
+sim_public-health-reports_1934-06-15_49_24	1934-06-15	day	1934	49	Public Health Reports 1934-06-15: Vol 49 Iss 24	English
+sim_public-health-reports_1934-06-22_49_25	1934-06-22	day	1934	49	Public Health Reports 1934-06-22: Vol 49 Iss 25	English
+sim_public-health-reports_1934-06-29_49_26	1934-06-29	day	1934	49	Public Health Reports 1934-06-29: Vol 49 Iss 26	English
+sim_public-health-reports_1934-07-06_49_27	1934-07-06	day	1934	49	Public Health Reports 1934-07-06: Vol 49 Iss 27	English
+sim_public-health-reports_1934-07-13_49_28	1934-07-13	day	1934	49	Public Health Reports 1934-07-13: Vol 49 Iss 28	English
+sim_public-health-reports_1934-07-20_49_29	1934-07-20	day	1934	49	Public Health Reports 1934-07-20: Vol 49 Iss 29	English
+sim_public-health-reports_1934-07-27_49_30	1934-07-27	day	1934	49	Public Health Reports 1934-07-27: Vol 49 Iss 30	English
+sim_public-health-reports_1934-08-03_49_31	1934-08-03	day	1934	49	Public Health Reports 1934-08-03: Vol 49 Iss 31	English
+sim_public-health-reports_1934-08-10_49_32	1934-08-10	day	1934	49	Public Health Reports 1934-08-10: Vol 49 Iss 32	English
+sim_public-health-reports_1934-08-17_49_33	1934-08-17	day	1934	49	Public Health Reports 1934-08-17: Vol 49 Iss 33	English
+sim_public-health-reports_1934-08-24_49_34	1934-08-24	day	1934	49	Public Health Reports 1934-08-24: Vol 49 Iss 34	English
+sim_public-health-reports_1934-08-31_49_35	1934-08-31	day	1934	49	Public Health Reports 1934-08-31: Vol 49 Iss 35	English
+sim_public-health-reports_1934-09-07_49_36	1934-09-07	day	1934	49	Public Health Reports 1934-09-07: Vol 49 Iss 36	English
+sim_public-health-reports_1934-09-14_49_37	1934-09-14	day	1934	49	Public Health Reports 1934-09-14: Vol 49 Iss 37	English
+sim_public-health-reports_1934-09-21_49_38	1934-09-21	day	1934	49	Public Health Reports 1934-09-21: Vol 49 Iss 38	English
+sim_public-health-reports_1934-09-28_49_39	1934-09-28	day	1934	49	Public Health Reports 1934-09-28: Vol 49 Iss 39	English
+sim_public-health-reports_1934-10-05_49_40	1934-10-05	day	1934	49	Public Health Reports 1934-10-05: Vol 49 Iss 40	English
+sim_public-health-reports_1934-10-12_49_41	1934-10-12	day	1934	49	Public Health Reports 1934-10-12: Vol 49 Iss 41	English
+sim_public-health-reports_1934-10-19_49_42	1934-10-19	day	1934	49	Public Health Reports 1934-10-19: Vol 49 Iss 42	English
+sim_public-health-reports_1934-10-26_49_43	1934-10-26	day	1934	49	Public Health Reports 1934-10-26: Vol 49 Iss 43	English
+sim_public-health-reports_1934-11-02_49_44	1934-11-02	day	1934	49	Public Health Reports 1934-11-02: Vol 49 Iss 44	English
+sim_public-health-reports_1934-11-09_49_45	1934-11-09	day	1934	49	Public Health Reports 1934-11-09: Vol 49 Iss 45	English
+sim_public-health-reports_1934-11-16_49_46	1934-11-16	day	1934	49	Public Health Reports 1934-11-16: Vol 49 Iss 46	English
+sim_public-health-reports_1934-11-23_49_47	1934-11-23	day	1934	49	Public Health Reports 1934-11-23: Vol 49 Iss 47	English
+sim_public-health-reports_1934-11-30_49_48	1934-11-30	day	1934	49	Public Health Reports 1934-11-30: Vol 49 Iss 48	English
+sim_public-health-reports_1934-12-07_49_49	1934-12-07	day	1934	49	Public Health Reports 1934-12-07: Vol 49 Iss 49	English
+sim_public-health-reports_1934-12-14_49_50	1934-12-14	day	1934	49	Public Health Reports 1934-12-14: Vol 49 Iss 50	English
+sim_public-health-reports_1934-12-21_49_51	1934-12-21	day	1934	49	Public Health Reports 1934-12-21: Vol 49 Iss 51	English
+sim_public-health-reports_1934-12-28_49_52	1934-12-28	day	1934	49	Public Health Reports 1934-12-28: Vol 49 Iss 52	English
+sim_public-health-reports_1934_supplement-110	1934-01-01	year	1934		Public Health Reports 1934: Supplement	English
+sim_public-health-reports_1934_supplement-111	1934-01-01	year	1934		Public Health Reports 1934: Supplement	English
+sim_public-health-reports_1934_supplement-112	1934-01-01	year	1934		Public Health Reports 1934: Supplement	English
+sim_public-health-reports_1935-01-04_50_1	1935-01-04	day	1935	50	Public Health Reports 1935-01-04: Vol 50 Iss 1	English
+sim_public-health-reports_1935-01-11_50_2	1935-01-11	day	1935	50	Public Health Reports 1935-01-11: Vol 50 Iss 2	English
+sim_public-health-reports_1935-01-18_50_3	1935-01-18	day	1935	50	Public Health Reports 1935-01-18: Vol 50 Iss 3	English
+sim_public-health-reports_1935-01-25_50_4	1935-01-25	day	1935	50	Public Health Reports 1935-01-25: Vol 50 Iss 4	English
+sim_public-health-reports_1935-02-01_50_5	1935-02-01	day	1935	50	Public Health Reports 1935-02-01: Vol 50 Iss 5	English
+sim_public-health-reports_1935-02-08_50_6	1935-02-08	day	1935	50	Public Health Reports 1935-02-08: Vol 50 Iss 6	English
+sim_public-health-reports_1935-02-15_50_7	1935-02-15	day	1935	50	Public Health Reports 1935-02-15: Vol 50 Iss 7	English
+sim_public-health-reports_1935-02-22_50_8	1935-02-22	day	1935	50	Public Health Reports 1935-02-22: Vol 50 Iss 8	English
+sim_public-health-reports_1935-03-01_50_9	1935-03-01	day	1935	50	Public Health Reports 1935-03-01: Vol 50 Iss 9	English
+sim_public-health-reports_1935-03-08_50_10	1935-03-08	day	1935	50	Public Health Reports 1935-03-08: Vol 50 Iss 10	English
+sim_public-health-reports_1935-03-15_50_11	1935-03-15	day	1935	50	Public Health Reports 1935-03-15: Vol 50 Iss 11	English
+sim_public-health-reports_1935-03-22_50_12	1935-03-22	day	1935	50	Public Health Reports 1935-03-22: Vol 50 Iss 12	English
+sim_public-health-reports_1935-03-29_50_13	1935-03-29	day	1935	50	Public Health Reports 1935-03-29: Vol 50 Iss 13	English
+sim_public-health-reports_1935-04-05_50_14	1935-04-05	day	1935	50	Public Health Reports 1935-04-05: Vol 50 Iss 14	English
+sim_public-health-reports_1935-04-12_50_15	1935-04-12	day	1935	50	Public Health Reports 1935-04-12: Vol 50 Iss 15	English
+sim_public-health-reports_1935-04-19_50_16	1935-04-19	day	1935	50	Public Health Reports 1935-04-19: Vol 50 Iss 16	English
+sim_public-health-reports_1935-04-26_50_17	1935-04-26	day	1935	50	Public Health Reports 1935-04-26: Vol 50 Iss 17	English
+sim_public-health-reports_1935-05-03_50_18	1935-05-03	day	1935	50	Public Health Reports 1935-05-03: Vol 50 Iss 18	English
+sim_public-health-reports_1935-05-10_50_19	1935-05-10	day	1935	50	Public Health Reports 1935-05-10: Vol 50 Iss 19	English
+sim_public-health-reports_1935-05-17_50_20	1935-05-17	day	1935	50	Public Health Reports 1935-05-17: Vol 50 Iss 20	English
+sim_public-health-reports_1935-05-24_50_21	1935-05-24	day	1935	50	Public Health Reports 1935-05-24: Vol 50 Iss 21	English
+sim_public-health-reports_1935-05-31_50_22	1935-05-31	day	1935	50	Public Health Reports 1935-05-31: Vol 50 Iss 22	English
+sim_public-health-reports_1935-06-07_50_23	1935-06-07	day	1935	50	Public Health Reports 1935-06-07: Vol 50 Iss 23	English
+sim_public-health-reports_1935-06-14_50_24	1935-06-14	day	1935	50	Public Health Reports 1935-06-14: Vol 50 Iss 24	English
+sim_public-health-reports_1935-06-21_50_25	1935-06-21	day	1935	50	Public Health Reports 1935-06-21: Vol 50 Iss 25	English
+sim_public-health-reports_1935-06-28_50_26	1935-06-28	day	1935	50	Public Health Reports 1935-06-28: Vol 50 Iss 26	English
+sim_public-health-reports_1935-07-05_50_27	1935-07-05	day	1935	50	Public Health Reports 1935-07-05: Vol 50 Iss 27	English
+sim_public-health-reports_1935-07-12_50_28	1935-07-12	day	1935	50	Public Health Reports 1935-07-12: Vol 50 Iss 28	English
+sim_public-health-reports_1935-07-19_50_29	1935-07-19	day	1935	50	Public Health Reports 1935-07-19: Vol 50 Iss 29	English
+sim_public-health-reports_1935-07-26_50_30	1935-07-26	day	1935	50	Public Health Reports 1935-07-26: Vol 50 Iss 30	English
+sim_public-health-reports_1935-08-02_50_31	1935-08-02	day	1935	50	Public Health Reports 1935-08-02: Vol 50 Iss 31	English
+sim_public-health-reports_1935-08-09_50_32	1935-08-09	day	1935	50	Public Health Reports 1935-08-09: Vol 50 Iss 32	English
+sim_public-health-reports_1935-08-16_50_33	1935-08-16	day	1935	50	Public Health Reports 1935-08-16: Vol 50 Iss 33	English
+sim_public-health-reports_1935-08-30_50_35	1935-08-30	day	1935	50	Public Health Reports 1935-08-30: Vol 50 Iss 35	English
+sim_public-health-reports_1935-09-06_50_36	1935-09-06	day	1935	50	Public Health Reports 1935-09-06: Vol 50 Iss 36	English
+sim_public-health-reports_1935-09-13_50_37	1935-09-13	day	1935	50	Public Health Reports 1935-09-13: Vol 50 Iss 37	English
+sim_public-health-reports_1935-09-20_50_38	1935-09-20	day	1935	50	Public Health Reports 1935-09-20: Vol 50 Iss 38	English
+sim_public-health-reports_1935-09-27_50_39	1935-09-27	day	1935	50	Public Health Reports 1935-09-27: Vol 50 Iss 39	English
+sim_public-health-reports_1935-10-04_50_40	1935-10-04	day	1935	50	Public Health Reports 1935-10-04: Vol 50 Iss 40	English
+sim_public-health-reports_1935-10-11_50_41	1935-10-11	day	1935	50	Public Health Reports 1935-10-11: Vol 50 Iss 41	English
+sim_public-health-reports_1935-10-18_50_42	1935-10-18	day	1935	50	Public Health Reports 1935-10-18: Vol 50 Iss 42	English
+sim_public-health-reports_1935-10-25_50_43	1935-10-25	day	1935	50	Public Health Reports 1935-10-25: Vol 50 Iss 43	English
+sim_public-health-reports_1935-11-01_50_44	1935-11-01	day	1935	50	Public Health Reports 1935-11-01: Vol 50 Iss 44	English
+sim_public-health-reports_1935-11-08_50_45	1935-11-08	day	1935	50	Public Health Reports 1935-11-08: Vol 50 Iss 45	English
+sim_public-health-reports_1935-11-15_50_46	1935-11-15	day	1935	50	Public Health Reports 1935-11-15: Vol 50 Iss 46	English
+sim_public-health-reports_1935-11-29_50_48	1935-11-29	day	1935	50	Public Health Reports 1935-11-29: Vol 50 Iss 48	English
+sim_public-health-reports_1935-12-06_50_49	1935-12-06	day	1935	50	Public Health Reports 1935-12-06: Vol 50 Iss 49	English
+sim_public-health-reports_1935-12-13_50_50	1935-12-13	day	1935	50	Public Health Reports 1935-12-13: Vol 50 Iss 50	English
+sim_public-health-reports_1935-12-20_50_51	1935-12-20	day	1935	50	Public Health Reports 1935-12-20: Vol 50 Iss 51	English
+sim_public-health-reports_1935-12-27_50_52	1935-12-27	day	1935	50	Public Health Reports 1935-12-27: Vol 50 Iss 52	English
+sim_public-health-reports_1935_supplement-113	1935-01-01	year	1935		Public Health Reports 1935: Supplement	English
+sim_public-health-reports_1935_supplement-114	1935-01-01	year	1935		Public Health Reports 1935: Supplement	English
+sim_public-health-reports_1935_supplement-115	1935-01-01	year	1935		Public Health Reports 1935: Supplement	English
+sim_public-health-reports_1935_supplement-116	1935-01-01	year	1935		Public Health Reports 1935: Supplement	English
+sim_public-health-reports_1935_supplement-117	1935-01-01	year	1935		Public Health Reports 1935: Supplement	English
+sim_public-health-reports_1936-01-03_51_1	1936-01-03	day	1936	51	Public Health Reports 1936-01-03: Vol 51 Iss 1	English
+sim_public-health-reports_1936-01-10_51_2	1936-01-10	day	1936	51	Public Health Reports 1936-01-10: Vol 51 Iss 2	English
+sim_public-health-reports_1936-01-17_51_3	1936-01-17	day	1936	51	Public Health Reports 1936-01-17: Vol 51 Iss 3	English
+sim_public-health-reports_1936-01-24_51_4	1936-01-24	day	1936	51	Public Health Reports 1936-01-24: Vol 51 Iss 4	English
+sim_public-health-reports_1936-01-31_51_5	1936-01-31	day	1936	51	Public Health Reports 1936-01-31: Vol 51 Iss 5	English
+sim_public-health-reports_1936-02-07_51_6	1936-02-07	day	1936	51	Public Health Reports 1936-02-07: Vol 51 Iss 6	English
+sim_public-health-reports_1936-02-14_51_7	1936-02-14	day	1936	51	Public Health Reports 1936-02-14: Vol 51 Iss 7	English
+sim_public-health-reports_1936-02-21_51_8	1936-02-21	day	1936	51	Public Health Reports 1936-02-21: Vol 51 Iss 8	English
+sim_public-health-reports_1936-02-28_51_9	1936-02-28	day	1936	51	Public Health Reports 1936-02-28: Vol 51 Iss 9	English
+sim_public-health-reports_1936-03-06_51_10	1936-03-06	day	1936	51	Public Health Reports 1936-03-06: Vol 51 Iss 10	English
+sim_public-health-reports_1936-03-20_51_12	1936-03-20	day	1936	51	Public Health Reports 1936-03-20: Vol 51 Iss 12	English
+sim_public-health-reports_1936-03-27_51_13	1936-03-27	day	1936	51	Public Health Reports 1936-03-27: Vol 51 Iss 13	English
+sim_public-health-reports_1936-04-03_51_14	1936-04-03	day	1936	51	Public Health Reports 1936-04-03: Vol 51 Iss 14	English
+sim_public-health-reports_1936-04-10_51_15	1936-04-10	day	1936	51	Public Health Reports 1936-04-10: Vol 51 Iss 15	English
+sim_public-health-reports_1936-04-17_51_16	1936-04-17	day	1936	51	Public Health Reports 1936-04-17: Vol 51 Iss 16	English
+sim_public-health-reports_1936-04-24_51_17	1936-04-24	day	1936	51	Public Health Reports 1936-04-24: Vol 51 Iss 17	English
+sim_public-health-reports_1936-05-01_51_18	1936-05-01	day	1936	51	Public Health Reports 1936-05-01: Vol 51 Iss 18	English
+sim_public-health-reports_1936-05-08_51_19	1936-05-08	day	1936	51	Public Health Reports 1936-05-08: Vol 51 Iss 19	English
+sim_public-health-reports_1936-05-15_51_20	1936-05-15	day	1936	51	Public Health Reports 1936-05-15: Vol 51 Iss 20	English
+sim_public-health-reports_1936-05-22_51_21	1936-05-22	day	1936	51	Public Health Reports 1936-05-22: Vol 51 Iss 21	English
+sim_public-health-reports_1936-05-29_51_22	1936-05-29	day	1936	51	Public Health Reports 1936-05-29: Vol 51 Iss 22	English
+sim_public-health-reports_1936-06-05_51_23	1936-06-05	day	1936	51	Public Health Reports 1936-06-05: Vol 51 Iss 23	English
+sim_public-health-reports_1936-06-12_51_24	1936-06-12	day	1936	51	Public Health Reports 1936-06-12: Vol 51 Iss 24	English
+sim_public-health-reports_1936-06-19_51_25	1936-06-19	day	1936	51	Public Health Reports 1936-06-19: Vol 51 Iss 25	English
+sim_public-health-reports_1936-06-26_51_26	1936-06-26	day	1936	51	Public Health Reports 1936-06-26: Vol 51 Iss 26	English
+sim_public-health-reports_1936-07-03_51_27	1936-07-03	day	1936	51	Public Health Reports 1936-07-03: Vol 51 Iss 27	English
+sim_public-health-reports_1936-07-10_51_28	1936-07-10	day	1936	51	Public Health Reports 1936-07-10: Vol 51 Iss 28	English
+sim_public-health-reports_1936-07-17_51_29	1936-07-17	day	1936	51	Public Health Reports 1936-07-17: Vol 51 Iss 29	English
+sim_public-health-reports_1936-07-24_51_30	1936-07-24	day	1936	51	Public Health Reports 1936-07-24: Vol 51 Iss 30	English
+sim_public-health-reports_1936-07-31_51_31	1936-07-31	day	1936	51	Public Health Reports 1936-07-31: Vol 51 Iss 31	English
+sim_public-health-reports_1936-08-07_51_32	1936-08-07	day	1936	51	Public Health Reports 1936-08-07: Vol 51 Iss 32	English
+sim_public-health-reports_1936-08-14_51_33	1936-08-14	day	1936	51	Public Health Reports 1936-08-14: Vol 51 Iss 33	English
+sim_public-health-reports_1936-08-21_51_34	1936-08-21	day	1936	51	Public Health Reports 1936-08-21: Vol 51 Iss 34	English
+sim_public-health-reports_1936-08-28_51_35	1936-08-28	day	1936	51	Public Health Reports 1936-08-28: Vol 51 Iss 35	English
+sim_public-health-reports_1936-09-04_51_36	1936-09-04	day	1936	51	Public Health Reports 1936-09-04: Vol 51 Iss 36	English
+sim_public-health-reports_1936-09-11_51_37	1936-09-11	day	1936	51	Public Health Reports 1936-09-11: Vol 51 Iss 37	English
+sim_public-health-reports_1936-09-18_51_38	1936-09-18	day	1936	51	Public Health Reports 1936-09-18: Vol 51 Iss 38	English
+sim_public-health-reports_1936-09-25_51_39	1936-09-25	day	1936	51	Public Health Reports 1936-09-25: Vol 51 Iss 39	English
+sim_public-health-reports_1936-10-02_51_40	1936-10-02	day	1936	51	Public Health Reports 1936-10-02: Vol 51 Iss 40	English
+sim_public-health-reports_1936-10-09_51_41	1936-10-09	day	1936	51	Public Health Reports 1936-10-09: Vol 51 Iss 41	English
+sim_public-health-reports_1936-10-16_51_42	1936-10-16	day	1936	51	Public Health Reports 1936-10-16: Vol 51 Iss 42	English
+sim_public-health-reports_1936-10-23_51_43	1936-10-23	day	1936	51	Public Health Reports 1936-10-23: Vol 51 Iss 43	English
+sim_public-health-reports_1936-10-30_51_44	1936-10-30	day	1936	51	Public Health Reports 1936-10-30: Vol 51 Iss 44	English
+sim_public-health-reports_1936-11-06_51_45	1936-11-06	day	1936	51	Public Health Reports 1936-11-06: Vol 51 Iss 45	English
+sim_public-health-reports_1936-11-13_51_46	1936-11-13	day	1936	51	Public Health Reports 1936-11-13: Vol 51 Iss 46	English
+sim_public-health-reports_1936-11-20_51_47	1936-11-20	day	1936	51	Public Health Reports 1936-11-20: Vol 51 Iss 47	English
+sim_public-health-reports_1936-11-27_51_48	1936-11-27	day	1936	51	Public Health Reports 1936-11-27: Vol 51 Iss 48	English
+sim_public-health-reports_1936-12-04_51_49	1936-12-04	day	1936	51	Public Health Reports 1936-12-04: Vol 51 Iss 49	English
+sim_public-health-reports_1936-12-11_51_50	1936-12-11	day	1936	51	Public Health Reports 1936-12-11: Vol 51 Iss 50	English
+sim_public-health-reports_1936-12-18_51_51	1936-12-18	day	1936	51	Public Health Reports 1936-12-18: Vol 51 Iss 51	English
+sim_public-health-reports_1936-12-25_51_52	1936-12-25	day	1936	51	Public Health Reports 1936-12-25: Vol 51 Iss 52	English
+sim_public-health-reports_1936_supplement-118	1936-01-01	year	1936		Public Health Reports 1936: Supplement	English
+sim_public-health-reports_1936_supplement-119	1936-01-01	year	1936		Public Health Reports 1936: Supplement	English
+sim_public-health-reports_1936_supplement-120	1936-01-01	year	1936		Public Health Reports 1936: Supplement	English
+sim_public-health-reports_1936_supplement-121	1936-01-01	year	1936		Public Health Reports 1936: Supplement	English
+sim_public-health-reports_1937-01-01_52_1	1937-01-01	day	1937	52	Public Health Reports 1937-01-01: Vol 52 Iss 1	English
+sim_public-health-reports_1937-01-08_52_2	1937-01-08	day	1937	52	Public Health Reports 1937-01-08: Vol 52 Iss 2	English
+sim_public-health-reports_1937-01-15_52_3	1937-01-15	day	1937	52	Public Health Reports 1937-01-15: Vol 52 Iss 3	English
+sim_public-health-reports_1937-01-22_52_4	1937-01-22	day	1937	52	Public Health Reports 1937-01-22: Vol 52 Iss 4	English
+sim_public-health-reports_1937-01-29_52_5	1937-01-29	day	1937	52	Public Health Reports 1937-01-29: Vol 52 Iss 5	English
+sim_public-health-reports_1937-02-05_52_6	1937-02-05	day	1937	52	Public Health Reports 1937-02-05: Vol 52 Iss 6	English
+sim_public-health-reports_1937-02-12_52_7	1937-02-12	day	1937	52	Public Health Reports 1937-02-12: Vol 52 Iss 7	English
+sim_public-health-reports_1937-02-19_52_8	1937-02-19	day	1937	52	Public Health Reports 1937-02-19: Vol 52 Iss 8	English
+sim_public-health-reports_1937-02-26_52_9	1937-02-26	day	1937	52	Public Health Reports 1937-02-26: Vol 52 Iss 9	English
+sim_public-health-reports_1937-03-05_52_10	1937-03-05	day	1937	52	Public Health Reports 1937-03-05: Vol 52 Iss 10	English
+sim_public-health-reports_1937-03-12_52_11	1937-03-12	day	1937	52	Public Health Reports 1937-03-12: Vol 52 Iss 11	English
+sim_public-health-reports_1937-03-19_52_12	1937-03-19	day	1937	52	Public Health Reports 1937-03-19: Vol 52 Iss 12	English
+sim_public-health-reports_1937-03-26_52_13	1937-03-26	day	1937	52	Public Health Reports 1937-03-26: Vol 52 Iss 13	English
+sim_public-health-reports_1937-04-02_52_14	1937-04-02	day	1937	52	Public Health Reports 1937-04-02: Vol 52 Iss 14	English
+sim_public-health-reports_1937-04-09_52_15	1937-04-09	day	1937	52	Public Health Reports 1937-04-09: Vol 52 Iss 15	English
+sim_public-health-reports_1937-04-16_52_16	1937-04-16	day	1937	52	Public Health Reports 1937-04-16: Vol 52 Iss 16	English
+sim_public-health-reports_1937-04-23_52_17	1937-04-23	day	1937	52	Public Health Reports 1937-04-23: Vol 52 Iss 17	English
+sim_public-health-reports_1937-04-30_52_18	1937-04-30	day	1937	52	Public Health Reports 1937-04-30: Vol 52 Iss 18	English
+sim_public-health-reports_1937-05-07_52_19	1937-05-07	day	1937	52	Public Health Reports 1937-05-07: Vol 52 Iss 19	English
+sim_public-health-reports_1937-05-14_52_20	1937-05-14	day	1937	52	Public Health Reports 1937-05-14: Vol 52 Iss 20	English
+sim_public-health-reports_1937-05-21_52_21	1937-05-21	day	1937	52	Public Health Reports 1937-05-21: Vol 52 Iss 21	English
+sim_public-health-reports_1937-05-28_52_22	1937-05-28	day	1937	52	Public Health Reports 1937-05-28: Vol 52 Iss 22	English
+sim_public-health-reports_1937-06-04_52_23	1937-06-04	day	1937	52	Public Health Reports 1937-06-04: Vol 52 Iss 23	English
+sim_public-health-reports_1937-06-11_52_24	1937-06-11	day	1937	52	Public Health Reports 1937-06-11: Vol 52 Iss 24	English
+sim_public-health-reports_1937-06-18_52_25	1937-06-18	day	1937	52	Public Health Reports 1937-06-18: Vol 52 Iss 25	English
+sim_public-health-reports_1937-06-25_52_26	1937-06-25	day	1937	52	Public Health Reports 1937-06-25: Vol 52 Iss 26	English
+sim_public-health-reports_1937-07-02_52_27	1937-07-02	day	1937	52	Public Health Reports 1937-07-02: Vol 52 Iss 27	English
+sim_public-health-reports_1937-07-09_52_28	1937-07-09	day	1937	52	Public Health Reports 1937-07-09: Vol 52 Iss 28	English
+sim_public-health-reports_1937-07-16_52_29	1937-07-16	day	1937	52	Public Health Reports 1937-07-16: Vol 52 Iss 29	English
+sim_public-health-reports_1937-07-23_52_30	1937-07-23	day	1937	52	Public Health Reports 1937-07-23: Vol 52 Iss 30	English
+sim_public-health-reports_1937-07-30_52_31	1937-07-30	day	1937	52	Public Health Reports 1937-07-30: Vol 52 Iss 31	English
+sim_public-health-reports_1937-08-06_52_32	1937-08-06	day	1937	52	Public Health Reports 1937-08-06: Vol 52 Iss 32	English
+sim_public-health-reports_1937-08-13_52_33	1937-08-13	day	1937	52	Public Health Reports 1937-08-13: Vol 52 Iss 33	English
+sim_public-health-reports_1937-08-20_52_34	1937-08-20	day	1937	52	Public Health Reports 1937-08-20: Vol 52 Iss 34	English
+sim_public-health-reports_1937-08-27_52_35	1937-08-27	day	1937	52	Public Health Reports 1937-08-27: Vol 52 Iss 35	English
+sim_public-health-reports_1937-09-03_52_36	1937-09-03	day	1937	52	Public Health Reports 1937-09-03: Vol 52 Iss 36	English
+sim_public-health-reports_1937-09-10_52_37	1937-09-10	day	1937	52	Public Health Reports 1937-09-10: Vol 52 Iss 37	English
+sim_public-health-reports_1937-09-17_52_38	1937-09-17	day	1937	52	Public Health Reports 1937-09-17: Vol 52 Iss 38	English
+sim_public-health-reports_1937-09-24_52_39	1937-09-24	day	1937	52	Public Health Reports 1937-09-24: Vol 52 Iss 39	English
+sim_public-health-reports_1937-10-01_52_40	1937-10-01	day	1937	52	Public Health Reports 1937-10-01: Vol 52 Iss 40	English
+sim_public-health-reports_1937-10-08_52_41	1937-10-08	day	1937	52	Public Health Reports 1937-10-08: Vol 52 Iss 41	English
+sim_public-health-reports_1937-10-15_52_42	1937-10-15	day	1937	52	Public Health Reports 1937-10-15: Vol 52 Iss 42	English
+sim_public-health-reports_1937-10-22_52_43	1937-10-22	day	1937	52	Public Health Reports 1937-10-22: Vol 52 Iss 43	English
+sim_public-health-reports_1937-10-29_52_44	1937-10-29	day	1937	52	Public Health Reports 1937-10-29: Vol 52 Iss 44	English
+sim_public-health-reports_1937-11-05_52_45	1937-11-05	day	1937	52	Public Health Reports 1937-11-05: Vol 52 Iss 45	English
+sim_public-health-reports_1937-11-12_52_46	1937-11-12	day	1937	52	Public Health Reports 1937-11-12: Vol 52 Iss 46	English
+sim_public-health-reports_1937-11-19_52_47	1937-11-19	day	1937	52	Public Health Reports 1937-11-19: Vol 52 Iss 47	English
+sim_public-health-reports_1937-11-26_52_48	1937-11-26	day	1937	52	Public Health Reports 1937-11-26: Vol 52 Iss 48	English
+sim_public-health-reports_1937-12-03_52_49	1937-12-03	day	1937	52	Public Health Reports 1937-12-03: Vol 52 Iss 49	English
+sim_public-health-reports_1937-12-10_52_50	1937-12-10	day	1937	52	Public Health Reports 1937-12-10: Vol 52 Iss 50	English
+sim_public-health-reports_1937-12-17_52_51	1937-12-17	day	1937	52	Public Health Reports 1937-12-17: Vol 52 Iss 51	English
+sim_public-health-reports_1937-12-24_52_52	1937-12-24	day	1937	52	Public Health Reports 1937-12-24: Vol 52 Iss 52	English
+sim_public-health-reports_1937-12-31_52_53	1937-12-31	day	1937	52	Public Health Reports 1937-12-31: Vol 52 Iss 53	English
+sim_public-health-reports_1937_supplement-122	1937-01-01	year	1937		Public Health Reports 1937: Supplement	English
+sim_public-health-reports_1937_supplement-123	1937-01-01	year	1937		Public Health Reports 1937: Supplement	English
+sim_public-health-reports_1937_supplement-124	1937-01-01	year	1937		Public Health Reports 1937: Supplement	English
+sim_public-health-reports_1937_supplement-125	1937-01-01	year	1937		Public Health Reports 1937: Supplement	English
+sim_public-health-reports_1937_supplement-126	1937-01-01	year	1937		Public Health Reports 1937: Supplement	English
+sim_public-health-reports_1937_supplement-127	1937-01-01	year	1937		Public Health Reports 1937: Supplement	English
+sim_public-health-reports_1937_supplement-129	1937-01-01	year	1937		Public Health Reports 1937: Supplement	English
+sim_public-health-reports_1937_supplement-130	1937-01-01	year	1937		Public Health Reports 1937: Supplement	English
+sim_public-health-reports_1937_supplement-131	1937-01-01	year	1937		Public Health Reports 1937: Supplement	English
+sim_public-health-reports_1937_supplement-132	1937-01-01	year	1937		Public Health Reports 1937: Supplement	English
+sim_public-health-reports_1937_supplement-133	1937-01-01	year	1937		Public Health Reports 1937: Supplement	English
+sim_public-health-reports_1938-01-07_53_1	1938-01-07	day	1938	53	Public Health Reports 1938-01-07: Vol 53 Iss 1	English
+sim_public-health-reports_1938-01-14_53_2	1938-01-14	day	1938	53	Public Health Reports 1938-01-14: Vol 53 Iss 2	English
+sim_public-health-reports_1938-01-21_53_3	1938-01-21	day	1938	53	Public Health Reports 1938-01-21: Vol 53 Iss 3	English
+sim_public-health-reports_1938-01-28_53_4	1938-01-28	day	1938	53	Public Health Reports 1938-01-28: Vol 53 Iss 4	English
+sim_public-health-reports_1938-02-04_53_5	1938-02-04	day	1938	53	Public Health Reports 1938-02-04: Vol 53 Iss 5	English
+sim_public-health-reports_1938-02-11_53_6	1938-02-11	day	1938	53	Public Health Reports 1938-02-11: Vol 53 Iss 6	English
+sim_public-health-reports_1938-02-18_53_7	1938-02-18	day	1938	53	Public Health Reports 1938-02-18: Vol 53 Iss 7	English
+sim_public-health-reports_1938-02-25_53_8	1938-02-25	day	1938	53	Public Health Reports 1938-02-25: Vol 53 Iss 8	English
+sim_public-health-reports_1938-03-04_53_9	1938-03-04	day	1938	53	Public Health Reports 1938-03-04: Vol 53 Iss 9	English
+sim_public-health-reports_1938-03-11_53_10	1938-03-11	day	1938	53	Public Health Reports 1938-03-11: Vol 53 Iss 10	English
+sim_public-health-reports_1938-03-18_53_11	1938-03-18	day	1938	53	Public Health Reports 1938-03-18: Vol 53 Iss 11	English
+sim_public-health-reports_1938-03-25_53_12	1938-03-25	day	1938	53	Public Health Reports 1938-03-25: Vol 53 Iss 12	English
+sim_public-health-reports_1938-04-01_53_13	1938-04-01	day	1938	53	Public Health Reports 1938-04-01: Vol 53 Iss 13	English
+sim_public-health-reports_1938-04-08_53_14	1938-04-08	day	1938	53	Public Health Reports 1938-04-08: Vol 53 Iss 14	English
+sim_public-health-reports_1938-04-15_53_15	1938-04-15	day	1938	53	Public Health Reports 1938-04-15: Vol 53 Iss 15	English
+sim_public-health-reports_1938-04-22_53_16	1938-04-22	day	1938	53	Public Health Reports 1938-04-22: Vol 53 Iss 16	English
+sim_public-health-reports_1938-04-29_53_17	1938-04-29	day	1938	53	Public Health Reports 1938-04-29: Vol 53 Iss 17	English
+sim_public-health-reports_1938-05-06_53_18	1938-05-06	day	1938	53	Public Health Reports 1938-05-06: Vol 53 Iss 18	English
+sim_public-health-reports_1938-05-13_53_19	1938-05-13	day	1938	53	Public Health Reports 1938-05-13: Vol 53 Iss 19	English
+sim_public-health-reports_1938-05-20_53_20	1938-05-20	day	1938	53	Public Health Reports 1938-05-20: Vol 53 Iss 20	English
+sim_public-health-reports_1938-05-27_53_21	1938-05-27	day	1938	53	Public Health Reports 1938-05-27: Vol 53 Iss 21	English
+sim_public-health-reports_1938-06-03_53_22	1938-06-03	day	1938	53	Public Health Reports 1938-06-03: Vol 53 Iss 22	English
+sim_public-health-reports_1938-06-10_53_23	1938-06-10	day	1938	53	Public Health Reports 1938-06-10: Vol 53 Iss 23	English
+sim_public-health-reports_1938-06-17_53_24	1938-06-17	day	1938	53	Public Health Reports 1938-06-17: Vol 53 Iss 24	English
+sim_public-health-reports_1938-06-24_53_25	1938-06-24	day	1938	53	Public Health Reports 1938-06-24: Vol 53 Iss 25	English
+sim_public-health-reports_1938-07-01_53_26	1938-07-01	day	1938	53	Public Health Reports 1938-07-01: Vol 53 Iss 26	English
+sim_public-health-reports_1938-07-08_53_27	1938-07-08	day	1938	53	Public Health Reports 1938-07-08: Vol 53 Iss 27	English
+sim_public-health-reports_1938-07-15_53_28	1938-07-15	day	1938	53	Public Health Reports 1938-07-15: Vol 53 Iss 28	English
+sim_public-health-reports_1938-07-22_53_29	1938-07-22	day	1938	53	Public Health Reports 1938-07-22: Vol 53 Iss 29	English
+sim_public-health-reports_1938-07-29_53_30	1938-07-29	day	1938	53	Public Health Reports 1938-07-29: Vol 53 Iss 30	English
+sim_public-health-reports_1938-08-05_53_31	1938-08-05	day	1938	53	Public Health Reports 1938-08-05: Vol 53 Iss 31	English
+sim_public-health-reports_1938-08-12_53_32	1938-08-12	day	1938	53	Public Health Reports 1938-08-12: Vol 53 Iss 32	English
+sim_public-health-reports_1938-08-19_53_33	1938-08-19	day	1938	53	Public Health Reports 1938-08-19: Vol 53 Iss 33	English
+sim_public-health-reports_1938-08-26_53_34	1938-08-26	day	1938	53	Public Health Reports 1938-08-26: Vol 53 Iss 34	English
+sim_public-health-reports_1938-09-02_53_35	1938-09-02	day	1938	53	Public Health Reports 1938-09-02: Vol 53 Iss 35	English
+sim_public-health-reports_1938-09-09_53_36	1938-09-09	day	1938	53	Public Health Reports 1938-09-09: Vol 53 Iss 36	English
+sim_public-health-reports_1938-09-16_53_37	1938-09-16	day	1938	53	Public Health Reports 1938-09-16: Vol 53 Iss 37	English
+sim_public-health-reports_1938-09-23_53_38	1938-09-23	day	1938	53	Public Health Reports 1938-09-23: Vol 53 Iss 38	English
+sim_public-health-reports_1938-09-30_53_39	1938-09-30	day	1938	53	Public Health Reports 1938-09-30: Vol 53 Iss 39	English
+sim_public-health-reports_1938-10-07_53_40	1938-10-07	day	1938	53	Public Health Reports 1938-10-07: Vol 53 Iss 40	English
+sim_public-health-reports_1938-10-14_53_41	1938-10-14	day	1938	53	Public Health Reports 1938-10-14: Vol 53 Iss 41	English
+sim_public-health-reports_1938-10-21_53_42	1938-10-21	day	1938	53	Public Health Reports 1938-10-21: Vol 53 Iss 42	English
+sim_public-health-reports_1938-10-28_53_43	1938-10-28	day	1938	53	Public Health Reports 1938-10-28: Vol 53 Iss 43	English
+sim_public-health-reports_1938-11-04_53_44	1938-11-04	day	1938	53	Public Health Reports 1938-11-04: Vol 53 Iss 44	English
+sim_public-health-reports_1938-11-11_53_45	1938-11-11	day	1938	53	Public Health Reports 1938-11-11: Vol 53 Iss 45	English
+sim_public-health-reports_1938-11-18_53_46	1938-11-18	day	1938	53	Public Health Reports 1938-11-18: Vol 53 Iss 46	English
+sim_public-health-reports_1938-11-25_53_47	1938-11-25	day	1938	53	Public Health Reports 1938-11-25: Vol 53 Iss 47	English
+sim_public-health-reports_1938-12-02_53_48	1938-12-02	day	1938	53	Public Health Reports 1938-12-02: Vol 53 Iss 48	English
+sim_public-health-reports_1938-12-09_53_49	1938-12-09	day	1938	53	Public Health Reports 1938-12-09: Vol 53 Iss 49	English
+sim_public-health-reports_1938-12-16_53_50	1938-12-16	day	1938	53	Public Health Reports 1938-12-16: Vol 53 Iss 50	English
+sim_public-health-reports_1938-12-23_53_51	1938-12-23	day	1938	53	Public Health Reports 1938-12-23: Vol 53 Iss 51	English
+sim_public-health-reports_1938-12-30_53_52	1938-12-30	day	1938	53	Public Health Reports 1938-12-30: Vol 53 Iss 52	English
+sim_public-health-reports_1938_index	1938-01-01	year	1938		Public Health Reports 1938: Index	English
+sim_public-health-reports_1938_supplement-128	1938-01-01	year	1938		Public Health Reports 1938: Supplement	English
+sim_public-health-reports_1938_supplement-134	1938-01-01	year	1938		Public Health Reports 1938: Supplement	English
+sim_public-health-reports_1938_supplement-136	1938-01-01	year	1938		Public Health Reports 1938: Supplement	English
+sim_public-health-reports_1938_supplement-137	1938-01-01	year	1938		Public Health Reports 1938: Supplement	English
+sim_public-health-reports_1938_supplement-138	1938-01-01	year	1938		Public Health Reports 1938: Supplement	English
+sim_public-health-reports_1938_supplement-139	1938-01-01	year	1938		Public Health Reports 1938: Supplement	English
+sim_public-health-reports_1938_supplement-140	1938-01-01	year	1938		Public Health Reports 1938: Supplement	English
+sim_public-health-reports_1938_supplement-141	1938-01-01	year	1938		Public Health Reports 1938: Supplement	English
+sim_public-health-reports_1938_supplement-142	1938-01-01	year	1938		Public Health Reports 1938: Supplement	English
+sim_public-health-reports_1938_supplement-143	1938-01-01	year	1938		Public Health Reports 1938: Supplement	English
+sim_public-health-reports_1938_supplement-144	1938-01-01	year	1938		Public Health Reports 1938: Supplement	English
+sim_public-health-reports_1938_supplement-145	1938-01-01	year	1938		Public Health Reports 1938: Supplement	English
+sim_public-health-reports_1938_supplement-146	1938-01-01	year	1938		Public Health Reports 1938: Supplement	English
+sim_public-health-reports_1939-01-06_54_1	1939-01-06	day	1939	54	Public Health Reports 1939-01-06: Vol 54 Iss 1	English
+sim_public-health-reports_1939-01-13_54_2	1939-01-13	day	1939	54	Public Health Reports 1939-01-13: Vol 54 Iss 2	English
+sim_public-health-reports_1939-01-20_54_3	1939-01-20	day	1939	54	Public Health Reports 1939-01-20: Vol 54 Iss 3	English
+sim_public-health-reports_1939-01-27_54_4	1939-01-27	day	1939	54	Public Health Reports 1939-01-27: Vol 54 Iss 4	English
+sim_public-health-reports_1939-02-03_54_5	1939-02-03	day	1939	54	Public Health Reports 1939-02-03: Vol 54 Iss 5	English
+sim_public-health-reports_1939-02-10_54_6	1939-02-10	day	1939	54	Public Health Reports 1939-02-10: Vol 54 Iss 6	English
+sim_public-health-reports_1939-02-17_54_7	1939-02-17	day	1939	54	Public Health Reports 1939-02-17: Vol 54 Iss 7	English
+sim_public-health-reports_1939-02-24_54_8	1939-02-24	day	1939	54	Public Health Reports 1939-02-24: Vol 54 Iss 8	English
+sim_public-health-reports_1939-03-03_54_9	1939-03-03	day	1939	54	Public Health Reports 1939-03-03: Vol 54 Iss 9	English
+sim_public-health-reports_1939-03-10_54_10	1939-03-10	day	1939	54	Public Health Reports 1939-03-10: Vol 54 Iss 10	English
+sim_public-health-reports_1939-03-17_54_11	1939-03-17	day	1939	54	Public Health Reports 1939-03-17: Vol 54 Iss 11	English
+sim_public-health-reports_1939-03-24_54_12	1939-03-24	day	1939	54	Public Health Reports 1939-03-24: Vol 54 Iss 12	English
+sim_public-health-reports_1939-03-31_54_13	1939-03-31	day	1939	54	Public Health Reports 1939-03-31: Vol 54 Iss 13	English
+sim_public-health-reports_1939-04-07_54_14	1939-04-07	day	1939	54	Public Health Reports 1939-04-07: Vol 54 Iss 14	English
+sim_public-health-reports_1939-04-14_54_15	1939-04-14	day	1939	54	Public Health Reports 1939-04-14: Vol 54 Iss 15	English
+sim_public-health-reports_1939-04-21_54_16	1939-04-21	day	1939	54	Public Health Reports 1939-04-21: Vol 54 Iss 16	English
+sim_public-health-reports_1939-04-28_54_17	1939-04-28	day	1939	54	Public Health Reports 1939-04-28: Vol 54 Iss 17	English
+sim_public-health-reports_1939-05-05_54_18	1939-05-05	day	1939	54	Public Health Reports 1939-05-05: Vol 54 Iss 18	English
+sim_public-health-reports_1939-05-12_54_19	1939-05-12	day	1939	54	Public Health Reports 1939-05-12: Vol 54 Iss 19	English
+sim_public-health-reports_1939-05-19_54_20	1939-05-19	day	1939	54	Public Health Reports 1939-05-19: Vol 54 Iss 20	English
+sim_public-health-reports_1939-05-26_54_21	1939-05-26	day	1939	54	Public Health Reports 1939-05-26: Vol 54 Iss 21	English
+sim_public-health-reports_1939-06-02_54_22	1939-06-02	day	1939	54	Public Health Reports 1939-06-02: Vol 54 Iss 22	English
+sim_public-health-reports_1939-06-09_54_23	1939-06-09	day	1939	54	Public Health Reports 1939-06-09: Vol 54 Iss 23	English
+sim_public-health-reports_1939-06-16_54_24	1939-06-16	day	1939	54	Public Health Reports 1939-06-16: Vol 54 Iss 24	English
+sim_public-health-reports_1939-06-23_54_25	1939-06-23	day	1939	54	Public Health Reports 1939-06-23: Vol 54 Iss 25	English
+sim_public-health-reports_1939-06-30_54_26	1939-06-30	day	1939	54	Public Health Reports 1939-06-30: Vol 54 Iss 26	English
+sim_public-health-reports_january-june-1923_38_index	1923-01-01	year	1923	38	Public Health Reports January-June 1923: Vol 38 Index	English
+sim_public-health-reports_january-june-1924_39_index	1924-01-01	year	1924	39	Public Health Reports January-June 1924: Vol 39 Index	English
+sim_public-health-reports_january-june-1925_40_index	1925-01-01	year	1925	40	Public Health Reports January-June 1925: Vol 40 Index	English
+sim_public-health-reports_january-june-1926_41_index	1926-01-01	year	1926	41	Public Health Reports January-June 1926: Vol 41 Index	English
+sim_public-health-reports_january-june-1927_42_index	1927-01-01	year	1927	42	Public Health Reports January-June 1927: Vol 42 Index	English
+sim_public-health-reports_january-june-1928_43_index	1928-01-01	year	1928	43	Public Health Reports January-June 1928: Vol 43 Index	English
+sim_public-health-reports_january-june-1929_44_index	1929-01-01	year	1929	44	Public Health Reports January-June 1929: Vol 44 Index	English
+sim_public-health-reports_january-june-1930_45_index	1930-01-01	year	1930	45	Public Health Reports January-June 1930: Vol 45 Index	English
+sim_public-health-reports_january-june-1931_46_index	1931-01-01	year	1931	46	Public Health Reports January-June 1931: Vol 46 Index	English
+sim_public-health-reports_january-june-1932_47_index	1932-01-01	year	1932	47	Public Health Reports January-June 1932: Vol 47 Index	English
+sim_public-health-reports_january-june-1933_48_index	1933-01-01	year	1933	48	Public Health Reports January-June 1933: Vol 48 Index	English
+sim_public-health-reports_january-june-1934_49_index	1934-01-01	year	1934	49	Public Health Reports January-June 1934: Vol 49 Index	English
+sim_public-health-reports_january-june-1935_50_index	1935-01-01	year	1935	50	Public Health Reports January-June 1935: Vol 50 Index	English
+sim_public-health-reports_january-june-1936_51_index	1936-01-01	year	1936	51	Public Health Reports January-June 1936: Vol 51 Index	English
+sim_public-health-reports_january-june-1937_52_index	1937-01-01	year	1937	52	Public Health Reports January-June 1937: Vol 52 Index	English
+sim_public-health-reports_january-june-1938_53_index	1938-01-01	year	1938	53	Public Health Reports January-June 1938: Vol 53 Index	English
+sim_public-health-reports_july-december-1923_38_index	1923-07-01	day	1923	38	Public Health Reports July-December 1923: Vol 38 Index	English
+sim_public-health-reports_july-december-1924_39_index	1924-07-01	day	1924	39	Public Health Reports July-December 1924: Vol 39 Index	English
+sim_public-health-reports_july-december-1925_40_index	1925-07-01	day	1925	40	Public Health Reports July-December 1925: Vol 40 Index	English
+sim_public-health-reports_july-december-1926_41_index	1926-07-01	day	1926	41	Public Health Reports July-December 1926: Vol 41 Index	English
+sim_public-health-reports_july-december-1927_42_index	1927-07-01	day	1927	42	Public Health Reports July-December 1927: Vol 42 Index	English
+sim_public-health-reports_july-december-1928_43_index	1928-07-01	day	1928	43	Public Health Reports July-December 1928: Vol 43 Index	English
+sim_public-health-reports_july-december-1929_44_index	1929-07-01	day	1929	44	Public Health Reports July-December 1929: Vol 44 Index	English
+sim_public-health-reports_july-december-1930_45_index	1930-07-01	day	1930	45	Public Health Reports July-December 1930: Vol 45 Index	English
+sim_public-health-reports_july-december-1931_46_index	1931-07-01	day	1931	46	Public Health Reports July-December 1931: Vol 46 Index	English
+sim_public-health-reports_july-december-1932_47_index	1932-07-01	day	1932	47	Public Health Reports July-December 1932: Vol 47 Index	English
+sim_public-health-reports_july-december-1933_48_index	1933-07-01	day	1933	48	Public Health Reports July-December 1933: Vol 48 Index	English
+sim_public-health-reports_july-december-1934_49_index	1934-07-01	day	1934	49	Public Health Reports July-December 1934: Vol 49 Index	English
+sim_public-health-reports_july-december-1935_50_index	1935-07-01	day	1935	50	Public Health Reports July-December 1935: Vol 50 Index	English
+sim_public-health-reports_july-december-1936_51_index	1936-07-01	day	1936	51	Public Health Reports July-December 1936: Vol 51 Index	English
+sim_public-health-reports_july-december-1937_52_index	1937-07-01	day	1937	52	Public Health Reports July-December 1937: Vol 52 Index	English
+sim_public-health-reports_july-december-1938_53_index	1938-07-01	day	1938	53	Public Health Reports July-December 1938: Vol 53 Index	English
