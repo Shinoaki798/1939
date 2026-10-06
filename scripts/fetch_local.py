@@ -15,6 +15,7 @@ import argparse
 import datetime as dt
 import hashlib
 import json
+import re
 import sys
 import time
 import urllib.error
@@ -46,6 +47,22 @@ def fetch(url: str, part: Path, backoff: float) -> int:
         return 0
 
 
+def ia_replicas(url: str) -> list[str]:
+    """The two storage servers of an archive.org item (metadata d1/d2) for a /download/ URL. The /download/
+    redirect can land on a cache node that answers HTTP 500 while both replicas serve the file."""
+    m = re.match(r"https://archive\.org/download/([^/]+)/(.+)$", url)
+    if not m:
+        return []
+    try:
+        req = urllib.request.Request(f"https://archive.org/metadata/{m.group(1)}", headers={"User-Agent": UA})
+        with urllib.request.urlopen(req, timeout=60) as r:
+            meta = json.load(r)
+    except (urllib.error.URLError, TimeoutError, ConnectionError, OSError, ValueError):
+        return []
+    d = meta.get("dir")
+    return [f"https://{h}{d}/{m.group(2)}" for h in (meta.get("d1"), meta.get("d2")) if h and d]
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--source", required=True)
@@ -70,7 +87,7 @@ def main() -> None:
         final, part = dest / name, dest / (name + ".part")
         algo, _, want = (spec.get("checksum") or "-").partition(":")
         urls, alt = spec["url"].split("|"), 0   # "a|b|c": a 404 moves on to the next alternative
-        forbidden = 0
+        forbidden, replicas_tried = 0, False
         for attempt in range(1, args.attempts + 1):
             t0 = time.time()
             url = urls[alt]
@@ -93,6 +110,17 @@ def main() -> None:
             if spec["bytes"] is not None and size < spec["bytes"]:
                 print(f"[{key}] attempt {attempt}: HTTP {status}, {size}/{spec['bytes']} bytes", flush=True)
                 continue
+            if isinstance(status, int) and status >= 500:
+                if not replicas_tried:
+                    replicas_tried = True
+                    reps = ia_replicas(url)
+                    if reps:
+                        print(f"[{key}] HTTP {status}; trying the item's replicas "
+                              f"{', '.join(r.split('/')[2] for r in reps)}", flush=True)
+                        urls[alt + 1:alt + 1] = reps
+                        alt += 1
+                        continue
+                alt = (alt + 1) % len(urls)
             if spec["bytes"] is None and (status not in (200, 206) or size == 0):
                 print(f"[{key}] attempt {attempt}: HTTP {status}, {size} bytes", flush=True)
                 time.sleep(min(60, 10 * attempt))
