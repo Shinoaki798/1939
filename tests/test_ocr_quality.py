@@ -97,3 +97,12 @@ def test_scowl_words_reads_only_chosen_categories_and_sizes(tmp_path):
     words, used = scowl_words(path)
     assert words == {"the", "house", "color", "don"}
     assert used == ["american-words.60", "english-contractions.35", "english-words.10"]
+
+
+def test_item_level_sources_use_the_lower_token_floor():
+    from src.data.ocr_quality import gate
+
+    lex = {"the", "senate", "adjourned", "until", "noon", "tomorrow"}
+    text = "The Senate adjourned until noon tomorrow . " * 4          # 28 tokens
+    assert gate(text, lex, "en", "congressional_record")[0] is None
+    assert gate(text, lex, "en", "chronicling_america")[0] == "short"

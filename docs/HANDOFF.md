@@ -454,3 +454,14 @@ Dated entries; each supersedes anything above it that it contradicts.
   to the user before proceeding. ECCO, Evans, DTA and SCOWL are "lexicon anchor,
   not training" in `config/sources.yaml`, kept, and refused by `prune_raw.py`.
   The lexicon is an OCR instrument only; it never touches the tokenizer.
+- **2026-10-06 — English OCR check; token floor by document type.** English
+  lexicon v2: anchor 370,774 types (SCOWL ≤ 60 + TCP), pool 24,572 types of
+  which 23,557 already in the anchor, 275 variants dropped (lhe, thls, aas, iof,
+  …). Hit rate ≥ 0.75 and word share ≥ 0.70 kept unchanged for English (AS
+  median hit rate 0.98; the two gates drop < 2 % of words except Federal
+  Register 1937–39, 14 %, tables). The 50-token floor stays for page- and
+  issue-level documents; article-, speech- and case-level sources (American
+  Stories, Congressional Record, CAP, JSTOR EJC, RSC) use 20 tokens, the point
+  below which neither score is defined (user). Reason: at 50, AS lost 31 % of
+  articles / 6–7 % of words and the Congressional Record 68 % of speeches /
+  16–17 % of words; at 20 the losses are 0.6 % and ~5 %.

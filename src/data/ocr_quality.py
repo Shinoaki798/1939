@@ -78,7 +78,10 @@ POOL_SOURCES = {"de": GERMAN_SOURCES, "en": ["american_stories"]}
 SCORER_VERSION = "2026-10-06.2"
 HIT_THRESHOLD = {"de": 0.75, "en": 0.75}     # en provisional until its own histogram check
 WORD_SHARE_THRESHOLD = 0.70
-MIN_DOC_TOKENS = 50
+MIN_DOC_TOKENS = 50          # page- and issue-level documents
+MIN_DOC_TOKENS_ITEM = 20     # article/speech/case-level documents (user, 2026-10-06): short items are normal
+ITEM_LEVEL_SOURCES = {"american_stories", "congressional_record", "caselaw_access_project", "jstor_ejc",
+                      "royal_society_corpus"}
 # Issue-level sources (one row = a whole issue, columns run together) are cleaned per segment instead of
 # being gated whole: blank-line blocks are merged into segments of >= SEGMENT_MIN_TOKENS tokens and a
 # segment is dropped if its word share < WORD_SHARE_THRESHOLD (user, 2026-10-06).
@@ -115,12 +118,16 @@ def word_share(text: str) -> float:
 
 # ---- gates -----------------------------------------------------------------------------
 
-def gate(text: str, lexicon: set[str], lang: str) -> tuple[str | None, float, float, int]:
+def min_tokens(source: str | None) -> int:
+    return MIN_DOC_TOKENS_ITEM if source in ITEM_LEVEL_SOURCES else MIN_DOC_TOKENS
+
+
+def gate(text: str, lexicon: set[str], lang: str, source: str | None = None) -> tuple[str | None, float, float, int]:
     """(reason the document is dropped or None, hit rate, word share, tokens). Gates are checked in
     order short -> hit_rate -> word_share; the first that fails is the reason. NaN scores fail."""
     n = len(text.split())
     hit, ws = score(text, lexicon), word_share(text)
-    if n < MIN_DOC_TOKENS:
+    if n < min_tokens(source):
         return "short", hit, ws, n
     if not hit >= HIT_THRESHOLD[lang]:
         return "hit_rate", hit, ws, n
@@ -167,6 +174,7 @@ def gate_params(cfg: dict, lang: str) -> dict:
             "lexicon_sha256": m["sha256"], "lexicon_version": m.get("lexicon_version", "v1"),
             "hit_threshold": HIT_THRESHOLD[lang],
             "word_share_threshold": WORD_SHARE_THRESHOLD, "min_doc_tokens": MIN_DOC_TOKENS,
+            "min_doc_tokens_item_level": MIN_DOC_TOKENS_ITEM, "item_level_sources": sorted(ITEM_LEVEL_SOURCES),
             "segment_sources": sorted(SEGMENT_SOURCES), "segment_min_tokens": SEGMENT_MIN_TOKENS,
             "gate_order": ["short", "hit_rate", "word_share"]}
 
@@ -553,7 +561,7 @@ def write_gates_report(lang: str, cells: dict, seg_stats: dict, seg_boundary: li
             continue
         for hit, ws, nw, snip in rows:
             nw = nw or 0
-            reason = ("short" if nw < MIN_DOC_TOKENS else "hit_rate" if not hit >= HIT_THRESHOLD[lang]
+            reason = ("short" if nw < min_tokens(src) else "hit_rate" if not hit >= HIT_THRESHOLD[lang]
                       else "word_share" if not ws >= thr else None)
             a = agg[(src, per)]
             a["docs"] += 1; a["words"] += nw
@@ -577,12 +585,13 @@ def write_gates_report(lang: str, cells: dict, seg_stats: dict, seg_boundary: li
         lines.append(f"| {src} | {per} | {a['docs']} | " + " | ".join(pct(a[f'd_{r}'], a['docs']) for r in reasons)
                      + f" | {pct(d_tot, a['docs'])} | " + " | ".join(pct(a[f'w_{r}'], a['words']) for r in reasons)
                      + f" | {pct(w_tot, a['words'])} |")
-    lines += ["", f"## Segment cleanup (issue-level sources: {', '.join(sorted(SEGMENT_SOURCES))})", "",
-              f"Every document, not a sample. Blank-line blocks merged to >= {SEGMENT_MIN_TOKENS} tokens; "
-              f"segments with word share < {thr} dropped.", "",
-              "| source | period | segments | segments dropped | tokens | tokens dropped |", "|---|---|---|---|---|---|"]
-    for (src, per), (n_seg, n_tok, d_seg, d_tok) in sorted(seg_stats.items()):
-        lines.append(f"| {src} | {per} | {n_seg} | {pct(d_seg, n_seg)} | {n_tok:,} | {pct(d_tok, n_tok)} |")
+    if seg_stats:
+        lines += ["", f"## Segment cleanup (issue-level sources: {', '.join(sorted({s for s, _ in seg_stats}))})", "",
+                  f"Every document, not a sample. Blank-line blocks merged to >= {SEGMENT_MIN_TOKENS} tokens; "
+                  f"segments with word share < {thr} dropped.", "",
+                  "| source | period | segments | segments dropped | tokens | tokens dropped |", "|---|---|---|---|---|---|"]
+        for (src, per), (n_seg, n_tok, d_seg, d_tok) in sorted(seg_stats.items()):
+            lines.append(f"| {src} | {per} | {n_seg} | {pct(d_seg, n_seg)} | {n_tok:,} | {pct(d_tok, n_tok)} |")
     lines += ["", f"Boundary samples ({thr - 0.05:.2f}-{thr + 0.05:.2f} word share, dated <= 1939): "
               f"logs/{out_boundary.name}.", ""]
     out_md.write_text("\n".join(lines) + "\n", encoding="utf-8")
