@@ -171,6 +171,7 @@ def _keep(article_id: str, per_cell_rate: float) -> bool:
     return h < per_cell_rate
 
 
+SMALL_SOURCE_ROWS = 50_000
 _LEX: set[str] = set()
 
 
@@ -194,8 +195,12 @@ def _hist_job(args: tuple) -> dict:
 def histogram(cfg: dict, lang: str, per_cell: int, rate: float, workers: int) -> dict:
     lex = load_lexicon(cfg, lang)
     sources = load_config(repo_path(cfg["sources"]))
-    jobs = [(src, str(f), per_cell, rate) for src in GERMAN_SOURCES
-            for f in sorted(ingested_dir(cfg, src, sources[src]).glob("*.parquet"))]
+    jobs = []
+    for src in GERMAN_SOURCES:
+        files = sorted(ingested_dir(cfg, src, sources[src]).glob("*.parquet"))
+        n_rows = sum(pq.ParquetFile(f).metadata.num_rows for f in files)
+        src_rate = 1.0 if n_rows <= SMALL_SOURCE_ROWS else rate   # small sources: score every document
+        jobs += [(src, str(f), per_cell, src_rate) for f in files]
     merged: dict = defaultdict(list)
     with ProcessPoolExecutor(workers, initializer=_init_lex, initargs=(lex,)) as ex:
         for part in ex.map(_hist_job, jobs):
