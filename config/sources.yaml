@@ -543,3 +543,17 @@ meyers6_ia:
   ia_query: 'title:(meyers grosses konversations-lexikon) AND date:[1902 TO 1909]'
   window: [1902-01-01, 1909-12-31]
   role: "training, science bucket. zeno.org forbids robots; archive.org scans instead"
+
+# ---- science bucket, keyed / born-digital German ----
+jfm:
+  kind: oai
+  dest: ./data/foreign/de/raw/jfm
+  lang: de
+  approved: 2026-10-06
+  title: "Jahrbuch über die Fortschritte der Mathematik (zbMATH Open)"
+  bucket: science
+  licence: "CC BY-SA 4.0 (zbMATH Open)"
+  access_method: "OAI-PMH https://oai.zbmath.org/v1/ set=JFM metadataPrefix=oai_zb_preview via src.data.jfm_harvest (zbmath.org blocks AI crawlers; OAI only)"
+  ocr_or_keyed: keyed (ERAM digitisation; skips the OCR gates, gets the C1 screen)
+  subject_filter_rule: "reviews only, JFM volume <= 61 (volumes > 61 appeared after 1939-06-30 or on unknown dates; user 2026-10-06); zbMATH placeholders and inserted JFM/Zbl cross-references removed"
+  role: training, science bucket

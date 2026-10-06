@@ -191,3 +191,28 @@ def test_royal_society_corpus_joins_meta(tmp_path):
     assert [r["article_id"] for r in rows] == ["rsc_100915", "rsc_rspa_1905_0001"] and stats["dropped_no_meta"] == 1
     rows = rows[1:]
     assert rows[0]["date"] == "1905-01-01" and rows[0]["headline"] == "Address" and rows[0]["byline"] == "W. Huggins"
+
+
+def test_jfm_keeps_reviews_up_to_volume_61(tmp_path):
+    import gzip
+
+    from src.data.ingest_extra import rows_jfm
+
+    def rec(zid, year, review, rtype="review"):
+        return (f"<record><metadata><zbmath:zbl_id>{zid}</zbmath:zbl_id>"
+                f"<zbmath:publication_year>{year}</zbmath:publication_year>"
+                f"<zbmath:document_title>Über Gruppen</zbmath:document_title><zbmath:review>"
+                f"<zbmath:review_text>{review}</zbmath:review_text><zbmath:review_type>{rtype}</zbmath:review_type>"
+                f"<zbmath:reviewer>Hasse, H.</zbmath:reviewer></zbmath:review></metadata></record>")
+    page = "".join([rec("61.0101.01", 1935, "Der Verf. beweist den Satz (JFM 52.0528.*) &amp; mehr."),
+                    rec("62.0101.01", 1936, "Zu spät erschienen."),
+                    rec("40.0101.01", 1909, "zbMATH Open Web Interface contents unavailable due to conflicting licenses."),
+                    rec("40.0102.01", 1909, "Editorial note.", rtype="editorial")])
+    p = tmp_path / "page_0000000.xml.gz"
+    p.write_bytes(gzip.compress(page.encode()))
+    stats = Counter()
+    rows = list(rows_jfm(p, "page_0000000", CUTOFF, stats))
+    assert [r["article_id"] for r in rows] == ["jfm_61.0101.01"]
+    assert rows[0]["text"] == "Der Verf. beweist den Satz & mehr." and rows[0]["byline"] == "Hasse, H."
+    assert stats["dropped_volume_after_61"] == 1 and stats["dropped_no_review"] == 1
+    assert stats["dropped_review_type_editorial"] == 1

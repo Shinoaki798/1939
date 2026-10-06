@@ -438,6 +438,59 @@ def rows_royal_society_corpus(path: Path, key: str, cutoff: dt.date, stats: Coun
             yield row
 
 
+JFM_MAX_VOLUME = 61   # JFM volumes > 61 appeared after 1939-06-30 or on unknown dates (user, 2026-10-06)
+JFM_PLACEHOLDER = "contents unavailable due to conflicting licenses"
+_JFM_RECORD = re.compile(r"<record>(.*?)</record>", re.S)
+_JFM_XREF = re.compile(r"\(\s*(?:JFM|Zbl)\s*[\d.*]+\s*\)|\b(?:JFM|Zbl)\s+[\d*]+\.[\d*]+\.[\d*]+")
+
+
+def _zb(rec: str, tag: str) -> str:
+    import html
+    m = re.search(rf"<zbmath:{tag}>(.*?)</zbmath:{tag}>", rec, re.S)
+    return html.unescape(m.group(1).strip()) if m else ""
+
+
+def rows_jfm(path: Path, key: str, cutoff: dt.date, stats: Counter):
+    """One zbMATH Open OAI page (gzip) of the Jahrbuch ueber die Fortschritte der Mathematik: one row per
+    review in JFM volumes <= JFM_MAX_VOLUME. Keyed text (ERAM); date = reviewed paper's year (year-only)."""
+    import gzip
+    text = gzip.decompress(path.read_bytes()).decode("utf-8", "replace")
+    for rec in _JFM_RECORD.findall(text):
+        stats["rows_in"] += 1
+        zid = _zb(rec, "zbl_id")
+        try:
+            vol = int(zid.split(".")[0])
+        except ValueError:
+            stats["dropped_bad_id"] += 1
+            continue
+        if vol > JFM_MAX_VOLUME:
+            stats["dropped_volume_after_61"] += 1
+            continue
+        review, rtype = _zb(rec, "review_text"), _zb(rec, "review_type")
+        if not review or JFM_PLACEHOLDER in review:
+            stats["dropped_no_review"] += 1
+            continue
+        if rtype not in ("", "review"):
+            stats[f"dropped_review_type_{rtype}"] += 1
+            continue
+        try:
+            year = int(_zb(rec, "publication_year"))
+        except ValueError:
+            stats["dropped_bad_date"] += 1
+            continue
+        if year > cutoff.year - 1:
+            stats["dropped_after_cutoff"] += 1
+            continue
+        review = re.sub(r"\s+", " ", _JFM_XREF.sub("", review)).strip()
+        meta = {"zbl_id": zid, "jfm_volume": vol, "paper_year": year, "paper_language": _zb(rec, "language"),
+                "review_language": _zb(rec, "review_language"), "source": _zb(rec, "source"),
+                "date_precision": "year", "bucket": "science"}
+        row = _row(f"jfm_{zid}", "jfm", dt.date(year, 1, 1), "Jahrbuch über die Fortschritte der Mathematik", "",
+                   _zb(rec, "reviewer"), review, meta)
+        row["headline"] = _zb(rec, "document_title")
+        yield row
+
+
 IA_CHUNK_WORDS = 2000          # whole issues/volumes are cut into ~2k-word documents (C1 drop, dedup)
 _IA_HYPHEN = re.compile(r"(\w)[-¬]\s*\n\s*(\w)")
 _IA_BLANK = re.compile(r"\n\s*\n")
@@ -519,6 +572,7 @@ def rows_ia_text(path: Path, key: str, cutoff: dt.date, stats: Counter, source: 
 
 ADAPTERS = {"congressional_record": rows_congressional_record, "hmd_newspapers": rows_hmd_newspapers,
             "jstor_ejc": rows_jstor_ejc, "royal_society_corpus": rows_royal_society_corpus,
+            "jfm": rows_jfm,
             "loc_pd_books": rows_loc_pd_books, "pre_1929_books": rows_pre_1929_books,
             "chronicling_america": rows_chronicling_america, "federal_register": rows_federal_register,
             "caselaw_access_project": rows_caselaw_access_project,
