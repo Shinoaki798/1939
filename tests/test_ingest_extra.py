@@ -179,12 +179,15 @@ def test_royal_society_corpus_joins_meta(tmp_path):
 
     with zipfile.ZipFile(tmp_path / "RSC_meta.tsv.zip", "w") as z:
         z.writestr("meta.tsv", "id\ttitle\tyear\tjournal\tauthor\tprimaryTopic\n"
-                               "rspa_1905_0001\tAddress\t1905\tProc. R. Soc. A\tW. Huggins\tBiography\n")
+                               "rspa_1905_0001\tAddress\t1905\tProc. R. Soc. A\tW. Huggins\tBiography\n"
+                               "100915\tA New Catadioptrical Telescope\t1672\tPhil. Trans.\tMr. Newton\tAstronomy\n")
     texts = tmp_path / "RSC_texts_txt.zip"
     with zipfile.ZipFile(texts, "w") as z:
-        z.writestr("texts/rspa_1905_0001.txt", "The President addressed the Society.")
-        z.writestr("texts/unknown_0002.txt", "No metadata.")
+        z.writestr("RSC_texts_txt/RSC_open_v6.0_text_rspa_1905_0001.txt", "The President addressed the Society.")
+        z.writestr("RSC_texts_txt/RSC_open_v6.0_text_100915.txt", "An Account of a New Catadioptrical Telescope.")
+        z.writestr("RSC_texts_txt/RSC_open_v6.0_text_unknown_0002.txt", "No metadata.")
     stats = Counter()
     rows = list(rows_royal_society_corpus(texts, "texts_txt", CUTOFF, stats))
-    assert [r["article_id"] for r in rows] == ["rsc_rspa_1905_0001"] and stats["dropped_no_meta"] == 1
+    assert [r["article_id"] for r in rows] == ["rsc_100915", "rsc_rspa_1905_0001"] and stats["dropped_no_meta"] == 1
+    rows = rows[1:]
     assert rows[0]["date"] == "1905-01-01" and rows[0]["headline"] == "Address" and rows[0]["byline"] == "W. Huggins"

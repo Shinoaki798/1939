@@ -410,7 +410,8 @@ def rows_royal_society_corpus(path: Path, key: str, cutoff: dt.date, stats: Coun
             if not n.endswith(".txt"):
                 continue
             stats["rows_in"] += 1
-            rid = n.rsplit("/", 1)[-1][:-len(".txt")]
+            # files are .../Royal_Society_Corpus_open_v6.0_text_<id>.txt; <id> is the meta TSV's id column
+            rid = n.rsplit("/", 1)[-1][:-len(".txt")].rsplit("_text_", 1)[-1]
             md = meta.get(rid)
             if md is None:
                 stats["dropped_no_meta"] += 1
