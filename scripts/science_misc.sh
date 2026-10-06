@@ -18,6 +18,6 @@ echo "catalog $(sha256sum "$cat_file")" >> "$log"
 for s in gutenberg_sci_en gutenberg_sci_de dingler; do
   echo "$(date -Is) download $s" >> "$log"
   "$PY" -u -m src.data.download --source "$s" --delay 2 --backoff 1800 --via proxy >> "logs/download_$s.log" 2>&1
-  echo "$(date -Is) $s exit $?" >> "$log"
+  rc=$?; echo "$(date -Is) $s exit $rc" >> "$log"
 done
 echo "$(date -Is) science_misc done" >> "$log"

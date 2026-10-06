@@ -8,5 +8,5 @@ PY="$HOME/miniconda3/envs/torch-gpu/bin/python"
 for s in "$@"; do
   echo "$(date -Is) ingest $s" >> logs/ingest_run.log
   "$PY" -u -m src.data.ingest_extra --source "$s" --workers "${WORKERS:-4}" >> "logs/ingest_$s.log" 2>&1
-  echo "$(date -Is) $s exit $?" >> logs/ingest_run.log
+  rc=$?; echo "$(date -Is) $s exit $rc" >> logs/ingest_run.log
 done

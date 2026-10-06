@@ -13,6 +13,6 @@ log=logs/ca_resume.log
 echo "$(date -Is) ca_resume start (start delay ${START_DELAY:-7200}s)" >> "$log"
 "$PY" -u -m src.data.ca_survey --inventory data/raw/chronicling_america/inventory/ocr.json \
       --start-delay "${START_DELAY:-7200}" >> "$log" 2>&1
-echo "$(date -Is) survey finished (exit $?); downloading listed batches" >> "$log"
+rc=$?; echo "$(date -Is) survey finished (exit $rc); downloading listed batches" >> "$log"
 "$PY" -u -m src.data.download --source chronicling_america --delay 30 --backoff 1800 >> "$log" 2>&1
-echo "$(date -Is) ca_resume done (exit $?)" >> "$log"
+rc=$?; echo "$(date -Is) ca_resume done (exit $rc)" >> "$log"

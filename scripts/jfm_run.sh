@@ -5,4 +5,4 @@ set -uo pipefail
 cd "$HOME/1939"
 mkdir -p logs
 "$HOME/miniconda3/envs/torch-gpu/bin/python" -u -m src.data.jfm_harvest --delay 2 >> logs/jfm_harvest.log 2>&1
-echo "$(date -Is) jfm_harvest exit $?" >> logs/jfm_harvest.log
+rc=$?; echo "$(date -Is) jfm_harvest exit $rc" >> logs/jfm_harvest.log
