@@ -3,12 +3,17 @@
     https://oai.zbmath.org/v1/?verb=ListRecords&metadataPrefix=oai_zb_preview&set=JFM
 
 zbMATH Open content is CC BY-SA 4.0. zbmath.org itself blocks AI crawlers in robots.txt, so only the
-OAI endpoint is used, one request at a time, --delay seconds apart. Every response page is kept raw
-(gzip) under data/foreign/de/raw/jfm/pages/ and listed with its sha256 in the source MANIFEST.json;
-the resumption token is saved after every page, so an interrupted run continues where it stopped
-(tokens expire after about a day, or are lost server-side and answered with HTTP 500; then the run
-starts over once and skips pages it already has).
-Selection (JFM volume <= 61, reviews only) happens at ingest, not here.
+OAI endpoint is used, one request at a time, --delay seconds apart. Response pages are kept raw (gzip)
+under data/foreign/de/raw/jfm/pages/ and listed with their sha256 in the source MANIFEST.json; the
+resumption token is saved after every page, so an interrupted run continues where it stopped.
+
+zbMATH loses tokens after a few hours (HTTP 500, not badResumptionToken), and a new walk from the first
+page returns the records in a different block order, so offsets of two walks are not comparable. Each
+walk therefore has its own page keys (`<walk>_page_<cursor>`; the first walk's pages are `page_<cursor>`),
+a page is saved when it holds at least one record not saved before (by OAI identifier), and the run
+stops when every record of the set is saved or a walk completes. Pages of different walks overlap:
+drop duplicate `jfm_<zbl_id>` rows before MinHash. Selection (JFM volume <= 61, reviews only) happens
+at ingest, not here.
 
     python -m src.data.jfm_harvest --delay 2
 """
@@ -31,6 +36,12 @@ from src.data.download import load_config, repo_path
 BASE = "https://oai.zbmath.org/v1/"
 UA = "APS360-1939-corpus/1.0 (university course project; polite OAI harvest, 1 request per few seconds)"
 _TOKEN = re.compile(r"<resumptionToken([^>]*)>([^<]*)</resumptionToken>")
+_ID = re.compile(r"<identifier>(oai:[^<]+)</identifier>")
+FIRST = {"verb": "ListRecords", "metadataPrefix": "oai_zb_preview", "set": "JFM"}
+
+
+def new_walk() -> str:
+    return "w" + dt.datetime.now(dt.timezone.utc).strftime("%Y%m%dT%H%M%S")
 
 
 def fetch_via_proxy(url: str, proxy: str) -> bytes | None:
@@ -66,7 +77,8 @@ def fetch(params: dict, tries: int = 8, proxy: str | None = None) -> bytes:
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--delay", type=float, default=2.0)
-    ap.add_argument("--max-pages", type=int, default=0, help="stop after this many new pages (0 = all)")
+    ap.add_argument("--max-pages", type=int, default=0, help="stop after this many saved pages (0 = all)")
+    ap.add_argument("--max-walks", type=int, default=8, help="new walks after lost tokens before giving up")
     ap.add_argument("--direct", action="store_true", help="no Windows-side proxy (the local PC)")
     args = ap.parse_args()
     cfg = load_config(repo_path("config/paths.yaml"))
@@ -79,50 +91,66 @@ def main() -> None:
     manifest = json.loads(mpath.read_text(encoding="utf-8")) if mpath.exists() else {
         "source": "jfm", "revision": None, "endpoint": BASE, "set": "JFM", "metadataPrefix": "oai_zb_preview",
         "licence": "CC BY-SA 4.0 (zbMATH Open)", "files": {}}
+    seen: set[str] = set()
+    for e in manifest["files"].values():
+        seen.update(_ID.findall(gzip.decompress((dest / e["file"]).read_bytes()).decode("utf-8", "replace")))
     state = json.loads(state_path.read_text(encoding="utf-8")) if state_path.exists() else {}
-    params = {"verb": "ListRecords", "resumptionToken": state["token"]} if state.get("token") else \
-             {"verb": "ListRecords", "metadataPrefix": "oai_zb_preview", "set": "JFM"}
-    cursor, new, restarted = state.get("cursor", 0), 0, False
+    total = state.get("complete_list_size")
+    if state.get("token") and state.get("walk"):     # a token without a walk id predates per-walk keys
+        params, walk, cursor = {"verb": "ListRecords", "resumptionToken": state["token"]}, state["walk"], state["cursor"]
+    else:
+        params, walk, cursor = dict(FIRST), new_walk(), 0
+    print(f"{len(seen)} records saved so far; walk {walk} from cursor {cursor}", flush=True)
+    saved = walks = walked = 0
     while True:
         try:
             body = fetch(params, tries=3 if "resumptionToken" in params else 8, proxy=proxy)
+            text = body.decode("utf-8", "replace")
+            if "<error" in text and "badResumptionToken" in text:
+                raise SystemExit("badResumptionToken")
         except SystemExit:
             # zbMATH answers a token it no longer knows with HTTP 500, not with badResumptionToken
-            if "resumptionToken" not in params or restarted:
+            if "resumptionToken" not in params or walks >= args.max_walks:
                 raise
-            print("resumption token keeps failing; restarting from the first page", flush=True)
-            params, cursor, restarted = {"verb": "ListRecords", "metadataPrefix": "oai_zb_preview", "set": "JFM"}, 0, True
+            walks += 1
+            params, walk, cursor = dict(FIRST), new_walk(), 0
+            print(f"resumption token lost; new walk {walk} from the first page ({walks}/{args.max_walks}), "
+                  f"{len(seen)}/{total} records saved", flush=True)
             continue
-        text = body.decode("utf-8", "replace")
-        if "<error" in text and "badResumptionToken" in text:
-            print("resumption token expired; restarting from the first page", flush=True)
-            params, cursor = {"verb": "ListRecords", "metadataPrefix": "oai_zb_preview", "set": "JFM"}, 0
-            continue
-        key = f"page_{cursor:07d}"
-        out = pages / f"{key}.xml.gz"
-        if key not in manifest["files"]:
+        ids = _ID.findall(text)
+        fresh = [i for i in ids if i not in seen]
+        if fresh:
+            key = f"{walk}_page_{cursor:07d}"
+            out = pages / f"{key}.xml.gz"
             out.write_bytes(gzip.compress(body))
             manifest["files"][key] = {"file": f"pages/{out.name}", "bytes": out.stat().st_size,
                                       "sha256": hashlib.sha256(out.read_bytes()).hexdigest(),
-                                      "records": text.count("<record>"),
+                                      "records": len(ids), "new_records": len(fresh), "walk": walk,
                                       "harvested_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")}
-            new += 1
+            seen.update(fresh)
+            saved += 1
+            tmp = mpath.with_suffix(".tmp")
+            tmp.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+            tmp.replace(mpath)
         m = _TOKEN.search(text)
         token = m.group(2).strip() if m else ""
         size = re.search(r'completeListSize="(\d+)"', m.group(1)) if m else None
-        cursor += text.count("<record>")
-        state = {"token": token, "cursor": cursor, "complete_list_size": int(size.group(1)) if size else None}
-        tmp = mpath.with_suffix(".tmp")
-        tmp.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
-        tmp.replace(mpath)
-        state_path.write_text(json.dumps(state), encoding="utf-8")
-        if len(manifest["files"]) % 50 == 0:
-            print(f"{len(manifest['files'])} pages, cursor {cursor}/{state['complete_list_size']}", flush=True)
-        if not token or (args.max_pages and new >= args.max_pages):
+        total = int(size.group(1)) if size else total
+        cursor += len(ids)
+        state_path.write_text(json.dumps({"walk": walk, "token": token, "cursor": cursor,
+                                          "complete_list_size": total}), encoding="utf-8")
+        walked += 1
+        if walked % 50 == 0:
+            print(f"walk {walk}: cursor {cursor}/{total}, {len(seen)} records saved, {saved} pages saved this run",
+                  flush=True)
+        if total and len(seen) >= total:
+            print("every record of the set is saved", flush=True)
+            break
+        if not token or (args.max_pages and saved >= args.max_pages):
             break
         params = {"verb": "ListRecords", "resumptionToken": token}
         time.sleep(args.delay)
-    print(f"done: {len(manifest['files'])} pages, {cursor} records", flush=True)
+    print(f"done: {len(manifest['files'])} pages, {len(seen)}/{total} records", flush=True)
 
 
 if __name__ == "__main__":
