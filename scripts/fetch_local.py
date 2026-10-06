@@ -112,9 +112,9 @@ def main() -> None:
                 continue
             if isinstance(status, int) and status >= 500:
                 if not replicas_tried:
-                    replicas_tried = True
-                    reps = ia_replicas(url)
+                    reps = ia_replicas(url)   # [] if the metadata lookup failed too: looked up again next time
                     if reps:
+                        replicas_tried = True
                         print(f"[{key}] HTTP {status}; trying the item's replicas "
                               f"{', '.join(r.split('/')[2] for r in reps)}", flush=True)
                         urls[alt + 1:alt + 1] = reps
