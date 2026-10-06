@@ -36,3 +36,8 @@ def test_word_share_penalises_tables_and_fragments():
     assert word_share(prose) > 0.9
     assert word_share(table) < 0.3
     assert math.isnan(word_share("zu kurz"))
+
+
+def test_word_share_ignores_spaced_punctuation():
+    spaced = "Beerdigte den 12 . Juli Peter Müller , Bäckermeister , alt 73 Jahre . " * 4
+    assert word_share(spaced) > 0.75

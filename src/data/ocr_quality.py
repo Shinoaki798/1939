@@ -72,7 +72,9 @@ def score(text: str, lexicon: set[str]) -> float:
 
 
 def word_share(text: str) -> float:
-    ws = text.split()
+    # Punctuation-only tokens are not counted: some OCR (DDB) writes "Müller , a . d ." with spaced
+    # punctuation, which says nothing about quality. Digits, symbols and fragments do count.
+    ws = [w for w in text.split() if any(ch.isalnum() for ch in w)]
     if len(ws) < MIN_TOKENS:
         return float("nan")
     words = 0
@@ -194,6 +196,7 @@ def _keep(article_id: str, per_cell_rate: float) -> bool:
 
 
 SMALL_SOURCE_ROWS = 50_000
+FIRST_YEAR, LAST_YEAR = 1900, 1955   # study range (per-year holdout spans 1900-1955)
 _LEX: set[str] = set()
 
 
@@ -207,11 +210,14 @@ def _snippet(text: str, n: int = 320) -> str:
 
 
 def _hist_job(args: tuple) -> dict:
-    src, path, per_cell, rate = args
+    src, path, per_cell, rate, lang = args
     cells = defaultdict(list)
-    cols = ("article_id", "year", "text", "n_words")
+    cols = ("article_id", "year", "text", "n_words", "lang")
     for b in pq.ParquetFile(path).iter_batches(batch_size=1000, columns=list(cols)):
-        for aid, y, text, nw in zip(*(b.column(c).to_pylist() for c in cols)):
+        for aid, y, text, nw, row_lang in zip(*(b.column(c).to_pylist() for c in cols)):
+            # only pages in the study language and range (DDB also holds French/Italian and 18th-c. pages)
+            if row_lang != lang or not FIRST_YEAR <= y <= LAST_YEAR:
+                continue
             if len(cells[y]) >= per_cell or not _keep(aid, rate):
                 continue
             text = text or ""
@@ -229,7 +235,7 @@ def histogram(cfg: dict, lang: str, per_cell: int, rate: float, workers: int) ->
         files = sorted(ingested_dir(cfg, src, sources[src]).glob("*.parquet"))
         n_rows = sum(pq.ParquetFile(f).metadata.num_rows for f in files)
         src_rate = 1.0 if n_rows <= SMALL_SOURCE_ROWS else rate   # small sources: score every document
-        jobs += [(src, str(f), per_cell, src_rate) for f in files]
+        jobs += [(src, str(f), per_cell, src_rate, lang) for f in files]
     merged: dict = defaultdict(list)
     with ProcessPoolExecutor(workers, initializer=_init_lex, initargs=(lex,)) as ex:
         for part in ex.map(_hist_job, jobs):
@@ -273,7 +279,8 @@ def write_report(cfg: dict, lang: str, cells: dict, out_md: Path, out_png: Path,
                 by[(src, f"{a}-{b}")].extend(rows)
                 passed[(src, f"{a}-{b}")].extend(r for r in rows if r[0] >= hit_thr and not math.isnan(r[1]))
     lines = [f"# OCR quality, {lang}", "",
-             "Sampled documents per source x year (deterministic hash sample). Nothing has been dropped.", "",
+             f"Sampled documents per source x year (deterministic hash sample), lang = {lang} only, "
+             f"{FIRST_YEAR}-{LAST_YEAR}. Nothing has been dropped.", "",
              "## 1. Period-lexicon hit rate (all sampled documents)", "",
              "Share of documents below each threshold:", ""]
     lines += _table(by, 0, (0.6, 0.7, 0.75, 0.8), weighted=False) + ["", "Share of words below each threshold:", ""]
@@ -287,7 +294,8 @@ def write_report(cfg: dict, lang: str, cells: dict, out_md: Path, out_png: Path,
     lines += _table(passed, 1, WORD_SHARE_CANDIDATES, weighted=True) + [""]
     out_md.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
-    ex = [f"# OCR examples, {lang}: documents with hit rate >= {hit_thr}, dated <= 1939, by word-share band", ""]
+    ex = [f"# OCR examples, {lang}: documents with hit rate >= {hit_thr}, dated {FIRST_YEAR}-1939, "
+          f"by word-share band", ""]
     bands = [(0.0, 0.4), (0.4, 0.5), (0.5, 0.6), (0.6, 0.7), (0.7, 0.8), (0.8, 1.01)]
     for src in sorted({k.split("|")[0] for k in cells}):
         rows = [r for k, v in sorted(cells.items()) if k.split("|")[0] == src and int(k.split("|")[1]) <= 1939
