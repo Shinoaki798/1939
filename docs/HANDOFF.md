@@ -409,3 +409,17 @@ Dated entries; each supersedes anything above it that it contradicts.
     seen shares separately), 1925–1939-06 totals per language, OCR histograms +
     thresholds per language, dedup rates per source, C1 drop counts, mixture vs
     target and any shortfall.
+- **2026-10-05 — German OCR threshold.** From `reports/ocr_quality_de.md`
+  (lexicon = DTA ≤1938, 1.32M types, + 177k widespread pool types): hit rate
+  ≥ **0.75** (user). Words lost before cutoff: DDB 0.3–2.8 %, Europeana
+  16–21 %, VB 0 %. German supply in every period exceeds its 25 % cap, so the
+  stricter threshold costs no seen tokens. The hit rate ignores digits and
+  one-letter fragments (number tables, shredded OCR still reach ≥ 0.8), so a
+  second gate, `word_share`, is applied too; its threshold is chosen by the
+  user from its own histogram before anything is dropped.
+- **2026-10-05 — CAP file names.** static.case.law volume numbers repeat across
+  reporters; the first run saved them under the bare number and overwrote 120
+  volumes. Files now carry `<reporter>__<vol>.zip`, the downloader refuses any
+  table whose keys share a local name, and `scripts/cap_fix_names.py`
+  re-attributed the files on disk by sha256 (214 kept, 120 refetched). NCSE
+  (excluded) had the same clash in 6 file names; its counts are a lower bound.
