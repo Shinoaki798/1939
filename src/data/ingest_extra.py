@@ -576,6 +576,41 @@ _YEAR = re.compile(r"\b(1[5-9]\d\d|20\d\d)\b")
 _DEATH = re.compile(r"\d{3,4}\??\s*-\s*(\d{3,4})")
 
 
+def html_to_text(doc: str) -> str:
+    """Plain text from a PG HTML edition: block elements become paragraph breaks; script/style and the
+    page-number spans PG uses are dropped; whitespace inside a paragraph is collapsed."""
+    from html.parser import HTMLParser
+
+    class P(HTMLParser):
+        BLOCK = {"p", "div", "br", "h1", "h2", "h3", "h4", "h5", "h6", "li", "tr", "pre", "blockquote", "hr", "table"}
+
+        def __init__(self):
+            super().__init__(convert_charrefs=True)
+            self.out, self.skip = [], 0
+
+        def handle_starttag(self, tag, attrs):
+            cls = dict(attrs).get("class") or ""
+            if tag in ("script", "style") or (tag == "span" and "pagenum" in cls):
+                self.skip += 1
+            elif tag in self.BLOCK:
+                self.out.append("\n\n")
+
+        def handle_endtag(self, tag):
+            if tag in ("script", "style", "span") and self.skip:
+                self.skip -= 1
+            elif tag in self.BLOCK:
+                self.out.append("\n\n")
+
+        def handle_data(self, data):
+            if not self.skip:
+                self.out.append(data)
+
+    p = P()
+    p.feed(doc)
+    paras = (re.sub(r"\s+", " ", x).strip() for x in re.split(r"\n\s*\n", "".join(p.out)))
+    return "\n\n".join(x for x in paras if x)
+
+
 def rows_gutenberg(path: Path, key: str, cutoff: dt.date, stats: Counter, source: str = ""):
     """Project Gutenberg plain text (science bucket): PG header/footer removed; one row per book. Books
     whose authors are not all dead by 1930 ("check") are kept only if the front matter names a year
@@ -586,6 +621,8 @@ def rows_gutenberg(path: Path, key: str, cutoff: dt.date, stats: Counter, source
         stats["dropped_not_in_catalog"] += 1
         return
     raw = path.read_text(encoding="utf-8", errors="replace")
+    if raw.lstrip()[:500].lower().startswith(("<!doctype", "<?xml", "<html")):
+        raw = html_to_text(raw)
     s, e = _PG_START.search(raw), _PG_END.search(raw)
     text = raw[s.end() if s else 0: e.start() if e else len(raw)].strip()
     years = [int(y) for y in _YEAR.findall(text[:5000])]

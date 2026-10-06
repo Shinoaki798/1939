@@ -235,3 +235,15 @@ def test_gutenberg_front_matter_year_check(tmp_path, monkeypatch):
     assert [r["article_id"] for r in rows] == ["gutenberg_sci_en_pg1", "gutenberg_sci_en_pg3"]
     assert rows[0]["date"] == "1920-01-01" and "licence" not in rows[0]["text"] and "START OF" not in rows[0]["text"]
     assert rows[1]["date"] == "1867-01-01" and stats["dropped_date_unverified"] == 1
+
+
+def test_html_to_text_and_mirror_urls():
+    from src.data.gutenberg_select import mirror_urls
+    from src.data.ingest_extra import html_to_text
+
+    doc = ("<!DOCTYPE html><html><head><style>p {x}</style></head><body><h1>RELATIVITY</h1>"
+           "<p>The special <i>and</i>\n general theory.<span class='pagenum'>[Pg 5]</span></p><p>Second</p></body></html>")
+    assert html_to_text(doc) == "RELATIVITY\n\nThe special and general theory.\n\nSecond"
+    urls = mirror_urls("5001").split("|")
+    assert urls[0] == "https://gutenberg.pglaf.org/5/0/0/5001/5001-h/5001-h.htm" and urls[-1].endswith("/5001-8.txt")
+    assert mirror_urls("7").split("|")[2] == "https://gutenberg.pglaf.org/0/7/7-0.txt"

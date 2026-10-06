@@ -208,10 +208,12 @@ def fetch_one(key: str, spec: dict, src: dict, dl: dict, out_dir: Path, via: str
     final = out_dir / name
     part = out_dir / (name + ".part")
 
+    alt = 0   # a url column may list alternatives "a|b|c": a 404 moves on to the next one
     for attempt in range(1, max_attempts + 1):
         # "auto" is resolved before every attempt: proxy whenever it answers, mirror/direct otherwise.
         cur = via if via != "auto" else ("proxy" if proxy_alive(dl["proxy"], dl["hf_endpoint"]) else "mirror")
-        url = source_url(spec, src, dl, cur)
+        urls = source_url(spec, src, dl, cur).split("|")
+        url = urls[min(alt, len(urls) - 1)]
         if spec["bytes"] is None:
             # Size not published: fetch the whole file each attempt; accept on curl exit 0, then verify().
             if part.exists():
@@ -220,6 +222,12 @@ def fetch_one(key: str, spec: dict, src: dict, dl: dict, out_dir: Path, via: str
             rc, code = run_curl(cur, url, part, dl["proxy"])
             if rc != 0 or not part.exists() or part.stat().st_size == 0:
                 print(f"[{key}] curl exit {rc}, HTTP {code}", flush=True)
+                if code == "404":
+                    if alt + 1 < len(urls):
+                        alt += 1
+                        continue
+                    print(f"[{key}] 404 on every URL; giving up", flush=True)
+                    return False
                 time.sleep(min(60, 10 * attempt))
                 continue
         have = part.stat().st_size if part.exists() else 0

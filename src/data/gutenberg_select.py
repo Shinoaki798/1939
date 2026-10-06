@@ -24,7 +24,16 @@ import re
 from src.data.download import load_config, repo_path
 
 T_KEEP = ("TA", "TC", "TD", "TF", "TG", "TJ", "TK", "TL", "TN", "TP")
-MIRROR = "https://gutenberg.pglaf.org/cache/epub/{n}/pg{n}.txt"
+MIRROR = "https://gutenberg.pglaf.org"
+# Mirror layout: digits of the number except the last, then the number (40 -> 4/40, 5001 -> 5/0/0/5001).
+# Most books only have the HTML edition there; plain-text names vary. Alternatives are tried in order
+# (src.data.download moves to the next one on 404).
+FORMATS = ("{n}-h/{n}-h.htm", "{n}-h/{n}-h.html", "{n}-0.txt", "{n}.txt", "{n}-8.txt")
+
+
+def mirror_urls(n: str) -> str:
+    d = "/".join(n[:-1]) + "/" + n if len(n) > 1 else "0/" + n
+    return "|".join(f"{MIRROR}/{d}/{f.format(n=n)}" for f in FORMATS)
 _PERSON = re.compile(r"(\d{3,4})\??\s*-\s*(\d{3,4})?")
 
 
@@ -65,10 +74,10 @@ def main() -> None:
                 kept.append((r, kind, verdict))
         src = sources[name]
         with open(repo_path(src["files"]), "w", encoding="utf-8", newline="\n") as fh:
-            fh.write(f"# {name}: Project Gutenberg plain text from the PG mirror; selected from {cat.name} "
-                     f"on {dt.date.today()} by src.data.gutenberg_select\nkey\turl\tbytes\tchecksum\n")
+            fh.write(f"# {name}: Project Gutenberg HTML/plain text from the PG mirror; selected from {cat.name} "
+                     f"on {dt.date.today()} by src.data.gutenberg_select\nkey\turl\tbytes\tchecksum\tfile\n")
             for r, *_ in kept:
-                fh.write(f"pg{r['Text#']}\t{MIRROR.format(n=r['Text#'])}\t?\t-\n")
+                fh.write(f"pg{r['Text#']}\t{mirror_urls(r['Text#'])}\t?\t-\tpg{r['Text#']}.dat\n")
         with open(repo_path(src["items"]), "w", encoding="utf-8", newline="\n") as fh:
             fh.write("key\tkind\tverdict\tlocc\ttitle\tauthors\n")
             for r, kind, verdict in kept:
