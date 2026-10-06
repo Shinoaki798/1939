@@ -32,16 +32,25 @@ if [ ! -d "$WORK/.git" ]; then
 fi
 cd "$WORK"
 git "${SAFE[@]}" fetch origin --prune
-# Reports regenerated on this box (and later committed from the local machine) would block the merge:
-# move them to logs/reports_prev/<time>/ first. Never touches anything outside reports/.
-changed=$(git status --porcelain --untracked-files=all -- reports | cut -c4-)
+# Reports and catalog tables (config/*_files.tsv, *_items.tsv) generated on this box and later committed
+# from the local machine would block the merge: move them to logs/reports_prev/<time>/ first.
+# Never touches anything else.
+candidates=$( { git status --porcelain --untracked-files=all -- reports | cut -c4-;
+               git status --porcelain --untracked-files=all -- config | grep '^??' | cut -c4- | grep -E '_(files|items)[.]tsv$'; } )
+changed=""
+for f in $candidates; do   # only files the incoming commit adds or changes would block the merge
+  if git cat-file -e "origin/$BRANCH:$f" 2>/dev/null &&      { ! git ls-files --error-unmatch "$f" >/dev/null 2>&1 || ! git diff --quiet HEAD "origin/$BRANCH" -- "$f"; }; then
+    changed="$changed $f"
+  fi
+done
 if [ -n "$changed" ]; then
   keep="logs/reports_prev/$(date +%Y%m%dT%H%M%S)"
   mkdir -p "$keep"
-  for f in $changed; do cp "$f" "$keep/"; done
-  git checkout -q -- reports 2>/dev/null || true
-  git status --porcelain --untracked-files=all -- reports | grep '^??' | cut -c4- | xargs -r rm -f
-  echo "moved generated reports to $keep"
+  for f in $changed; do
+    cp "$f" "$keep/"
+    if git ls-files --error-unmatch "$f" >/dev/null 2>&1; then git checkout -q -- "$f"; else rm -f "$f"; fi
+  done
+  echo "moved generated files to $keep:$changed"
 fi
 git checkout -q "$BRANCH" 2>/dev/null || git checkout -q -b "$BRANCH" "origin/$BRANCH"
 git "${SAFE[@]}" merge --ff-only "origin/$BRANCH"

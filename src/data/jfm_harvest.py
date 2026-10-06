@@ -32,9 +32,22 @@ UA = "APS360-1939-corpus/1.0 (university course project; polite OAI harvest, 1 r
 _TOKEN = re.compile(r"<resumptionToken([^>]*)>([^<]*)</resumptionToken>")
 
 
-def fetch(params: dict, tries: int = 8) -> bytes:
+def fetch_via_proxy(url: str, proxy: str) -> bytes | None:
+    """curl.exe through the Windows-side proxy (WSL cannot reach it directly); None if that fails."""
+    import subprocess
+    from src.data.download import CURL_EXE
+    r = subprocess.run([CURL_EXE, "-sS", "--fail", "--max-time", "300", "-x", proxy, "-A", UA, url],
+                       stdin=subprocess.DEVNULL, capture_output=True)
+    return r.stdout if r.returncode == 0 and r.stdout else None
+
+
+def fetch(params: dict, tries: int = 8, proxy: str | None = None) -> bytes:
     url = BASE + "?" + urllib.parse.urlencode(params)
     for attempt in range(tries):
+        if proxy:
+            body = fetch_via_proxy(url, proxy)
+            if body is not None:
+                return body
         try:
             req = urllib.request.Request(url, headers={"User-Agent": UA})
             with urllib.request.urlopen(req, timeout=180) as r:
@@ -68,7 +81,7 @@ def main() -> None:
              {"verb": "ListRecords", "metadataPrefix": "oai_zb_preview", "set": "JFM"}
     cursor, new = state.get("cursor", 0), 0
     while True:
-        body = fetch(params)
+        body = fetch(params, proxy=cfg["download"]["proxy"])
         text = body.decode("utf-8", "replace")
         if "<error" in text and "badResumptionToken" in text:
             print("resumption token expired; restarting from the first page", flush=True)

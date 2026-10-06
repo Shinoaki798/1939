@@ -589,3 +589,17 @@ gutenberg_sci_de:
   ocr_or_keyed: keyed (skips the OCR gates, gets the C1 screen)
   subject_filter_rule: "as gutenberg_sci_en"
   role: training, science bucket
+
+dingler:
+  kind: url
+  files: ./config/dingler_files.tsv
+  dest: ./data/foreign/de/raw/dingler
+  lang: de
+  approved: 2026-10-06
+  title: "Dinglers Polytechnisches Journal (1820-1931)"
+  bucket: science
+  licence: "CC BY-SA 4.0 (text digitisations; https://dingler.bbaw.de/nutzungsbedingungen.html); repository code LGPL-2.1"
+  access_method: "GitHub deutschestextarchiv/dingler, source tarball pinned to commit 20d97b12 (the project's sanctioned bulk route)"
+  ocr_or_keyed: keyed (project-corrected OCR in TEI; skips the OCR gates, gets the C1 screen)
+  subject_filter_rule: "none (whole journal); TEI <text> only, teiHeader and editorial notes removed"
+  role: training, science bucket
