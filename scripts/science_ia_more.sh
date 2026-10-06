@@ -6,7 +6,7 @@ set -uo pipefail
 cd "$HOME/1939"
 PY="$HOME/miniconda3/envs/torch-gpu/bin/python"
 log=logs/science_ia.log
-until grep -q "science_ia done" "$log" 2>/dev/null; do sleep 300; done
+[ "${NOWAIT:-0}" = 1 ] || until grep -q "science_ia done" "$log" 2>/dev/null; do sleep 300; done
 for s in "$@"; do
   "$PY" -u -m src.data.ia_catalog --source "$s" >> "$log" 2>&1
   echo "$(date -Is) download $s" >> "$log"

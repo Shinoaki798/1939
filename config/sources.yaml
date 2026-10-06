@@ -639,3 +639,20 @@ nature_ia:
   ia_date_from: volume
   window: [1869-01-01, 1930-12-31]
   role: training, science bucket
+
+sitzungsberichte_ia:
+  kind: url
+  files: ./config/sitzungsberichte_ia_files.tsv
+  items: ./config/sitzungsberichte_ia_items.tsv
+  dest: ./data/foreign/de/raw/sitzungsberichte_ia
+  lang: de
+  approved: 2026-10-06
+  title: "Sitzungsberichte der Koeniglich Preussischen Akademie der Wissenschaften (archive.org copies)"
+  bucket: science
+  licence: "<= 1930 US public domain; 1931-38 in copyright, used for non-commercial research training (user decision 2026-10-06)"
+  access_method: "archive.org scans with OCR text (BBAW serves page images only); <id>_djvu.txt via src.data.download"
+  ocr_or_keyed: ocr
+  subject_filter_rule: "none (whole series); year-only items <= 1938"
+  ia_query: 'title:(sitzungsberichte preussischen akademie wissenschaften)'
+  window: [1882-01-01, 1938-12-31]
+  role: training, science bucket
