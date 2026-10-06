@@ -55,7 +55,7 @@ contamination is detectable. Deep learning is the
 instrument: these quantities exist only in a trained model's next-token
 distribution, so the project \emph{is} the training, validation and testing of
 that model. Training ends \textbf{30 June 1939}; July--August 1939 is an
-\textbf{embargo}, excluded from training and evaluation.
+\textbf{embargo}, excluded from training and scored evaluation.
 
 \section*{Illustration}
 \begin{figure}[!h]
@@ -97,21 +97,21 @@ of seen tokens); pre-1920 $\le$8\%; within a period, sampling weight
 $\propto \exp(-(1939-\text{year})/5)$. \textbf{Splits} by publication date,
 never shuffled: a fixed 2\% of every year 1900--1955, per language, is held out
 and never trained on; \textsc{Train} $=$ the rest $\le$1939-06-30; \textsc{Val}
-$=$ a disjoint 2\%; \textsc{Test-A/B/C} $=$ held-out 1930--38 / 1939-09--45 /
+$=$ a disjoint 2\% $\le$1939-06-30; \textsc{Test-A/B/C} $=$ held-out 1930--38 / 1939-09--45 /
 1946--55. \textbf{Cleaning}, in order: (1)~language filter (stopword vote per
 article and title-year); (2)~MinHash dedup of reprints (word 5-grams, Jaccard
 $\ge$0.8) before splitting; (3)~OCR quality $=$ period-lexicon hit rate per
 language, cut at a threshold set from its histogram; (4)~documents containing
 a C1 coinage (English or German list) are dropped whole.
 \textbf{Format:} 48k BPE trained only on native pre-cutoff English and German;
-documents joined by an end-of-text token, packed into 2048-token sequences; all
-numbers are bits-per-byte. \textbf{RQ1 probe set:} $\sim$200
+documents joined by an end-of-text token into 2048-token sequences; numbers are
+bits-per-byte. \textbf{RQ1 probe set:} $\sim$200
 post-cutoff terms in four classes --- C1 coinage (\textit{radar}), C2
 compositional (\textit{atomic bomb}), C3 old word, new sense (\textit{blitz}),
 C4 proper noun, new association (\textit{Hiroshima}) --- each with a
 frequency-matched control in $\ge$5 sentence contexts, frozen in advance. \textbf{RQ2
-calibration:} held-out pre-cutoff corpora with a known fraction $\varepsilon$
-(0.1--50\%) of 1939-09--1945 articles mixed in. \textbf{RQ3 propositions:}
+calibration:} held-out pre-cutoff corpora with a known share $\varepsilon$
+(0.1--50\%) of 1939-09--45 articles mixed in. \textbf{RQ3 propositions:}
 $\sim$60 binary propositions about 1939--45, each with same-topic US (English)
 and German (German) contexts from June and late August 1939 (embargo text as
 conditioning only); continuations are English.
@@ -120,12 +120,12 @@ conditioning only); continuations are English.
 One \textbf{decoder-only Transformer} as in the course: token embeddings,
 stacked blocks of multi-head self-attention and position-wise feed-forward
 layers, residual connections, layer normalisation, softmax over the vocabulary,
-with attention \textbf{causally masked} (position $i$ sees only $\le i$), a
+with attention \textbf{causally masked} (position $i$ sees $\le i$), a
 next-token predictor. Decoder-only because every measurement is a sequence
 probability of unseen text: a masked encoder's pseudo-likelihoods give none, and
-an encoder--decoder has no source sequence here. From scratch in PyTorch, no
+an encoder--decoder has no source sequence. From scratch in PyTorch, no
 pretrained weights, \textbf{no second Transformer}: all controls are built at
-evaluation time on this one model.
+evaluation on this one model.
 \textbf{Size:} 350M parameters (24 layers, $d{=}1024$, 16 heads, 48k vocab) on
 up to 10B seen tokens ($\approx$29/parameter); no text is seen more than twice,
 as repetition raises memorisation and biases surprisal. Compute
@@ -134,8 +134,8 @@ before the midterm.
 \textbf{Measurement.} For term class $c$, $\Delta_c = \mathbb{E}_{t\in
 \mathcal{T}_c}[s(t)] - \mathbb{E}_{t\in\mathcal{C}_c}[s(t)]$, $s$ the
 surprisal in fixed contexts, $\mathcal{C}_c$ matched controls. RQ1 is the
-profile $(\Delta_{C1..C4})$; RQ2 fits a monotone map to $\varepsilon$ and
-reports the minimum detectable $\varepsilon$; RQ3 scores
+profile $(\Delta_{C1..C4})$; RQ2 fits a monotone map to $\varepsilon$,
+reporting the minimum detectable $\varepsilon$; RQ3 scores
 forced-choice continuations by log-likelihood ratio as Brier score per
 perspective; all with bootstrap 95\% CIs.
 \textbf{Success:} $\Delta_{C2}$ significantly smallest; a step at 1939, not a
