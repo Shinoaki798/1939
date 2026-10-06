@@ -325,6 +325,18 @@ down immediately; it still satisfies every success criterion.
   (he was asked by email; default: keep).
 - Exact OCR-quality drop threshold (set after the week-1 histogram).
 - Bulk-access status of Gallica and Deutsches Zeitungsportal.
+- (2026-10-06, twin) The old RQ2 — passage dater, corpus estimate ε̂,
+  `src/tools/corpus_audit` — is not in the rewritten proposal: dropped, or kept
+  as an extension?
+- (2026-10-06, twin) Twin token budget: the same English token stream as the
+  main run (same documents, order and repetition; the run is shorter by the
+  German share, ≤ 25 %), or the same number of steps? The proposal ("identical
+  … English tokens and schedule") reads as the former. Decide before the
+  tokenised shards are built: the former needs the sampler to produce the
+  English stream independently of the German one.
+- (2026-10-06, twin) Gallup 1939 figures for RQ3: collected by hand per
+  proposition from the Gallup volume (evaluation reference only, never
+  training); when.
 
 ## 12. Decisions log
 
@@ -510,6 +522,39 @@ Dated entries; each supersedes anything above it that it contradicts.
 - **2026-10-06 — English token floor, CA routing.** See §13 for the operating
   guide. Chronicling America must never be downloaded through the VPN (68 GB
   > budget); it was fetched and ingested on the local PC and shipped as parquet.
+- **2026-10-06 — two Transformer runs: main + English-only twin; proposal
+  rewritten (user decision).** Supersedes "one Transformer" in §1, §2 RQ2/RQ3,
+  §6.4, §6.5, §9 and "no control Transformer" of 2026-10-05.
+  - *Runs:* one architecture, two runs. Main = English + German, as fixed on
+    2026-10-05 (24 layers, d 1024, 16 heads, bilingual 48k BPE, ≈350M params,
+    ≤ 10B seen tokens). Twin = identical size, tokenizer, English tokens and
+    schedule, German slice removed; used for RQ2 only. Still no other control
+    Transformer, ablation, second scale, seed sweep or instruction tuning.
+    Main run 10-22…11-01 as planned; twin in November (~85 h on the 5080 or
+    ~15 h on a rented H100). CLAUDE.md rule 1 rewritten.
+  - *RQ2 = perspective:* what reading the German press changes. The RQ1 and
+    RQ3 batteries run on both models; the paired difference is the effect.
+    Success: a significant paired difference on DE-context propositions.
+  - *RQ3 = foresight against informed contemporaries:* ≥ 120 binary
+    propositions resolved after 1939-09-01, in three tiers by what was knowable
+    in June 1939 (near: war in Europe this year; mid: third Roosevelt term, US
+    entry, self-sustaining chain reaction; far: Hitler defeated, a fission
+    weapon used); each with same-topic US (English) and DE (German) contexts
+    from June and 1939-08-18…31, in period language, three wordings each;
+    English continuations. Brier per tier × perspective × window against
+    chance, the n-gram floor and the 1939 Gallup figure where polled (Gallup,
+    *The Gallup Poll: Public Opinion 1935–1971*). Success: mid-tier Brier
+    better than chance and not worse than Gallup.
+  - *RQ1* adds a C4 forced-choice test (e.g. Pearl Harbor: naval station vs.
+    attack) that doubles as a contamination check.
+  - *Proposal vs. HANDOFF:* the proposal stays high-level and is not edited for
+    details it simplifies (user): PNAS comes from archive.org, not PubMed
+    Central; the token floor is 20 for article-, speech- and case-level
+    sources, 50 for pages; Math. Annalen and Crelle come from archive.org with
+    GDZ as fallback. HANDOFF governs.
+  - *E-mail:* kept out of the public repo again (`\authoremail` +
+    gitignored `docs/author_private.tex`); `docs/proposal.pdf` is the public
+    build, `docs/proposal_submission.pdf` (gitignored) the one to submit.
 
 ---
 
@@ -525,7 +570,7 @@ already answers.
 
 | # | file | why |
 |---|---|---|
-| 1 | `CLAUDE.md` | hard rules (one Transformer, cutoff/embargo, splits, ≤ 2 epochs + caps + science bucket, bpb, no pretrained tokenizer) |
+| 1 | `CLAUDE.md` | hard rules (main + English-only twin Transformer, cutoff/embargo, splits, ≤ 2 epochs + caps + science bucket, bpb, no pretrained tokenizer) |
 | 2 | `docs/HANDOFF.md` §12 (from 2026-10-05) and this §13 | every decision since the review: German used natively, sources in/out, OCR gates, lexicon v2, science bucket, copyright decisions |
 | 3 | `reports/science_status_2026-10-06.md` | what is running, what is done, exact resume commands |
 | 4 | `reports/science_feasibility_2026-10-06.md` | every science source: route, terms, size |

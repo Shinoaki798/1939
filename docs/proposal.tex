@@ -1,7 +1,6 @@
-% APS360 project proposal, written in the course template (template.tex + APS360.sty).
 \documentclass[final]{article}
 
-\PassOptionsToPackage{numbers,sort&compress}{natbib} % options for the natbib that APS360.sty loads
+\PassOptionsToPackage{numbers,sort&compress}{natbib}
 \usepackage{APS360}
 \usepackage[utf8]{inputenc} % allow utf-8 input
 \usepackage[T1]{fontenc}    % use 8-bit T1 fonts
@@ -9,27 +8,31 @@
 \usepackage{url}            % simple URL typesetting
 \usepackage{booktabs}       % professional-quality tables
 \usepackage{amsfonts}       % blackboard math symbols
+\usepackage{amsmath}
 \usepackage{nicefrac}       % compact symbols for 1/2, etc.
 \usepackage{microtype}      % microtypography
 \usepackage{xcolor}         % colors
-\usepackage{amsmath}        % \text in the sampling-weight formula (added)
-\usepackage{graphicx}       % the overview figure (added)
-
-% APS360.sty in [final] mode prints \@trackname, which it defines only for a track option;
-% an empty definition gives the same output as the unmodified template, without the error.
+\usepackage{graphicx}
 \makeatletter\providecommand{\@trackname}{}\makeatother
-\renewcommand{\bibsection}{} % the template supplies its own "References" heading
+\renewcommand{\bibfont}{\fontsize{8}{9.2}\selectfont}
+\setlength{\bibsep}{1.5pt}
+\setlength{\intextsep}{1pt}
+\setlength{\abovecaptionskip}{2pt}
+\setlength{\belowcaptionskip}{0pt}
+\let\oldsection\section
+\renewcommand{\section}{\vspace{-0.3em}\oldsection}
 % The e-mail is kept out of the public repository: docs/author_private.tex (gitignored)
 % holds \renewcommand{\authoremail}{, <email>} for the submitted build.
 \newcommand{\authoremail}{}
 \IfFileExists{author_private.tex}{\input{author_private.tex}}{}
 
-\title{The Shape of a Knowledge Boundary:\\ A Transformer Trained Only on Pre-1939 Text}
+\title{The Shape of a Knowledge Boundary:\\
+A Transformer Trained Only on Pre-1939 Text}
 
 \author{%
   Andrew An \\
-  1010864165\authoremail \\
-  \url{https://github.com/Shinoaki798/1939} \quad I used Claude Fable 5.1 to do the proposal.
+  1010864165\authoremail\\
+  \url{https://github.com/Shinoaki798/1939} \quad I used Claude Fable 5.1 to do the proposal.\\
 }
 
 \begin{document}
@@ -40,130 +43,129 @@
 
 \section*{Introduction}
 A language model's knowledge cutoff is usually described as a wall. I suspect
-it is a \textbf{membrane with structure}:
-some post-cutoff concepts are unreachable, others are assembled from parts the
-model already has and are half predictable. To characterise it I will train
-\textbf{one Transformer network} from random initialisation on newspaper text
-ending before the Second World War --- American and German press, the German in
-the original, because the country that started the war kept a record the
-American press could not --- and use that one model to answer three questions. \textbf{RQ1 (permeability):} which classes of post-1939 concepts can
-a pre-1939 model reach? \textbf{RQ2 (invertibility):} can the boundary be inverted
-into a tool that dates a passage and audits a corpus for post-1939 text? \textbf{RQ3 (foresight by perspective):} how much
-of 1939--45 was already implied by the press of mid-1939 --- American or
-German? Beyond history, this bounds what ``held-out'' tests test and whether
-contamination is detectable. Deep learning is the
+it is a \textbf{membrane with structure}: some post-cutoff concepts are
+unreachable, others are assembled from parts the model already has and are
+half predictable. To characterise it I will train a \textbf{decoder-only
+Transformer language model} from random initialisation on text ending before the Second
+World War --- American and German press, the German in the original, because the
+country that started the war kept its own record --- and ask three questions. \textbf{RQ1 (permeability):} which classes of
+post-1939 concepts can a pre-1939 model reach? \textbf{RQ2 (perspective):}
+what does reading the German press change --- measured against an otherwise
+identical twin trained on English only? \textbf{RQ3 (foresight):} how
+accurately does a model that has read everything up to June 1939 predict what
+happened next --- the war, a third Roosevelt term, nuclear weapons --- against
+what informed people believed at the time? Deep learning is the
 instrument: these quantities exist only in a trained model's next-token
-distribution, so the project \emph{is} the training, validation and testing of
-that model. Training ends \textbf{30 June 1939}; July--August 1939 is an
+distribution. Training ends \textbf{30 June 1939}; July--August 1939 is an
 \textbf{embargo}, excluded from training and scored evaluation.
 
 \section*{Illustration}
 \begin{figure}[!h]
   \centering
-  \includegraphics[width=0.88\textwidth]{figures/overview.pdf}
-  \caption{One model, three measurements. Shapes are hypothesised, not results.}
+  \includegraphics[width=\textwidth]{figures/overview.pdf}
+  \vspace{-0.9em}
+  \caption{One boundary, one model and its English-only twin. Shapes are hypothesised, not results.}
   \label{fig:overview}
 \end{figure}
+\vspace{-0.9em}
 
 \section*{Background \& Related Work}
 Language models degrade on text written after their training window
 \citep{lazaridou2021}; temporal conditioning improves future-fact calibration
 \citep{dhingra2022}; Time Machine GPT \citep{drinkall2024} trains
-point-in-time models. Recent from-scratch models with 19th- and 20th-century cutoffs,
-including 1939 \citep{timecapsule2025,ranke2025,talkie2026}, aim to
-\emph{produce} such models; this project studies the boundary itself.
-SemEval-2020 Task~1 \citep{schlechtweg2020}, HistBERT \citep{qiu2022} and
-19th-century models \citep{hosseini2021} measure how \emph{existing} words drift
-with masked encoders; RQ1 asks which \emph{not-yet-existing} concepts a fixed
-earlier vocabulary can reach, which needs a causal model with a hard boundary. ChroniclingAmericaQA \citep{piryani2024} shows OCR errors cut accuracy, hence
-an OCR covariate.
+point-in-time models. Recent from-scratch
+models with 19th- and 20th-century cutoffs, including 1939
+\citep{timecapsule2025,ranke2025,talkie2026}, aim to \emph{produce} such
+models; this project measures the boundary. SemEval-2020
+Task~1 \citep{schlechtweg2020}, HistBERT \citep{qiu2022} and 19th-century
+models \citep{hosseini2021} measure how \emph{existing} words drift with masked
+encoders; RQ1 asks which \emph{not-yet-existing} concepts a fixed earlier
+vocabulary can reach, which needs a causal model with a hard boundary.
+Gallup's 1939 polls \citep{gallup1939} give RQ3 a hindsight-free human
+reference.
 
 \section*{Data Processing}
-\textbf{Sources.} All text is pre-cutoff, in the original language; nothing
-is machine-translated. \emph{English:} American Stories \citep{dell2023},
+\textbf{Sources.} All text is pre-cutoff, in the original language; nothing is
+machine-translated. \emph{English:} American Stories \citep{dell2023},
 article-level text from Chronicling America, is the backbone and sole source
-of scored sets; training-only additions: Chronicling America pages digitised
-since that snapshot (1930s, page OCR) \citep{chronam}, the Congressional Record
-\citep{congrecord}, the Federal Register \citep{fedreg} and case law \citep{cap}
-(legal text $\le$10\%), and public-domain books \citep{locpdbooks} ($\le$12\%).
-\emph{German:} newspapers from Europeana \citep{europeana2015} and the
-Deutsches Zeitungsportal \citep{ddb} (38 titles in 1933--39), deduplicated
-by title and date, plus the 1925 and 1930 issues of the NSDAP daily
-\emph{V\"olkischer Beobachter} \citep{vb}; German is $\le$25\% of seen
-tokens per period. Every file is pinned by revision and checksum.
-\textbf{Recency weighting.} The pool centres on the 1910s but the model must
-live in 1939: the 1930s are seen twice; the 1920s fill the remainder ($\le$35\%
-of seen tokens); pre-1920 $\le$8\%; within a period, sampling weight
-$\propto \exp(-(1939-\text{year})/5)$. \textbf{Splits} by publication date,
-never shuffled: a fixed 2\% of every year 1900--1955, per language, is held out
-and never trained on; \textsc{Train} $=$ the rest $\le$1939-06-30; \textsc{Val}
-$=$ a disjoint 2\% $\le$1939-06-30; \textsc{Test-A/B/C} $=$ held-out 1930--38 / 1939-09--45 /
-1946--55. \textbf{Cleaning}, in order: (1)~language filter (stopword vote per
-article and title-year); (2)~MinHash dedup of reprints (word 5-grams, Jaccard
-$\ge$0.8) before splitting; (3)~OCR quality $=$ lexicon hit rate $\ge$0.75 and
-word-like share $\ge$0.70, per language; (4)~documents containing
-a C1 coinage (English or German list) are dropped whole.
-\textbf{Format:} 48k BPE trained only on native pre-cutoff English and German;
-documents joined by an end-of-text token into 2048-token sequences; numbers are
-bits-per-byte. \textbf{RQ1 probe set:} $\sim$200
-post-cutoff terms in four classes --- C1 coinage (\textit{radar}), C2
-compositional (\textit{atomic bomb}), C3 old word, new sense (\textit{blitz}),
-C4 proper noun, new association (\textit{Hiroshima}) --- each with a
-frequency-matched control in $\ge$5 sentence contexts, frozen in advance. \textbf{RQ2
-calibration:} held-out pre-cutoff corpora with a known share $\varepsilon$
-(0.1--50\%) of 1939-09--45 articles mixed in. \textbf{RQ3 propositions:}
-$\sim$60 binary propositions about 1939--45, each with same-topic US (English)
-and German (German) contexts from June and late August 1939 (embargo text as
-conditioning only); continuations are English.
+of scored sets; training-only additions: Chronicling America batch OCR for the
+1930s \citep{chronam2026}, the Congressional
+Record \citep{gentzkow2018}, the Federal Register \citep{fedreg} and case law
+\citep{cap2024} ($\le$10\%), and public-domain books
+\citep{locpdbooks} ($\le$12\%). \emph{German:} newspapers from Europeana
+\citep{europeana2015} and the Deutsches Zeitungsportal \citep{ddb2024}, deduplicated by title and date, plus the NSDAP daily
+\emph{V\"olkischer Beobachter} (1925, 1930) \citep{vb1925};
+German is $\le$25\% of seen tokens per period. \emph{Science} ($\le$10\%, exempt from recency weighting): PNAS
+1915--39 \citep{pnas}, the 1911 Britannica \citep{eb1911}, the
+\emph{Jahrbuch \"uber die Fortschritte der Mathematik} \citep{jfm} and
+G\"ottingen's digitised mathematics journals \citep{gdz}.
+\textbf{Recency weighting.}
+The pool centres on the 1910s but the model must live in 1939: the 1930s are
+seen twice; the 1920s fill the remainder ($\le$35\%); pre-1920 $\le$8\%;
+within a period, weight $\propto\exp(-(1939-\text{year})/5)$.
+\textbf{Splits} by publication date, never shuffled: a fixed 2\% of every year
+1900--1955, per language, is held out and never trained on; \textsc{Train} $=$
+the rest $\le$1939-06-30; \textsc{Val} $=$ a disjoint 2\% $\le$ cutoff;
+\textsc{Test-A/B/C} $=$ held-out 1930--38 / 1939-09--45 / 1946--55.
+\textbf{Cleaning}, in order: (1)~language filter (stopword vote); (2)~MinHash dedup of reprints (word 5-grams, Jaccard
+$\ge$0.8) before splitting; (3)~OCR quality per language: period-lexicon hit
+rate $\ge$0.75 and word-like share $\ge$0.70, $\ge$50 tokens; (4)~documents
+containing a C1 coinage (English or German list) are dropped whole.
+\textbf{Format:} 48k BPE trained only on native pre-cutoff English and
+German; 2048-token sequences; all numbers are bits-per-byte. \textbf{RQ1 probe set:} $\sim$200 post-cutoff
+terms in four classes (C1 coinage \textit{radar}; C2 compositional
+\textit{atomic bomb}; C3 new sense \textit{blitz}; C4 new association
+\textit{Hiroshima}), each with a frequency-matched control in $\ge$5 contexts,
+frozen in advance. \textbf{RQ3
+propositions:} $\ge$120 binary propositions resolved after 1939-09-01, in
+three tiers by what was knowable in June 1939 --- \emph{near} (war in Europe
+this year), \emph{mid} (a third Roosevelt term, US entry, a self-sustaining
+chain reaction), \emph{far} (Hitler defeated, a fission weapon used) --- each
+with same-topic US (English) and German (German) contexts from June and late
+August 1939 (embargo as conditioning only), in period language, three wordings each;
+continuations are English; the 1939 Gallup figure is recorded where polled.
 
 \section*{Architecture}
-One \textbf{decoder-only Transformer} as in the course: token embeddings,
-stacked blocks of multi-head self-attention and position-wise feed-forward
-layers, residual connections, layer normalisation, softmax over the vocabulary,
-with attention \textbf{causally masked} (position $i$ sees $\le i$), a
-next-token predictor. Decoder-only because every measurement is a sequence
-probability of unseen text: a masked encoder's pseudo-likelihoods give none, and
-an encoder--decoder has no source sequence. From scratch in PyTorch, no
-pretrained weights, \textbf{no second Transformer}: all controls are built at
-evaluation on this one model.
-\textbf{Size:} 350M parameters (24 layers, $d{=}1024$, 16 heads, 48k vocab) on
-up to 10B seen tokens ($\approx$29/parameter); no text is seen more than twice,
-as repetition raises memorisation and biases surprisal. Compute
-$\approx$2.1$\times$10$^{19}$ FLOPs, $\sim$85\,h on the RTX~5080 (H100: 15\,h),
-before the midterm.
-\textbf{Measurement.} For term class $c$, $\Delta_c = \mathbb{E}_{t\in
-\mathcal{T}_c}[s(t)] - \mathbb{E}_{t\in\mathcal{C}_c}[s(t)]$, $s$ the
-surprisal in fixed contexts, $\mathcal{C}_c$ matched controls. RQ1 is the
-profile $(\Delta_{C1..C4})$; RQ2 fits a monotone map to $\varepsilon$,
-reporting the minimum detectable $\varepsilon$; RQ3 scores
-forced-choice continuations by log-likelihood ratio as Brier score per
-perspective; all with bootstrap 95\% CIs.
-\textbf{Success:} $\Delta_{C2}$ significantly smallest; a step at 1939, not a
-slope; $\hat\varepsilon$ monotone; perspectives above the $n$-gram floor and
-significantly different.
+A \textbf{decoder-only Transformer} as in the course: token embeddings;
+stacked blocks of \textbf{causally masked} multi-head self-attention and
+position-wise feed-forward layers with residuals and layer normalisation;
+softmax over the vocabulary --- a next-token predictor. Decoder-only because every measurement is a
+sequence probability of unseen text: a masked encoder's pseudo-likelihoods
+give none, and an encoder--decoder has no source sequence. From scratch, no pretrained weights. \textbf{Two runs, one architecture:} the main
+model (English+German) and, for RQ2 only, a \textbf{twin} identical in size, tokenizer,
+English tokens and schedule but with the German slice removed. \textbf{Size:}
+350M parameters (24 layers, $d{=}1024$, 16 heads, 48k vocab) on up to 10B seen
+tokens ($\approx$29/parameter); no text is seen more than twice (repetition raises memorisation). Compute $\approx$2.1$\times$10$^{19}$
+FLOPs per run: $\sim$85\,h on the RTX~5080 or 15\,h on a rented H100. \textbf{Measurement.}
+RQ1: for term class $c$, $\Delta_c=\mathbb{E}_{t\in\mathcal{T}_c}[s(t)]-
+\mathbb{E}_{t\in\mathcal{C}_c}[s(t)]$, $s$ the surprisal in fixed contexts,
+$\mathcal{C}_c$ matched controls, plus a C4 forced-choice test (naval station vs.\ attack) that doubles as a
+contamination check. RQ3: forced choice between two continuations, the normalised log-likelihood
+ratio as probability, Brier per tier, perspective and window against chance,
+the $n$-gram floor and Gallup. RQ2: the same batteries on the twin; the paired difference is the
+effect of the German press. All with bootstrap 95\% CIs. \textbf{Success:} $\Delta_{C2}$
+significantly smallest and a step at 1939 (RQ1); mid-tier Brier better than
+chance and not worse than Gallup (RQ3); a significant paired difference on
+DE-context propositions (RQ2).
 
 \section*{Baseline Model}
 Following the course progression, with the same split, tokenizer and budget:
-a \textbf{vanilla RNN}, an \textbf{LSTM} and a \textbf{GRU} language model (2
-layers, $\sim$50M parameters, next-token objective), which justify the
-Transformer as primary model. A \textbf{modified Kneser--Ney 5-gram} (KenLM defaults) is the
-non-neural floor; it cannot compose unseen compounds, so it should show no
-C1/C2 ordering.
-\textbf{Plan} (individual): corpus frozen 20 Oct; baselines 17--21 Oct;
-Transformer 22 Oct--1 Nov; then evaluation.
+a \textbf{vanilla RNN}, an \textbf{LSTM} and a \textbf{GRU} language model
+(2 layers, $\sim$50M parameters, next-token objective), which justify the
+Transformer as primary model. A \textbf{modified Kneser--Ney 5-gram} (KenLM
+defaults) is the non-neural floor. \textbf{Plan} (individual): corpus frozen 20
+Oct; baselines 17--21 Oct; main Transformer 22 Oct--1 Nov; twin in November.
 
 \section*{Ethical Considerations}
-Pre-1939 newspapers carry the racial, ethnic and gender language of their time;
-the model reproduces it, which is documented, not sanitised. German press after
+Pre-1939 newspapers carry the racial, ethnic and gender language of their
+time; the model reproduces it, documented, not sanitised. German press after
 1933 was state-controlled, so the ``German perspective'' is what Germans were
-permitted to read; RQ3 results describe a record, not nations, and corpus
-shares by source are reported. In collection, OCR noise concentrates in older and German
-(Fraktur) text, and year-only book dates can mislead (hence the C1 screen). All sources are public domain or openly licensed, and attributed; as the papers
-name private people, the model is not released for querying them; the RQ2 tool,
-misusable as an accusation, ships with its detection limit.
+permitted to read; results describe a record, not nations or culpability. In
+collection, OCR noise concentrates in older and German (Fraktur) text, and
+unreliable book dates are caught by the C1 screen. Sources are public domain or openly licensed and attributed; the model is
+released non-commercially, not for querying the private people the papers name.
 
 \newpage
-\section*{References}
 \bibliographystyle{abbrvnat}
 \bibliography{references}
 

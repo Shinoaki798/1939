@@ -5,15 +5,18 @@ HANDOFF holds the research design, every locked decision with its rationale,
 the instructor's constraints and the schedule. This file holds only the rules
 that must never be violated and the conventions of the repo.
 
-State as of 2026-10-01; rules 2, 4-7, 10, 11 revised 2026-10-05 (HANDOFF §12). Proposal due 2026-10-16. The person you are working
+State as of 2026-10-01; rules 2, 4-7, 10, 11 revised 2026-10-05, rule 1 revised 2026-10-06 (HANDOFF §12). Proposal due 2026-10-16. The person you are working
 with is Junlei An (goes by Andrew), an individual student on this project.
 
 ## Hard constraints (never violate, never "improve")
 
-1. **Exactly one Transformer is trained.** No control Transformer, no
-   ablation, no second scale, no seed sweep, no instruction-tuning stage. All
-   controls are constructed at evaluation time on that one model. Baselines
-   (vanilla RNN, LSTM, GRU, n-gram) are not Transformers and may be retrained.
+1. **Two Transformer runs, one architecture** (user decision 2026-10-06,
+   HANDOFF §12): the main model (English + German) and, for RQ2 only, an
+   English-only twin identical in size, tokenizer, English tokens and schedule
+   with the German slice removed. No other control Transformer, no ablation,
+   no second scale, no seed sweep, no instruction-tuning stage. All other
+   controls are constructed at evaluation time. Baselines (vanilla RNN, LSTM,
+   GRU, n-gram) are not Transformers and may be retrained.
 2. **The Transformer is decoder-only with causal self-attention, trained with
    next-token cross-entropy from random initialisation.** No encoder, no
    masked-LM objective, no pretrained weights anywhere in the model. There is
@@ -97,7 +100,7 @@ probes/
 data/                   gitignored: raw/ dedup/ filtered/ translated/ tokenized/
 src/
   data/     ingest, dedup, ocr_quality, splits, translate, tokenizer
-  model/    transformer.py (the one model), rnn.py, lstm.py, gru.py, ngram.py
+  model/    transformer.py (one architecture: main run + twin), rnn.py, lstm.py, gru.py, ngram.py
   train/    train.py, resume.py
   eval/     bpb_by_year.py, probes.py (RQ1), detector.py (RQ2), foresight.py (RQ3), sanity_caqa.py
   tools/    corpus_audit CLI (the RQ2 deliverable)
