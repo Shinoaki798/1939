@@ -425,3 +425,18 @@ Dated entries; each supersedes anything above it that it contradicts.
   table whose keys share a local name, and `scripts/cap_fix_names.py`
   re-attributed the files on disk by sha256 (214 kept, 120 refetched). NCSE
   (excluded) had the same clash in 6 file names; its counts are a lower bound.
+- **2026-10-06 — OCR gates (final; supersedes the 0.80 / digit-share draft).**
+  Gate 1 lexicon hit rate ≥ 0.75; gate 2 word-like share ≥ 0.70 (share of
+  non-punctuation tokens that are letter words of length ≥ 2), applied to
+  pages passing gate 1; documents < 50 tokens dropped; no separate digit gate.
+  Same gates and values for English after its own histogram check (if English
+  needs other values, report both and justify). Völkischer Beobachter is
+  included and cleaned per segment, not gated whole: its issue text breaks
+  into 4-token lines and 8-token blank-line blocks, so blocks are merged into
+  segments of ≥ 30 tokens and segments with word share < 0.70 are dropped
+  (keeps ~96 % of VB words; the literal line split would keep 4 %). Gate
+  parameters, scorer version and lexicon hash go into every filtered shard's
+  MANIFEST (`ocr_quality.gate_params`). Drop rates per source × period per gate
+  and boundary samples (0.65–0.75 word share) go into `reports/audit_v1.md`.
+  Proposal Cleaning step (3) now reads "lexicon hit rate ≥0.75 and word-like
+  share ≥0.70, per language".
