@@ -653,6 +653,11 @@ already answers.
 - archive.org `/download/<id>/<file>` from the 2080 can redirect to a cache node (`dn*.ca.archive.org`)
   that answers HTTP 500 for hours while the item's two storage replicas (metadata `d1`/`d2` + `dir`)
   serve the file; `scripts/fetch_local.py` falls back to them. There is no other public mirror.
+- zbMATH OAI (JFM) loses resumption tokens after a few hours, and a new walk returns the records in a
+  different block order, so pages of two walks cannot be matched by offset (the old "restart and skip
+  saved pages" lost records). `jfm_harvest` now keys pages per walk, saves pages with unseen record
+  identifiers and stops when all 223,270 are saved; drop duplicate `jfm_<zbl_id>` rows before MinHash.
+  JFM is harvested and ingested on the 2080 only; the 5080's 521 pages (an older walk) are not used.
 - On the 5080, check memory and kill hung or finished project processes on every visit (Andrew,
   2026-10-06: stray python loops keep the box hot); keep the two WSL `sleep infinity` keep-alives.
 
