@@ -100,8 +100,8 @@ and never trained on; \textsc{Train} $=$ the rest $\le$1939-06-30; \textsc{Val}
 $=$ a disjoint 2\% $\le$1939-06-30; \textsc{Test-A/B/C} $=$ held-out 1930--38 / 1939-09--45 /
 1946--55. \textbf{Cleaning}, in order: (1)~language filter (stopword vote per
 article and title-year); (2)~MinHash dedup of reprints (word 5-grams, Jaccard
-$\ge$0.8) before splitting; (3)~OCR quality $=$ period-lexicon hit rate per
-language, cut at a threshold set from its histogram; (4)~documents containing
+$\ge$0.8) before splitting; (3)~OCR quality $=$ lexicon hit rate $\ge$0.75 and
+word-like share $\ge$0.70, per language; (4)~documents containing
 a C1 coinage (English or German list) are dropped whole.
 \textbf{Format:} 48k BPE trained only on native pre-cutoff English and German;
 documents joined by an end-of-text token into 2048-token sequences; numbers are
