@@ -36,7 +36,7 @@ def fetch(url: str, part: Path, backoff: float) -> int:
                 f.write(chunk)
             return r.status
     except urllib.error.HTTPError as e:
-        if e.code in (429, 403):
+        if e.code in (429, 403):   # rate limit; a 403 that repeats after the pause is treated as restricted
             print(f"HTTP {e.code}: pausing {backoff:.0f}s", flush=True)
             time.sleep(backoff)
         return e.code
@@ -70,6 +70,7 @@ def main() -> None:
         final, part = dest / name, dest / (name + ".part")
         algo, _, want = (spec.get("checksum") or "-").partition(":")
         urls, alt = spec["url"].split("|"), 0   # "a|b|c": a 404 moves on to the next alternative
+        forbidden = 0
         for attempt in range(1, args.attempts + 1):
             t0 = time.time()
             url = urls[alt]
@@ -77,6 +78,12 @@ def main() -> None:
                 part.unlink()   # size unpublished: no resume, fetch the whole file each attempt
             status = fetch(url, part, args.backoff)
             size = part.stat().st_size if part.exists() else 0
+            forbidden = forbidden + 1 if status == 403 else 0
+            if status == 401 or forbidden >= 2:
+                # access-restricted item (e.g. archive.org lending copies), not a rate limit: never retried
+                print(f"[{key}] HTTP {status}{' again after the pause' if forbidden >= 2 else ''}; "
+                      f"access restricted, giving up", flush=True)
+                break
             if status == 404:
                 if alt + 1 < len(urls):
                     alt += 1
