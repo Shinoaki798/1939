@@ -150,6 +150,21 @@ def curl_cmd(via: str, url: str, part: Path, proxy: str) -> list[str]:
     return ["curl", *common, "-o", str(part), url]
 
 
+RATE_LIMIT_BACKOFF = 1800.0   # seconds to pause after HTTP 429/403 (set by --backoff)
+
+
+def run_curl(via: str, url: str, part: Path, proxy: str) -> tuple[int, str]:
+    """Run curl/curl.exe; return (exit code, HTTP status). A 429/403 (rate limit / bot challenge)
+    pauses for RATE_LIMIT_BACKOFF seconds before the caller retries, instead of hammering the host."""
+    cmd = curl_cmd(via, url, part, proxy) + ["-w", "%{http_code}"]
+    r = subprocess.run(cmd, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, text=True)
+    code = (r.stdout or "").strip()[-3:]
+    if code in ("429", "403"):
+        print(f"  HTTP {code} from host: pausing {RATE_LIMIT_BACKOFF:.0f}s (rate limit / bot check)", flush=True)
+        time.sleep(RATE_LIMIT_BACKOFF)
+    return r.returncode, code
+
+
 def source_url(spec: dict, src: dict, dl: dict, via: str) -> str:
     if "url" in spec:
         return spec["url"]
@@ -194,9 +209,9 @@ def fetch_one(key: str, spec: dict, src: dict, dl: dict, out_dir: Path, via: str
             if part.exists():
                 part.unlink()
             print(f"[{key}] attempt {attempt}: size unknown, via {cur}", flush=True)
-            r = subprocess.run(curl_cmd(cur, url, part, dl["proxy"]), stdin=subprocess.DEVNULL)
-            if r.returncode != 0 or not part.exists() or part.stat().st_size == 0:
-                print(f"[{key}] curl exit {r.returncode}", flush=True)
+            rc, code = run_curl(cur, url, part, dl["proxy"])
+            if rc != 0 or not part.exists() or part.stat().st_size == 0:
+                print(f"[{key}] curl exit {rc}, HTTP {code}", flush=True)
                 time.sleep(min(60, 10 * attempt))
                 continue
         have = part.stat().st_size if part.exists() else 0
@@ -207,10 +222,10 @@ def fetch_one(key: str, spec: dict, src: dict, dl: dict, out_dir: Path, via: str
         if spec["bytes"] is not None and have < spec["bytes"]:
             t0 = time.time()
             print(f"[{key}] attempt {attempt}: {have/1e9:.2f}/{spec['bytes']/1e9:.2f} GB via {cur}", flush=True)
-            r = subprocess.run(curl_cmd(cur, url, part, dl["proxy"]), stdin=subprocess.DEVNULL)
+            rc, code = run_curl(cur, url, part, dl["proxy"])
             got = (part.stat().st_size if part.exists() else 0) - have
             secs = max(time.time() - t0, 1e-6)
-            print(f"[{key}] curl exit {r.returncode}; +{got/1e6:.0f} MB in {secs:.0f}s ({got/secs/1e6:.1f} MB/s)",
+            print(f"[{key}] curl exit {rc}, HTTP {code}; +{got/1e6:.0f} MB in {secs:.0f}s ({got/secs/1e6:.1f} MB/s)",
                   flush=True)
             if not part.exists() or part.stat().st_size < spec["bytes"]:
                 time.sleep(min(60, 10 * attempt))
@@ -294,10 +309,17 @@ def main() -> None:
     ap.add_argument("--via", choices=["auto", "proxy", "mirror"], default="auto")
     ap.add_argument("--max-attempts", type=int, default=30)
     ap.add_argument("--delay", type=float, default=0.0, help="seconds to wait between files (polite slow download)")
+    ap.add_argument("--backoff", type=float, default=1800.0, help="pause after HTTP 429/403 before retrying")
+    ap.add_argument("--start-delay", type=float, default=0.0, help="wait this long before the first request")
     ap.add_argument("--dry-run", action="store_true", help="report what would be downloaded; write nothing")
     ap.add_argument("--shard", default="0/1", help="k/N: fetch only the k-th of N stable slices of the file list "
                                                    "(run N processes for small-file sources)")
     args = ap.parse_args()
+    global RATE_LIMIT_BACKOFF
+    RATE_LIMIT_BACKOFF = args.backoff
+    if args.start_delay and not args.dry_run:
+        print(f"waiting {args.start_delay:.0f}s before the first request", flush=True)
+        time.sleep(args.start_delay)
     k, n = (int(x) for x in args.shard.split("/"))
     if not 0 <= k < n:
         sys.exit(f"bad --shard {args.shard}")
