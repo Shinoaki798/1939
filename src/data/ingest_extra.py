@@ -35,6 +35,8 @@ from src.data.download import load_config, repo_path
 from src.data.ingest import BATCH_ROWS, SCHEMA, guess_lang, sha256_file
 
 EXTRA_SCHEMA = SCHEMA.append(pa.field("meta", pa.string()))
+SOURCE_META_FIELDS = ("title", "bucket", "lang", "licence", "access_method", "ocr_or_keyed", "subject_filter_rule",
+                      "role", "approved")
 BATCH_BYTES = 256 << 20   # flush the parquet writer at this much text, whatever the row count
 
 
@@ -347,7 +349,95 @@ def rows_caselaw_access_project(path: Path, key: str, cutoff: dt.date, stats: Co
                        juris.get("name_long") or "", (ops[0].get("author") or "") if ops else "", text, meta)
 
 
+def rows_jstor_ejc(path: Path, key: str, cutoff: dt.date, stats: Counter):
+    """JSTOR Early Journal Content bundle (one XML per article, members bundle/10.2307_<id>, no
+    suffix): one row per article, OCR text of all pages. Every journal is ingested; the science
+    bucket keeps the STEM titles listed in config/science_jstor_titles.txt."""
+    import tarfile
+    import xml.etree.ElementTree as ET
+    if not path.name.endswith(".tar.bz2"):          # readme.txt
+        return
+    with tarfile.open(path, "r|bz2") as tf:
+        for m in tf:
+            if not m.isfile() or "10.2307_" not in m.name.rsplit("/", 1)[-1]:
+                continue
+            stats["rows_in"] += 1
+            try:
+                a = ET.fromstring(tf.extractfile(m).read())
+            except ET.ParseError:
+                stats["dropped_bad_xml"] += 1
+                continue
+            g = lambda tag: (a.findtext(tag) or "").strip()
+            precision = "day"
+            try:
+                date = dt.date.fromisoformat(g("pubdate")[:10])
+            except ValueError:
+                try:
+                    date, precision = dt.date(int(g("year")), 1, 1), "year"
+                except ValueError:
+                    stats["dropped_bad_date"] += 1
+                    continue
+            if date > cutoff or (precision == "year" and date.year > cutoff.year - 1):
+                stats["dropped_after_cutoff"] += 1
+                continue
+            text = "\n\n".join((p.text or "").strip() for p in a.findall("pages/list-item")).strip()
+            if not text:
+                stats["dropped_empty"] += 1
+                continue
+            langs = [(x.text or "").strip() for x in a.findall("languages/list-item")] or [g("languages")]
+            meta = {"jstor_id": g("id"), "journal_id": g("journalid"), "journal_abbrv": g("journalabbrv"),
+                    "type": g("type"), "volume": g("volume"), "pagerange": g("pagerange"), "issn": g("issn"),
+                    "languages": [x for x in langs if x], "date_precision": precision}
+            authors = "; ".join((x.text or "").strip() for x in a.findall("authors/list-item"))
+            row = _row(f"ejc_{g('id').replace('/', '_')}", "jstor_ejc", date, g("journaltitle"), "", authors, text, meta)
+            row["headline"] = g("title")
+            yield row
+
+
+def rows_royal_society_corpus(path: Path, key: str, cutoff: dt.date, stats: Counter):
+    """Royal Society Corpus 6.0.4 open (Philosophical Transactions / Proceedings 1665-1920): one row
+    per paper from the plain-text zip, joined to the metadata TSV in the same directory. Year-only."""
+    import zipfile
+    if "texts_txt" not in path.name:                 # the meta zip is read alongside the texts
+        return
+    meta_zip = next(path.parent.glob("*_meta.tsv.zip"))
+    with zipfile.ZipFile(meta_zip) as z:
+        lines = z.read(z.namelist()[0]).decode("utf-8", "replace").splitlines()
+    header = lines[0].split("\t")
+    meta = {f[0]: dict(zip(header, f)) for f in (l.split("\t") for l in lines[1:]) if len(f) == len(header)}
+    with zipfile.ZipFile(path) as z:
+        for n in sorted(z.namelist()):
+            if not n.endswith(".txt"):
+                continue
+            stats["rows_in"] += 1
+            rid = n.rsplit("/", 1)[-1][:-len(".txt")]
+            md = meta.get(rid)
+            if md is None:
+                stats["dropped_no_meta"] += 1
+                continue
+            try:
+                year = int(md["year"])
+            except ValueError:
+                stats["dropped_bad_date"] += 1
+                continue
+            if year > cutoff.year - 1:                  # year-only items: year <= 1938
+                stats["dropped_after_cutoff"] += 1
+                continue
+            text = z.read(n).decode("utf-8", "replace").strip()
+            if not text:
+                stats["dropped_empty"] += 1
+                continue
+            row = _row(f"rsc_{rid}", "royal_society_corpus", dt.date(year, 1, 1), md.get("journal", ""), "",
+                       md.get("author", ""), text,
+                       {"rsc_id": rid, "doi": md.get("doi"), "volume": md.get("volume"), "type": md.get("type"),
+                        "language": md.get("language"), "primary_topic": md.get("primaryTopic"),
+                        "date_precision": "year"})
+            row["headline"] = md.get("title", "")
+            yield row
+
+
 ADAPTERS = {"congressional_record": rows_congressional_record, "hmd_newspapers": rows_hmd_newspapers,
+            "jstor_ejc": rows_jstor_ejc, "royal_society_corpus": rows_royal_society_corpus,
             "loc_pd_books": rows_loc_pd_books, "pre_1929_books": rows_pre_1929_books,
             "chronicling_america": rows_chronicling_america, "federal_register": rows_federal_register,
             "caselaw_access_project": rows_caselaw_access_project,
@@ -414,6 +504,8 @@ def main() -> None:
     manifest = json.loads(mpath.read_text(encoding="utf-8")) if mpath.exists() else {
         "stage": "ingested", "source": args.source, "hf_repo": src.get("hf_repo", args.source), "revision": raw_manifest["revision"],
         "cutoff": str(cfg["cutoff"]), "files": {}}
+    # source-level provenance (science-bucket task, 2026-10-06); item-level title/year/language are row columns
+    manifest["source_meta"] = {k: src.get(k) for k in SOURCE_META_FIELDS}
 
     jobs = [(args.source, k, str(raw_dir / e["file"]), str(out_dir), str(cfg["cutoff"]), args.dry_run)
             for k, e in sorted(raw_manifest["files"].items())

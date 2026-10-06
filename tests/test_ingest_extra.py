@@ -146,3 +146,45 @@ def test_caselaw_opinions_only_and_cutoff(tmp_path):
     assert rows[1]["date"] == "1939-06-01" and stats["dropped_after_cutoff"] == 1
     assert _cap_date("1939", CUTOFF) == (None, "year") and _cap_date("1938", CUTOFF)[0] == dt.date(1938, 1, 1)
     assert _cap_date("1939-12", CUTOFF)[0] is None and _cap_date("n/a", CUTOFF) == (None, "bad")
+
+
+def test_jstor_ejc_articles_without_suffix(tmp_path):
+    import io
+    import tarfile
+
+    from src.data.ingest_extra import rows_jstor_ejc
+
+    xml = ("<article><pages><list-item>On the theory of groups.</list-item><list-item>Page two.</list-item></pages>"
+           "<journaltitle>American Journal of Mathematics</journaltitle><title>Groups</title><year>1901</year>"
+           "<pubdate>1901-04-01T00:00:00Z</pubdate><id>10.2307/2369912</id><authors><list-item>E. H. Moore</list-item>"
+           "</authors><type>fla</type></article>")
+    path = tmp_path / "ejc.tar.bz2"
+    with tarfile.open(path, "w:bz2") as tf:
+        for name, body in [("bundle", None), ("bundle/10.2307_2369912", xml)]:
+            if body is None:
+                info = tarfile.TarInfo(name); info.type = tarfile.DIRTYPE; tf.addfile(info)
+            else:
+                b = body.encode(); info = tarfile.TarInfo(name); info.size = len(b); tf.addfile(info, io.BytesIO(b))
+    rows = list(rows_jstor_ejc(path, "ejc", CUTOFF, Counter()))
+    assert len(rows) == 1 and rows[0]["article_id"] == "ejc_10.2307_2369912"
+    assert rows[0]["newspaper"] == "American Journal of Mathematics" and rows[0]["date"] == "1901-04-01"
+    assert rows[0]["text"] == "On the theory of groups.\n\nPage two." and rows[0]["headline"] == "Groups"
+    assert list(rows_jstor_ejc(tmp_path / "readme.txt", "readme", CUTOFF, Counter())) == []
+
+
+def test_royal_society_corpus_joins_meta(tmp_path):
+    import zipfile
+
+    from src.data.ingest_extra import rows_royal_society_corpus
+
+    with zipfile.ZipFile(tmp_path / "RSC_meta.tsv.zip", "w") as z:
+        z.writestr("meta.tsv", "id\ttitle\tyear\tjournal\tauthor\tprimaryTopic\n"
+                               "rspa_1905_0001\tAddress\t1905\tProc. R. Soc. A\tW. Huggins\tBiography\n")
+    texts = tmp_path / "RSC_texts_txt.zip"
+    with zipfile.ZipFile(texts, "w") as z:
+        z.writestr("texts/rspa_1905_0001.txt", "The President addressed the Society.")
+        z.writestr("texts/unknown_0002.txt", "No metadata.")
+    stats = Counter()
+    rows = list(rows_royal_society_corpus(texts, "texts_txt", CUTOFF, stats))
+    assert [r["article_id"] for r in rows] == ["rsc_rspa_1905_0001"] and stats["dropped_no_meta"] == 1
+    assert rows[0]["date"] == "1905-01-01" and rows[0]["headline"] == "Address" and rows[0]["byline"] == "W. Huggins"

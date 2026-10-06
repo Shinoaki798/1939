@@ -42,8 +42,14 @@ jstor_ejc:
   dest: ./data/raw/jstor_ejc
   lang: en
   approved: 2026-10-05
-  role: training only. JSTOR Early Journal Content (US journals before 1923, elsewhere before 1870),
-        one XML per article with day-level pubdate and OCR text; non-commercial terms
+  title: JSTOR Early Journal Content
+  bucket: science
+  licence: JSTOR Early Journal Content terms (non-commercial reuse); model release is non-commercial
+  access_method: archive.org bundle jstor_ejc_data_bundle (ejc.tar.bz2, publisher md5)
+  ocr_or_keyed: ocr
+  subject_filter_rule: journaltitle in config/science_jstor_titles.txt (STEM journals); other titles not used
+  role: training, science bucket (re-included 2026-10-06; HANDOFF §12). US journals before 1923,
+        elsewhere before 1870; one XML per article with day-level pubdate and OCR text
 
 royal_society_corpus:
   kind: url
@@ -51,8 +57,14 @@ royal_society_corpus:
   dest: ./data/raw/royal_society_corpus
   lang: en
   approved: 2026-10-05
-  role: training only. Royal Society Corpus 6.0.4 open, Philosophical Transactions 1665-1920,
-        plain-text release + metadata TSV; CC BY-NC-SA 4.0
+  title: Royal Society Corpus 6.0.4 (open)
+  bucket: science
+  licence: CC BY-NC-SA 4.0
+  access_method: CLARIN-D Saarland fedora download (texts_txt.zip + meta.tsv.zip)
+  ocr_or_keyed: ocr (corrected by the corpus builders)
+  subject_filter_rule: none (all papers)
+  role: training, science bucket (re-included 2026-10-06; HANDOFF §12). Philosophical
+        Transactions and Proceedings 1665-1920, plain-text release + metadata TSV; year-only dates
 
 evans_tcp:
   hf_repo: Vintage-LLM/EVANS
