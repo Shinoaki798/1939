@@ -36,7 +36,7 @@ git "${SAFE[@]}" fetch origin --prune
 # from the local machine would block the merge: move them to logs/reports_prev/<time>/ first.
 # Never touches anything else.
 candidates=$( { git status --porcelain --untracked-files=all -- reports | cut -c4-;
-               git status --porcelain --untracked-files=all -- config | grep '^??' | cut -c4- | grep -E '_(files|items)[.]tsv$'; } )
+               git status --porcelain --untracked-files=all -- config | grep '^??' | cut -c4- | grep -E '_(files|items)[.]tsv$'; } || true )
 changed=""
 for f in $candidates; do   # only files the incoming commit adds or changes would block the merge
   if git cat-file -e "origin/$BRANCH:$f" 2>/dev/null &&      { ! git ls-files --error-unmatch "$f" >/dev/null 2>&1 || ! git diff --quiet HEAD "origin/$BRANCH" -- "$f"; }; then
