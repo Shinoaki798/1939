@@ -13,7 +13,13 @@ The lexicon is a measuring instrument only; DTA is not training data here.
 score(text) = share of word tokens (letters only, length >= 2, lower-cased, long s -> s)
 found in the lexicon; NaN when there are fewer than MIN_TOKENS tokens.
 
-Nothing is dropped by this module: the threshold is chosen from the histogram and
+word_share(text) = share of whitespace-separated tokens that look like words (letters only
+once edge punctuation and inner hyphens are removed, length >= 2). The hit rate ignores digits,
+symbols and one-letter fragments, so number tables and shredded OCR can still score >= 0.8;
+word_share is the second gate for those. Its threshold is chosen from its own histogram, among
+documents that pass the hit-rate threshold.
+
+Nothing is dropped by this module: thresholds are chosen from the histograms and
 confirmed by the user (TASKS Phase 1), then applied in the filter stage.
 
     python -m src.data.ocr_quality build-lexicon --lang de
@@ -47,6 +53,11 @@ POOL_MIN_DF = 50
 POOL_MIN_TITLES = 5
 POOL_SAMPLE_PER_FILE = 1500
 GERMAN_SOURCES = ["ddb_newspapers_de", "europeana_newspapers_de", "voelkischer_beobachter_de"]
+# Hit-rate thresholds confirmed by the user (reports/ocr_quality_<lang>.md).
+HIT_THRESHOLD = {"de": 0.75}   # 2026-10-05
+WORD_SHARE_CANDIDATES = (0.5, 0.6, 0.7, 0.8)
+_EDGE = "\"'.,;:!?()[]{}<>*„“”‚‘’»«›‹/|"
+_INNER_HYPHEN = re.compile(r"[-⸗¬]")
 
 
 def tokens(text: str) -> list[str]:
@@ -58,6 +69,17 @@ def score(text: str, lexicon: set[str]) -> float:
     if len(toks) < MIN_TOKENS:
         return float("nan")
     return sum(t in lexicon for t in toks) / len(toks)
+
+
+def word_share(text: str) -> float:
+    ws = text.split()
+    if len(ws) < MIN_TOKENS:
+        return float("nan")
+    words = 0
+    for w in ws:
+        core = _INNER_HYPHEN.sub("", w.strip(_EDGE))
+        words += len(core) >= 2 and core.isalpha()
+    return words / len(ws)
 
 
 # ---- lexicon ---------------------------------------------------------------------------
@@ -179,16 +201,23 @@ def _init_lex(lex: set[str]) -> None:
     _LEX.update(lex)
 
 
+def _snippet(text: str, n: int = 320) -> str:
+    mid = max(0, len(text) // 2 - n // 2)
+    return " ".join(text[mid:mid + n].split())
+
+
 def _hist_job(args: tuple) -> dict:
     src, path, per_cell, rate = args
     cells = defaultdict(list)
-    for b in pq.ParquetFile(path).iter_batches(batch_size=1000, columns=["article_id", "year", "text"]):
-        for aid, y, text in zip(*(b.column(c).to_pylist() for c in ("article_id", "year", "text"))):
+    cols = ("article_id", "year", "text", "n_words")
+    for b in pq.ParquetFile(path).iter_batches(batch_size=1000, columns=list(cols)):
+        for aid, y, text, nw in zip(*(b.column(c).to_pylist() for c in cols)):
             if len(cells[y]) >= per_cell or not _keep(aid, rate):
                 continue
-            s = score(text or "", _LEX)
+            text = text or ""
+            s = score(text, _LEX)
             if not math.isnan(s):
-                cells[y].append((aid, s))
+                cells[y].append((aid, s, word_share(text), nw, _snippet(text)))
     return {(src, y): v for y, v in cells.items()}
 
 
@@ -210,7 +239,7 @@ def histogram(cfg: dict, lang: str, per_cell: int, rate: float, workers: int) ->
     out = {}
     for (src, y), v in merged.items():
         v.sort(key=lambda t: hashlib.sha1(t[0].encode()).hexdigest())
-        out[f"{src}|{y}"] = [s for _, s in v[:per_cell]]
+        out[f"{src}|{y}"] = [list(t[1:]) for t in v[:per_cell]]   # [hit rate, word share, n_words, snippet]
     return out
 
 
@@ -219,41 +248,75 @@ def quantiles(xs: list[float], qs=(0.1, 0.25, 0.5, 0.75, 0.9)) -> list[float]:
     return [xs[min(len(xs) - 1, int(q * len(xs)))] for q in qs] if xs else []
 
 
-def write_report(cfg: dict, lang: str, cells: dict, out_md: Path, out_png: Path) -> None:
+def _table(by: dict, idx: int, thresholds: tuple, weighted: bool) -> list[str]:
+    head = "words lost" if weighted else "docs"
+    lines = ["| source | period | n | p10 | p25 | p50 | p75 | p90 | "
+             + " | ".join(f"{head} < {t}" for t in thresholds) + " |",
+             "|---|---|---|---|---|---|---|---|" + "---|" * len(thresholds)]
+    for (src, per), rows in sorted(by.items()):
+        v = [r[idx] for r in rows]
+        w = [(r[2] or 0) if weighted else 1 for r in rows]
+        below = [sum(wi for x, wi in zip(v, w) if x < t) / max(1, sum(w)) for t in thresholds]
+        lines.append(f"| {src} | {per} | {len(v)} | " + " | ".join(f"{x:.2f}" for x in quantiles(v)) + " | "
+                     + " | ".join(f"{b:.1%}" for b in below) + " |")
+    return lines
+
+
+def write_report(cfg: dict, lang: str, cells: dict, out_md: Path, out_png: Path, out_examples: Path) -> None:
     periods = [(1900, 1919), (1920, 1929), (1930, 1933), (1934, 1936), (1937, 1939), (1940, 1955)]
-    thresholds = (0.5, 0.6, 0.7, 0.8)
-    by = defaultdict(list)
-    for k, v in cells.items():
+    hit_thr = HIT_THRESHOLD[lang]
+    by, passed = defaultdict(list), defaultdict(list)
+    for k, rows in cells.items():
         src, y = k.split("|"); y = int(y)
         for a, b in periods:
             if a <= y <= b:
-                by[(src, f"{a}-{b}")].extend(v)
-    lines = [f"# OCR quality (period-lexicon hit rate), {lang}", "",
+                by[(src, f"{a}-{b}")].extend(rows)
+                passed[(src, f"{a}-{b}")].extend(r for r in rows if r[0] >= hit_thr and not math.isnan(r[1]))
+    lines = [f"# OCR quality, {lang}", "",
              "Sampled documents per source x year (deterministic hash sample). Nothing has been dropped.", "",
-             "| source | period | n | p10 | p25 | p50 | p75 | p90 | " + " | ".join(f"< {t}" for t in thresholds) + " |",
-             "|---|---|---|---|---|---|---|---|" + "---|" * len(thresholds)]
-    for (src, per), v in sorted(by.items()):
-        q = quantiles(v)
-        below = [sum(x < t for x in v) / len(v) for t in thresholds]
-        lines.append(f"| {src} | {per} | {len(v)} | " + " | ".join(f"{x:.2f}" for x in q) + " | "
-                     + " | ".join(f"{b:.0%}" for b in below) + " |")
+             "## 1. Period-lexicon hit rate (all sampled documents)", "",
+             "Share of documents below each threshold:", ""]
+    lines += _table(by, 0, (0.6, 0.7, 0.75, 0.8), weighted=False) + ["", "Share of words below each threshold:", ""]
+    lines += _table(by, 0, (0.6, 0.7, 0.75, 0.8), weighted=True) + [""]
+    lines += [f"Confirmed hit-rate threshold: {hit_thr} (user, 2026-10-05).", "",
+              f"## 2. Word share, among documents with hit rate >= {hit_thr}", "",
+              "Share of whitespace tokens that look like words (letters only, length >= 2). "
+              "Low values are number tables and shredded OCR that the hit rate misses. "
+              f"Examples per band: logs/{out_examples.name}.", "", "Share of documents below each threshold:", ""]
+    lines += _table(passed, 1, WORD_SHARE_CANDIDATES, weighted=False) + ["", "Share of words below each threshold:", ""]
+    lines += _table(passed, 1, WORD_SHARE_CANDIDATES, weighted=True) + [""]
     out_md.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    ex = [f"# OCR examples, {lang}: documents with hit rate >= {hit_thr}, dated <= 1939, by word-share band", ""]
+    bands = [(0.0, 0.4), (0.4, 0.5), (0.5, 0.6), (0.6, 0.7), (0.7, 0.8), (0.8, 1.01)]
+    for src in sorted({k.split("|")[0] for k in cells}):
+        rows = [r for k, v in sorted(cells.items()) if k.split("|")[0] == src and int(k.split("|")[1]) <= 1939
+                for r in v if r[0] >= hit_thr and not math.isnan(r[1])]
+        for lo, hi in bands:
+            band = [r for r in rows if lo <= r[1] < hi]
+            ex.append(f"## {src}, word share {lo:.1f}-{min(hi, 1.0):.1f} ({len(band)} sampled)")
+            ex += [f"- hit {r[0]:.2f}, share {r[1]:.2f}, {r[2]} words: {r[3]}" for r in band[:3]] + [""]
+    out_examples.write_text("\n".join(ex) + "\n", encoding="utf-8")
 
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     srcs = sorted({k[0] for k in by})
-    fig, axes = plt.subplots(1, len(srcs), figsize=(5.2 * len(srcs), 3.6), squeeze=False)
-    for ax, src in zip(axes[0], srcs):
-        for a, b in periods:
-            v = by.get((src, f"{a}-{b}"))
-            if v:
-                ax.hist(v, bins=40, range=(0, 1), histtype="step", lw=1.4, label=f"{a}-{b} (n={len(v)})")
-        for t in thresholds:
-            ax.axvline(t, color="grey", lw=0.6, ls=":")
-        ax.set_title(src)
-        ax.set_xlabel("lexicon hit rate")
-        ax.legend(fontsize=7)
+    panels = [(by, 0, "lexicon hit rate (all documents)", (hit_thr,)),
+              (passed, 1, f"word share (hit rate >= {hit_thr})", WORD_SHARE_CANDIDATES)]
+    fig, axes = plt.subplots(2, len(srcs), figsize=(5.2 * len(srcs), 7.0), squeeze=False)
+    for j, src in enumerate(srcs):
+        for i, (data, idx, xlabel, marks) in enumerate(panels):
+            ax = axes[i][j]
+            for a, b in periods:
+                v = [r[idx] for r in data.get((src, f"{a}-{b}"), [])]
+                if v:
+                    ax.hist(v, bins=40, range=(0, 1), histtype="step", lw=1.4, label=f"{a}-{b} (n={len(v)})")
+            for t in marks:
+                ax.axvline(t, color="grey", lw=0.8, ls=":")
+            ax.set_title(src)
+            ax.set_xlabel(xlabel)
+            ax.legend(fontsize=7)
     fig.tight_layout()
     fig.savefig(out_png, dpi=110)
 
@@ -276,8 +339,11 @@ def main() -> None:
         cells = histogram(cfg, args.lang, args.per_cell, args.rate, args.workers)
         rep = repo_path(cfg["reports"])
         rep.mkdir(parents=True, exist_ok=True)
-        (repo_path("logs") / f"ocr_quality_{args.lang}_samples.json").write_text(json.dumps(cells), encoding="utf-8")
-        write_report(cfg, args.lang, cells, rep / f"ocr_quality_{args.lang}.md", rep / f"ocr_quality_{args.lang}.png")
+        logs = repo_path("logs")
+        (logs / f"ocr_quality_{args.lang}_samples.json").write_text(
+            json.dumps({k: [r[:3] for r in v] for k, v in cells.items()}), encoding="utf-8")
+        write_report(cfg, args.lang, cells, rep / f"ocr_quality_{args.lang}.md", rep / f"ocr_quality_{args.lang}.png",
+                     logs / f"ocr_quality_{args.lang}_examples.md")
         print((rep / f"ocr_quality_{args.lang}.md").read_text(encoding="utf-8"))
 
 
