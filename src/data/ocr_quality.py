@@ -1,14 +1,21 @@
 """Per-article OCR quality = period-lexicon hit rate (one lexicon per language).
 
-German lexicon (built once, content-addressed under data/lexicon/de/):
-  1. Deutsches Textarchiv (hand-keyed TEI, original orthography), texts published
-     <= 1938: every word type seen at least DTA_MIN_FREQ times.
-  2. Plus word types that are frequent AND widespread in the German newspaper pool
-     itself (document frequency >= POOL_MIN_DF in a fixed sample, in >= POOL_MIN_TITLES
-     distinct titles). DTA is mostly pre-1900, i.e. before the 1901 spelling reform
-     (Thür -> Tür); the pool adds those spellings. OCR errors are idiosyncratic, so they
-     rarely reach that spread.
-The lexicon is a measuring instrument only; DTA is not training data here.
+Lexicon v2 (HANDOFF §12, 2026-10-06), built once per language, content-addressed under
+data/lexicon/<lang>/:
+  1. Anchor: hand-keyed or curated text with no OCR errors.
+       de: Deutsches Textarchiv (TEI, original orthography), works dated <= 1938, types seen
+           >= ANCHOR_MIN_FREQ times.
+       en: SCOWL 2020.12.07 English + American lists of size <= 60 (the source of hunspell
+           en_US) UNION ECCO-TCP and Evans-TCP types seen >= ANCHOR_MIN_FREQ times.
+  2. Pool: types frequent AND widespread in the language's own pre-cutoff newspapers
+     (document frequency >= POOL_MIN_DF in a fixed sample, in >= POOL_MIN_TITLES titles).
+     This adds period spellings the anchor lacks (Thür, to-day).
+  3. Variant filter on pool types only: a pool type within edit distance 1 of a type at
+     least VARIANT_RATIO times more frequent is dropped unless the anchor has it. Systematic
+     OCR errors are frequent and widespread (tbe/aud, Fraktur ift/fich) and would otherwise
+     enter through the pool.
+The lexicon is a measuring instrument only; no anchor text is training data, and the lexicon
+is never used for tokenisation.
 
 score(text) = share of word tokens (letters only, length >= 2, lower-cased, long s -> s)
 found in the lexicon; NaN when there are fewer than MIN_TOKENS tokens.
@@ -22,7 +29,7 @@ documents that pass the hit-rate threshold.
 Nothing is dropped by this module: thresholds are chosen from the histograms and
 confirmed by the user (TASKS Phase 1), then applied in the filter stage.
 
-    python -m src.data.ocr_quality build-lexicon --lang de
+    python -m src.data.ocr_quality build-lexicon --lang de        # or --lang en
     python -m src.data.ocr_quality histogram --lang de --per-cell 400   # + reports/ocr_gates_de.md
 """
 
@@ -44,20 +51,32 @@ import pyarrow.parquet as pq
 from concurrent.futures import ProcessPoolExecutor
 
 from src.data.download import load_config, repo_path
+from src.data.filters import is_native_english
 from src.data.ingest_extra import ingested_dir
 
 TOKEN = re.compile(r"[^\W\d_]+", re.UNICODE)
 MIN_TOKENS = 20
-DTA_MIN_FREQ = 2
+LEXICON_VERSION = "v2"
+ANCHOR_MIN_FREQ = 2
 POOL_MIN_DF = 50
-POOL_MIN_TITLES = 5
-POOL_SAMPLE_PER_FILE = 1500
+POOL_MIN_TITLES = {"de": 5, "en": 10}
+POOL_SAMPLE_PER_FILE = {"de": 1500}          # German: first N in-range pages of every file
+POOL_SAMPLE_DOCS = {"en": 250_000}           # English: hash sample of about this many articles
+POOL_LAST_DATE = "1939-06-30"                # pool = pre-cutoff text, 1900 onwards
+VARIANT_MAX_EDIT = 1
+VARIANT_RATIO = 50
+SCOWL_MAX_SIZE = 60
+SCOWL_CATEGORIES = ("english", "american")   # en_US: no British/Canadian/variant lists
 GERMAN_SOURCES = ["ddb_newspapers_de", "europeana_newspapers_de", "voelkischer_beobachter_de"]
+ENGLISH_SOURCES = ["american_stories", "congressional_record", "loc_pd_books", "pre_1929_books",
+                   "chronicling_america", "federal_register", "caselaw_access_project"]
+SOURCES = {"de": GERMAN_SOURCES, "en": ENGLISH_SOURCES}
+POOL_SOURCES = {"de": GERMAN_SOURCES, "en": ["american_stories"]}
 # Gates confirmed by the user (reports/ocr_quality_<lang>.md; HANDOFF §12, 2026-10-05/06). A document is
 # kept only if it has >= MIN_DOC_TOKENS tokens, hit rate >= HIT_THRESHOLD and word share >= WORD_SHARE_THRESHOLD.
 # English uses the same values unless its own histogram shows they do not fit (then both are reported).
-SCORER_VERSION = "2026-10-06.1"
-HIT_THRESHOLD = {"de": 0.75}
+SCORER_VERSION = "2026-10-06.2"
+HIT_THRESHOLD = {"de": 0.75, "en": 0.75}     # en provisional until its own histogram check
 WORD_SHARE_THRESHOLD = 0.70
 MIN_DOC_TOKENS = 50
 # Issue-level sources (one row = a whole issue, columns run together) are cleaned per segment instead of
@@ -145,7 +164,8 @@ def gate_params(cfg: dict, lang: str) -> dict:
     """Everything needed to reproduce a filter decision; goes into every filtered shard's MANIFEST."""
     m = json.loads((lexicon_dir(cfg, lang) / "MANIFEST.json").read_text(encoding="utf-8"))
     return {"scorer_version": SCORER_VERSION, "lang": lang, "lexicon_file": m["file"],
-            "lexicon_sha256": m["sha256"], "hit_threshold": HIT_THRESHOLD[lang],
+            "lexicon_sha256": m["sha256"], "lexicon_version": m.get("lexicon_version", "v1"),
+            "hit_threshold": HIT_THRESHOLD[lang],
             "word_share_threshold": WORD_SHARE_THRESHOLD, "min_doc_tokens": MIN_DOC_TOKENS,
             "segment_sources": sorted(SEGMENT_SOURCES), "segment_min_tokens": SEGMENT_MIN_TOKENS,
             "gate_order": ["short", "hit_rate", "word_share"]}
@@ -188,21 +208,13 @@ def _dta_job(args: tuple) -> tuple[Counter, int, int]:
     return c, used, late
 
 
-def _pool_job(path: str) -> tuple[Counter, dict, int]:
-    df, titles, n = Counter(), defaultdict(set), 0
-    for b in pq.ParquetFile(path).iter_batches(batch_size=500, columns=["newspaper", "text"]):
-        for paper, text in zip(b.column("newspaper").to_pylist(), b.column("text").to_pylist()):
-            for w in set(tokens(text or "")):
-                df[w] += 1
-                if len(titles[w]) < POOL_MIN_TITLES:
-                    titles[w].add(paper)
-            n += 1
-            if n >= POOL_SAMPLE_PER_FILE:
-                return df, {w: sorted(t) for w, t in titles.items()}, n
-    return df, {w: sorted(t) for w, t in titles.items()}, n
+def _raw_sha(raw_dir: Path, name: str) -> str | None:
+    """sha256 of a downloaded raw file, as recorded by download.py in the source's MANIFEST."""
+    m = json.loads((raw_dir / "MANIFEST.json").read_text(encoding="utf-8"))
+    return next((e["sha256"] for e in m["files"].values() if e["file"].rsplit("/", 1)[-1] == name), None)
 
 
-def build_lexicon_de(cfg: dict, workers: int) -> tuple[set[str], dict]:
+def anchor_de(cfg: dict, workers: int) -> tuple[set[str], dict]:
     sources = load_config(repo_path(cfg["sources"]))
     zpath = next(repo_path(sources["dta"]["dest"]).glob("*.zip"))
     with zipfile.ZipFile(zpath) as z:
@@ -212,41 +224,199 @@ def build_lexicon_de(cfg: dict, workers: int) -> tuple[set[str], dict]:
     with ProcessPoolExecutor(workers) as ex:
         for c, used, late in ex.map(_dta_job, chunks):
             dta.update(c); n_docs += used; n_late += late
-    lex_dta = {w for w, c in dta.items() if c >= DTA_MIN_FREQ}
+    anchor = {w for w, c in dta.items() if c >= ANCHOR_MIN_FREQ}
+    return anchor, {"sources": [{"name": "dta", "file": zpath.name, "sha256": _raw_sha(zpath.parent, zpath.name),
+                                 "docs_used": n_docs, "docs_skipped_after_1938_or_undated": n_late,
+                                 "types": len(anchor)}]}
 
-    files = [str(f) for src in GERMAN_SOURCES
-             for f in sorted(ingested_dir(cfg, src, sources[src]).glob("*.parquet"))]
-    df, titles, n_pool = Counter(), defaultdict(set), 0
+
+_SCOWL_LIST = re.compile(r"/final/([a-z_0-9]+)-([a-z-]+)\.(\d+)$")
+
+
+def scowl_words(tar_path: Path, categories=SCOWL_CATEGORIES, max_size: int = SCOWL_MAX_SIZE) -> tuple[set[str], list[str]]:
+    """Word types from SCOWL's final/<category>-<kind>.<size> lists (latin-1), normalised like tokens()."""
+    import tarfile
+    words, used = set(), []
+    with tarfile.open(tar_path) as tf:
+        for m in tf:
+            mm = _SCOWL_LIST.search(m.name)
+            if not m.isfile() or not mm or mm.group(1) not in categories or int(mm.group(3)) > max_size:
+                continue
+            used.append(m.name.split("/final/", 1)[1])
+            for line in tf.extractfile(m).read().decode("latin-1").splitlines():
+                words.update(tokens(line))
+    return words, sorted(used)
+
+
+def _tcp_job(path: str) -> tuple[Counter, int]:
+    c, n = Counter(), 0
+    for b in pq.ParquetFile(path).iter_batches(batch_size=200, columns=["text"]):
+        for t in b.column("text").to_pylist():
+            c.update(tokens(t or "")); n += 1
+    return c, n
+
+
+def anchor_en(cfg: dict, workers: int) -> tuple[set[str], dict]:
+    sources = load_config(repo_path(cfg["sources"]))
+    sdir = repo_path(sources["scowl"]["dest"])
+    tar = next(sdir.glob("scowl-*.tar.gz"))
+    scowl, lists = scowl_words(tar)
+    info = [{"name": "scowl", "file": tar.name, "sha256": _raw_sha(sdir, tar.name), "lists": len(lists),
+             "categories": list(SCOWL_CATEGORIES), "max_size": SCOWL_MAX_SIZE, "types": len(scowl)}]
+    tcp = Counter()
+    for name in ("ecco_tcp", "evans_tcp"):
+        d = repo_path(sources[name]["dest"])
+        files = sorted(d.glob("*.parquet"))
+        n_docs, c = 0, Counter()
+        with ProcessPoolExecutor(min(workers, len(files))) as ex:
+            for part, n in ex.map(_tcp_job, [str(f) for f in files]):
+                c.update(part); n_docs += n
+        tcp.update(c)
+        info.append({"name": name, "files": {f.name: _raw_sha(d, f.name) for f in files}, "docs": n_docs,
+                     "types_freq_ge_min": sum(1 for v in c.values() if v >= ANCHOR_MIN_FREQ)})
+    tcp_types = {w for w, v in tcp.items() if v >= ANCHOR_MIN_FREQ}
+    info.append({"name": "tcp_union", "types": len(tcp_types)})
+    return scowl | tcp_types, {"sources": info}
+
+
+def _in_lang(lang: str, row_lang: str, en_share) -> bool:
+    if lang == "en":
+        return is_native_english(row_lang, en_share or 0.0)
+    return row_lang == lang
+
+
+def _pool_job(args: tuple) -> tuple[Counter, Counter, dict, int]:
+    """Document and token frequencies of one ingested file's pre-cutoff, in-language documents.
+    German: the first `k` such documents; English: a hash sample at rate `k`."""
+    path, lang, k = args
+    df, tf, titles, n = Counter(), Counter(), defaultdict(set), 0
+    cols = ["article_id", "year", "date", "newspaper", "lccn", "text", "lang", "lang_en_share"]
+    min_titles = POOL_MIN_TITLES[lang]
+    for b in pq.ParquetFile(path).iter_batches(batch_size=500, columns=cols):
+        for aid, y, d, paper, lccn, text, rl, share in zip(*(b.column(c).to_pylist() for c in cols)):
+            if not (y and y >= FIRST_YEAR and d and str(d)[:10] <= POOL_LAST_DATE and _in_lang(lang, rl, share)):
+                continue
+            if lang == "en" and not _keep(aid, k):
+                continue
+            toks = tokens(text or "")
+            tf.update(toks)
+            title = lccn or paper
+            for w in set(toks):
+                df[w] += 1
+                if len(titles[w]) < min_titles:
+                    titles[w].add(title)
+            n += 1
+            if lang != "en" and n >= k:
+                return df, tf, {w: sorted(t) for w, t in titles.items()}, n
+    return df, tf, {w: sorted(t) for w, t in titles.items()}, n
+
+
+def pool_counts(cfg: dict, lang: str, workers: int) -> tuple[Counter, Counter, dict, dict]:
+    sources = load_config(repo_path(cfg["sources"]))
+    files = [str(f) for src in POOL_SOURCES[lang] for f in sorted(ingested_dir(cfg, src, sources[src]).glob("*.parquet"))]
+    if lang == "en":
+        n_rows = sum(pq.ParquetFile(f).metadata.num_rows for f in files)
+        k = min(1.0, POOL_SAMPLE_DOCS[lang] / max(1, n_rows) * 56 / 40)   # rows span 1900-1955; pool is 1900-1939
+        sampling = {"method": "article-id hash", "rate": k}
+    else:
+        k = POOL_SAMPLE_PER_FILE[lang]
+        sampling = {"method": "first in-range documents per file", "per_file": k}
+    df, tf, titles, n_pool = Counter(), Counter(), defaultdict(set), 0
     with ProcessPoolExecutor(workers) as ex:
-        for c, t, n in ex.map(_pool_job, files):
-            df.update(c); n_pool += n
-            for w, ts in t.items():
-                if len(titles[w]) < POOL_MIN_TITLES:
+        for c, t, ti, n in ex.map(_pool_job, [(f, lang, k) for f in files]):
+            df.update(c); tf.update(t); n_pool += n
+            for w, ts in ti.items():
+                if len(titles[w]) < POOL_MIN_TITLES[lang]:
                     titles[w].update(ts)
-    lex_pool = {w for w, c in df.items() if c >= POOL_MIN_DF and len(titles[w]) >= POOL_MIN_TITLES}
-    lex = lex_dta | lex_pool
-    info = {"dta_zip": zpath.name, "dta_docs_used": n_docs, "dta_docs_skipped_after_1938_or_undated": n_late,
-            "dta_types": len(lex_dta), "pool_files": len(files), "pool_docs_sampled": n_pool,
-            "pool_types": len(lex_pool), "pool_only_types": len(lex_pool - lex_dta), "total_types": len(lex),
-            "params": {"DTA_MIN_FREQ": DTA_MIN_FREQ, "POOL_MIN_DF": POOL_MIN_DF,
-                       "POOL_MIN_TITLES": POOL_MIN_TITLES, "POOL_SAMPLE_PER_FILE": POOL_SAMPLE_PER_FILE}}
-    return lex, info
+    info = {"sources": POOL_SOURCES[lang], "files": len(files), "docs_sampled": n_pool, "sampling": sampling,
+            "date_range": [f"{FIRST_YEAR}-01-01", POOL_LAST_DATE], "min_df": POOL_MIN_DF,
+            "min_titles": POOL_MIN_TITLES[lang]}
+    return df, tf, titles, info
+
+
+def _edits1(w: str, alphabet: str) -> set[str]:
+    """Levenshtein distance-1 neighbours (delete, substitute, insert)."""
+    splits = [(w[:i], w[i:]) for i in range(len(w) + 1)]
+    out = {a + b[1:] for a, b in splits if b}
+    out |= {a + c + b[1:] for a, b in splits if b for c in alphabet if c != b[0]}
+    out |= {a + c + b for a, b in splits for c in alphabet}
+    return out
+
+
+def variant_filter(pool: set[str], tf: Counter, anchor: set[str], ratio: int = VARIANT_RATIO,
+                   min_tf: int = POOL_MIN_DF) -> tuple[set[str], list[tuple[str, int, str, int]]]:
+    """Drop pool types within edit distance 1 of a type >= `ratio` times more frequent, unless the
+    anchor has them. Returns (kept types, [(dropped, its freq, more frequent neighbour, its freq)])."""
+    parents = {w: c for w, c in tf.items() if c >= ratio * min_tf}   # nothing rarer can be `ratio` x a pool type
+    alphabet = "".join(sorted({ch for w, _ in tf.most_common(20000) for ch in w}))
+    kept, dropped = set(), []
+    for w in pool:
+        if w in anchor:
+            kept.add(w)
+            continue
+        need, best = ratio * tf[w], None
+        for v in _edits1(w, alphabet):
+            c = parents.get(v)
+            if c is not None and c >= need and (best is None or c > best[1]):
+                best = (v, c)
+        if best:
+            dropped.append((w, tf[w], best[0], best[1]))
+        else:
+            kept.add(w)
+    dropped.sort(key=lambda r: (-r[1], r[0]))
+    return kept, dropped
+
+
+def build_lexicon(cfg: dict, lang: str, workers: int) -> tuple[set[str], dict, list]:
+    anchor, a_info = (anchor_de if lang == "de" else anchor_en)(cfg, workers)
+    df, tf, titles, p_info = pool_counts(cfg, lang, workers)
+    pool = {w for w, c in df.items() if c >= POOL_MIN_DF and len(titles[w]) >= POOL_MIN_TITLES[lang]}
+    kept, dropped = variant_filter(pool, tf, anchor)
+    lex = anchor | kept
+    info = {"lexicon_version": LEXICON_VERSION, "lang": lang, "anchor": a_info, "anchor_types": len(anchor),
+            "pool": p_info, "pool_types_before_filter": len(pool), "pool_types_in_anchor": len(pool & anchor),
+            "variant_filter": {"max_edit_distance": VARIANT_MAX_EDIT, "ratio": VARIANT_RATIO,
+                               "applies_to": "pool types not in the anchor", "dropped_types": len(dropped)},
+            "pool_types_after_filter": len(kept), "pool_only_types_after_filter": len(kept - anchor),
+            "total_types": len(lex)}
+    return lex, info, dropped
 
 
 def lexicon_dir(cfg: dict, lang: str) -> Path:
     return repo_path(cfg["data_root"]) / "lexicon" / lang
 
 
-def save_lexicon(cfg: dict, lang: str, lex: set[str], info: dict) -> Path:
+def save_lexicon(cfg: dict, lang: str, lex: set[str], info: dict, dropped: list | None = None) -> Path:
+    """Write <sha12>.txt and point MANIFEST.json at it. A previous MANIFEST is kept as
+    MANIFEST.<its version>.json, so earlier reports stay traceable."""
     d = lexicon_dir(cfg, lang)
     d.mkdir(parents=True, exist_ok=True)
     data = ("\n".join(sorted(lex)) + "\n").encode("utf-8")
     sha = hashlib.sha256(data).hexdigest()
     path = d / f"{sha[:12]}.txt"
     path.write_bytes(data)
+    mpath = d / "MANIFEST.json"
+    if mpath.exists():
+        old = json.loads(mpath.read_text(encoding="utf-8"))
+        (d / f"MANIFEST.{old.get('lexicon_version', 'v1')}.json").write_text(json.dumps(old, indent=2, ensure_ascii=False),
+                                                                            encoding="utf-8")
     info.update({"file": path.name, "sha256": sha, "built_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")})
-    (d / "MANIFEST.json").write_text(json.dumps(info, indent=2, ensure_ascii=False), encoding="utf-8")
+    if dropped is not None:
+        vpath = d / f"variants_dropped_{sha[:12]}.tsv"
+        vpath.write_text("type\tfreq\tneighbour\tneighbour_freq\n"
+                         + "".join(f"{w}\t{c}\t{v}\t{vc}\n" for w, c, v, vc in dropped), encoding="utf-8")
+        info["variant_filter"]["dropped_file"] = vpath.name
+    mpath.write_text(json.dumps(info, indent=2, ensure_ascii=False), encoding="utf-8")
     return path
+
+
+def write_lexicon_report(cfg: dict, lang: str, info: dict, dropped: list, out_md: Path, top: int = 50) -> None:
+    lines = [f"# OCR lexicon {info['lexicon_version']}, {lang}", "", "```json",
+             json.dumps({k: v for k, v in info.items()}, indent=1, ensure_ascii=False), "```", "",
+             f"## Variant filter: top {top} dropped pool types by frequency", "",
+             "| type | freq in pool sample | more frequent neighbour | its freq | ratio |", "|---|---|---|---|---|"]
+    lines += [f"| {w} | {c:,} | {v} | {vc:,} | {vc / c:.0f}x |" for w, c, v, vc in dropped[:top]]
+    out_md.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 def load_lexicon(cfg: dict, lang: str) -> set[str]:
@@ -279,11 +449,11 @@ def _snippet(text: str, n: int = 320) -> str:
 def _hist_job(args: tuple) -> dict:
     src, path, per_cell, rate, lang = args
     cells = defaultdict(list)
-    cols = ("article_id", "year", "text", "n_words", "lang")
+    cols = ("article_id", "year", "text", "n_words", "lang", "lang_en_share")
     for b in pq.ParquetFile(path).iter_batches(batch_size=1000, columns=list(cols)):
-        for aid, y, text, nw, row_lang in zip(*(b.column(c).to_pylist() for c in cols)):
+        for aid, y, text, nw, row_lang, share in zip(*(b.column(c).to_pylist() for c in cols)):
             # only pages in the study language and range (DDB also holds French/Italian and 18th-c. pages)
-            if row_lang != lang or not FIRST_YEAR <= y <= LAST_YEAR:
+            if not _in_lang(lang, row_lang, share) or not FIRST_YEAR <= y <= LAST_YEAR:
                 continue
             if len(cells[y]) >= per_cell or not _keep(aid, rate):
                 continue
@@ -297,10 +467,17 @@ def histogram(cfg: dict, lang: str, per_cell: int, rate: float, workers: int) ->
     lex = load_lexicon(cfg, lang)
     sources = load_config(repo_path(cfg["sources"]))
     jobs = []
-    for src in GERMAN_SOURCES:
+    for src in SOURCES[lang]:
         files = sorted(ingested_dir(cfg, src, sources[src]).glob("*.parquet"))
         n_rows = sum(pq.ParquetFile(f).metadata.num_rows for f in files)
-        src_rate = 1.0 if n_rows <= SMALL_SOURCE_ROWS else rate   # small sources: score every document
+        if n_rows <= SMALL_SOURCE_ROWS:
+            src_rate = 1.0                                         # small sources: score every document
+        elif lang == "en":
+            # about 3x the per-year cap, so the cap keeps a hash sample rather than the first rows of a file
+            # (German keeps the fixed --rate so its reports stay comparable across lexicon versions)
+            src_rate = min(1.0, 3 * per_cell * (LAST_YEAR - FIRST_YEAR + 1) / n_rows)
+        else:
+            src_rate = rate
         jobs += [(src, str(f), per_cell, src_rate, lang) for f in files]
     merged: dict = defaultdict(list)
     with ProcessPoolExecutor(workers, initializer=_init_lex, initargs=(lex,)) as ex:
@@ -346,11 +523,11 @@ def segment_report(cfg: dict, lang: str) -> tuple[dict, list]:
     (source, period), plus (source, word share, kept, segment text) for every segment near the cut."""
     sources = load_config(repo_path(cfg["sources"]))
     stats, boundary = defaultdict(lambda: [0, 0, 0, 0]), []
-    for src in sorted(SEGMENT_SOURCES):
+    for src in sorted(SEGMENT_SOURCES & set(SOURCES[lang])):
         for f in sorted(ingested_dir(cfg, src, sources[src]).glob("*.parquet")):
-            for r in pq.read_table(f, columns=["year", "text", "lang"]).to_pylist():
+            for r in pq.read_table(f, columns=["year", "text", "lang", "lang_en_share"]).to_pylist():
                 per = _period(r["year"])
-                if r["lang"] != lang or per is None:
+                if not _in_lang(lang, r["lang"], r["lang_en_share"]) or per is None:
                     continue
                 st = stats[(src, per)]
                 for s in segments(r["text"] or ""):
@@ -492,7 +669,7 @@ def write_report(cfg: dict, lang: str, cells: dict, out_md: Path, out_png: Path,
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("command", choices=["build-lexicon", "histogram"])
-    ap.add_argument("--lang", default="de", choices=["de"])
+    ap.add_argument("--lang", default="de", choices=["de", "en"])
     ap.add_argument("--config", default=None)
     ap.add_argument("--per-cell", type=int, default=400, help="max sampled docs per source x year")
     ap.add_argument("--rate", type=float, default=0.02, help="hash-sample rate before the per-cell cap")
@@ -500,9 +677,13 @@ def main() -> None:
     args = ap.parse_args()
     cfg = load_config(Path(args.config) if args.config else repo_path("config/paths.yaml"))
     if args.command == "build-lexicon":
-        lex, info = build_lexicon_de(cfg, args.workers)
-        path = save_lexicon(cfg, args.lang, lex, info)
+        lex, info, dropped = build_lexicon(cfg, args.lang, args.workers)
+        path = save_lexicon(cfg, args.lang, lex, info, dropped)
+        rep = repo_path(cfg["reports"])
+        rep.mkdir(parents=True, exist_ok=True)
+        write_lexicon_report(cfg, args.lang, info, dropped, rep / f"ocr_lexicon_{args.lang}.md")
         print(json.dumps(info, indent=1, ensure_ascii=False), "\n->", path)
+        print("top dropped variants:", [(w, v) for w, _, v, _ in dropped[:30]])
     else:
         cells = histogram(cfg, args.lang, args.per_cell, args.rate, args.workers)
         rep = repo_path(cfg["reports"])

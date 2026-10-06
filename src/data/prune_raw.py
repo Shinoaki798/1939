@@ -39,6 +39,8 @@ def main() -> None:
 
     cfg = load_config(Path(args.config) if args.config else repo_path("config/paths.yaml"))
     src = load_config(repo_path(cfg["sources"]))[args.source]
+    if str(src.get("role", "")).startswith("lexicon anchor"):
+        sys.exit(f"{args.source}: lexicon anchors are measuring instruments and are never pruned")
     raw_dir = repo_path(src["dest"])
     raw_mpath = raw_dir / "MANIFEST.json"
     raw_m = json.loads(raw_mpath.read_text(encoding="utf-8"))

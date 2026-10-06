@@ -64,3 +64,36 @@ def test_clean_segments_drops_tables_keeps_prose():
     out, n_in, n_kept = clean_segments(text)
     assert "Thälmann" not in out and out.count("Versammlung") == 4 and out.rstrip().endswith("Ende .")
     assert n_in == len(text.split()) and n_kept == len(out.split())
+
+
+def test_variant_filter_drops_ocr_variants_unless_anchored():
+    from collections import Counter
+
+    from src.data.ocr_quality import _edits1, variant_filter
+
+    assert {"a", "cb", "cab", "abc"} <= _edits1("ab", "abc") and "ab" not in _edits1("ab", "abc")
+    tf = Counter({"the": 100000, "tbe": 900, "and": 80000, "aud": 700, "have": 50000, "hare": 300,
+                  "ist": 40000, "ift": 600, "sein": 60000, "fein": 500, "tho": 3000})
+    pool = {"the", "tbe", "aud", "hare", "ift", "fein", "tho"}
+    kept, dropped = variant_filter(pool, tf, anchor={"the", "hare", "fein"}, ratio=50, min_tf=50)
+    assert kept == {"the", "hare", "fein", "tho"}          # tho: "the" is only 33x more frequent
+    assert dropped == [("tbe", 900, "the", 100000), ("aud", 700, "and", 80000), ("ift", 600, "ist", 40000)]
+
+
+def test_scowl_words_reads_only_chosen_categories_and_sizes(tmp_path):
+    import io
+    import tarfile
+
+    from src.data.ocr_quality import scowl_words
+
+    path = tmp_path / "scowl-x.tar.gz"
+    with tarfile.open(path, "w:gz") as tf:
+        for name, words in [("english-words.10", "the\nhouse\n"), ("american-words.60", "color\n"),
+                            ("british-words.10", "colour\n"), ("english-words.70", "zyzzyva\n"),
+                            ("english-contractions.35", "don't\n")]:
+            b = words.encode("latin-1")
+            info = tarfile.TarInfo(f"scowl-x/final/{name}"); info.size = len(b)
+            tf.addfile(info, io.BytesIO(b))
+    words, used = scowl_words(path)
+    assert words == {"the", "house", "color", "don"}
+    assert used == ["american-words.60", "english-contractions.35", "english-words.10"]

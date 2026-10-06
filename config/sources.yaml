@@ -61,8 +61,9 @@ evans_tcp:
   dest: ./data/raw/evans_tcp
   lang: en
   approved: 2026-10-05
-  role: training only. Evans-TCP, hand-keyed early American imprints (almanacs, sermons,
-        broadsides), year; strip illegibility markers; CC0
+  role: lexicon anchor, not training (HANDOFF §12, 2026-10-06). Evans-TCP, hand-keyed early
+        American imprints (almanacs, sermons, broadsides); types seen >= 2 times enter the
+        English OCR lexicon anchor; raw kept, never pruned; CC0
 
 ecco_tcp:
   hf_repo: Vintage-LLM/ECCO
@@ -71,7 +72,9 @@ ecco_tcp:
   dest: ./data/raw/ecco_tcp
   lang: en
   approved: 2026-10-05
-  role: training only. ECCO-TCP, hand-keyed 18th-century British texts, year; CC0
+  role: lexicon anchor, not training (HANDOFF §12, 2026-10-06). ECCO-TCP, hand-keyed
+        18th-century British texts; types seen >= 2 times enter the English OCR lexicon anchor;
+        raw kept, never pruned; CC0
 
 ncse:
   hf_repo: Vintage-LLM/NCSE
@@ -131,8 +134,19 @@ dta:
   dest: ./data/foreign/de/raw/dta
   lang: de
   approved: 2026-10-05
-  role: Deutsches Textarchiv core + supplementary texts (2026-02-10), hand-keyed TEI-XML in
-        original orthography, first-edition year; drop the ~19 post-1939 texts; CC BY-SA 4.0
+  role: lexicon anchor, not training. Deutsches Textarchiv core + supplementary texts
+        (2026-02-10), hand-keyed TEI-XML in original orthography; works dated <= 1938, types seen
+        >= 2 times form the German OCR lexicon anchor; CC BY-SA 4.0
+
+scowl:
+  kind: url
+  files: ./config/scowl_files.tsv
+  dest: ./data/raw/scowl
+  lang: en
+  approved: 2026-10-06
+  role: lexicon anchor, not training. SCOWL 2020.12.07 word lists, english + american categories
+        of size <= 60 (the source of hunspell en_US); OCR-quality instrument only, never used for
+        the tokenizer or training. Downloaded on the local PC and synced to the 5080 box
 
 voelkischer_beobachter_de:
   kind: url
