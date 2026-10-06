@@ -51,3 +51,19 @@ def test_record_in_manifest_merges_concurrent_writers(tmp_path):
     record_in_manifest(m, a, "k1", {"sha256": "1"})
     record_in_manifest(m, b, "k2", {"sha256": "2"})   # b never saw k1 in memory
     assert set(json.loads(m.read_text())["files"]) == {"k1", "k2"}
+
+
+def test_unknown_size_zip_is_verified_by_integrity(tmp_path):
+    import zipfile
+
+    from src.data.download import verify
+
+    good = tmp_path / "173.zip.part"
+    with zipfile.ZipFile(good, "w") as z:
+        z.writestr("CasesMetadata.json", "[]")
+    spec = {"file": "173.zip", "url": "https://static.case.law/la/173.zip", "bytes": None, "checksum": "-"}
+    ok, hashes, how = verify(spec, good)
+    assert ok and how == "zip integrity" and len(hashes["sha256"]) == 64
+    bad = tmp_path / "bad.zip.part"
+    bad.write_bytes(b"<html>rate limited</html>")
+    assert not verify(spec, bad)[0]

@@ -166,3 +166,13 @@ chronicling_america:
         the American Stories snapshot (2023-04-22+), pages dated 1930-01-01..1939-06-30 only (filtered at
         ingest). Contains some non-English titles (language filter) and new pages of AS titles (dedup
         against AS on lccn + date + page). Batch list in config/chronicling_america_batches.json
+
+caselaw_access_project:
+  kind: url
+  files: ./config/caselaw_access_project_files.tsv   # 3,464 volume zips published 1925-1942
+  dest: ./data/raw/caselaw_access_project
+  lang: en
+  approved: 2026-10-05
+  role: training only, legal (capped with the Federal Register at 10 % of seen tokens). Opinion text
+        only, cases kept by decision_date <= 1939-06-30. Fetched slowly (one zip every ~5 s, user
+        decision) because static.case.law robots.txt disallows crawling; CC0

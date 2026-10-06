@@ -84,7 +84,7 @@ def load_file_table(path: Path) -> dict[str, dict]:
     header, table = rows[0], {}
     for r in rows[1:]:
         rec = dict(zip(header[1:], r[1:]))
-        rec["bytes"] = int(rec["bytes"])
+        rec["bytes"] = None if rec["bytes"] in ("?", "-", "") else int(rec["bytes"])   # None: size unpublished
         if "url" in rec:
             rec["file"] = rec["url"].rsplit("/", 1)[-1]
         table[r[0]] = rec
@@ -166,6 +166,16 @@ def verify(spec: dict, part: Path) -> tuple[bool, dict[str, str], str]:
     if algo in ("md5", "sha1", "sha256"):
         hs = file_hashes(part, tuple(dict.fromkeys(("sha256", algo))))
         return hs[algo] == want, hs, spec["checksum"]
+    if spec.get("bytes") is None:   # no size, no checksum published: the archive must at least be intact
+        if spec["file"].endswith(".zip"):
+            import zipfile
+            try:
+                with zipfile.ZipFile(part) as z:
+                    ok = z.testzip() is None
+            except zipfile.BadZipFile:
+                ok = False
+            return ok, file_hashes(part), "zip integrity"
+        return part.stat().st_size > 0, file_hashes(part), "non-empty"
     return True, file_hashes(part), "size only"
 
 
@@ -179,12 +189,22 @@ def fetch_one(key: str, spec: dict, src: dict, dl: dict, out_dir: Path, via: str
         # "auto" is resolved before every attempt: proxy whenever it answers, mirror/direct otherwise.
         cur = via if via != "auto" else ("proxy" if proxy_alive(dl["proxy"], dl["hf_endpoint"]) else "mirror")
         url = source_url(spec, src, dl, cur)
+        if spec["bytes"] is None:
+            # Size not published: fetch the whole file each attempt; accept on curl exit 0, then verify().
+            if part.exists():
+                part.unlink()
+            print(f"[{key}] attempt {attempt}: size unknown, via {cur}", flush=True)
+            r = subprocess.run(curl_cmd(cur, url, part, dl["proxy"]), stdin=subprocess.DEVNULL)
+            if r.returncode != 0 or not part.exists() or part.stat().st_size == 0:
+                print(f"[{key}] curl exit {r.returncode}", flush=True)
+                time.sleep(min(60, 10 * attempt))
+                continue
         have = part.stat().st_size if part.exists() else 0
-        if have > spec["bytes"]:
+        if spec["bytes"] is not None and have > spec["bytes"]:
             print(f"[{key}] .part larger than expected ({have} > {spec['bytes']}); restarting", flush=True)
             part.unlink()
             have = 0
-        if have < spec["bytes"]:
+        if spec["bytes"] is not None and have < spec["bytes"]:
             t0 = time.time()
             print(f"[{key}] attempt {attempt}: {have/1e9:.2f}/{spec['bytes']/1e9:.2f} GB via {cur}", flush=True)
             r = subprocess.run(curl_cmd(cur, url, part, dl["proxy"]), stdin=subprocess.DEVNULL)
@@ -202,12 +222,12 @@ def fetch_one(key: str, spec: dict, src: dict, dl: dict, out_dir: Path, via: str
             continue
         os.replace(part, final)
         entry = {
-            "file": name, "bytes": spec["bytes"], "sha256": hashes["sha256"], "verified_against": expected,
+            "file": name, "bytes": final.stat().st_size, "sha256": hashes["sha256"], "verified_against": expected,
             "url": url, "via": cur, "verified_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
         }
         manifest["files"][key] = entry
         record_in_manifest(mpath, manifest, key, entry)
-        print(f"[{key}] OK {spec['bytes']/1e9:.2f} GB verified ({expected if expected == 'size only' else 'checksum'})",
+        print(f"[{key}] OK {final.stat().st_size/1e9:.3f} GB verified ({expected})",
               flush=True)
         return True
     print(f"[{key}] FAILED after {max_attempts} attempts", flush=True)
@@ -235,14 +255,15 @@ def run_source(name: str, src: dict, dl: dict, args) -> list[str]:
     manifest = load_manifest(mpath, ident, src.get("revision")) \
         if mpath.exists() or not args.dry_run else {"files": {}}
     todo = [k for k in keys if k not in manifest["files"]]
-    todo_bytes = sum(table[k]["bytes"] for k in todo)
+    todo_bytes = sum(table[k]["bytes"] or 0 for k in todo)
+    unknown = sum(table[k]["bytes"] is None for k in todo)
     print(f"[{name}] {len(keys)} files requested, {len(keys) - len(todo)} already verified, {len(todo)} to "
-          f"fetch ({todo_bytes/1e9:.1f} GB; ~{todo_bytes/15e6/3600:.1f} h at 15 MB/s) -> {out_dir}", flush=True)
+          f"fetch ({todo_bytes/1e9:.1f} GB known + {unknown} of unpublished size) -> {out_dir}", flush=True)
     if args.dry_run:
         for k in todo[:20]:
             part = out_dir / (table[k]["file"].rsplit("/", 1)[-1] + ".part")
             have = part.stat().st_size if part.exists() else 0
-            print(f"  {k}  {table[k]['bytes']/1e9:6.2f} GB  partial={have/1e9:.2f} GB")
+            print(f"  {k}  {(table[k]['bytes'] or 0)/1e9:6.2f} GB  partial={have/1e9:.2f} GB")
         return []
 
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -253,8 +274,12 @@ def run_source(name: str, src: dict, dl: dict, args) -> list[str]:
     except BlockingIOError:
         print(f"[{name}] another downloader holds {out_dir}/{lock_name}; skipping", flush=True)
         return [f"{name}:locked"]
-    failed = [k for k in todo if not fetch_one(k, table[k], src, dl, out_dir, args.via, manifest, mpath,
-                                               args.max_attempts)]
+    failed = []
+    for k in todo:
+        if not fetch_one(k, table[k], src, dl, out_dir, args.via, manifest, mpath, args.max_attempts):
+            failed.append(k)
+        if args.delay:
+            time.sleep(args.delay)   # politeness gap between files (e.g. static.case.law)
     lock.close()
     print(f"[{name}] done. failed: {failed or 'none'}", flush=True)
     return [f"{name}:{k}" for k in failed]
@@ -268,6 +293,7 @@ def main() -> None:
                                                    "(default: paths.yaml download.years)")
     ap.add_argument("--via", choices=["auto", "proxy", "mirror"], default="auto")
     ap.add_argument("--max-attempts", type=int, default=30)
+    ap.add_argument("--delay", type=float, default=0.0, help="seconds to wait between files (polite slow download)")
     ap.add_argument("--dry-run", action="store_true", help="report what would be downloaded; write nothing")
     ap.add_argument("--shard", default="0/1", help="k/N: fetch only the k-th of N stable slices of the file list "
                                                    "(run N processes for small-file sources)")
