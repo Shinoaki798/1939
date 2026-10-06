@@ -440,3 +440,17 @@ Dated entries; each supersedes anything above it that it contradicts.
   and boundary samples (0.65–0.75 word share) go into `reports/audit_v1.md`.
   Proposal Cleaning step (3) now reads "lexicon hit rate ≥0.75 and word-like
   share ≥0.70, per language".
+- **2026-10-06 — OCR lexicon v2, both languages.** Lexicon = anchor ∪ pool
+  types that survive a variant filter. Anchor (no OCR errors): de = DTA ≤ 1938,
+  types ≥ 2; en = SCOWL 2020.12.07 english + american lists of size ≤ 60 (the
+  hunspell en_US source; downloaded on the local PC with the user's approval,
+  sha256 5587667c…, synced to the box) ∪ ECCO-TCP + Evans-TCP types ≥ 2. Pool:
+  pre-cutoff (1900-01-01…1939-06-30) in-language newspapers, df ≥ 50 in ≥ 5 (de)
+  / ≥ 10 (en, American Stories only) titles. Variant filter: a pool type within
+  edit distance 1 of a type ≥ 50× more frequent is dropped unless it is in the
+  anchor; dropped types are logged, top 50 in `reports/ocr_lexicon_<lang>.md`.
+  Gates unchanged (0.75 / 0.70 / 50). German is re-reported on v2; if any
+  source × period drop rate moves by more than 5 points, the boundary samples go
+  to the user before proceeding. ECCO, Evans, DTA and SCOWL are "lexicon anchor,
+  not training" in `config/sources.yaml`, kept, and refused by `prune_raw.py`.
+  The lexicon is an OCR instrument only; it never touches the tokenizer.
