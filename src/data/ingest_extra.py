@@ -5,8 +5,11 @@ Output: data/ingested/<source>/<sha256[:12]>.parquet, one per input file, listed
         data/ingested/<source>/MANIFEST.json
 
 Same columns as src.data.ingest.SCHEMA plus `meta` (JSON of source-specific fields).
-These sources are training-only, so rows dated after the cutoff are dropped HERE
-(and counted) — they can never be used. Rows without a valid date are dropped too.
+English extras are training-only, so rows dated after the cutoff are dropped HERE
+(and counted) — they can never be used. German sources keep every dated row up to the
+end of the study range (1955): the German per-year holdout spans both sides of the
+boundary (HANDOFF §12), and the split stage applies the cutoff. Rows without a valid
+date are dropped everywhere.
 
     python -m src.data.ingest_extra --source congressional_record --dry-run
     python -m src.data.ingest_extra --source hmd_newspapers --workers 8
@@ -92,7 +95,82 @@ def rows_hmd_newspapers(path: Path, key: str, cutoff: dt.date, stats: Counter):
                        "", text, meta)
 
 
-ADAPTERS = {"congressional_record": rows_congressional_record, "hmd_newspapers": rows_hmd_newspapers}
+GERMAN_LAST_DATE = dt.date(1955, 12, 31)   # end of the study range; the split stage applies the cutoff
+
+
+def _german_date(value, stats: Counter) -> dt.date | None:
+    try:
+        d = value if isinstance(value, dt.date) else dt.date.fromisoformat(str(value)[:10])
+    except ValueError:
+        stats["dropped_bad_date"] += 1
+        return None
+    if d > GERMAN_LAST_DATE:
+        stats["dropped_after_1955"] += 1
+        return None
+    return d
+
+
+def rows_ddb_newspapers_de(path: Path, key: str, cutoff: dt.date, stats: Counter):
+    """Deutsches Zeitungsportal pages (storytracer/German-PD-Newspapers): one row per page."""
+    cols = ["issue_id", "date", "paper", "page", "language", "zdb_id", "provider", "license", "text"]
+    for batch in pq.ParquetFile(path).iter_batches(batch_size=2_000, columns=cols):
+        for r in batch.to_pylist():
+            stats["rows_in"] += 1
+            d = _german_date(r.get("date"), stats)
+            text = (r.get("text") or "").strip()
+            if d is None:
+                continue
+            if not text:
+                stats["dropped_empty"] += 1
+                continue
+            meta = {k: r.get(k) for k in ("issue_id", "page", "language", "zdb_id", "provider", "license")}
+            yield _row(f"ddb_{r.get('issue_id')}_{r.get('page')}", "ddb_newspapers_de", d, r.get("paper") or "",
+                       "", "", text, meta)
+
+
+def rows_europeana_newspapers_de(path: Path, key: str, cutoff: dt.date, stats: Counter):
+    """Europeana Newspapers German decade files (biglam/europeana_newspapers data/de-19x0): one row per page."""
+    cols = ["id", "date", "title", "mean_ocr", "std_ocr", "language", "multi_language", "issue_uri", "text"]
+    for batch in pq.ParquetFile(path).iter_batches(batch_size=1_000, columns=cols):
+        for r in batch.to_pylist():
+            stats["rows_in"] += 1
+            d = _german_date(r.get("date"), stats)
+            text = (r.get("text") or "").strip()
+            if d is None:
+                continue
+            if not text:
+                stats["dropped_empty"] += 1
+                continue
+            meta = {k: r.get(k) for k in ("mean_ocr", "std_ocr", "language", "multi_language", "issue_uri")}
+            yield _row(f"eu_{r.get('id')}", "europeana_newspapers_de", d, r.get("title") or "", "", "", text, meta)
+
+
+_VB_DATES: dict[str, str] = {}
+
+
+def rows_voelkischer_beobachter_de(path: Path, key: str, cutoff: dt.date, stats: Counter):
+    """Voelkischer Beobachter issues (Internet Archive *_djvu.txt): one row per issue; the issue
+    date comes from config/voelkischer_beobachter_de_dates.tsv, never from the identifier."""
+    if not _VB_DATES:
+        with open(repo_path("config/voelkischer_beobachter_de_dates.tsv"), encoding="utf-8") as f:
+            rows = [l.rstrip("\n").split("\t") for l in f if l.strip() and not l.startswith("#")]
+        _VB_DATES.update({k: v for k, v in rows[1:]})
+    stats["rows_in"] += 1
+    d = _german_date(_VB_DATES.get(key, ""), stats)
+    if d is None:
+        return
+    text = path.read_text(encoding="utf-8", errors="replace").strip()
+    if not text:
+        stats["dropped_empty"] += 1
+        return
+    yield _row(f"vb_{key}", "voelkischer_beobachter_de", d, "Völkischer Beobachter", "", "", text,
+               {"ia_identifier": key, "named_source": "NSDAP party daily"})
+
+
+ADAPTERS = {"congressional_record": rows_congressional_record, "hmd_newspapers": rows_hmd_newspapers,
+            "ddb_newspapers_de": rows_ddb_newspapers_de,
+            "europeana_newspapers_de": rows_europeana_newspapers_de,
+            "voelkischer_beobachter_de": rows_voelkischer_beobachter_de}
 
 
 def ingested_dir(cfg: dict, name: str, src: dict) -> Path:
