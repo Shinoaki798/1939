@@ -484,3 +484,23 @@ Dated entries; each supersedes anything above it that it contradicts.
   RQ3: fission propositions must draw their contexts from Jan–Jun 1939
   newspapers and PNAS. Audit adds science tokens by language × decade ×
   source, a licence table and the keyed vs OCR share of the bucket.
+- **2026-10-06 — science sources: user decisions after the feasibility check**
+  (`reports/science_feasibility_2026-10-06.md`). (1) US non-federal journals
+  1931–39 (PNAS, Bull. AMS, BSTJ, Physical Review) are IN as US public domain by
+  non-renewal (no renewals found, Online Books Page); basis recorded in each
+  source's licence field. (2) German journals 1931–38 are IN, including the
+  archive.org copies of Naturwissenschaften and Physikalische Zeitschrift that
+  carry no licence (still in copyright; used for non-commercial research
+  training, never redistributed). (3) Period human translations (NACA Technical
+  Memorandums, translated letters in the RSC) count as native period text: in
+  training, flagged `period_translation` in meta, never scored. (4) JFM: reviews
+  in volumes ≤ 61 only (~153k); volume 62+ only if its publication date is
+  shown to be ≤ 1939-06-30. Defaults applied: no US patents (no account-free
+  bulk OCR; the Official Gazette would swamp the mix), no Zentralblatt (scans
+  only; keyed reviews include modern retro-reviews), Meyers 6th ed. from
+  archive.org OCR (zeno.org forbids robots), EB11 vols 2–17 keyed from
+  Gutenberg and vols 1, 18–28, 30–31 OCR from archive.org (index vol 29 out),
+  Nature to 1930 with dates from the volume field, PMC not used (scans only,
+  bulk download prohibited) — PNAS and Public Health Reports come from
+  archive.org. EJC science titles: `config/science_jstor_titles.txt` (69
+  titles, 166,290 articles, 306M words before cleaning).
