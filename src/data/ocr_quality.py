@@ -62,16 +62,22 @@ def score(text: str, lexicon: set[str]) -> float:
 
 # ---- lexicon ---------------------------------------------------------------------------
 
-_DTA_YEAR = re.compile(r'<date type="publication">\s*(\d{4})')
+# The first <date type="publication"> in a DTA header is the digital edition (e.g. 2025); the
+# original work's date sits inside <sourceDesc> (publication, or creation for manuscripts).
+_DTA_SOURCE = re.compile(r"<sourceDesc>(.*?)</sourceDesc>", re.S)
+_DTA_YEAR = re.compile(r'<date type="(?:publication|creation)">\s*(\d{4})')
 _FW = re.compile(r"<fw\b[^>]*>.*?</fw>", re.S)            # running heads, page numbers, catchwords
 _HYPH = re.compile(r"[-¬]\s*<lb\s*/>\s*")                  # line-end hyphenation
 _TAG = re.compile(r"<[^>]+>")
 
 
 def dta_text(tei: str) -> tuple[int | None, str]:
-    m = _DTA_YEAR.search(tei)
+    header = tei.split("</teiHeader>", 1)[0]
+    src = _DTA_SOURCE.search(header)
+    m = _DTA_YEAR.search(src.group(1)) if src else None
+    m = m or re.search(r'<date type="creation">\s*(\d{4})', header)
     year = int(m.group(1)) if m else None
-    body = tei.split("<text", 1)[-1]
+    body = tei.split("</teiHeader>", 1)[-1].split("<text", 1)[-1]   # not the header's <textClass>
     body = _FW.sub(" ", body)
     body = _HYPH.sub("", body)
     return year, html.unescape(_TAG.sub(" ", body))

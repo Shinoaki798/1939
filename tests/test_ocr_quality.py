@@ -15,8 +15,16 @@ def test_score_hit_rate_and_short_text_is_nan():
 
 
 def test_dta_text_joins_hyphenation_and_drops_running_heads():
-    tei = ('<TEI><teiHeader><date type="publication">1873</date></teiHeader>'
+    tei = ('<TEI><teiHeader><publicationStmt><date type="publication">2025-10-24T08:36:51Z</date>'
+           '</publicationStmt><sourceDesc><biblFull><date type="publication">1873</date></biblFull>'
+           '</sourceDesc></teiHeader>'
            '<text><fw type="header">Seite 3</fw><p>Die Ver-<lb/>fassung des Lan&amp;des</p></text></TEI>')
     year, text = dta_text(tei)
     assert year == 1873
     assert tokens(text) == ["die", "verfassung", "des", "lan", "des"]
+
+
+def test_dta_year_falls_back_to_creation_date():
+    tei = ('<TEI><teiHeader><date type="publication">2025-10-24T08:36:51Z</date>'
+           '<date type="creation">1849</date></teiHeader><text><p>Die Stadt</p></text></TEI>')
+    assert dta_text(tei)[0] == 1849
