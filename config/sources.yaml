@@ -557,3 +557,35 @@ jfm:
   ocr_or_keyed: keyed (ERAM digitisation; skips the OCR gates, gets the C1 screen)
   subject_filter_rule: "reviews only, JFM volume <= 61 (volumes > 61 appeared after 1939-06-30 or on unknown dates; user 2026-10-06); zbMATH placeholders and inserted JFM/Zbl cross-references removed"
   role: training, science bucket
+
+gutenberg_sci_en:
+  kind: url
+  files: ./config/gutenberg_sci_en_files.tsv
+  items: ./config/gutenberg_sci_en_items.tsv
+  catalog_dest: ./data/raw/gutenberg
+  dest: ./data/raw/gutenberg_sci_en
+  lang: en
+  approved: 2026-10-06
+  title: "Project Gutenberg science, mathematics and engineering books (+ EB11 keyed slices)"
+  bucket: science
+  licence: "US public domain (Project Gutenberg); PG header/licence text stripped"
+  access_method: "PG catalog pg_catalog.csv.gz -> src.data.gutenberg_select -> plain text from the PG mirror gutenberg.pglaf.org (no automated use of www.gutenberg.org)"
+  ocr_or_keyed: keyed (skips the OCR gates, gets the C1 screen)
+  subject_filter_rule: "LoCC Q* or TA/TC/TD/TF/TG/TJ/TK/TL/TN/TP, or an 'Encyclopaedia Britannica, 11th Edition' slice; drop if any person born >= 1915; if not every person died <= 1930, the front matter must name a year 1800-1938 and none >= 1939"
+  role: training, science bucket
+
+gutenberg_sci_de:
+  kind: url
+  files: ./config/gutenberg_sci_de_files.tsv
+  items: ./config/gutenberg_sci_de_items.tsv
+  catalog_dest: ./data/raw/gutenberg
+  dest: ./data/foreign/de/raw/gutenberg_sci_de
+  lang: de
+  approved: 2026-10-06
+  title: "Project Gutenberg German science, mathematics and engineering books"
+  bucket: science
+  licence: "US public domain (Project Gutenberg); PG header/licence text stripped"
+  access_method: "as gutenberg_sci_en"
+  ocr_or_keyed: keyed (skips the OCR gates, gets the C1 screen)
+  subject_filter_rule: "as gutenberg_sci_en"
+  role: training, science bucket

@@ -216,3 +216,22 @@ def test_jfm_keeps_reviews_up_to_volume_61(tmp_path):
     assert rows[0]["text"] == "Der Verf. beweist den Satz & mehr." and rows[0]["byline"] == "Hasse, H."
     assert stats["dropped_volume_after_61"] == 1 and stats["dropped_no_review"] == 1
     assert stats["dropped_review_type_editorial"] == 1
+
+
+def test_gutenberg_front_matter_year_check(tmp_path, monkeypatch):
+    import src.data.ingest_extra as ie
+
+    monkeypatch.setitem(ie._IA_ITEMS, "gutenberg_sci_en", {
+        "pg1": {"kind": "science", "verdict": "check", "title": "Relativity", "authors": "Einstein, Albert, 1879-1955"},
+        "pg2": {"kind": "science", "verdict": "check", "title": "Later", "authors": "X, 1890-1960"},
+        "pg3": {"kind": "science", "verdict": "safe", "title": "Old", "authors": "Faraday, Michael, 1791-1867"}})
+    body = "*** START OF THE PROJECT GUTENBERG EBOOK X ***\n{front}\n\nThe text.\n*** END OF THE PROJECT GUTENBERG EBOOK X ***\nlicence"
+    fronts = {"pg1": "RELATIVITY\nLONDON\n1920", "pg2": "Published 1920; revised edition 1946", "pg3": "Experimental Researches"}
+    rows, stats = [], Counter()
+    for k, front in fronts.items():
+        p = tmp_path / f"{k}.txt"
+        p.write_text(body.format(front=front), encoding="utf-8")
+        rows += list(ie.rows_gutenberg(p, k, CUTOFF, stats, source="gutenberg_sci_en"))
+    assert [r["article_id"] for r in rows] == ["gutenberg_sci_en_pg1", "gutenberg_sci_en_pg3"]
+    assert rows[0]["date"] == "1920-01-01" and "licence" not in rows[0]["text"] and "START OF" not in rows[0]["text"]
+    assert rows[1]["date"] == "1867-01-01" and stats["dropped_date_unverified"] == 1

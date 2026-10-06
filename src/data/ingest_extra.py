@@ -570,7 +570,44 @@ def rows_ia_text(path: Path, key: str, cutoff: dt.date, stats: Counter, source: 
         yield row
 
 
+_PG_START = re.compile(r"\*\*\*\s*START OF (?:THE|THIS) PROJECT GUTENBERG[^\n]*\n", re.I)
+_PG_END = re.compile(r"\n[^\n]*\*\*\*\s*END OF (?:THE|THIS) PROJECT GUTENBERG", re.I)
+_YEAR = re.compile(r"\b(1[5-9]\d\d|20\d\d)\b")
+_DEATH = re.compile(r"\d{3,4}\??\s*-\s*(\d{3,4})")
+
+
+def rows_gutenberg(path: Path, key: str, cutoff: dt.date, stats: Counter, source: str = ""):
+    """Project Gutenberg plain text (science bucket): PG header/footer removed; one row per book. Books
+    whose authors are not all dead by 1930 ("check") are kept only if the front matter names a year
+    1800-1938 and none >= 1939. Keyed text: skips the OCR gates, gets the C1 screen."""
+    item = ia_items(source).get(key)
+    stats["rows_in"] += 1
+    if item is None:
+        stats["dropped_not_in_catalog"] += 1
+        return
+    raw = path.read_text(encoding="utf-8", errors="replace")
+    s, e = _PG_START.search(raw), _PG_END.search(raw)
+    text = raw[s.end() if s else 0: e.start() if e else len(raw)].strip()
+    years = [int(y) for y in _YEAR.findall(text[:5000])]
+    early = [y for y in years if 1800 <= y <= cutoff.year - 1]
+    if item["verdict"] == "check" and (not early or any(y > cutoff.year - 1 for y in years)):
+        stats["dropped_date_unverified"] += 1
+        return
+    deaths = [int(d) for d in _DEATH.findall(item.get("authors", ""))]
+    year = max(early) if early else (1910 if item["kind"] == "eb11" else min(max(deaths, default=1930), 1930))
+    if not text:
+        stats["dropped_empty"] += 1
+        return
+    row = _row(f"{source}_{key}", source, dt.date(year, 1, 1), item.get("title", ""), "", item.get("authors", ""),
+               text, {"pg_id": key, "kind": item["kind"], "date_verdict": item["verdict"], "locc": item.get("locc"),
+                      "date_precision": "year", "bucket": "science"})
+    row["headline"] = item.get("title", "")
+    yield row
+
+
 ADAPTERS = {"congressional_record": rows_congressional_record, "hmd_newspapers": rows_hmd_newspapers,
+            "gutenberg_sci_en": functools.partial(rows_gutenberg, source="gutenberg_sci_en"),
+            "gutenberg_sci_de": functools.partial(rows_gutenberg, source="gutenberg_sci_de"),
             "jstor_ejc": rows_jstor_ejc, "royal_society_corpus": rows_royal_society_corpus,
             "jfm": rows_jfm,
             "loc_pd_books": rows_loc_pd_books, "pre_1929_books": rows_pre_1929_books,
