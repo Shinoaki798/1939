@@ -30,6 +30,17 @@ if [ ! -d "$WORK/.git" ]; then
 fi
 cd "$WORK"
 git "${SAFE[@]}" fetch origin --prune
+# Reports regenerated on this box (and later committed from the local machine) would block the merge:
+# move them to logs/reports_prev/<time>/ first. Never touches anything outside reports/.
+changed=$(git status --porcelain --untracked-files=all -- reports | cut -c4-)
+if [ -n "$changed" ]; then
+  keep="logs/reports_prev/$(date +%Y%m%dT%H%M%S)"
+  mkdir -p "$keep"
+  for f in $changed; do cp "$f" "$keep/"; done
+  git checkout -q -- reports 2>/dev/null || true
+  git status --porcelain --untracked-files=all -- reports | grep '^??' | cut -c4- | xargs -r rm -f
+  echo "moved generated reports to $keep"
+fi
 git checkout -q "$BRANCH" 2>/dev/null || git checkout -q -b "$BRANCH" "origin/$BRANCH"
 git "${SAFE[@]}" merge --ff-only "origin/$BRANCH"
 git log --oneline -3
