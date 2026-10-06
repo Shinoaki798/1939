@@ -144,3 +144,14 @@ voelkischer_beobachter_de:
         pool. Internet Archive pub_volkischer-beobachter (UNCG microfilm OCR, *_djvu.txt), only the
         openly downloadable years 1925 and 1930; other years are lending-only. Noisy Fraktur OCR;
         same German OCR scoring/threshold as every German source. Issue dates from the IA item.
+
+# ---- approved 2026-10-05: English 1930s (option C) ----
+
+federal_register:
+  kind: url
+  files: ./config/federal_register_files.tsv   # 839 daily issues, 1936-03-14 .. 1939-06-30
+  dest: ./data/raw/federal_register
+  lang: en
+  approved: 2026-10-05
+  role: training only, legal/regulatory (capped with case law at 10 % of seen tokens). govinfo PDFs
+        with an OCR text layer, two-column layout -> column-aware extraction; US public domain
