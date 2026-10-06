@@ -1,0 +1,83 @@
+# JSTOR Early Journal Content titles kept in the science bucket (exact <journaltitle> strings).
+# Rule (2026-10-06): mathematics, natural sciences (physics, chemistry, astronomy, geology, biology incl.
+# botany/zoology/entomology/ornithology/mycology/microscopy/ecology/parasitology), engineering and technology,
+# medicine and public health, plus general-science and academy proceedings.
+# Excluded: humanities, social sciences, law, art, education, psychology, anthropology/ethnology, geography,
+# statistics/actuarial, nursing, mixed science/antiquities academies (Royal Irish Academy), and the Royal
+# Society's Philosophical Transactions / Proceedings / Abstracts (already in the Royal Society Corpus).
+# Non-English articles in these titles are removed by the language filter, not here.
+# mathematics
+American Journal of Mathematics
+Transactions of the American Mathematical Society
+Annals of Mathematics
+The American Mathematical Monthly
+The Mathematics Teacher
+The Analyst
+# general science, academies
+Science
+The Scientific Monthly
+Proceedings of the National Academy of Sciences of the United States of America
+Proceedings of the American Philosophical Society
+Transactions of the American Philosophical Society
+Proceedings of the American Academy of Arts and Sciences
+Memoirs of the American Academy of Arts and Sciences
+Sigma Xi Quarterly
+Proceedings of the Academy of Natural Sciences of Philadelphia
+Transactions of the Kansas Academy of Science (1903-)
+Transactions of the Annual Meetings of the Kansas Academy of Science
+Transactions of the Kansas Academy of Science (1872-1880)
+# astronomy, geology
+Publications of the Astronomical Society of the Pacific
+The Journal of Geology
+# biology and natural history
+The American Naturalist
+Biological Bulletin
+American Midland Naturalist
+Midland Naturalist
+Ecology
+Bulletin of the Ecological Society of America
+Botanical Gazette
+Bulletin of the Torrey Botanical Club
+Torreya
+American Journal of Botany
+Botanical Bulletin
+The Bryologist
+American Fern Journal
+Mycologia
+The Journal of Mycology
+Mycological Bulletin
+Ohio Mycological Bulletin
+Missouri Botanical Garden Annual Report
+Annals of the Missouri Botanical Garden
+Bulletin de la Société Royale de Botanique de Belgique / Bulletin van de Koninklijke Belgische Botanische Vereniging
+Bulletin de la Société de Botanique de Belgique
+The Auk
+The Condor
+Bulletin of the Cooper Ornithological Club
+The Wilson Bulletin
+The Wilson Quarterly (1892)
+The Journal of the Wilson Ornithological Chapter of the Agassiz Association
+The Semi-Annual (Agassiz Association. Department of the Wilson Chapter)
+The Ornithologists' and Oologists' Semi-Annual
+The Murrelet
+Journal of Mammalogy
+Copeia
+Zoological Bulletin
+Transactions of the American Entomological Society (1890-)
+Transactions of the American Entomological Society (1867-1877)
+Transactions of the American Entomological Society and Proceedings of the Entomological Section of the Academy of Natural Sciences
+Journal of the New York Entomological Society
+The Florida Buggist
+The Florida Entomologist
+The Journal of Parasitology
+Transactions of the American Microscopical Society
+Proceedings of the American Society of Microscopists
+Proceedings of the American Microscopical Society
+# medicine, public health
+Public Health Reports (1896-1970)
+The Journal of Infectious Diseases
+# engineering, technology, applied science
+Journal (American Water Works Association)
+The Journal of the Society of Arts
+Transactions of the Society, Instituted at London, for the Encouragement of Arts, Manufactures, and Commerce
+The Soil

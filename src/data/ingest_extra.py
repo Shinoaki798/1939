@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import functools
 import json
 import os
 import re
@@ -437,6 +438,85 @@ def rows_royal_society_corpus(path: Path, key: str, cutoff: dt.date, stats: Coun
             yield row
 
 
+IA_CHUNK_WORDS = 2000          # whole issues/volumes are cut into ~2k-word documents (C1 drop, dedup)
+_IA_HYPHEN = re.compile(r"(\w)[-¬]\s*\n\s*(\w)")
+_IA_BLANK = re.compile(r"\n\s*\n")
+_GOOGLE_END = re.compile(r"google\s*\.\s*com\s*/?", re.I)
+_TRANSLATION = re.compile(r"\b(?:NACA[- ]?TM|Technical Memorand|translat)", re.I)
+_IA_ITEMS: dict[str, dict] = {}
+
+
+def ia_items(source: str) -> dict:
+    """config/<source>_items.tsv written by src.data.ia_catalog (date, precision, title, ...)."""
+    if source not in _IA_ITEMS:
+        cfg = load_config(repo_path("config/paths.yaml"))
+        path = repo_path(load_config(repo_path(cfg["sources"]))[source]["items"])
+        lines = path.read_text(encoding="utf-8").splitlines()
+        header = lines[0].split("\t")
+        _IA_ITEMS[source] = {f[0]: dict(zip(header, f)) for f in (l.split("\t") for l in lines[1:]) if f and f[0]}
+    return _IA_ITEMS[source]
+
+
+def ia_clean(text: str) -> str:
+    """Strip Google's scan boilerplate, join line-end hyphenation, unwrap lines inside paragraphs."""
+    head = text[:6000]
+    if "digital copy of a book" in head or "Google Book Search" in head:
+        ends = list(_GOOGLE_END.finditer(head))
+        if ends:
+            text = text[ends[-1].end():]
+    text = _IA_HYPHEN.sub(r"\1\2", text)
+    paras = (" ".join(l.strip() for l in p.splitlines() if l.strip()) for p in _IA_BLANK.split(text))
+    return "\n\n".join(p for p in paras if p)
+
+
+def ia_chunks(text: str, words: int = IA_CHUNK_WORDS) -> list[str]:
+    out, cur, n = [], [], 0
+    for p in text.split("\n\n"):
+        cur.append(p)
+        n += len(p.split())
+        if n >= words:
+            out.append("\n\n".join(cur))
+            cur, n = [], 0
+    if cur:
+        if out and n < words // 4:
+            out[-1] += "\n\n" + "\n\n".join(cur)
+        else:
+            out.append("\n\n".join(cur))
+    return out
+
+
+def rows_ia_text(path: Path, key: str, cutoff: dt.date, stats: Counter, source: str = ""):
+    """archive.org <id>_djvu.txt of an issue or volume (science bucket): cleaned, cut into ~2k-word
+    documents, dated from config/<source>_items.tsv. Period human translations are flagged in meta."""
+    item = ia_items(source).get(key)
+    stats["rows_in"] += 1
+    if item is None:
+        stats["dropped_not_in_catalog"] += 1
+        return
+    date, precision = dt.date.fromisoformat(item["date"]), item["precision"]
+    if precision == "year":
+        span_end = dt.date(date.year, 12, 31)                  # year-only 1939 -> after the cutoff
+    elif precision == "month":
+        span_end = (date.replace(day=28) + dt.timedelta(days=4)).replace(day=1) - dt.timedelta(days=1)
+    else:
+        span_end = date
+    if span_end > cutoff:
+        stats["dropped_after_cutoff"] += 1
+        return
+    text = ia_clean(path.read_text(encoding="utf-8", errors="replace"))
+    if not text:
+        stats["dropped_empty"] += 1
+        return
+    translated = bool(_TRANSLATION.search(item.get("title", "")))
+    chunks = ia_chunks(text)
+    for i, chunk in enumerate(chunks):
+        row = _row(f"{source}_{key}_c{i:03d}", source, date, item.get("title", ""), "", "", chunk,
+                   {"ia_id": key, "volume": item.get("volume"), "chunk": i, "n_chunks": len(chunks),
+                    "date_precision": precision, "period_translation": translated, "bucket": "science"})
+        row["headline"] = item.get("title", "")
+        yield row
+
+
 ADAPTERS = {"congressional_record": rows_congressional_record, "hmd_newspapers": rows_hmd_newspapers,
             "jstor_ejc": rows_jstor_ejc, "royal_society_corpus": rows_royal_society_corpus,
             "loc_pd_books": rows_loc_pd_books, "pre_1929_books": rows_pre_1929_books,
@@ -463,7 +543,8 @@ def ingest_file(job: tuple) -> dict:
     writer = None if dry_run else pq.ParquetWriter(tmp, EXTRA_SCHEMA, compression="zstd")
     batch: list[dict] = []
     batch_bytes = 0
-    for row in ADAPTERS[source](Path(path), key, dt.date.fromisoformat(cutoff_iso), stats):
+    adapter = ADAPTERS.get(source) or functools.partial(rows_ia_text, source=source)   # ia_query sources
+    for row in adapter(Path(path), key, dt.date.fromisoformat(cutoff_iso), stats):
         stats["rows_out"] += 1
         stats["words"] += row["n_words"]
         stats[f"lang_{row['lang']}"] += 1
@@ -491,13 +572,15 @@ def ingest_file(job: tuple) -> dict:
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--config", default=None)
-    ap.add_argument("--source", required=True, choices=sorted(ADAPTERS))
+    ap.add_argument("--source", required=True, help=f"one of {sorted(ADAPTERS)} or a source with ia_query")
     ap.add_argument("--workers", type=int, default=8)
     ap.add_argument("--dry-run", action="store_true", help="count only; write nothing")
     args = ap.parse_args()
 
     cfg = load_config(Path(args.config) if args.config else repo_path("config/paths.yaml"))
     src = load_config(repo_path(cfg["sources"]))[args.source]
+    if args.source not in ADAPTERS and not src.get("ia_query"):
+        sys.exit(f"no adapter for {args.source}")
     raw_dir = repo_path(src["dest"])
     out_dir = ingested_dir(cfg, args.source, src)
     raw_manifest = json.loads((raw_dir / "MANIFEST.json").read_text(encoding="utf-8"))

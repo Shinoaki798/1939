@@ -202,3 +202,344 @@ caselaw_access_project:
   role: training only, legal (capped with the Federal Register at 10 % of seen tokens). Opinion text
         only, cases kept by decision_date <= 1939-06-30. Fetched slowly (one zip every ~5 s, user
         decision) because static.case.law robots.txt disallows crawling; CC0
+
+# ---- science bucket, archive.org text (2026-10-06; reports/science_feasibility_2026-10-06.md) ----
+pnas_ia:
+  kind: url
+  files: ./config/pnas_ia_files.tsv
+  items: ./config/pnas_ia_items.tsv
+  dest: ./data/raw/pnas_ia
+  lang: en
+  approved: 2026-10-06
+  title: "Proceedings of the National Academy of Sciences (PNAS)"
+  bucket: science
+  licence: "US public domain (published <= 1930); 1931-39 issues: US public domain by non-renewal (no renewals found, Online Books Page; user decision 2026-10-06)"
+  access_method: "archive.org advancedsearch collection:pub_proceedings-of-the-national-academy-of-sciences-usa; <id>_djvu.txt via src.data.download"
+  ocr_or_keyed: ocr
+  subject_filter_rule: none (whole serial)
+  ia_query: 'collection:pub_proceedings-of-the-national-academy-of-sciences-usa'
+  window: [1923-01-01, 1939-06-30]
+  role: "training, science bucket. 1915-22 come from JSTOR EJC"
+
+bams_ia:
+  kind: url
+  files: ./config/bams_ia_files.tsv
+  items: ./config/bams_ia_items.tsv
+  dest: ./data/raw/bams_ia
+  lang: en
+  approved: 2026-10-06
+  title: "Bulletin of the American Mathematical Society"
+  bucket: science
+  licence: "US public domain (published <= 1930); 1931-39 issues: US public domain by non-renewal (no renewals found, Online Books Page; user decision 2026-10-06)"
+  access_method: "archive.org advancedsearch collection:pub_american-mathematical-society-bulletin; <id>_djvu.txt via src.data.download"
+  ocr_or_keyed: ocr
+  subject_filter_rule: none (whole serial)
+  ia_query: 'collection:pub_american-mathematical-society-bulletin'
+  window: [1891-01-01, 1939-06-30]
+  role: training, science bucket
+
+nbs_jres_ia:
+  kind: url
+  files: ./config/nbs_jres_ia_files.tsv
+  items: ./config/nbs_jres_ia_items.tsv
+  dest: ./data/raw/nbs_jres_ia
+  lang: en
+  approved: 2026-10-06
+  title: "Bureau of Standards Journal of Research / Journal of Research of the NBS"
+  bucket: science
+  licence: "US federal government work, public domain"
+  access_method: "archive.org advancedsearch collection:pub_united-states-national-bureau-of-standards-journal; <id>_djvu.txt via src.data.download"
+  ocr_or_keyed: ocr
+  subject_filter_rule: none (whole serial)
+  ia_query: 'collection:pub_united-states-national-bureau-of-standards-journal'
+  window: [1928-01-01, 1939-06-30]
+  role: training, science bucket
+
+nbs_papers_ia:
+  kind: url
+  files: ./config/nbs_papers_ia_files.tsv
+  items: ./config/nbs_papers_ia_items.tsv
+  dest: ./data/raw/nbs_papers_ia
+  lang: en
+  approved: 2026-10-06
+  title: "Scientific Papers of the Bureau of Standards"
+  bucket: science
+  licence: "US federal government work, public domain"
+  access_method: "archive.org advancedsearch collection:NBSScientificPapers; <id>_djvu.txt via src.data.download"
+  ocr_or_keyed: ocr
+  subject_filter_rule: none (whole serial)
+  ia_query: 'collection:NBSScientificPapers'
+  window: [1900-01-01, 1938-12-31]
+  role: training, science bucket
+
+bstj_ia:
+  kind: url
+  files: ./config/bstj_ia_files.tsv
+  items: ./config/bstj_ia_items.tsv
+  dest: ./data/raw/bstj_ia
+  lang: en
+  approved: 2026-10-06
+  title: "Bell System Technical Journal"
+  bucket: science
+  licence: "US public domain (published <= 1930); 1931-39 issues: US public domain by non-renewal (no renewals found, Online Books Page; user decision 2026-10-06); posted by Bell Labs, recorded as open, non-commercial"
+  access_method: "archive.org advancedsearch collection:bstj-archives; <id>_djvu.txt via src.data.download"
+  ocr_or_keyed: ocr
+  subject_filter_rule: none (whole serial)
+  ia_query: 'collection:bstj-archives'
+  window: [1922-01-01, 1939-06-30]
+  role: "training, science bucket. article-level items"
+
+naca_ia:
+  kind: url
+  files: ./config/naca_ia_files.tsv
+  items: ./config/naca_ia_items.tsv
+  dest: ./data/raw/naca_ia
+  lang: en
+  approved: 2026-10-06
+  title: "NACA Technical Reports, Notes, Memorandums"
+  bucket: science
+  licence: "US federal government work, public domain"
+  access_method: "archive.org advancedsearch collection:NASA_NTRS_Archive AND date:[1915-01-01 TO 1939-06-30]; <id>_djvu.txt via src.data.download"
+  ocr_or_keyed: ocr
+  subject_filter_rule: none (whole serial)
+  ia_query: 'collection:NASA_NTRS_Archive AND date:[1915-01-01 TO 1939-06-30]'
+  window: [1915-01-01, 1939-06-30]
+  role: "training, science bucket. Technical Memorandums are period human translations: kept, flagged period_translation (user decision 2026-10-06)"
+
+physrev_ia:
+  kind: url
+  files: ./config/physrev_ia_files.tsv
+  items: ./config/physrev_ia_items.tsv
+  dest: ./data/raw/physrev_ia
+  lang: en
+  approved: 2026-10-06
+  title: "Physical Review"
+  bucket: science
+  licence: "US public domain (published <= 1930); 1931-39 issues: US public domain by non-renewal (no renewals found, Online Books Page; user decision 2026-10-06)"
+  access_method: "archive.org advancedsearch collection:pub_physical-review AND date:[1893-01-01 TO 1939-06-30]; <id>_djvu.txt via src.data.download"
+  ocr_or_keyed: ocr
+  subject_filter_rule: none (whole serial)
+  ia_query: 'collection:pub_physical-review AND date:[1893-01-01 TO 1939-06-30]'
+  window: [1893-01-01, 1939-06-30]
+  role: "training, science bucket. last issue in window 1939-06-15"
+
+phr_ia:
+  kind: url
+  files: ./config/phr_ia_files.tsv
+  items: ./config/phr_ia_items.tsv
+  dest: ./data/raw/phr_ia
+  lang: en
+  approved: 2026-10-06
+  title: "Public Health Reports"
+  bucket: science
+  licence: "US federal government work, public domain"
+  access_method: "archive.org advancedsearch collection:pub_public-health-reports; <id>_djvu.txt via src.data.download"
+  ocr_or_keyed: ocr
+  subject_filter_rule: none (whole serial)
+  ia_query: 'collection:pub_public-health-reports'
+  window: [1923-01-01, 1939-06-30]
+  role: "training, science bucket. 1896-1922 come from JSTOR EJC"
+
+mwr_ia:
+  kind: url
+  files: ./config/mwr_ia_files.tsv
+  items: ./config/mwr_ia_items.tsv
+  dest: ./data/raw/mwr_ia
+  lang: en
+  approved: 2026-10-06
+  title: "Monthly Weather Review"
+  bucket: science
+  licence: "US federal government work, public domain"
+  access_method: "archive.org advancedsearch collection:pub_monthly-weather-review; <id>_djvu.txt via src.data.download"
+  ocr_or_keyed: ocr
+  subject_filter_rule: none (whole serial)
+  ia_query: 'collection:pub_monthly-weather-review'
+  window: [1920-01-01, 1939-06-30]
+  role: "training, science bucket. very tabular"
+
+americana_ia:
+  kind: url
+  files: ./config/americana_ia_files.tsv
+  items: ./config/americana_ia_items.tsv
+  dest: ./data/raw/americana_ia
+  lang: en
+  approved: 2026-10-06
+  title: "Encyclopedia Americana (1918-20 edition, 1922 printing)"
+  bucket: science
+  licence: "US public domain (published <= 1930)"
+  access_method: "archive.org advancedsearch identifier:encyclopediaamer*unse AND date:[1918 TO 1922]; <id>_djvu.txt via src.data.download"
+  ocr_or_keyed: ocr
+  subject_filter_rule: none (whole serial)
+  ia_query: 'identifier:encyclopediaamer*unse AND date:[1918 TO 1922]'
+  window: [1918-01-01, 1922-12-31]
+  role: "training, science bucket. Library of Congress scans"
+
+jfi_ia:
+  kind: url
+  files: ./config/jfi_ia_files.tsv
+  items: ./config/jfi_ia_items.tsv
+  dest: ./data/raw/jfi_ia
+  lang: en
+  approved: 2026-10-06
+  title: "Journal of the Franklin Institute"
+  bucket: science
+  licence: "US public domain (published <= 1930)"
+  access_method: "archive.org advancedsearch identifier:journalfranklini*fran OR (collection:pub_journal-of-the-franklin-institute AND date:[1924-01-01 TO 1930-12-31] AND NOT identifier:*journal-of-the-franklin-institute_journal-of-the-franklin-institute*); <id>_djvu.txt via src.data.download"
+  ocr_or_keyed: ocr
+  subject_filter_rule: none (whole serial)
+  ia_query: 'identifier:journalfranklini*fran OR (collection:pub_journal-of-the-franklin-institute AND date:[1924-01-01 TO 1930-12-31] AND NOT identifier:*journal-of-the-franklin-institute_journal-of-the-franklin-institute*)'
+  window: [1826-01-01, 1930-12-31]
+  role: "training, science bucket. UofT volume scans carry the start year 1826 as date"
+
+psm_ia:
+  kind: url
+  files: ./config/psm_ia_files.tsv
+  items: ./config/psm_ia_items.tsv
+  dest: ./data/raw/psm_ia
+  lang: en
+  approved: 2026-10-06
+  title: "Popular Science Monthly (1916-1930)"
+  bucket: science
+  licence: "US public domain (published <= 1930)"
+  access_method: "archive.org advancedsearch collection:pub_popular-science AND date:[1916-01-01 TO 1930-12-31] AND NOT identifier:*index*; <id>_djvu.txt via src.data.download"
+  ocr_or_keyed: ocr
+  subject_filter_rule: none (whole serial)
+  ia_query: 'collection:pub_popular-science AND date:[1916-01-01 TO 1930-12-31] AND NOT identifier:*index*'
+  window: [1916-01-01, 1930-12-31]
+  role: "training, science bucket. vols 1-87 (1872-1915) come keyed from Wikisource"
+
+sciam_ia:
+  kind: url
+  files: ./config/sciam_ia_files.tsv
+  items: ./config/sciam_ia_items.tsv
+  dest: ./data/raw/sciam_ia
+  lang: en
+  approved: 2026-10-06
+  title: "Scientific American"
+  bucket: science
+  licence: "US public domain (published <= 1930)"
+  access_method: "archive.org advancedsearch collection:pub_scientific-american AND date:[1845-01-01 TO 1930-12-31]; <id>_djvu.txt via src.data.download"
+  ocr_or_keyed: ocr
+  subject_filter_rule: none (whole serial)
+  ia_query: 'collection:pub_scientific-american AND date:[1845-01-01 TO 1930-12-31]'
+  window: [1845-01-01, 1930-12-31]
+  role: "training, science bucket. issue-level, heavy advertising"
+
+annalen_physik_ia:
+  kind: url
+  files: ./config/annalen_physik_ia_files.tsv
+  items: ./config/annalen_physik_ia_items.tsv
+  dest: ./data/foreign/de/raw/annalen_physik_ia
+  lang: de
+  approved: 2026-10-06
+  title: "Annalen der Physik"
+  bucket: science
+  licence: "<= 1930 US public domain; 1931-39 still in copyright (life+70), used for non-commercial research training by user decision 2026-10-06, not redistributed"
+  access_method: "archive.org advancedsearch identifier:sim_annalen-der-physik_*; <id>_djvu.txt via src.data.download"
+  ocr_or_keyed: ocr
+  subject_filter_rule: none (whole serial)
+  ia_query: 'identifier:sim_annalen-der-physik_*'
+  window: [1799-01-01, 1939-06-30]
+  role: training, science bucket
+
+naturwiss_ia:
+  kind: url
+  files: ./config/naturwiss_ia_files.tsv
+  items: ./config/naturwiss_ia_items.tsv
+  dest: ./data/foreign/de/raw/naturwiss_ia
+  lang: de
+  approved: 2026-10-06
+  title: "Die Naturwissenschaften"
+  bucket: science
+  licence: "<= 1930 US public domain; 1931-39 still in copyright (life+70), used for non-commercial research training by user decision 2026-10-06, not redistributed"
+  access_method: "archive.org advancedsearch identifier:sim_naturwissenschaften_*; <id>_djvu.txt via src.data.download"
+  ocr_or_keyed: ocr
+  subject_filter_rule: none (whole serial)
+  ia_query: 'identifier:sim_naturwissenschaften_*'
+  window: [1913-01-01, 1939-06-30]
+  role: training, science bucket
+
+physz_ia:
+  kind: url
+  files: ./config/physz_ia_files.tsv
+  items: ./config/physz_ia_items.tsv
+  dest: ./data/foreign/de/raw/physz_ia
+  lang: de
+  approved: 2026-10-06
+  title: "Physikalische Zeitschrift"
+  bucket: science
+  licence: "<= 1930 US public domain; 1931-39 still in copyright (life+70), used for non-commercial research training by user decision 2026-10-06, not redistributed"
+  access_method: "archive.org advancedsearch identifier:per_physikalische-zeitschrift_*; <id>_djvu.txt via src.data.download"
+  ocr_or_keyed: ocr
+  subject_filter_rule: none (whole serial)
+  ia_query: 'identifier:per_physikalische-zeitschrift_*'
+  window: [1899-01-01, 1939-06-30]
+  role: training, science bucket
+
+math_annalen_ia:
+  kind: url
+  files: ./config/math_annalen_ia_files.tsv
+  items: ./config/math_annalen_ia_items.tsv
+  dest: ./data/foreign/de/raw/math_annalen_ia
+  lang: de
+  approved: 2026-10-06
+  title: "Mathematische Annalen"
+  bucket: science
+  licence: "<= 1930 US public domain; 1931-39 still in copyright (life+70), used for non-commercial research training by user decision 2026-10-06, not redistributed"
+  access_method: "archive.org advancedsearch identifier:sim_mathematische-annalen_*; <id>_djvu.txt via src.data.download"
+  ocr_or_keyed: ocr
+  subject_filter_rule: none (whole serial)
+  ia_query: 'identifier:sim_mathematische-annalen_*'
+  window: [1869-01-01, 1938-12-31]
+  role: "training, science bucket. multilingual; GDZ is the fallback"
+
+crelle_ia:
+  kind: url
+  files: ./config/crelle_ia_files.tsv
+  items: ./config/crelle_ia_items.tsv
+  dest: ./data/foreign/de/raw/crelle_ia
+  lang: de
+  approved: 2026-10-06
+  title: "Journal fuer die reine und angewandte Mathematik (Crelle)"
+  bucket: science
+  licence: "<= 1930 US public domain; 1931-39 still in copyright (life+70), used for non-commercial research training by user decision 2026-10-06, not redistributed"
+  access_method: "archive.org advancedsearch title:(journal fur die reine und angewandte mathematik); <id>_djvu.txt via src.data.download"
+  ocr_or_keyed: ocr
+  subject_filter_rule: none (whole serial)
+  ia_query: 'title:(journal fur die reine und angewandte mathematik)'
+  window: [1826-01-01, 1938-12-31]
+  role: "training, science bucket. Google scans; item dates unreliable but all scans are old volumes"
+
+encyklopaedie_ia:
+  kind: url
+  files: ./config/encyklopaedie_ia_files.tsv
+  items: ./config/encyklopaedie_ia_items.tsv
+  dest: ./data/foreign/de/raw/encyklopaedie_ia
+  lang: de
+  approved: 2026-10-06
+  title: "Encyklopaedie der mathematischen Wissenschaften (1st ed.)"
+  bucket: science
+  licence: "<= 1930 US public domain; 1931-39 still in copyright (life+70), used for non-commercial research training by user decision 2026-10-06, not redistributed"
+  access_method: "archive.org advancedsearch title:(encyklopadie der mathematischen wissenschaften); <id>_djvu.txt via src.data.download"
+  ocr_or_keyed: ocr
+  subject_filter_rule: none (whole serial)
+  ia_query: 'title:(encyklopadie der mathematischen wissenschaften)'
+  window: [1898-01-01, 1935-12-31]
+  role: "training, science bucket. 2nd edition (1939-58) excluded by the window"
+
+meyers6_ia:
+  kind: url
+  files: ./config/meyers6_ia_files.tsv
+  items: ./config/meyers6_ia_items.tsv
+  dest: ./data/foreign/de/raw/meyers6_ia
+  lang: de
+  approved: 2026-10-06
+  title: "Meyers Grosses Konversations-Lexikon (6th ed., 1902-09)"
+  bucket: science
+  licence: "US public domain (published <= 1930)"
+  access_method: "archive.org advancedsearch title:(meyers grosses konversations-lexikon) AND date:[1902 TO 1909]; <id>_djvu.txt via src.data.download"
+  ocr_or_keyed: ocr
+  subject_filter_rule: none (whole serial)
+  ia_query: 'title:(meyers grosses konversations-lexikon) AND date:[1902 TO 1909]'
+  window: [1902-01-01, 1909-12-31]
+  role: "training, science bucket. zeno.org forbids robots; archive.org scans instead"
