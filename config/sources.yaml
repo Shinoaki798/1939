@@ -133,3 +133,14 @@ dta:
   approved: 2026-10-05
   role: Deutsches Textarchiv core + supplementary texts (2026-02-10), hand-keyed TEI-XML in
         original orthography, first-edition year; drop the ~19 post-1939 texts; CC BY-SA 4.0
+
+voelkischer_beobachter_de:
+  kind: url
+  files: ./config/voelkischer_beobachter_de_files.tsv   # 528 issues: 1925 (234) + 1930 (294)
+  dest: ./data/foreign/de/raw/voelkischer_beobachter_de
+  lang: de
+  approved: 2026-10-05
+  role: named source - Voelkischer Beobachter, the NSDAP party daily, the only party organ in the
+        pool. Internet Archive pub_volkischer-beobachter (UNCG microfilm OCR, *_djvu.txt), only the
+        openly downloadable years 1925 and 1930; other years are lending-only. Noisy Fraktur OCR;
+        same German OCR scoring/threshold as every German source. Issue dates from the IA item.
