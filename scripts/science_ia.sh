@@ -15,7 +15,7 @@ from src.data.download import load_config, repo_path
 c = load_config(repo_path('config/paths.yaml')); s = load_config(repo_path(c['sources']))
 print(' '.join(n for n, v in s.items() if v.get('ia_query')))"); do
   echo "$(date -Is) download $s" >> "$log"
-  "$PY" -u -m src.data.download --source "$s" --delay 1 --backoff 1800 >> "logs/download_$s.log" 2>&1
+  "$PY" -u -m src.data.download --source "$s" --delay 1 --backoff 1800 --via proxy >> "logs/download_$s.log" 2>&1
   echo "$(date -Is) $s exit $?" >> "$log"
 done
 echo "$(date -Is) science_ia done" >> "$log"

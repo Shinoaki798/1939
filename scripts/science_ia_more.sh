@@ -10,7 +10,7 @@ log=logs/science_ia.log
 for s in "$@"; do
   "$PY" -u -m src.data.ia_catalog --source "$s" >> "$log" 2>&1
   echo "$(date -Is) download $s" >> "$log"
-  "$PY" -u -m src.data.download --source "$s" --delay 1 --backoff 1800 >> "logs/download_$s.log" 2>&1
+  "$PY" -u -m src.data.download --source "$s" --delay 1 --backoff 1800 --via proxy >> "logs/download_$s.log" 2>&1
   echo "$(date -Is) $s exit $?" >> "$log"
 done
 echo "$(date -Is) science_ia_more done ($*)" >> "$log"
