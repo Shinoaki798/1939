@@ -1,118 +1,109 @@
-# Data collection: status and resume steps (2026-10-06, ~12:45 EDT)
-
-## Update 12:45 — downloads moved to the 2080
-
-- The 5080's VPN dropped again ~12:00 (`forest-core.exe` gone, nothing on 7890); its chains sit in
-  27-minute retry loops per file. The 5080 JFM run (direct, ~50 s/page) was stopped.
-- Speed test from the 2080 (HANDOFF §13.4): archive.org 2.8-5.4 s/file vs 7-20 s on the 5080, JFM
-  ~5 s/page. So the 2080 now runs, detached (`Start-Process` + Git Bash), logs in `data/logs/`:
-
-  | chain | sources (reverse chain order, each table walked backwards, minus keys the 5080 has) | files | est. |
-  |---|---|---|---|
-  | `en` | sciam, psm, jfi, americana, mwr, phr, physrev, naca, bstj, nbs_papers, nbs_jres, bams | 10,162 | ~12-15 h |
-  | `de` | sitzungsberichte, meyers6, encyklopaedie, crelle, math_annalen, physz, naturwiss, annalen_physik | 5,100 | ~5-7 h |
-  | `misc` (DELAY=2) | gutenberg_sci_en, gutenberg_sci_de, dingler | 2,137 | ~3 h |
-  | JFM (`jfm_harvest --direct`) | whole harvest from page 1 | ~2,233 pages | ~4-5 h |
-
-  Restart a chain (fetch_local skips verified keys):
-  `powershell -Command "Start-Process -WindowStyle Hidden 'C:\Program Files\Git\bin\bash.exe' -WorkingDirectory 'C:\Users\27409\Desktop\1939' -ArgumentList 'scripts/fetch_local_chain.sh','<name>','<source>',..."`
-- Then on the 2080: ingest each source (`python -m src.data.ingest_extra --source <s>`), pack
-  (`python scripts/transfer_ingested.py pack --sources <list> --out <dir>`), Andrew moves it by Baidu
-  Netdisk, merge on the 5080 as before. The 5080 keeps and ingests its own partial bams (370) and
-  annalen (66) files; the key sets are disjoint.
-- **The 5080's archive.org and Gutenberg chains must not resume** once the VPN is back: they would
-  fetch the same files and the merge refuses keys ingested on both machines. Stop them (Andrew's OK).
-
+# Data collection: status and resume steps (2026-10-06, ~13:10 EDT)
 
 Operating guide (machines, remote control, VPN budget, tools, pitfalls): `docs/HANDOFF.md` §13.
 
-## Done since ~12:00
+## Where things stand
 
-- HANDOFF §13 and the previous version of this file committed (`fd4b23b`).
-- 2080 hand-over merged on the 5080 (`1939_transfer.rar` unpacked with Windows `tar` next to itself,
-  then `transfer_ingested.py merge`, every file sha256-verified): Chronicling America is complete
-  (124 / 124 batches, 1.22B words), PSM Wikisource ingested (31.7M words).
-- Catalog tables the box regenerated copied back and committed (`fb662b6`).
-- JFM had stopped at 05:02 (cursor 52,100 / 223,270): zbMATH lost the resumption token and answers it
-  with HTTP 500, which the harvester did not treat as expiry. Fixed (`82e3715`: a token that fails 3x
-  restarts the harvest once from page 1, saved pages are skipped) and relaunched.
-- Chain scripts logged `exit 0` for everything (`$?` read after `$(date)`); fixed (`52145cd`).
-- Ingested (`ingest_run.sh`): rest of CAP (now 3,464 volumes, 729M words), USGS PP, PNAS, Nature, EB11 OCR.
+- **All remaining downloads run on the 2080** (local PC, unmetered). Speed test 12:30 (HANDOFF §13.4):
+  archive.org 2.8-5.4 s/file vs 7-20 s on the 5080 through the VPN; JFM ~5 s/page vs ~10-50 s.
+- **The 5080's download chains are stopped** (Andrew, 13:00; its VPN dropped again ~12:00). Do not
+  relaunch `science_ia.sh`, `science_ia_now.sh`/`science_ia_more.sh`, `science_misc.sh` or `jfm_run.sh`:
+  they would fetch what the 2080 fetches, and the merge refuses keys ingested on both machines.
+  What the 5080 had fetched is ingested there: BAMS 370 issues, Annalen d. Physik 66 vols (1799-1810),
+  Gutenberg science 997 books, Sitzungsberichte 1 vol.
+- 2080 hand-over (2026-10-06 morning) merged on the 5080: Chronicling America complete (124 batches),
+  PSM Wikisource. Transfer files on the box deleted (Andrew's OK).
+
+## Running on the 2080 (detached `Start-Process` + Git Bash; logs in `data/logs/`)
+
+Key lists `data/logs/local_keys/<source>.txt`: keys the 5080 has not verified, reverse file order.
+
+| chain | sources in order | files | projected raw text | expected end (EDT) |
+|---|---|---|---|---|
+| `misc` (DELAY=2) | gutenberg_sci_en, gutenberg_sci_de, dingler | 2,137 | ~1.3 GB + Dingler tarball | 10-06 ~16:00 |
+| JFM (`python -m src.data.jfm_harvest --delay 2 --direct`) | whole harvest from page 1 | ~2,233 pages | ~0.7 GB XML (~0.1 GB gz) | 10-06 ~19:00 |
+| `de` | sitzungsberichte, meyers6, encyklopaedie, crelle, math_annalen, physz, naturwiss, annalen_physik | 5,100 | ~3.0 GB | 10-06 ~19:00 |
+| `en` | sciam, psm, jfi, americana, mwr, phr, physrev, naca, bstj, nbs_papers, nbs_jres, bams | 10,162 | ~1.9 GB | 10-07 ~06:00-08:00 |
+
+Projected sizes: archive.org metadata of 5 items per source (4.9 GB in all), measured averages for
+Gutenberg. Total raw ~7 GB on the 2080; ingested parquet ~40 % of that, so the Netdisk hand-over is
+~2.5-3 GB. Some archive.org items fail for good (no OCR text: 404; lending copies: 401/403); a
+datanode answering HTTP 500 makes a file fail after 8 attempts; rerunning a chain retries failures.
+
+Restart a chain (verified keys are skipped):
+
+    powershell -Command "Start-Process -WindowStyle Hidden 'C:\Program Files\Git\bin\bash.exe' -WorkingDirectory 'C:\Users\27409\Desktop\1939' -ArgumentList 'scripts/fetch_local_chain.sh','<name>','<source>',..."
 
 ## Do next, in this order
 
-1. **Wait for the downloads** (table below); restart any chain that dies (commands below).
-2. **Ingest the rest of the science sources** as they finish (incremental, skips ingested files):
-
-       (echo '$Script = "ingest_run.sh"'; echo '$DlArgs = "<sources>"'; cat scripts/start_download.ps1) | ssh gpu 'powershell -NoProfile -Command -'
-
+1. As each 2080 source finishes: ingest it on the 2080 (`python -m src.data.ingest_extra --source <s>`).
+2. When all are done: `python scripts/transfer_ingested.py pack --sources <all fetched sources incl. jfm,
+   dingler, gutenberg_sci_de> --out <dir>`; Andrew moves `<dir>` by Baidu Netdisk to
+   `C:\Users\AN\Downloads\` on the 5080; merge there with `transfer_ingested.py merge` (as on 10-06).
 3. Then OCR gates (keyed sources skip them), MinHash dedup, splits, C1 screen, and the audit
-   (`reports/audit_v1.md`, due 2026-10-10; science bucket by language x decade x source, licence
-   table, keyed vs OCR share). `dedup.py`, `splits.py` and the tokenizer do not exist yet.
-4. **VPN restart over SSH**: client identified (below); waiting for Andrew's choice.
-5. On Andrew's OK only: delete `C:\Users\AN\Downloads\1939_transfer.rar` and `1939_transfer\` on the box
-   (3.3 GB each; everything is merged and verified).
+   (`reports/audit_v1.md`, due 2026-10-10). `dedup.py`, `splits.py` and the tokenizer do not exist yet.
+4. VPN on the 5080: left alone (Andrew). Client details below if needed.
 
-## Running on the 5080 (checked 12:30 EDT)
+## Data inventory (raw words, before dedup and OCR gates; M = million)
 
-| job | route | progress | rate | expected end |
+Training pool by period (the caps act on seen tokens after dedup + gates):
+
+| lang | source | topic | < 1900 | 1900-19 | 1920-29 | 1930-1939-06 | state |
+|---|---|---|---|---|---|---|---|
+| EN | American Stories | US newspapers, article level; backbone and sole source of scored sets | - | 21,748 | 4,584 | 1,555 | ingested |
+| EN | Chronicling America pages | US newspapers, page OCR, batches after the AS snapshot | - | - | - | 1,217 | ingested, complete |
+| EN | Congressional Record | US Congress debates | 174 | 181 | 91 | 89 | ingested |
+| EN | LoC PD books | books | - | 2,759 | 593 | 19 | ingested |
+| EN | pre-1929 books | books | - | 4,171 | 958 | - | ingested |
+| EN | Caselaw Access Project | US case law (legal + FR <= 10 %) | 2 | 2 | 257 | 468 | ingested, complete |
+| EN | Federal Register 1936-39 | US regulation | - | - | - | 14.5 | ingested |
+| | **EN general total** | | 176 | 28,861 | 6,483 | 3,362 | |
+| DE | DDB (Deutsches Zeitungsportal) | German newspapers, page OCR | 10,117 | 1,380 | 612 | 639 | ingested |
+| DE | Europeana | German/Austrian newspapers | - | 3,111 | 1,103 | 449 | ingested |
+| DE | Voelkischer Beobachter 1925, 1930 | NSDAP daily (named source) | - | - | 3.6 | 8.4 | ingested |
+| | **DE general total** | | 10,117 | 4,491 | 1,719 | 1,097 | |
+
+Science bucket (any year, <= 10 % of each language's seen tokens):
+
+| lang | source | topic | words | state |
 |---|---|---|---|---|
-| `science_ia.sh` (English archive.org: BAMS, then NBS x2, BSTJ, NACA, Phys. Rev., PHR, MWR, Americana, JFI, PSM 1916-30, Sci. Am.) | proxy | BAMS 347 / 516; ~10,200 files left | ~7 s / file | 2026-10-07 evening |
-| `science_ia_more.sh` via `science_ia_now.sh` (German archive.org: Annalen d. Physik, Naturwiss., Phys. Z., Math. Ann., Crelle, Encyklopaedie, Meyers 6, Sitzungsber.) | proxy | Annalen 66 / 2,252; ~5,100 files left | ~20 s / file (many HTTP 500 retries) | 2026-10-07 night / 10-08 morning |
-| `science_misc.sh` (Gutenberg en 2,983, de 150, then Dingler tarball) | proxy | Gutenberg en 961 / 2,983 | ~6 s / file | today ~17:00 |
-| `jfm_run.sh` (zbMATH OAI) | proxy, falls back to direct | restarted from page 1 at 12:10 (521 of ~2,233 pages already saved) | ~12 s / page | today ~20:00 |
-| CAP, USGS PP, PNAS, Nature, EB11 OCR | - | downloaded and ingested | - | done |
+| EN | Science books (title keywords, from the two book sets) | science/technology books | 531M | selected |
+| EN | JSTOR EJC science titles (69) | journals, pre-1923 | 306M | ingested |
+| EN | Royal Society Corpus | Phil. Trans. 1665-1920 | 78.6M | ingested |
+| EN | Gutenberg science (997 of 2,983 books) | science/maths books, keyed | 58.5M | ingested (5080) |
+| EN | Nature <= 1930 / PSM 1872-1915 / EB11 OCR vols | journal / popular science / encyclopaedia | 49.9M / 31.7M / 21.9M | ingested |
+| EN | USGS Prof. Papers / BAMS (370 issues) / PNAS | geology / mathematics / general science | 11.4M / 6.0M / 5.1M | ingested |
+| EN | Sci. Am., PSM 1916-30, J. Franklin Inst., Americana, MWR, PHR, Phys. Rev., NACA, BSTJ, NBS x2, rest of BAMS | journals, encyclopaedia | ~280-300M (1.9 GB) | downloading (2080) |
+| EN | Gutenberg science, other 1,986 books | books | ~115M | downloading (2080) |
+| | **EN science** | | ~1.10B on hand, ~1.5B with downloads | |
+| DE | Annalen d. Physik (66 vols on the 5080) / Sitzungsberichte | physics / academy proceedings | 3.8M / 0.2M (+97 vols ~150 MB on the 2080) | ingested / downloaded |
+| DE | Annalen d. Physik rest, Meyers 6th ed., Naturwissenschaften, Math. Annalen, Phys. Zeitschrift, Crelle, Encyklopaedie d. math. Wiss. | physics, encyclopaedia, mathematics | ~400M (3.0 GB) | downloading (2080) |
+| DE | JFM (vol <= 61 at ingest) / Dingler / Gutenberg de (150) | maths reviews / engineering journal (TEI) / books | ~60-70M tok / ~130-150M tok / ~9M | downloading (2080) |
+| | **DE science** | | ~0.6-0.65B with downloads | |
 
-When `science_ia.sh` reaches the German sources, the per-source download lock makes it skip any source
-`science_ia_more.sh` is still fetching.
+Not training: embargo 1939-07-01..08-31 (RQ3 conditioning only) AS 23.0M, DDB 6.9M, Europeana 4.7M;
+from 1939-09 (Test-B/C) AS 2,078M, DDB 128M, Europeana 5.5M; excluded HMD 2,387M (UK 1800-96),
+JSTOR EJC non-science ~0.8B, NCSE; lexicon instruments DTA, ECCO/Evans TCP, SCOWL.
 
-Relaunch commands (verified files are skipped):
-
-    (echo '$Script = "science_ia.sh"'; cat scripts/start_download.ps1) | ssh gpu 'powershell -NoProfile -Command -'
-    (echo '$Script = "science_ia_now.sh"'; echo '$DlArgs = "annalen_physik_ia naturwiss_ia physz_ia math_annalen_ia crelle_ia encyklopaedie_ia meyers6_ia sitzungsberichte_ia"'; cat scripts/start_download.ps1) | ssh gpu 'powershell -NoProfile -Command -'
-    (echo '$Script = "science_misc.sh"'; cat scripts/start_download.ps1) | ssh gpu 'powershell -NoProfile -Command -'
-    (echo '$Script = "jfm_run.sh"'; cat scripts/start_download.ps1) | ssh gpu 'powershell -NoProfile -Command -'
-
-## VPN
-
-- Use since 2026-10-06T05:45Z: 10.12 GB at 11:52 EDT (`vpn_usage.py`, a floor; JFM pages are stored
-  gzipped, so its real transfer is ~10x its listed bytes, ~0.7 GB for the whole harvest).
-- Still expected: ~10-12 GB (English IA ~5 GB, German IA ~4 GB, Gutenberg ~1.2 GB, JFM ~0.6 GB, Dingler).
-- Client on the box: **Forest** (`C:\Program Files\Forest\forest.exe`, GUI in Andrew's interactive
-  session since 2026-10-01), which runs `resources\forest-core.exe` (Clash-style core, `-d`/`-f` flags;
-  listens on 7890 HTTP, 7891 SOCKS, 1053 DNS, 64999 local control port). The core was restarted at
-  11:28:41 (the VPN coming back). Forest is not in Run keys, Startup folders or services, so it does
-  not start at boot.
-- Restart over SSH, options (each needs Andrew's OK): (a) a scheduled task that runs in his interactive
-  session (`/IT`) and relaunches `forest.exe`, triggered with `schtasks /run`; works only if Forest
-  connects on launch (a client setting); (b) the core's local control port (needs the secret from
-  Forest's config; not read); (c) starting `forest-core.exe` from WMI in session 0 (conflicts with
-  the GUI; not recommended).
-
-## Data on hand (raw words before dedup / OCR gates)
-
-| bucket | source | state | volume |
-|---|---|---|---|
-| EN general | American Stories (backbone, all scored sets) | ingested | 27.96B <= 1939 (1900s 10.41B, 1910s 11.34B, 1920s 4.58B, 1930-39 1.62B); 2.03B 1940-55 for holdouts |
-| EN general | Chronicling America 1930-1939.06 pages | ingested, complete | 1.22B (124 batches) |
-| EN general | Congressional Record | ingested | 0.53B |
-| EN general | LoC PD books / pre-1929 books | ingested | 3.37B / 5.13B (science selection moves out, below) |
-| EN general | Caselaw Access Project (<= 1939-06-30) | ingested, complete | 0.73B |
-| EN general | Federal Register 1936-39 | ingested | 14.5M |
-| DE general | DDB / Europeana / Voelkischer Beobachter | ingested | 12.88B / 4.67B / 12M |
-| EN science | JSTOR EJC science titles / RSC | ingested | 306M / 78.6M |
-| EN science | Science books (title keywords) | selected | 531M (5,742 books) |
-| EN science | Nature <= 1930 / PSM 1872-1915 / EB11 OCR vols / USGS PP / PNAS | ingested | 49.9M / 31.7M / 21.9M / 11.4M / 5.1M |
-| EN science | archive.org journals (above), Gutenberg Q*/T* + EB11 keyed | downloading | est. 250-400M; 40-70M |
-| DE science | JFM (vol <= 61), Dingler, archive.org journals/encyclopaedias, Gutenberg de | downloading | est. JFM 60-70M tokens, Dingler 130-150M tokens, journals several 100M |
-| out | HMD (2.39B), JSTOR EJC non-science titles | ingested, excluded by decision | - |
-| instruments | DTA, ECCO/Evans TCP, SCOWL | kept, never training | - |
-
-English science is already ~1.04B words ingested or selected, above its 10 % cap at 10B seen tokens
-(~0.75B EN tokens); the remaining English downloads add coverage, not seen tokens.
+Reading against the mixture: the 1930-1939-06 pool (EN 3.36B + DE 1.10B words) seen twice is already
+about 9B words, roughly the 10B-token budget before dedup and gates, so dedup of wire reprints and
+the caps (German <= 25 % per period, legal <= 10 %) decide how much of the 1920s is used. German is
+~25 % of the 1930s pool; legal is ~14 % of the English 1930s and will be capped. English science is
+already above its cap (~0.75B tokens at 10B seen), German science is not.
 
 German 1939 coverage (RQ3 contexts): DDB / Europeana pages June 1939 1,799 / 680; 1939-08-18..31
 506 / 305 (19 titles). American Stories June 1939 90,532 articles, 08-18..31 39,258.
+
+## VPN (5080)
+
+- Use since 2026-10-06T05:45Z: 10.12 GB at 11:52 EDT (`vpn_usage.py`, a floor). No VPN downloads planned.
+- Client: **Forest** (`C:\Program Files\Forest\forest.exe`, GUI in Andrew's interactive session),
+  which runs `resources\forest-core.exe` (Clash-style core; 7890 HTTP, 7891 SOCKS, 1053 DNS, 64999
+  local control port). Not started at boot. Dropped three times on 2026-10-06 (core process gone).
+- Restart over SSH, options (each needs Andrew's OK): (a) a scheduled task in his interactive session
+  (`/IT`) that relaunches `forest.exe`, run with `schtasks /run`, if Forest connects on launch;
+  (b) the core's control port (needs the secret in Forest's config; not read); (c) `forest-core.exe`
+  from WMI in session 0 (conflicts with the GUI; not recommended).
 
 ## Prompt for a new session (paste as the first message)
 
@@ -120,6 +111,6 @@ German 1939 coverage (RQ3 contexts): DDB / Europeana pages June 1939 1,799 / 680
     先按顺序读：CLAUDE.md；docs/HANDOFF.md 的第 13 节（新对话操作指南：读什么、两台机器、怎么控制 5080、VPN 流量预算、工具、踩过的坑）
     和第 12 节 2026-10-05 以后的决定；reports/science_status_2026-10-06.md（当前状态和下一步命令）；
     C:\Users\27409\Desktop\APS360 Model\remote-gpu.md（5080 远程规则）。读完用中文给我一段简短的现状确认，然后按
-    science_status 文件里「Do next」的顺序继续：检查各下载线和 VPN 用量，下载完成的源先 ingest。
+    science_status 文件里「Do next」的顺序继续：检查 2080 上的下载线，下载完成的源在 2080 上 ingest，全部完成后打包交接。
     规则：所有决定以 HANDOFF 为准，不确定就问我；
     关机、改防火墙/SSH/Tailscale、删除远程数据之前先问我；
