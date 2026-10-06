@@ -6,3 +6,11 @@ __pycache__/
 .venv/
 .ipynb_checkpoints/
 reports/*.png
+/.preview/
+# course materials (not ours to redistribute; the repo is public)
+docs/project proposal rubric.pdf
+docs/aps360.sty
+docs/APS360.sty
+# private author details and the submission PDF built from them (e-mail stays out of the public repo)
+docs/author_private.tex
+docs/proposal_submission.pdf
