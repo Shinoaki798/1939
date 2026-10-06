@@ -603,3 +603,39 @@ dingler:
   ocr_or_keyed: keyed (project-corrected OCR in TEI; skips the OCR gates, gets the C1 screen)
   subject_filter_rule: "none (whole journal); TEI <text> only, teiHeader and editorial notes removed"
   role: training, science bucket
+
+eb11_ia:
+  kind: url
+  files: ./config/eb11_ia_files.tsv
+  items: ./config/eb11_ia_items.tsv
+  dest: ./data/raw/eb11_ia
+  lang: en
+  approved: 2026-10-06
+  title: "Encyclopaedia Britannica, 11th edition (OCR volumes not keyed on Gutenberg)"
+  bucket: science
+  licence: "US public domain (published 1910-11; supplement 1922)"
+  access_method: "archive.org University of California scans encyclopaedia*chisrich; <id>_djvu.txt via src.data.download"
+  ocr_or_keyed: ocr
+  subject_filter_rule: "vols 1, 18-28 and the 1922 supplement vols 30-31; vols 2-17 come keyed from Project Gutenberg (gutenberg_sci_en kind eb11); index vol 29 excluded"
+  ia_query: 'identifier:encyclopaedia*chisrich OR identifier:encyclopdiabri20chisrich'
+  ia_exclude: [encyclopaediabri02chisrich, encyclopaediabrit03chisrich, encyclopaediabri04chisrich, encyclopaediabrit05chisrich, encyclopaediabrit06chisrich, encyclopaediabrit07chisrich, encyclopaediabrit08chisrich, encyclopaediabrit09chisrich, encyclopaediabri10chisrich, encyclopaediabrit11chisrich, encyclopaediabrit12chisrich, encyclopaediabrit13chisrich, encyclopaediabri14chisrich, encyclopaediabri15chisrich, encyclopaediabri16chisrich, encyclopaediabri17chisrich, encyclopaediabri29chisrich]
+  window: [1910-01-01, 1922-12-31]
+  role: training, science bucket (general-knowledge anchor)
+
+nature_ia:
+  kind: url
+  files: ./config/nature_ia_files.tsv
+  items: ./config/nature_ia_items.tsv
+  dest: ./data/raw/nature_ia
+  lang: en
+  approved: 2026-10-06
+  title: "Nature (volumes to 1930)"
+  bucket: science
+  licence: "US public domain (published <= 1930); some articles may still be in copyright outside the US"
+  access_method: "archive.org BHL/Smithsonian scans nature{vol}{years}lock and Lockyer-edited Google scans *lockgoog; <id>_djvu.txt via src.data.download"
+  ocr_or_keyed: ocr
+  subject_filter_rule: "none (whole journal); date = last year named in the volume field"
+  ia_query: 'identifier:nature*lock OR identifier:nature*lockgoog'
+  ia_date_from: volume
+  window: [1869-01-01, 1930-12-31]
+  role: training, science bucket

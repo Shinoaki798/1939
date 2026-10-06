@@ -93,6 +93,9 @@ def build(name: str, src: dict, proxy: str, dry_run: bool) -> dict:
             stats["excluded"] += 1
             continue
         date, precision = item_date(doc)
+        if src.get("ia_date_from") == "volume":        # serial scans whose `date` is the run's start year
+            years = [int(y) for y in re.findall(r"\b(1[6-9]\d\d)\b", str(_first(doc.get("volume"))))]
+            date, precision = (dt.date(max(years), 1, 1), "year") if years else (None, "none")
         if date is None:
             stats["undated"] += 1
             continue
