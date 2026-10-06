@@ -465,3 +465,22 @@ Dated entries; each supersedes anything above it that it contradicts.
   below which neither score is defined (user). Reason: at 50, AS lost 31 % of
   articles / 6–7 % of words and the Congressional Record 68 % of speeches /
   16–17 % of words; at 20 the losses are 0.6 % and ~5 %.
+- **2026-10-06 — science bucket (user task + answers).** New bucket "science",
+  exempt from recency weighting and outside the period caps (pre-1920 ≤ 8 %,
+  books ≤ 12 %, etc. do not apply to it); capped at 10 % of seen tokens **per
+  language**, enforced after dedup + gates; ≤ 2 epochs. Same OCR gates; keyed /
+  born-digital sources (JFM, Gutenberg, DTA, Dingler TEI) skip the OCR gates
+  but get the C1 screen. Licence of the model release is non-commercial, so
+  CC BY-NC sources are in. Every source: `config/sources.yaml` entry with
+  title, bucket, licence, access_method, ocr_or_keyed, subject_filter_rule;
+  per-file checksums; ingested MANIFEST carries these as `source_meta`.
+  Nothing ≥ 1939-07-01 in any source; year-only items ≤ 1938. **JFM** reviews
+  are kept by the publication date of the JFM volume (≤ 1939-06-30), not by the
+  reviewed paper's year (a review of a 1938 paper may be written 1939–42).
+  US public domain now reaches works published in 1930 (entered PD
+  2026-01-01), not 1928. Re-included from disk: JSTOR EJC (STEM titles only,
+  list in `config/science_jstor_titles.txt`) and Royal Society Corpus 6.0.4
+  (all, 17,520 papers, 78.6M words). ECCO/Evans stay lexicon anchors.
+  RQ3: fission propositions must draw their contexts from Jan–Jun 1939
+  newspapers and PNAS. Audit adds science tokens by language × decade ×
+  source, a licence table and the keyed vs OCR share of the bucket.

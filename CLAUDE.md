@@ -44,7 +44,10 @@ with is Junlei An (goes by Andrew), an individual student on this project.
    fill the remainder (≤ 35 % of seen tokens), pre-1920 ≤ 8 %, German ≤ 25 % and
    books ≤ 12 % per period, legal/regulatory text ≤ 10 %. Model fixed at 350M on
    up to 10B seen tokens; if the cleaned pool is short the run is shorter —
-   never a third pass, never more pre-1920 text.
+   never a third pass, never more pre-1920 text. Exception (2026-10-06): the
+   **science bucket** (`bucket: science` in `config/sources.yaml`) sits outside
+   the period caps and recency weighting, any year, ≤ 10 % of each language's
+   seen tokens after dedup + gates; ≤ 2 epochs still applies.
 8. **Report bits-per-byte, never per-token perplexity, for any cross-model
    number.** Every reported number carries a bootstrap 95 % CI over items.
 9. **Probe set and proposition set are frozen (checksummed) before the model
