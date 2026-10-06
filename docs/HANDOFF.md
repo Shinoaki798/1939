@@ -13,6 +13,9 @@ supersedes earlier drafts (an 8-page proposal draft with six Transformer runs,
 a multi-cutoff "staircase" design, and a plan to audit externally released
 vintage models were all abandoned; do not resurrect them).
 
+**New session? Start with §13 (operating guide: read order, machines, how to control the 5080,
+VPN budget, tools, pitfalls), then `reports/science_status_2026-10-06.md` (current state).**
+
 ---
 
 ## 1. The project in one paragraph
@@ -504,3 +507,100 @@ Dated entries; each supersedes anything above it that it contradicts.
   bulk download prohibited) — PNAS and Public Health Reports come from
   archive.org. EJC science titles: `config/science_jstor_titles.txt` (69
   titles, 166,290 articles, 306M words before cleaning).
+- **2026-10-06 — English token floor, CA routing.** See §13 for the operating
+  guide. Chronicling America must never be downloaded through the VPN (68 GB
+  > budget); it was fetched and ingested on the local PC and shipped as parquet.
+
+---
+
+## 13. Operating guide for a new session (written 2026-10-06)
+
+Read this section first if you are a new Claude session taking over. The user
+(Andrew) chats in Chinese, wants short, concrete reports, decides policy (often
+after consulting a separate reviewer agent whose DECISION blocks he pastes),
+and expects you to do the work, not to ask about things the code or this file
+already answers.
+
+### 13.1 Read, in this order
+
+| # | file | why |
+|---|---|---|
+| 1 | `CLAUDE.md` | hard rules (one Transformer, cutoff/embargo, splits, ≤ 2 epochs + caps + science bucket, bpb, no pretrained tokenizer) |
+| 2 | `docs/HANDOFF.md` §12 (from 2026-10-05) and this §13 | every decision since the review: German used natively, sources in/out, OCR gates, lexicon v2, science bucket, copyright decisions |
+| 3 | `reports/science_status_2026-10-06.md` | what is running, what is done, exact resume commands |
+| 4 | `reports/science_feasibility_2026-10-06.md` | every science source: route, terms, size |
+| 5 | `config/sources.yaml`, `config/paths.yaml` | every source with dest, licence, access method, filters; all paths |
+| 6 | `C:\Users\27409\Desktop\APS360 Model\remote-gpu.md` (outside the repo) | the 5080 box: SSH, quoting, WSL, tmux, rules (verified commands) |
+| 7 | `docs/TASKS.md` | ordered plan with gates (Phase 1: audit due 10-10, corpus freeze 10-20) |
+| 8 | `reports/ocr_quality_*.md`, `ocr_gates_*.md`, `ocr_lexicon_*.md` | OCR evidence behind the gates |
+
+### 13.2 Machines
+
+| machine | role | notes |
+|---|---|---|
+| 5080 box (`ssh gpu`, Windows 11 + WSL2 Ubuntu, repo `/home/an/1939`, user `an`) | downloads, processing, training | default SSH shell is **cmd**; run Linux via `wsl -d Ubuntu --`. Python: `~/miniconda3/envs/torch-gpu/bin/python`. VPN = Windows proxy `127.0.0.1:7890`, **reachable only by Windows programs** (`/mnt/c/Windows/System32/curl.exe -x http://127.0.0.1:7890`), not by WSL. VPN traffic is **metered (~50 GB left on 2026-10-06)** |
+| local PC (the "2080", Windows, repo `C:\Users\27409\Desktop\1939`) | editing, git push; downloads of anything slow or blocked on the 5080 | its network is **not** metered. Python 3.12 with pyarrow/pyyaml (user site). Large results go to the 5080 via Baidu Netdisk (Andrew uploads/downloads) |
+
+### 13.3 Controlling the 5080 (all verified)
+
+- Multi-line work: write a local script, run `ssh gpu 'wsl -d Ubuntu -- bash -s' < script.sh`.
+  Filter the harmless UTF-16 WSL warning with `| tr -d '\000' | grep -av "localhost proxy"`.
+- Inline: single quotes locally, double quotes for the remote part; never put `|` inside nested
+  quotes (cmd breaks them) — use `bash -s` instead. PowerShell on the box: pipe a script into
+  `ssh gpu 'powershell -NoProfile -Command -'`.
+- Windows programs called from WSL (`curl.exe`, `git.exe`) need `< /dev/null`.
+- **Long jobs that use the VPN** (curl.exe interop) must be started through WMI so they survive
+  SSH: `(echo '$Script = "<script>.sh"'; echo '$DlArgs = "<args>"'; cat scripts/start_download.ps1) | ssh gpu 'powershell -NoProfile -Command -'`.
+  Pure-Linux jobs can use tmux, but tmux sessions have vanished once without explanation; WMI is safer.
+- Code sync: commit + push locally, then `ssh gpu 'wsl -d Ubuntu -- bash -s -- data/corpus-v1' < scripts/remote_pull.sh`
+  (always pass the branch; without it the box checks out `main`). The script falls back to a direct
+  GitHub fetch if the proxy is down and moves aside reports/config tables that the box generated.
+- Tables generated on the box (`config/*_files.tsv`, `*_items.tsv`, reports) must be copied back and
+  committed locally: `ssh gpu 'wsl -d Ubuntu -- bash -c "cd /home/an/1939 && tar czf - <files> | base64 -w0"' | ... | base64 -d | tar xzf -`.
+- Rules (from remote-gpu.md): ask Andrew before shutdown/reboot, sshd/firewall/Tailscale changes, Windows
+  update or power settings, deleting remote data; no password login, no port forwarding; kill only
+  processes/sessions you created; never write secrets anywhere.
+
+### 13.4 Network and VPN budget
+
+- Measured from the 5080: archive.org, Gutenberg mirror, GitHub and Wikimedia are unusable or very
+  slow without the VPN; static.case.law and pubs.usgs.gov work directly; chroniclingamerica/tile.loc.gov
+  answer 403 directly. From the 2080: LoC ~50 MB/s, Wikimedia ~3 MB/s, archive.org slow.
+- Downloader routing: `src.data.download --via proxy|mirror|auto`. **Force `--via proxy` for archive.org,
+  Gutenberg, GitHub** (the `auto` probe flaps and then hammers dead direct routes); `--via mirror`
+  (= direct) for CAP and USGS.
+- **Chronicling America never through the VPN** (124 batches, 83.8 GB). Use `scripts/fetch_local.py`
+  on the 2080, ingest there, ship parquet with `scripts/transfer_ingested.py pack|merge`.
+- Check usage: `python3 scripts/vpn_usage.py --since 2026-10-06T05:45:00+00:00` on the box (sums
+  MANIFEST bytes fetched via proxy; a floor). Tell Andrew before a planned download would exceed
+  the remaining budget.
+- The VPN client on the box dropped twice on 2026-10-06 (nothing listening on 7890). Open item:
+  find out whether it can be restarted over SSH (identify the client and its executable; options are
+  a scheduled task run in Andrew's interactive session via `schtasks /run`, or the client's own
+  auto-start/auto-reconnect setting). Creating a task or changing client settings needs Andrew's OK.
+
+### 13.5 Pipeline and tools added on 2026-10-05/06
+
+| tool | does |
+|---|---|
+| `src/data/download.py` | url/HF sources, resumable, checksums, 429/403 backoff, `|`-separated URL alternatives (404 -> next) |
+| `src/data/ia_catalog.py` | archive.org source -> `config/<src>_files.tsv` + `_items.tsv` (dates, window) |
+| `src/data/ingest_extra.py` | adapters for every extra source (CR, books, CA, FR, CAP, DDB, Europeana, VB, EJC, RSC, JFM, PSM Wikisource, Gutenberg, generic archive.org/PDF text) |
+| `src/data/ocr_quality.py` | lexicon v2 (anchor + pool + variant filter), histograms, gates, VB segment cleanup, gate reports |
+| `src/data/jfm_harvest.py`, `gutenberg_select.py`, `usgs_catalog.py`, `science_books.py` | science-bucket collection |
+| `scripts/science_ia.sh`, `science_ia_now.sh`, `science_misc.sh`, `science_usgs.sh`, `jfm_run.sh`, `ingest_run.sh` | WMI-launchable chains on the box |
+| `scripts/fetch_local.py`, `scripts/transfer_ingested.py` | 2080-side download and the Baidu Netdisk hand-over |
+
+### 13.6 Pitfalls already hit
+
+- The Bash tool halves backslashes in heredocs: write Python patch scripts with the Write tool, or use Edit.
+- Under `set -euo pipefail`, `x=$(... | grep ...)` with no match aborts the script silently.
+- Auto mode's safety check can start blocking every side-effecting command for the rest of a long
+  conversation; then switch to the default permission mode or start a fresh session with §13.7.
+- `ProcessPoolExecutor`, not `multiprocessing.Pool` (hangs on OOM-killed workers); flush parquet by bytes.
+- Never `remote_pull.sh` without the branch argument.
+
+### 13.7 Starting prompt for a new session
+
+See `reports/science_status_2026-10-06.md` for the current state; a ready-to-paste prompt is at the
+end of that file.
