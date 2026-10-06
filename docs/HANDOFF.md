@@ -651,7 +651,9 @@ already answers.
 - `ProcessPoolExecutor`, not `multiprocessing.Pool` (hangs on OOM-killed workers); flush parquet by bytes.
 - Never `remote_pull.sh` without the branch argument.
 - Long jobs on the 2080: start them with WMI (`Invoke-CimMethod Win32_Process Create`, Git Bash as the
-  command). `Start-Process` children were killed when the Claude desktop app restarted (10-06 17:45).
+  command) and a hidden window (`ProcessStartupInformation` with `ShowWindow = 0`; a visible bash window
+  invites closing it, which kills the job). `Start-Process` children were killed when the Claude
+  desktop app restarted (10-06 17:45). Command in `reports/science_status_2026-10-06.md`.
 - archive.org `/download/<id>/<file>` from the 2080 can redirect to a cache node (`dn*.ca.archive.org`)
   that answers HTTP 500 for hours while the item's two storage replicas (metadata `d1`/`d2` + `dir`)
   serve the file; `scripts/fetch_local.py` falls back to them. There is no other public mirror.

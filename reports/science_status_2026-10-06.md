@@ -33,7 +33,9 @@ datanode answering HTTP 500 makes a file fail after 8 attempts; rerunning a chai
 Restart a chain (verified keys are skipped):
 
     # PowerShell. Start-Process children died with the Claude app restart at 17:45 on 10-06; WMI ones do not.
-    Invoke-CimMethod -ClassName Win32_Process -MethodName Create -Arguments @{ CurrentDirectory = 'C:\Users\27409\Desktop\1939'; CommandLine = '"C:\Program Files\Git\bin\bash.exe" scripts/fetch_local_chain.sh <name> <source> ...' }
+    # Hide the window (ShowWindow 0): a visible bash window was closed by hand on 10-06 and killed the job.
+    $si = New-CimInstance -ClassName Win32_ProcessStartup -ClientOnly -Property @{ ShowWindow = [uint16]0 }
+    Invoke-CimMethod -ClassName Win32_Process -MethodName Create -Arguments @{ ProcessStartupInformation = $si; CurrentDirectory = 'C:\Users\27409\Desktop\1939'; CommandLine = '"C:\Program Files\Git\bin\bash.exe" scripts/fetch_local_chain.sh <name> <source> ...' }
     # JFM: CommandLine = '"C:\Program Files\Git\bin\bash.exe" -c "python -u -m src.data.jfm_harvest --delay 2 --direct >> data/logs/jfm_harvest_local.log 2>&1"'
 
 ## Do next, in this order
