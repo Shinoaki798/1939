@@ -656,3 +656,20 @@ sitzungsberichte_ia:
   ia_query: 'title:(sitzungsberichte preussischen akademie wissenschaften)'
   window: [1882-01-01, 1938-12-31]
   role: training, science bucket
+
+usgs_pp:
+  kind: url
+  files: ./config/usgs_pp_files.tsv
+  items: ./config/usgs_pp_items.tsv
+  dest: ./data/raw/usgs_pp
+  lang: en
+  approved: 2026-10-06
+  title: "USGS Professional Papers (1920-1938)"
+  bucket: science
+  licence: "US federal government work, public domain"
+  access_method: "USGS Publications Warehouse API -> report PDFs (OCR text layer) via src.data.download --via mirror (direct, no VPN)"
+  ocr_or_keyed: ocr
+  subject_filter_rule: "none (whole series); year-only, <= 1938"
+  usgs_series: Professional Paper
+  window: [1920-01-01, 1938-12-31]
+  role: training, science bucket

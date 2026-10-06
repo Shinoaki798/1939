@@ -556,7 +556,13 @@ def rows_ia_text(path: Path, key: str, cutoff: dt.date, stats: Counter, source: 
     if span_end > cutoff:
         stats["dropped_after_cutoff"] += 1
         return
-    text = ia_clean(path.read_text(encoding="utf-8", errors="replace"))
+    if path.suffix.lower() == ".pdf":                         # e.g. USGS reports: OCR text layer
+        import fitz   # pymupdf
+        with fitz.open(path) as doc:
+            raw = "\n\n".join(page.get_text() for page in doc)
+    else:
+        raw = path.read_text(encoding="utf-8", errors="replace")
+    text = ia_clean(raw)
     if not text:
         stats["dropped_empty"] += 1
         return
@@ -671,7 +677,7 @@ def ingest_file(job: tuple) -> dict:
     writer = None if dry_run else pq.ParquetWriter(tmp, EXTRA_SCHEMA, compression="zstd")
     batch: list[dict] = []
     batch_bytes = 0
-    adapter = ADAPTERS.get(source) or functools.partial(rows_ia_text, source=source)   # ia_query sources
+    adapter = ADAPTERS.get(source) or functools.partial(rows_ia_text, source=source)   # ia_query, usgs sources
     for row in adapter(Path(path), key, dt.date.fromisoformat(cutoff_iso), stats):
         stats["rows_out"] += 1
         stats["words"] += row["n_words"]
@@ -707,7 +713,7 @@ def main() -> None:
 
     cfg = load_config(Path(args.config) if args.config else repo_path("config/paths.yaml"))
     src = load_config(repo_path(cfg["sources"]))[args.source]
-    if args.source not in ADAPTERS and not src.get("ia_query"):
+    if args.source not in ADAPTERS and not (src.get("ia_query") or src.get("usgs_series")):
         sys.exit(f"no adapter for {args.source}")
     raw_dir = repo_path(src["dest"])
     out_dir = ingested_dir(cfg, args.source, src)
