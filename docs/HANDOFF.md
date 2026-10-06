@@ -374,3 +374,38 @@ Dated entries; each supersedes anything above it that it contradicts.
   contains foreign-language titles (e.g. Puerto Rican Spanish, Cleveland Czech).
   Article rule + per-title-year rule in `src/data/filters.py`, calibrated on
   1923. Scans without an `lccn` block (~5 %) are kept; LCCN from the filename.
+- **2026-10-05 — review decisions (supersede §2 RQ3 "US, DE, FR", §3.5 NMT
+  sentence, §5.1, §5.5, §6.1 size table, §9 schedule, §11 translation question).**
+  - *German in the original, no NMT anywhere.* French dropped. RQ3 perspectives:
+    US (English contexts) vs DE (German contexts), June 1939 and 1939-08-18…08-31;
+    scored continuations English. CLAUDE.md rules 2, 4–7, 10, 11 rewritten.
+  - *Model:* one Transformer (no control Transformer — user, 2026-10-05), 24
+    layers, d 1024, 16 heads, context 2048, bilingual 48k BPE, ≈350M params, up
+    to 10B seen tokens; RTX 5080 (~85 h, bf16, compile, SDPA, checkpoint/500,
+    resume test first), start 10-22, done by 11-01; fallback one rented H100.
+  - *Mixture:* 1930-01-01…1939-06-30 every surviving document twice; 1920s
+    fill the remainder (≤35 % of seen tokens); pre-1920 ≤8 %; German ≤25 % and
+    books ≤12 % per period; legal/regulatory ≤10 %; half-life 5 y orders
+    sampling within a period; recent periods are up-weighted by repetition
+    before any older period is added; a short pool means a shorter run.
+  - *Sources in:* American Stories; Congressional Record; LoC PD books (first)
+    and pre-1929 books (second), years ≥1900, deduped against each other,
+    raw kept until ingest verified; Europeana DE + DDB (keep; dedup by title +
+    date, then MinHash); Völkischer Beobachter 1925 + 1930 (named source).
+    Being verified (English 1930s): Chronicling America pages added after the
+    American Stories snapshot, Federal Register 1936–39, Caselaw Access Project.
+  - *Sources out:* Trove (no key without approval; NLA bars AI training),
+    Papers Past (API text lower-cased, unpunctuated), ANNO (no bulk; bot check),
+    HMD, JSTOR EJC, ECCO, Evans, Royal Society, NCSE (archaic / NC licences).
+  - *Cleaning:* OCR score = period-lexicon hit rate per language; German
+    lexicon from DTA (≤1938) + widespread pool words; threshold chosen by the
+    user from the histogram (Europeana `mean_ocr ≥ 0.7` rejected: it removes
+    nearly all 1925–39 German). C1 screen drops whole documents in both
+    languages. German per-year 2 % holdout spans 1900–1955 (German curve only).
+  - *Schedule:* 10-10 English audit + English v1 freeze; 10-17 German freeze;
+    10-17…10-21 baselines (RNN/LSTM/GRU 50M bilingual + KN 5-gram); 10-20 corpus
+    + tokenizer frozen; 10-22 main run; 11-01 done; 11-04 midterm; 11-20 progress.
+  - *Audit (reports/audit_v1.md, 10-10):* tokens by year × language (unique and
+    seen shares separately), 1925–1939-06 totals per language, OCR histograms +
+    thresholds per language, dedup rates per source, C1 drop counts, mixture vs
+    target and any shortfall.
