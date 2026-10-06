@@ -165,4 +165,4 @@ chronicling_america:
   role: training only. Chronicling America batch OCR (page-level ocr.txt) from batches ingested after
         the American Stories snapshot (2023-04-22+), pages dated 1930-01-01..1939-06-30 only (filtered at
         ingest). Contains some non-English titles (language filter) and new pages of AS titles (dedup
-        against AS on lccn + date + page). Batch list: config/chronicling_america_batches.json
+        against AS on lccn + date + page). Batch list in config/chronicling_america_batches.json

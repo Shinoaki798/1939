@@ -38,3 +38,16 @@ def test_url_table_and_publisher_checksum(tmp_path):
     table["ejc"]["checksum"] = "md5:" + "0" * 32
     assert not verify(table["ejc"], f)[0]
     assert verify(table["meta"], f)[2] == "size only"
+
+
+def test_record_in_manifest_merges_concurrent_writers(tmp_path):
+    import json
+
+    from src.data.download import record_in_manifest
+
+    m = tmp_path / "MANIFEST.json"
+    a = {"source": "x", "revision": None, "files": {}}
+    b = {"source": "x", "revision": None, "files": {}}
+    record_in_manifest(m, a, "k1", {"sha256": "1"})
+    record_in_manifest(m, b, "k2", {"sha256": "2"})   # b never saw k1 in memory
+    assert set(json.loads(m.read_text())["files"]) == {"k1", "k2"}

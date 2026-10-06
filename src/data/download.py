@@ -100,6 +100,17 @@ def load_manifest(path: Path, source: str, revision: str | None) -> dict:
     return {"source": source, "revision": revision, "files": {}}
 
 
+def record_in_manifest(path: Path, manifest: dict, key: str, entry: dict) -> None:
+    """Add one verified file under an exclusive lock, re-reading the MANIFEST first, so that several
+    shard processes of the same source never overwrite each other's entries."""
+    with open(path.with_suffix(".lock"), "w") as lk:
+        fcntl.flock(lk, fcntl.LOCK_EX)
+        current = json.loads(path.read_text(encoding="utf-8")) if path.exists() else \
+            {k: v for k, v in manifest.items() if k != "files"} | {"files": {}}
+        current["files"][key] = entry
+        save_manifest(path, current)
+
+
 def save_manifest(path: Path, m: dict) -> None:
     tmp = path.with_suffix(".json.tmp")
     tmp.write_text(json.dumps(m, indent=2, sort_keys=True), encoding="utf-8")
@@ -190,11 +201,12 @@ def fetch_one(key: str, spec: dict, src: dict, dl: dict, out_dir: Path, via: str
             part.unlink()
             continue
         os.replace(part, final)
-        manifest["files"][key] = {
+        entry = {
             "file": name, "bytes": spec["bytes"], "sha256": hashes["sha256"], "verified_against": expected,
             "url": url, "via": cur, "verified_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
         }
-        save_manifest(mpath, manifest)
+        manifest["files"][key] = entry
+        record_in_manifest(mpath, manifest, key, entry)
         print(f"[{key}] OK {spec['bytes']/1e9:.2f} GB verified ({expected if expected == 'size only' else 'checksum'})",
               flush=True)
         return True
@@ -216,6 +228,9 @@ def run_source(name: str, src: dict, dl: dict, args) -> list[str]:
         keys = [k for k in keys if k in table]
     else:
         keys = list(table)
+    k_shard, n_shards = args.shard
+    if n_shards > 1:   # stable split of the file list, so N processes can fetch one source in parallel
+        keys = [k for k in keys if int(hashlib.sha1(k.encode()).hexdigest(), 16) % n_shards == k_shard]
 
     manifest = load_manifest(mpath, ident, src.get("revision")) \
         if mpath.exists() or not args.dry_run else {"files": {}}
@@ -231,11 +246,12 @@ def run_source(name: str, src: dict, dl: dict, args) -> list[str]:
         return []
 
     out_dir.mkdir(parents=True, exist_ok=True)
-    lock = open(out_dir / ".download.lock", "w")
+    lock_name = ".download.lock" if n_shards == 1 else f".download.{k_shard}of{n_shards}.lock"
+    lock = open(out_dir / lock_name, "w")
     try:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
     except BlockingIOError:
-        print(f"[{name}] another downloader holds {out_dir}/.download.lock; skipping", flush=True)
+        print(f"[{name}] another downloader holds {out_dir}/{lock_name}; skipping", flush=True)
         return [f"{name}:locked"]
     failed = [k for k in todo if not fetch_one(k, table[k], src, dl, out_dir, args.via, manifest, mpath,
                                                args.max_attempts)]
@@ -253,7 +269,13 @@ def main() -> None:
     ap.add_argument("--via", choices=["auto", "proxy", "mirror"], default="auto")
     ap.add_argument("--max-attempts", type=int, default=30)
     ap.add_argument("--dry-run", action="store_true", help="report what would be downloaded; write nothing")
+    ap.add_argument("--shard", default="0/1", help="k/N: fetch only the k-th of N stable slices of the file list "
+                                                   "(run N processes for small-file sources)")
     args = ap.parse_args()
+    k, n = (int(x) for x in args.shard.split("/"))
+    if not 0 <= k < n:
+        sys.exit(f"bad --shard {args.shard}")
+    args.shard = (k, n)
 
     cfg = load_config(Path(args.config))
     sources = load_config(repo_path(cfg["sources"]))
