@@ -1,6 +1,9 @@
 # Chronicling America batch OCR tarballs (chroniclingamerica.loc.gov/data/ocr/, inventory ocr.json of 2026-09-21)
 # ingested after the American Stories snapshot (>= 2023-04-22) AND containing issues dated 1930-01-01..1939-06-30.
 # checksum = LoC sha256 from ocr.json. Generated 2026-10-05 from batch_1.xml issue lists.
+# Merged 2026-10-06 with the full post-snapshot survey (logs/ca_survey.json): every batch with issues
+# dated 1930-01-01..1939-06-30. Batches not yet on the 5080 are fetched on the local PC (2080), which
+# can reach chroniclingamerica.loc.gov directly; the 5080 is blocked without the VPN (68 GB > budget).
 key	url	bytes	checksum
 ak_amaranth_ver01	https://chroniclingamerica.loc.gov/data/ocr/ak_amaranth_ver01.tar.bz2	175643555	sha256:7f349fa4a9f0cbca14225d4856192639d94d614eb842ffcae01a2f9446abd769
 arhi_chalcopyrite_ver01	https://chroniclingamerica.loc.gov/data/ocr/arhi_chalcopyrite_ver01.tar.bz2	648753456	sha256:bd53ae609e64f43f52a958cdc348e6c22c66fc0e1639c4959e67065a4b8c7ef9
@@ -69,3 +72,60 @@ gu_jinn_ver01	https://chroniclingamerica.loc.gov/data/ocr/gu_jinn_ver01.tar.bz2	
 in_archer_ver01	https://chroniclingamerica.loc.gov/data/ocr/in_archer_ver01.tar.bz2	679003857	sha256:0f6b69c265aeae0fb1c96707b2d2ff383e5ede566e1c908871d86b0557403a05
 in_ilia_ver01	https://chroniclingamerica.loc.gov/data/ocr/in_ilia_ver01.tar.bz2	933818428	sha256:59c0b6da8fb2f53ba9a2c1d3a6d12d75fbb9a807861ed6d546e00e6ef088c4a6
 in_janeway_ver01	https://chroniclingamerica.loc.gov/data/ocr/in_janeway_ver01.tar.bz2	968237658	sha256:8770e3a3db45040a77658f87ddc5a3b39756ad79f5af41fa193adcb9c3685ec1
+kyu_heeler_ver01	https://chroniclingamerica.loc.gov/data/ocr/kyu_heeler_ver01.tar.bz2	650115622	sha256:c9a3bc02c1561718059355400f1fc1e7d5dbfdb4b19ca4d7354085d4d056d410
+kyu_keeshond_ver01	https://chroniclingamerica.loc.gov/data/ocr/kyu_keeshond_ver01.tar.bz2	1152894897	sha256:8927bc0f9e96c56812b55867a87128bbf8731ebca38201740e46e5a71b013dde
+kyu_labrador_ver01	https://chroniclingamerica.loc.gov/data/ocr/kyu_labrador_ver01.tar.bz2	687770867	sha256:0d24dcd2ca78445d296f4d7f270a3a478d64c1d5092722fc61f20286d6bc413e
+kyu_mastiff_ver02	https://chroniclingamerica.loc.gov/data/ocr/kyu_mastiff_ver02.tar.bz2	840105251	sha256:91d465a731c71c8489022a60832deda999cf7ba5a9ec73c0cb6d5e73dc5667ae
+mb_allspice_ver01	https://chroniclingamerica.loc.gov/data/ocr/mb_allspice_ver01.tar.bz2	1969854957	sha256:93faa124ccc967c72c5f1521811fd424f70e38eb8c2301851af409131a1b1b3f
+mb_basil_ver01	https://chroniclingamerica.loc.gov/data/ocr/mb_basil_ver01.tar.bz2	1808571241	sha256:417939fdb8892b15c1378e8779db772e52a96311240de8ca3a258bc8e6f334c0
+me_desjardins_ver01	https://chroniclingamerica.loc.gov/data/ocr/me_desjardins_ver01.tar.bz2	937936237	sha256:8c22c08d7baf5b021f7ca2429430ca34c84813dd5997bed18b8ff20ad1037375
+me_echo_ver01	https://chroniclingamerica.loc.gov/data/ocr/me_echo_ver01.tar.bz2	1003750167	sha256:697f154caaea964ef3e66f90be72ab37ed60b94b0491d2bd8fc84e8f2524e713
+me_franco_ver01	https://chroniclingamerica.loc.gov/data/ocr/me_franco_ver01.tar.bz2	993126487	sha256:b50bc31f2b3c3edda127b1e192f2a66ec62fa5ad093f0fbb565face4de3cfc19
+mnhi_caesar_ver01	https://chroniclingamerica.loc.gov/data/ocr/mnhi_caesar_ver01.tar.bz2	903850048	sha256:62e7e47ef3d007a9b090098bdb78c0a542fea15bb22746763b5c0528037714c0
+mnhi_desdemona_ver01	https://chroniclingamerica.loc.gov/data/ocr/mnhi_desdemona_ver01.tar.bz2	910775030	sha256:d8399c2e72dafddc2eb04907587735085e359f3d0569b46544df7e603fec40d9
+mnhi_escalus_ver03	https://chroniclingamerica.loc.gov/data/ocr/mnhi_escalus_ver03.tar.bz2	809538210	sha256:7fccb0d7ddbfe3f525a3227aa59b2adf8139f19e568c6ee8ca4e1d1c089ce835
+mnhi_falstaff_ver01	https://chroniclingamerica.loc.gov/data/ocr/mnhi_falstaff_ver01.tar.bz2	545631596	sha256:2a99105240a5a001afdf4c73f812ef8eddd8ae620a552e2e459a77a51b74b227
+mnhi_guildenstern_ver01	https://chroniclingamerica.loc.gov/data/ocr/mnhi_guildenstern_ver01.tar.bz2	876872503	sha256:21c6a8191fc451546887a0a289ac29b49ef74e49043179c50d5ba00583dea7b9
+mnhi_hamlet_ver01	https://chroniclingamerica.loc.gov/data/ocr/mnhi_hamlet_ver01.tar.bz2	577632976	sha256:8a4df7cbf22f503f246cfa7ee3489b7038018d4c9c0d1bcbf81b178bd8ca4002
+mnhi_iago_ver01	https://chroniclingamerica.loc.gov/data/ocr/mnhi_iago_ver01.tar.bz2	312249531	sha256:70c65d424872c197361c3be8f93095e90a6d7d4f575560d4902c57d3bd1dd097
+mnhi_katherine_ver01	https://chroniclingamerica.loc.gov/data/ocr/mnhi_katherine_ver01.tar.bz2	627873442	sha256:7181647f280e45d15c4959c3738bda0e8f3dca247612b5ba5091633960bf86be
+mnhi_lysander_ver01	https://chroniclingamerica.loc.gov/data/ocr/mnhi_lysander_ver01.tar.bz2	465224569	sha256:2f15c52eb059a591944246bbc646a09fe57063986d48153f457aab3e45536869
+mnhi_macbeth_ver01	https://chroniclingamerica.loc.gov/data/ocr/mnhi_macbeth_ver01.tar.bz2	43585575	sha256:b28aa1eb46e0862e1f5bcc0d369f4a7220be3483898e101c9d9d064a1232fe7d
+mthi_dillon_ver01	https://chroniclingamerica.loc.gov/data/ocr/mthi_dillon_ver01.tar.bz2	711455295	sha256:40c4481ed62a638b7714dc69b6954dfc99e379155f76e6b6a3dba5ea668ad6bc
+mthi_ekalaka_ver01	https://chroniclingamerica.loc.gov/data/ocr/mthi_ekalaka_ver01.tar.bz2	788262787	sha256:1934b2c7116804cd22b27402cef91b9ffc5445ffc90c4eba7ef0f5da899fadf0
+mthi_froid_ver01	https://chroniclingamerica.loc.gov/data/ocr/mthi_froid_ver01.tar.bz2	767044081	sha256:98ee79534e82a03ed0e3e5ec1057a304b44e81bbdf4aef5733f3ee4f45ad37ea
+mthi_hobson_ver01	https://chroniclingamerica.loc.gov/data/ocr/mthi_hobson_ver01.tar.bz2	790406994	sha256:c9c7852ad39cdd3321f82a5a3b1918b03e1669968bc020aff7f1d13ebae084aa
+mthi_ismay_ver01	https://chroniclingamerica.loc.gov/data/ocr/mthi_ismay_ver01.tar.bz2	662165074	sha256:b55e70a7ff5ac4047cd3c85a00ec2e7bcd6763eb0ba0d08c037fb10f249c190e
+nbu_bluejay_ver02	https://chroniclingamerica.loc.gov/data/ocr/nbu_bluejay_ver02.tar.bz2	573673891	sha256:eb0b2acd52fae935945a880c770181f247ebb34b4e14665bb7b66ca7a0d02906
+nbu_housesparrow_ver01	https://chroniclingamerica.loc.gov/data/ocr/nbu_housesparrow_ver01.tar.bz2	750316540	sha256:63d5bf6f0dbf3658444bc04dd9d81d931d7872a4d48e1e25a3c23e47e08666da
+ohi_alastor_ver02	https://chroniclingamerica.loc.gov/data/ocr/ohi_alastor_ver02.tar.bz2	572140516	sha256:7287996e588967de82ca1a5ce1fe11a168322b294e6e02fffb3583dc271dc469
+ohi_bellatrix_ver03	https://chroniclingamerica.loc.gov/data/ocr/ohi_bellatrix_ver03.tar.bz2	588822773	sha256:e3871b0244fda1aae4a9d08b4fe4f1a722d460db8b427be60d83c47a3892eb26
+ohi_draco_ver02	https://chroniclingamerica.loc.gov/data/ocr/ohi_draco_ver02.tar.bz2	646007821	sha256:f492eb1c1081573e7109d241fdcf512d6ef3a9d27b5c2b987d7dff5b8485009c
+ohi_fleur_ver01	https://chroniclingamerica.loc.gov/data/ocr/ohi_fleur_ver01.tar.bz2	814963362	sha256:a8c743c33c030a731c1d3b14a964e9e126038210722183d051f9ce61707aa001
+ohi_irma_ver01	https://chroniclingamerica.loc.gov/data/ocr/ohi_irma_ver01.tar.bz2	259319680	sha256:9c800d7628d81150dce1df46fb05e37bd13fad231030722ada54e49d1f9e6d72
+ohi_james_ver01	https://chroniclingamerica.loc.gov/data/ocr/ohi_james_ver01.tar.bz2	268237412	sha256:981fc5a73713e69ce088de305b4364e626f46b8b50c264e98dc58a7ce6f22263
+ohi_kingsley_ver01	https://chroniclingamerica.loc.gov/data/ocr/ohi_kingsley_ver01.tar.bz2	348333826	sha256:f340ec39f51c54781808d0432b99c5ebf0ba5470eb5f29664ce57bf3a8f65c83
+ohi_myrtle_ver01	https://chroniclingamerica.loc.gov/data/ocr/ohi_myrtle_ver01.tar.bz2	250615756	sha256:ca79d46f01729c8e48c83d9865996fc64b24dc6a3bf9288658344bb8ac6a40b5
+txdn_albatross_ver01	https://chroniclingamerica.loc.gov/data/ocr/txdn_albatross_ver01.tar.bz2	844192816	sha256:fa7a332bc0f62346b096c024e4ec1a3d1f804e8434bc99486980d3925c13d880
+txdn_bluebird_ver02	https://chroniclingamerica.loc.gov/data/ocr/txdn_bluebird_ver02.tar.bz2	607811698	sha256:028c67b5585c9ef1fcd6c6b7a277a4a0de6573ec34e5d45cd52ab51073997c69
+txdn_crane_ver01	https://chroniclingamerica.loc.gov/data/ocr/txdn_crane_ver01.tar.bz2	584813894	sha256:ed019573de44cdf1513a70e0445ccf94b27aa46f13bb6b3a610536b938f13890
+txdn_dove_ver02	https://chroniclingamerica.loc.gov/data/ocr/txdn_dove_ver02.tar.bz2	596963726	sha256:3fa86b50bda315e44d2635d32af2146ed9d50fd73de481c5b9baaa0c7abe6919
+txdn_egret_ver01	https://chroniclingamerica.loc.gov/data/ocr/txdn_egret_ver01.tar.bz2	669390527	sha256:bd03ae35b9520e5aff6f9056d34057e8cd155600161e1b88d207890579f960c9
+txdn_falcon_ver01	https://chroniclingamerica.loc.gov/data/ocr/txdn_falcon_ver01.tar.bz2	695134914	sha256:6521b4018e9e73b27ce6471788d19721c0bdd0854388d04a447a903dc6b04e9b
+txdn_gull_ver01	https://chroniclingamerica.loc.gov/data/ocr/txdn_gull_ver01.tar.bz2	748329619	sha256:1a60e51b2fed9affa75930e6f7b47e274f20825eaf979d1d2fe8225b42a6868f
+txdn_heron_ver01	https://chroniclingamerica.loc.gov/data/ocr/txdn_heron_ver01.tar.bz2	670552368	sha256:2529efb7e3b89cefd80598081f03f891021ccfc74b9eff184f780bcd14fab3e7
+txdn_ibis_ver01	https://chroniclingamerica.loc.gov/data/ocr/txdn_ibis_ver01.tar.bz2	716808045	sha256:4381173a7b32cbd887bcf802a6136fa25f101340ff725754018665b4dcdbf7e8
+txdn_jay_ver01	https://chroniclingamerica.loc.gov/data/ocr/txdn_jay_ver01.tar.bz2	739606919	sha256:87ed562f8e0ee86b69f5dc1873ef28dc0929df51c74df649899a754fa5184526
+txdn_kestrel_ver01	https://chroniclingamerica.loc.gov/data/ocr/txdn_kestrel_ver01.tar.bz2	535875932	sha256:64a1bd389534a082185fa6400a37f0121b3c13bc291046110a370627dce0ada6
+vi_cartier_ver01	https://chroniclingamerica.loc.gov/data/ocr/vi_cartier_ver01.tar.bz2	758149423	sha256:e845a848c02aa8e3b1c3a3c1415870fd92a73e7fa164fa52daa0a3f0cdfb881a
+vi_doxa_ver01	https://chroniclingamerica.loc.gov/data/ocr/vi_doxa_ver01.tar.bz2	752088613	sha256:e3d5205d11b3b84d9d440ebad8142a16df4f4a17693834d8c14c6b011f455898
+vi_fortis_ver01	https://chroniclingamerica.loc.gov/data/ocr/vi_fortis_ver01.tar.bz2	928296763	sha256:a3e46a6d3ec0cf9ad76b0aa37c2a3831a2dd50639ec5ad08dc1f5a4f761d0f9b
+vi_moser_ver01	https://chroniclingamerica.loc.gov/data/ocr/vi_moser_ver01.tar.bz2	564813407	sha256:d6b7b667a298d45c99327fb629bc1ce799997056b29fabeea913b9e18c398178
+whi_altbrew_ver01	https://chroniclingamerica.loc.gov/data/ocr/whi_altbrew_ver01.tar.bz2	29422097	sha256:e1081ab4b36848e3058fd559b5b26a80fce0f250708ddc7ee88a0fd6aabfcc8a
+whi_italico_ver01	https://chroniclingamerica.loc.gov/data/ocr/whi_italico_ver01.tar.bz2	1002531779	sha256:ac3ba756fcbf16fa1f9df849b30eb7c675e98c0acb93ae0428fcf15cf42bc461
+whi_jarlsburg_ver01	https://chroniclingamerica.loc.gov/data/ocr/whi_jarlsburg_ver01.tar.bz2	1046126925	sha256:9dfd6cb429cd9709e28bb243d0d26d98cb592c18ff020a5f61fb07f7fb8a0533
+wvu_day_ver01	https://chroniclingamerica.loc.gov/data/ocr/wvu_day_ver01.tar.bz2	729079202	sha256:41ce0491c1c40d221dd4fa5c71f88a526b452aed33211c5cfc2297234f8b9eb9
+wvu_monroe_ver01	https://chroniclingamerica.loc.gov/data/ocr/wvu_monroe_ver01.tar.bz2	818419216	sha256:c1dc9d2b274344975b582e4e9f159449048f6f9c79c4667f7cfb21756f7cb61e
+wvu_novak_ver02	https://chroniclingamerica.loc.gov/data/ocr/wvu_novak_ver02.tar.bz2	1235672	sha256:e84ce23e5e440e18102efe607a9233510c9e5d84dc8ab168e1abaf054ef9e271
+wyu_goblin_ver02	https://chroniclingamerica.loc.gov/data/ocr/wyu_goblin_ver02.tar.bz2	586409054	sha256:0e13b9286720ee07ac8da713c0ce30b17268265d79b97a55df820b18506ad5ae
+wyu_imp_ver02	https://chroniclingamerica.loc.gov/data/ocr/wyu_imp_ver02.tar.bz2	659091181	sha256:76882e5455bee4d08ce38d591dbbaf01281a781dec063c1bfeaa346b3c3d3868

@@ -30,7 +30,6 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
-import fcntl
 import hashlib
 import json
 import os
@@ -112,6 +111,7 @@ def record_in_manifest(path: Path, manifest: dict, key: str, entry: dict) -> Non
     """Add one verified file under an exclusive lock, re-reading the MANIFEST first, so that several
     shard processes of the same source never overwrite each other's entries."""
     with open(path.with_suffix(".lock"), "w") as lk:
+        import fcntl  # POSIX only; imported here so Windows can import this module
         fcntl.flock(lk, fcntl.LOCK_EX)
         current = json.loads(path.read_text(encoding="utf-8")) if path.exists() else \
             {k: v for k, v in manifest.items() if k != "files"} | {"files": {}}
@@ -301,6 +301,7 @@ def run_source(name: str, src: dict, dl: dict, args) -> list[str]:
     lock_name = ".download.lock" if n_shards == 1 else f".download.{k_shard}of{n_shards}.lock"
     lock = open(out_dir / lock_name, "w")
     try:
+        import fcntl  # POSIX only; imported here so Windows can import this module
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
     except BlockingIOError:
         print(f"[{name}] another downloader holds {out_dir}/{lock_name}; skipping", flush=True)
