@@ -116,3 +116,33 @@ def test_federal_register_reads_left_column_first(tmp_path):
     t = rows[0]["text"]
     assert t.index("LEFT ONE") < t.index("LEFT TWO") < t.index("RIGHT ONE")
     assert rows[0]["date"] == "1937-01-05"
+
+
+def test_caselaw_opinions_only_and_cutoff(tmp_path):
+    import json
+    import zipfile
+
+    from src.data.ingest_extra import _cap_date, rows_caselaw_access_project
+
+    def case(cid, date, opinions):
+        return {"id": cid, "decision_date": date, "name_abbreviation": f"Case {cid}",
+                "citations": [{"cite": f"{cid} Cal. 8"}], "court": {"name": "Supreme Court of California"},
+                "jurisdiction": {"name_long": "California"},
+                "casebody": {"head_matter": "Attorneys for appellant.", "opinions": opinions}}
+
+    path = tmp_path / "cal__210.zip"
+    with zipfile.ZipFile(path, "w") as z:
+        z.writestr("json/0008-01.json", json.dumps(case(1, "1934-05-17", [
+            {"type": "majority", "author": "SHENK, J.", "text": "The appeal is taken."},
+            {"type": "dissent", "author": "CURTIS, J.", "text": "I dissent."}])))
+        z.writestr("json/0011-01.json", json.dumps(case(2, "1939-07-03", [{"type": "majority", "text": "Late."}])))
+        z.writestr("json/0012-01.json", json.dumps(case(3, "1939-06", [{"type": "majority", "text": "June."}])))
+        z.writestr("metadata/CasesMetadata.json", "[]")
+    stats = Counter()
+    rows = list(rows_caselaw_access_project(path, "cal__210", CUTOFF, stats))
+    assert [r["article_id"] for r in rows] == ["cap_1", "cap_3"]
+    assert rows[0]["text"] == "The appeal is taken.\n\nI dissent." and "Attorneys" not in rows[0]["text"]
+    assert rows[0]["byline"] == "SHENK, J." and rows[0]["state"] == "California"
+    assert rows[1]["date"] == "1939-06-01" and stats["dropped_after_cutoff"] == 1
+    assert _cap_date("1939", CUTOFF) == (None, "year") and _cap_date("1938", CUTOFF)[0] == dt.date(1938, 1, 1)
+    assert _cap_date("1939-12", CUTOFF)[0] is None and _cap_date("n/a", CUTOFF) == (None, "bad")

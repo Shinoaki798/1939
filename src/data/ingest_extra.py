@@ -298,9 +298,59 @@ def rows_federal_register(path: Path, key: str, cutoff: dt.date, stats: Counter)
                {"issue": key, "pages": n_pages, "genre": "legal/regulatory"})
 
 
+def _cap_date(value: str, cutoff: dt.date) -> tuple[dt.date | None, str]:
+    """CAP decision_date is YYYY-MM-DD, YYYY-MM or YYYY. A partial date is kept only if its whole span
+    lies on or before the cutoff; it is stored as the first day of the span."""
+    parts = (value or "").strip().split("-")
+    try:
+        nums = [int(p) for p in parts]
+        if len(nums) == 3:
+            return dt.date(*nums), "day"
+        if len(nums) == 2:
+            first = dt.date(nums[0], nums[1], 1)
+            last = (dt.date(nums[0] + (nums[1] == 12), nums[1] % 12 + 1, 1) - dt.timedelta(days=1))
+            return (first if last <= cutoff else None), "month"
+        if len(nums) == 1:
+            return (dt.date(nums[0], 1, 1) if dt.date(nums[0], 12, 31) <= cutoff else None), "year"
+    except ValueError:
+        pass
+    return None, "bad"
+
+
+def rows_caselaw_access_project(path: Path, key: str, cutoff: dt.date, stats: Counter):
+    """Caselaw Access Project volume zip (static.case.law): one row per case, opinion text only
+    (head matter, attorneys and parties left out), kept by decision_date <= cutoff."""
+    import zipfile
+    with zipfile.ZipFile(path) as z:
+        for name in sorted(n for n in z.namelist() if n.startswith("json/") and n.endswith(".json")):
+            c = json.loads(z.read(name))
+            stats["rows_in"] += 1
+            date, precision = _cap_date(c.get("decision_date"), cutoff)
+            if date is None:
+                stats["dropped_bad_date" if precision == "bad" else "dropped_after_cutoff"] += 1
+                continue
+            if date > cutoff:
+                stats["dropped_after_cutoff"] += 1
+                continue
+            ops = (c.get("casebody") or {}).get("opinions") or []
+            text = "\n\n".join((o.get("text") or "").strip() for o in ops if (o.get("text") or "").strip())
+            if not text:
+                stats["dropped_empty"] += 1
+                continue
+            court = c.get("court") or {}
+            juris = c.get("jurisdiction") or {}
+            meta = {"volume": key, "case_id": c.get("id"), "name": c.get("name_abbreviation"),
+                    "citations": [x.get("cite") for x in c.get("citations") or []],
+                    "opinion_types": [o.get("type") for o in ops], "date_precision": precision,
+                    "genre": "legal/regulatory"}
+            yield _row(f"cap_{c.get('id')}", "caselaw_access_project", date, court.get("name") or "",
+                       juris.get("name_long") or "", (ops[0].get("author") or "") if ops else "", text, meta)
+
+
 ADAPTERS = {"congressional_record": rows_congressional_record, "hmd_newspapers": rows_hmd_newspapers,
             "loc_pd_books": rows_loc_pd_books, "pre_1929_books": rows_pre_1929_books,
             "chronicling_america": rows_chronicling_america, "federal_register": rows_federal_register,
+            "caselaw_access_project": rows_caselaw_access_project,
             "ddb_newspapers_de": rows_ddb_newspapers_de,
             "europeana_newspapers_de": rows_europeana_newspapers_de,
             "voelkischer_beobachter_de": rows_voelkischer_beobachter_de}
