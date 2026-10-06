@@ -25,21 +25,23 @@ KEYWORDS = [
     # mathematics
     r"mathemat\w*", r"algebra\w*", r"geometr\w*", r"trigonometr\w*", r"calculus", r"arithmetic\w*",
     r"differential equations?", r"theory of (?:numbers|functions|groups|probability)", r"vector analysis",
-    r"quaternions?", r"logarithm\w*", r"statistics", r"probabilit\w*",
+    r"quaternions?", r"logarithm\w*", r"probabilit\w*",
     # physical sciences
     r"physics", r"physical chemistry", r"mechanics", r"dynamics", r"statics", r"thermodynamic\w*",
     r"electricity", r"electrical", r"electric", r"electro\w+", r"magnetism", r"magnetic", r"wireless", r"radio\w*",
-    r"telegraph\w*", r"telephon\w*", r"optics", r"spectr\w+", r"relativity", r"quantum", r"atoms?", r"atomic",
-    r"electrons?", r"radium", r"radioactiv\w*", r"x-rays?", r"rontgen", r"crystal\w*",
+    r"telegraph\w*", r"telephon\w*", r"optics", r"spectr(?:um|a|oscop\w*)", r"relativity", r"quantum", r"atoms?", r"atomic",
+    r"electrons?", r"radium", r"radioactiv\w*", r"x-rays?", r"rontgen", r"crystallograph\w*",
     r"chemistry", r"chemical", r"chemist\w*", r"metallurg\w*", r"mineralog\w*", r"astronom\w*", r"astrophysic\w*",
     r"celestial", r"planets?", r"telescope\w*", r"geolog\w*", r"seismolog\w*", r"meteorolog\w*", r"physiograph\w*",
     # life sciences
     r"biolog\w*", r"botany", r"botanical", r"zoolog\w*", r"physiolog\w*", r"anatomy", r"bacteriolog\w*",
-    r"embryolog\w*", r"heredity", r"genetics", r"evolution", r"natural history", r"microscop\w*",
+    r"embryolog\w*", r"heredity", r"genetics", r"(?:organic|theory of) evolution", r"evolution of (?:life|species|man|plants|animals|the earth)",
+    r"natural history", r"microscop\w*",
     # engineering and technology
     r"engineering", r"engineers?", r"machine design", r"machinery", r"steam", r"engines?", r"turbines?",
     r"hydraulic\w*", r"aeronaut\w*", r"aviation", r"aeroplanes?", r"airplanes?", r"airships?", r"dynamos?",
-    r"motors?", r"internal combustion", r"locomotives?", r"bridges?", r"surveying", r"strength of materials",
+    r"motors?", r"internal combustion", r"locomotives?", r"bridge (?:engineering|construction|design)", r"surveying",
+    r"strength of materials",
 ]
 TITLE_RE = re.compile(r"\b(" + "|".join(KEYWORDS) + r")\b", re.I)
 
