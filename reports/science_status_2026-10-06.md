@@ -14,7 +14,7 @@ Operating guide (machines, remote control, VPN budget, tools, pitfalls): `docs/H
 - 2080 hand-over (2026-10-06 morning) merged on the 5080: Chronicling America complete (124 batches),
   PSM Wikisource. Transfer files on the box deleted (Andrew's OK).
 
-## Running on the 2080 (detached `Start-Process` + Git Bash; logs in `data/logs/`)
+## Running on the 2080 (started through WMI so they survive the Claude app; logs in `data/logs/`)
 
 Key lists `data/logs/local_keys/<source>.txt`: keys the 5080 has not verified, reverse file order.
 
@@ -32,7 +32,9 @@ datanode answering HTTP 500 makes a file fail after 8 attempts; rerunning a chai
 
 Restart a chain (verified keys are skipped):
 
-    powershell -Command "Start-Process -WindowStyle Hidden 'C:\Program Files\Git\bin\bash.exe' -WorkingDirectory 'C:\Users\27409\Desktop\1939' -ArgumentList 'scripts/fetch_local_chain.sh','<name>','<source>',..."
+    # PowerShell. Start-Process children died with the Claude app restart at 17:45 on 10-06; WMI ones do not.
+    Invoke-CimMethod -ClassName Win32_Process -MethodName Create -Arguments @{ CurrentDirectory = 'C:\Users\27409\Desktop\1939'; CommandLine = '"C:\Program Files\Git\bin\bash.exe" scripts/fetch_local_chain.sh <name> <source> ...' }
+    # JFM: CommandLine = '"C:\Program Files\Git\bin\bash.exe" -c "python -u -m src.data.jfm_harvest --delay 2 --direct >> data/logs/jfm_harvest_local.log 2>&1"'
 
 ## Do next, in this order
 
