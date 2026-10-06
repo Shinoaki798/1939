@@ -24,7 +24,7 @@ if [ ! -d "$MIRROR_WSL" ]; then
 else
   # proxy first; if the Windows-side proxy is down, GitHub is usually still reachable directly (slowly)
   "$GITEXE" -c http.proxy="$PROXY" -C "$MIRROR_WIN" remote update --prune </dev/null \
-    || { echo "proxy fetch failed; trying GitHub directly"; "$GITEXE" -C "$MIRROR_WIN" remote update --prune </dev/null; }
+    || { echo "proxy fetch failed; trying GitHub directly"; "$GITEXE" -c http.proxy= -c https.proxy= -C "$MIRROR_WIN" remote update --prune </dev/null; }
 fi
 
 if [ ! -d "$WORK/.git" ]; then
