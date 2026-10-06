@@ -1,152 +1,152 @@
-# gutenberg_sci_de: Project Gutenberg plain text from the PG mirror; selected from pg_catalog.csv.gz on 2026-10-06 by src.data.gutenberg_select
-key	url	bytes	checksum
-pg10914	https://gutenberg.pglaf.org/cache/epub/10914/pg10914.txt	?	-
-pg11925	https://gutenberg.pglaf.org/cache/epub/11925/pg11925.txt	?	-
-pg16718	https://gutenberg.pglaf.org/cache/epub/16718/pg16718.txt	?	-
-pg17153	https://gutenberg.pglaf.org/cache/epub/17153/pg17153.txt	?	-
-pg18471	https://gutenberg.pglaf.org/cache/epub/18471/pg18471.txt	?	-
-pg19673	https://gutenberg.pglaf.org/cache/epub/19673/pg19673.txt	?	-
-pg20313	https://gutenberg.pglaf.org/cache/epub/20313/pg20313.txt	?	-
-pg22492	https://gutenberg.pglaf.org/cache/epub/22492/pg22492.txt	?	-
-pg22659	https://gutenberg.pglaf.org/cache/epub/22659/pg22659.txt	?	-
-pg22761	https://gutenberg.pglaf.org/cache/epub/22761/pg22761.txt	?	-
-pg23672	https://gutenberg.pglaf.org/cache/epub/23672/pg23672.txt	?	-
-pg24618	https://gutenberg.pglaf.org/cache/epub/24618/pg24618.txt	?	-
-pg24746	https://gutenberg.pglaf.org/cache/epub/24746/pg24746.txt	?	-
-pg24817	https://gutenberg.pglaf.org/cache/epub/24817/pg24817.txt	?	-
-pg25157	https://gutenberg.pglaf.org/cache/epub/25157/pg25157.txt	?	-
-pg25783	https://gutenberg.pglaf.org/cache/epub/25783/pg25783.txt	?	-
-pg27254	https://gutenberg.pglaf.org/cache/epub/27254/pg27254.txt	?	-
-pg28664	https://gutenberg.pglaf.org/cache/epub/28664/pg28664.txt	?	-
-pg29780	https://gutenberg.pglaf.org/cache/epub/29780/pg29780.txt	?	-
-pg29806	https://gutenberg.pglaf.org/cache/epub/29806/pg29806.txt	?	-
-pg30005	https://gutenberg.pglaf.org/cache/epub/30005/pg30005.txt	?	-
-pg30042	https://gutenberg.pglaf.org/cache/epub/30042/pg30042.txt	?	-
-pg31564	https://gutenberg.pglaf.org/cache/epub/31564/pg31564.txt	?	-
-pg31856	https://gutenberg.pglaf.org/cache/epub/31856/pg31856.txt	?	-
-pg31911	https://gutenberg.pglaf.org/cache/epub/31911/pg31911.txt	?	-
-pg32201	https://gutenberg.pglaf.org/cache/epub/32201/pg32201.txt	?	-
-pg32634	https://gutenberg.pglaf.org/cache/epub/32634/pg32634.txt	?	-
-pg32766	https://gutenberg.pglaf.org/cache/epub/32766/pg32766.txt	?	-
-pg33202	https://gutenberg.pglaf.org/cache/epub/33202/pg33202.txt	?	-
-pg33317	https://gutenberg.pglaf.org/cache/epub/33317/pg33317.txt	?	-
-pg33330	https://gutenberg.pglaf.org/cache/epub/33330/pg33330.txt	?	-
-pg33369	https://gutenberg.pglaf.org/cache/epub/33369/pg33369.txt	?	-
-pg33726	https://gutenberg.pglaf.org/cache/epub/33726/pg33726.txt	?	-
-pg34032	https://gutenberg.pglaf.org/cache/epub/34032/pg34032.txt	?	-
-pg34137	https://gutenberg.pglaf.org/cache/epub/34137/pg34137.txt	?	-
-pg36310	https://gutenberg.pglaf.org/cache/epub/36310/pg36310.txt	?	-
-pg37945	https://gutenberg.pglaf.org/cache/epub/37945/pg37945.txt	?	-
-pg38033	https://gutenberg.pglaf.org/cache/epub/38033/pg38033.txt	?	-
-pg38157	https://gutenberg.pglaf.org/cache/epub/38157/pg38157.txt	?	-
-pg38755	https://gutenberg.pglaf.org/cache/epub/38755/pg38755.txt	?	-
-pg38986	https://gutenberg.pglaf.org/cache/epub/38986/pg38986.txt	?	-
-pg39553	https://gutenberg.pglaf.org/cache/epub/39553/pg39553.txt	?	-
-pg39763	https://gutenberg.pglaf.org/cache/epub/39763/pg39763.txt	?	-
-pg40543	https://gutenberg.pglaf.org/cache/epub/40543/pg40543.txt	?	-
-pg40854	https://gutenberg.pglaf.org/cache/epub/40854/pg40854.txt	?	-
-pg42489	https://gutenberg.pglaf.org/cache/epub/42489/pg42489.txt	?	-
-pg42745	https://gutenberg.pglaf.org/cache/epub/42745/pg42745.txt	?	-
-pg42937	https://gutenberg.pglaf.org/cache/epub/42937/pg42937.txt	?	-
-pg43191	https://gutenberg.pglaf.org/cache/epub/43191/pg43191.txt	?	-
-pg45460	https://gutenberg.pglaf.org/cache/epub/45460/pg45460.txt	?	-
-pg46781	https://gutenberg.pglaf.org/cache/epub/46781/pg46781.txt	?	-
-pg46878	https://gutenberg.pglaf.org/cache/epub/46878/pg46878.txt	?	-
-pg46896	https://gutenberg.pglaf.org/cache/epub/46896/pg46896.txt	?	-
-pg47251	https://gutenberg.pglaf.org/cache/epub/47251/pg47251.txt	?	-
-pg47733	https://gutenberg.pglaf.org/cache/epub/47733/pg47733.txt	?	-
-pg47843	https://gutenberg.pglaf.org/cache/epub/47843/pg47843.txt	?	-
-pg48120	https://gutenberg.pglaf.org/cache/epub/48120/pg48120.txt	?	-
-pg48312	https://gutenberg.pglaf.org/cache/epub/48312/pg48312.txt	?	-
-pg48450	https://gutenberg.pglaf.org/cache/epub/48450/pg48450.txt	?	-
-pg48570	https://gutenberg.pglaf.org/cache/epub/48570/pg48570.txt	?	-
-pg48798	https://gutenberg.pglaf.org/cache/epub/48798/pg48798.txt	?	-
-pg48965	https://gutenberg.pglaf.org/cache/epub/48965/pg48965.txt	?	-
-pg49774	https://gutenberg.pglaf.org/cache/epub/49774/pg49774.txt	?	-
-pg49775	https://gutenberg.pglaf.org/cache/epub/49775/pg49775.txt	?	-
-pg50003	https://gutenberg.pglaf.org/cache/epub/50003/pg50003.txt	?	-
-pg50081	https://gutenberg.pglaf.org/cache/epub/50081/pg50081.txt	?	-
-pg51567	https://gutenberg.pglaf.org/cache/epub/51567/pg51567.txt	?	-
-pg51638	https://gutenberg.pglaf.org/cache/epub/51638/pg51638.txt	?	-
-pg51929	https://gutenberg.pglaf.org/cache/epub/51929/pg51929.txt	?	-
-pg52373	https://gutenberg.pglaf.org/cache/epub/52373/pg52373.txt	?	-
-pg52492	https://gutenberg.pglaf.org/cache/epub/52492/pg52492.txt	?	-
-pg53428	https://gutenberg.pglaf.org/cache/epub/53428/pg53428.txt	?	-
-pg53514	https://gutenberg.pglaf.org/cache/epub/53514/pg53514.txt	?	-
-pg53973	https://gutenberg.pglaf.org/cache/epub/53973/pg53973.txt	?	-
-pg54127	https://gutenberg.pglaf.org/cache/epub/54127/pg54127.txt	?	-
-pg54357	https://gutenberg.pglaf.org/cache/epub/54357/pg54357.txt	?	-
-pg54565	https://gutenberg.pglaf.org/cache/epub/54565/pg54565.txt	?	-
-pg54762	https://gutenberg.pglaf.org/cache/epub/54762/pg54762.txt	?	-
-pg55462	https://gutenberg.pglaf.org/cache/epub/55462/pg55462.txt	?	-
-pg55559	https://gutenberg.pglaf.org/cache/epub/55559/pg55559.txt	?	-
-pg56239	https://gutenberg.pglaf.org/cache/epub/56239/pg56239.txt	?	-
-pg56330	https://gutenberg.pglaf.org/cache/epub/56330/pg56330.txt	?	-
-pg57240	https://gutenberg.pglaf.org/cache/epub/57240/pg57240.txt	?	-
-pg57636	https://gutenberg.pglaf.org/cache/epub/57636/pg57636.txt	?	-
-pg57952	https://gutenberg.pglaf.org/cache/epub/57952/pg57952.txt	?	-
-pg58148	https://gutenberg.pglaf.org/cache/epub/58148/pg58148.txt	?	-
-pg58399	https://gutenberg.pglaf.org/cache/epub/58399/pg58399.txt	?	-
-pg58506	https://gutenberg.pglaf.org/cache/epub/58506/pg58506.txt	?	-
-pg58683	https://gutenberg.pglaf.org/cache/epub/58683/pg58683.txt	?	-
-pg58989	https://gutenberg.pglaf.org/cache/epub/58989/pg58989.txt	?	-
-pg59161	https://gutenberg.pglaf.org/cache/epub/59161/pg59161.txt	?	-
-pg59268	https://gutenberg.pglaf.org/cache/epub/59268/pg59268.txt	?	-
-pg59493	https://gutenberg.pglaf.org/cache/epub/59493/pg59493.txt	?	-
-pg59659	https://gutenberg.pglaf.org/cache/epub/59659/pg59659.txt	?	-
-pg60930	https://gutenberg.pglaf.org/cache/epub/60930/pg60930.txt	?	-
-pg61584	https://gutenberg.pglaf.org/cache/epub/61584/pg61584.txt	?	-
-pg61850	https://gutenberg.pglaf.org/cache/epub/61850/pg61850.txt	?	-
-pg61873	https://gutenberg.pglaf.org/cache/epub/61873/pg61873.txt	?	-
-pg61928	https://gutenberg.pglaf.org/cache/epub/61928/pg61928.txt	?	-
-pg61997	https://gutenberg.pglaf.org/cache/epub/61997/pg61997.txt	?	-
-pg62131	https://gutenberg.pglaf.org/cache/epub/62131/pg62131.txt	?	-
-pg62311	https://gutenberg.pglaf.org/cache/epub/62311/pg62311.txt	?	-
-pg63371	https://gutenberg.pglaf.org/cache/epub/63371/pg63371.txt	?	-
-pg64085	https://gutenberg.pglaf.org/cache/epub/64085/pg64085.txt	?	-
-pg64204	https://gutenberg.pglaf.org/cache/epub/64204/pg64204.txt	?	-
-pg65211	https://gutenberg.pglaf.org/cache/epub/65211/pg65211.txt	?	-
-pg68258	https://gutenberg.pglaf.org/cache/epub/68258/pg68258.txt	?	-
-pg68593	https://gutenberg.pglaf.org/cache/epub/68593/pg68593.txt	?	-
-pg68838	https://gutenberg.pglaf.org/cache/epub/68838/pg68838.txt	?	-
-pg68947	https://gutenberg.pglaf.org/cache/epub/68947/pg68947.txt	?	-
-pg69172	https://gutenberg.pglaf.org/cache/epub/69172/pg69172.txt	?	-
-pg69267	https://gutenberg.pglaf.org/cache/epub/69267/pg69267.txt	?	-
-pg69320	https://gutenberg.pglaf.org/cache/epub/69320/pg69320.txt	?	-
-pg69469	https://gutenberg.pglaf.org/cache/epub/69469/pg69469.txt	?	-
-pg69470	https://gutenberg.pglaf.org/cache/epub/69470/pg69470.txt	?	-
-pg69472	https://gutenberg.pglaf.org/cache/epub/69472/pg69472.txt	?	-
-pg69522	https://gutenberg.pglaf.org/cache/epub/69522/pg69522.txt	?	-
-pg69524	https://gutenberg.pglaf.org/cache/epub/69524/pg69524.txt	?	-
-pg70435	https://gutenberg.pglaf.org/cache/epub/70435/pg70435.txt	?	-
-pg70567	https://gutenberg.pglaf.org/cache/epub/70567/pg70567.txt	?	-
-pg70687	https://gutenberg.pglaf.org/cache/epub/70687/pg70687.txt	?	-
-pg70692	https://gutenberg.pglaf.org/cache/epub/70692/pg70692.txt	?	-
-pg71303	https://gutenberg.pglaf.org/cache/epub/71303/pg71303.txt	?	-
-pg71616	https://gutenberg.pglaf.org/cache/epub/71616/pg71616.txt	?	-
-pg72876	https://gutenberg.pglaf.org/cache/epub/72876/pg72876.txt	?	-
-pg72951	https://gutenberg.pglaf.org/cache/epub/72951/pg72951.txt	?	-
-pg72952	https://gutenberg.pglaf.org/cache/epub/72952/pg72952.txt	?	-
-pg73374	https://gutenberg.pglaf.org/cache/epub/73374/pg73374.txt	?	-
-pg74363	https://gutenberg.pglaf.org/cache/epub/74363/pg74363.txt	?	-
-pg75055	https://gutenberg.pglaf.org/cache/epub/75055/pg75055.txt	?	-
-pg75185	https://gutenberg.pglaf.org/cache/epub/75185/pg75185.txt	?	-
-pg75312	https://gutenberg.pglaf.org/cache/epub/75312/pg75312.txt	?	-
-pg75352	https://gutenberg.pglaf.org/cache/epub/75352/pg75352.txt	?	-
-pg75670	https://gutenberg.pglaf.org/cache/epub/75670/pg75670.txt	?	-
-pg75805	https://gutenberg.pglaf.org/cache/epub/75805/pg75805.txt	?	-
-pg76062	https://gutenberg.pglaf.org/cache/epub/76062/pg76062.txt	?	-
-pg76878	https://gutenberg.pglaf.org/cache/epub/76878/pg76878.txt	?	-
-pg76968	https://gutenberg.pglaf.org/cache/epub/76968/pg76968.txt	?	-
-pg77002	https://gutenberg.pglaf.org/cache/epub/77002/pg77002.txt	?	-
-pg77208	https://gutenberg.pglaf.org/cache/epub/77208/pg77208.txt	?	-
-pg77678	https://gutenberg.pglaf.org/cache/epub/77678/pg77678.txt	?	-
-pg77679	https://gutenberg.pglaf.org/cache/epub/77679/pg77679.txt	?	-
-pg77700	https://gutenberg.pglaf.org/cache/epub/77700/pg77700.txt	?	-
-pg77785	https://gutenberg.pglaf.org/cache/epub/77785/pg77785.txt	?	-
-pg77850	https://gutenberg.pglaf.org/cache/epub/77850/pg77850.txt	?	-
-pg78079	https://gutenberg.pglaf.org/cache/epub/78079/pg78079.txt	?	-
-pg78608	https://gutenberg.pglaf.org/cache/epub/78608/pg78608.txt	?	-
-pg79185	https://gutenberg.pglaf.org/cache/epub/79185/pg79185.txt	?	-
-pg79232	https://gutenberg.pglaf.org/cache/epub/79232/pg79232.txt	?	-
-pg79674	https://gutenberg.pglaf.org/cache/epub/79674/pg79674.txt	?	-
+# gutenberg_sci_de: Project Gutenberg HTML/plain text from the PG mirror; selected from pg_catalog.csv.gz on 2026-10-06 by src.data.gutenberg_select
+key	url	bytes	checksum	file
+pg10914	https://gutenberg.pglaf.org/1/0/9/1/10914/10914-h/10914-h.htm|https://gutenberg.pglaf.org/1/0/9/1/10914/10914-h/10914-h.html|https://gutenberg.pglaf.org/1/0/9/1/10914/10914-0.txt|https://gutenberg.pglaf.org/1/0/9/1/10914/10914.txt|https://gutenberg.pglaf.org/1/0/9/1/10914/10914-8.txt	?	-	pg10914.dat
+pg11925	https://gutenberg.pglaf.org/1/1/9/2/11925/11925-h/11925-h.htm|https://gutenberg.pglaf.org/1/1/9/2/11925/11925-h/11925-h.html|https://gutenberg.pglaf.org/1/1/9/2/11925/11925-0.txt|https://gutenberg.pglaf.org/1/1/9/2/11925/11925.txt|https://gutenberg.pglaf.org/1/1/9/2/11925/11925-8.txt	?	-	pg11925.dat
+pg16718	https://gutenberg.pglaf.org/1/6/7/1/16718/16718-h/16718-h.htm|https://gutenberg.pglaf.org/1/6/7/1/16718/16718-h/16718-h.html|https://gutenberg.pglaf.org/1/6/7/1/16718/16718-0.txt|https://gutenberg.pglaf.org/1/6/7/1/16718/16718.txt|https://gutenberg.pglaf.org/1/6/7/1/16718/16718-8.txt	?	-	pg16718.dat
+pg17153	https://gutenberg.pglaf.org/1/7/1/5/17153/17153-h/17153-h.htm|https://gutenberg.pglaf.org/1/7/1/5/17153/17153-h/17153-h.html|https://gutenberg.pglaf.org/1/7/1/5/17153/17153-0.txt|https://gutenberg.pglaf.org/1/7/1/5/17153/17153.txt|https://gutenberg.pglaf.org/1/7/1/5/17153/17153-8.txt	?	-	pg17153.dat
+pg18471	https://gutenberg.pglaf.org/1/8/4/7/18471/18471-h/18471-h.htm|https://gutenberg.pglaf.org/1/8/4/7/18471/18471-h/18471-h.html|https://gutenberg.pglaf.org/1/8/4/7/18471/18471-0.txt|https://gutenberg.pglaf.org/1/8/4/7/18471/18471.txt|https://gutenberg.pglaf.org/1/8/4/7/18471/18471-8.txt	?	-	pg18471.dat
+pg19673	https://gutenberg.pglaf.org/1/9/6/7/19673/19673-h/19673-h.htm|https://gutenberg.pglaf.org/1/9/6/7/19673/19673-h/19673-h.html|https://gutenberg.pglaf.org/1/9/6/7/19673/19673-0.txt|https://gutenberg.pglaf.org/1/9/6/7/19673/19673.txt|https://gutenberg.pglaf.org/1/9/6/7/19673/19673-8.txt	?	-	pg19673.dat
+pg20313	https://gutenberg.pglaf.org/2/0/3/1/20313/20313-h/20313-h.htm|https://gutenberg.pglaf.org/2/0/3/1/20313/20313-h/20313-h.html|https://gutenberg.pglaf.org/2/0/3/1/20313/20313-0.txt|https://gutenberg.pglaf.org/2/0/3/1/20313/20313.txt|https://gutenberg.pglaf.org/2/0/3/1/20313/20313-8.txt	?	-	pg20313.dat
+pg22492	https://gutenberg.pglaf.org/2/2/4/9/22492/22492-h/22492-h.htm|https://gutenberg.pglaf.org/2/2/4/9/22492/22492-h/22492-h.html|https://gutenberg.pglaf.org/2/2/4/9/22492/22492-0.txt|https://gutenberg.pglaf.org/2/2/4/9/22492/22492.txt|https://gutenberg.pglaf.org/2/2/4/9/22492/22492-8.txt	?	-	pg22492.dat
+pg22659	https://gutenberg.pglaf.org/2/2/6/5/22659/22659-h/22659-h.htm|https://gutenberg.pglaf.org/2/2/6/5/22659/22659-h/22659-h.html|https://gutenberg.pglaf.org/2/2/6/5/22659/22659-0.txt|https://gutenberg.pglaf.org/2/2/6/5/22659/22659.txt|https://gutenberg.pglaf.org/2/2/6/5/22659/22659-8.txt	?	-	pg22659.dat
+pg22761	https://gutenberg.pglaf.org/2/2/7/6/22761/22761-h/22761-h.htm|https://gutenberg.pglaf.org/2/2/7/6/22761/22761-h/22761-h.html|https://gutenberg.pglaf.org/2/2/7/6/22761/22761-0.txt|https://gutenberg.pglaf.org/2/2/7/6/22761/22761.txt|https://gutenberg.pglaf.org/2/2/7/6/22761/22761-8.txt	?	-	pg22761.dat
+pg23672	https://gutenberg.pglaf.org/2/3/6/7/23672/23672-h/23672-h.htm|https://gutenberg.pglaf.org/2/3/6/7/23672/23672-h/23672-h.html|https://gutenberg.pglaf.org/2/3/6/7/23672/23672-0.txt|https://gutenberg.pglaf.org/2/3/6/7/23672/23672.txt|https://gutenberg.pglaf.org/2/3/6/7/23672/23672-8.txt	?	-	pg23672.dat
+pg24618	https://gutenberg.pglaf.org/2/4/6/1/24618/24618-h/24618-h.htm|https://gutenberg.pglaf.org/2/4/6/1/24618/24618-h/24618-h.html|https://gutenberg.pglaf.org/2/4/6/1/24618/24618-0.txt|https://gutenberg.pglaf.org/2/4/6/1/24618/24618.txt|https://gutenberg.pglaf.org/2/4/6/1/24618/24618-8.txt	?	-	pg24618.dat
+pg24746	https://gutenberg.pglaf.org/2/4/7/4/24746/24746-h/24746-h.htm|https://gutenberg.pglaf.org/2/4/7/4/24746/24746-h/24746-h.html|https://gutenberg.pglaf.org/2/4/7/4/24746/24746-0.txt|https://gutenberg.pglaf.org/2/4/7/4/24746/24746.txt|https://gutenberg.pglaf.org/2/4/7/4/24746/24746-8.txt	?	-	pg24746.dat
+pg24817	https://gutenberg.pglaf.org/2/4/8/1/24817/24817-h/24817-h.htm|https://gutenberg.pglaf.org/2/4/8/1/24817/24817-h/24817-h.html|https://gutenberg.pglaf.org/2/4/8/1/24817/24817-0.txt|https://gutenberg.pglaf.org/2/4/8/1/24817/24817.txt|https://gutenberg.pglaf.org/2/4/8/1/24817/24817-8.txt	?	-	pg24817.dat
+pg25157	https://gutenberg.pglaf.org/2/5/1/5/25157/25157-h/25157-h.htm|https://gutenberg.pglaf.org/2/5/1/5/25157/25157-h/25157-h.html|https://gutenberg.pglaf.org/2/5/1/5/25157/25157-0.txt|https://gutenberg.pglaf.org/2/5/1/5/25157/25157.txt|https://gutenberg.pglaf.org/2/5/1/5/25157/25157-8.txt	?	-	pg25157.dat
+pg25783	https://gutenberg.pglaf.org/2/5/7/8/25783/25783-h/25783-h.htm|https://gutenberg.pglaf.org/2/5/7/8/25783/25783-h/25783-h.html|https://gutenberg.pglaf.org/2/5/7/8/25783/25783-0.txt|https://gutenberg.pglaf.org/2/5/7/8/25783/25783.txt|https://gutenberg.pglaf.org/2/5/7/8/25783/25783-8.txt	?	-	pg25783.dat
+pg27254	https://gutenberg.pglaf.org/2/7/2/5/27254/27254-h/27254-h.htm|https://gutenberg.pglaf.org/2/7/2/5/27254/27254-h/27254-h.html|https://gutenberg.pglaf.org/2/7/2/5/27254/27254-0.txt|https://gutenberg.pglaf.org/2/7/2/5/27254/27254.txt|https://gutenberg.pglaf.org/2/7/2/5/27254/27254-8.txt	?	-	pg27254.dat
+pg28664	https://gutenberg.pglaf.org/2/8/6/6/28664/28664-h/28664-h.htm|https://gutenberg.pglaf.org/2/8/6/6/28664/28664-h/28664-h.html|https://gutenberg.pglaf.org/2/8/6/6/28664/28664-0.txt|https://gutenberg.pglaf.org/2/8/6/6/28664/28664.txt|https://gutenberg.pglaf.org/2/8/6/6/28664/28664-8.txt	?	-	pg28664.dat
+pg29780	https://gutenberg.pglaf.org/2/9/7/8/29780/29780-h/29780-h.htm|https://gutenberg.pglaf.org/2/9/7/8/29780/29780-h/29780-h.html|https://gutenberg.pglaf.org/2/9/7/8/29780/29780-0.txt|https://gutenberg.pglaf.org/2/9/7/8/29780/29780.txt|https://gutenberg.pglaf.org/2/9/7/8/29780/29780-8.txt	?	-	pg29780.dat
+pg29806	https://gutenberg.pglaf.org/2/9/8/0/29806/29806-h/29806-h.htm|https://gutenberg.pglaf.org/2/9/8/0/29806/29806-h/29806-h.html|https://gutenberg.pglaf.org/2/9/8/0/29806/29806-0.txt|https://gutenberg.pglaf.org/2/9/8/0/29806/29806.txt|https://gutenberg.pglaf.org/2/9/8/0/29806/29806-8.txt	?	-	pg29806.dat
+pg30005	https://gutenberg.pglaf.org/3/0/0/0/30005/30005-h/30005-h.htm|https://gutenberg.pglaf.org/3/0/0/0/30005/30005-h/30005-h.html|https://gutenberg.pglaf.org/3/0/0/0/30005/30005-0.txt|https://gutenberg.pglaf.org/3/0/0/0/30005/30005.txt|https://gutenberg.pglaf.org/3/0/0/0/30005/30005-8.txt	?	-	pg30005.dat
+pg30042	https://gutenberg.pglaf.org/3/0/0/4/30042/30042-h/30042-h.htm|https://gutenberg.pglaf.org/3/0/0/4/30042/30042-h/30042-h.html|https://gutenberg.pglaf.org/3/0/0/4/30042/30042-0.txt|https://gutenberg.pglaf.org/3/0/0/4/30042/30042.txt|https://gutenberg.pglaf.org/3/0/0/4/30042/30042-8.txt	?	-	pg30042.dat
+pg31564	https://gutenberg.pglaf.org/3/1/5/6/31564/31564-h/31564-h.htm|https://gutenberg.pglaf.org/3/1/5/6/31564/31564-h/31564-h.html|https://gutenberg.pglaf.org/3/1/5/6/31564/31564-0.txt|https://gutenberg.pglaf.org/3/1/5/6/31564/31564.txt|https://gutenberg.pglaf.org/3/1/5/6/31564/31564-8.txt	?	-	pg31564.dat
+pg31856	https://gutenberg.pglaf.org/3/1/8/5/31856/31856-h/31856-h.htm|https://gutenberg.pglaf.org/3/1/8/5/31856/31856-h/31856-h.html|https://gutenberg.pglaf.org/3/1/8/5/31856/31856-0.txt|https://gutenberg.pglaf.org/3/1/8/5/31856/31856.txt|https://gutenberg.pglaf.org/3/1/8/5/31856/31856-8.txt	?	-	pg31856.dat
+pg31911	https://gutenberg.pglaf.org/3/1/9/1/31911/31911-h/31911-h.htm|https://gutenberg.pglaf.org/3/1/9/1/31911/31911-h/31911-h.html|https://gutenberg.pglaf.org/3/1/9/1/31911/31911-0.txt|https://gutenberg.pglaf.org/3/1/9/1/31911/31911.txt|https://gutenberg.pglaf.org/3/1/9/1/31911/31911-8.txt	?	-	pg31911.dat
+pg32201	https://gutenberg.pglaf.org/3/2/2/0/32201/32201-h/32201-h.htm|https://gutenberg.pglaf.org/3/2/2/0/32201/32201-h/32201-h.html|https://gutenberg.pglaf.org/3/2/2/0/32201/32201-0.txt|https://gutenberg.pglaf.org/3/2/2/0/32201/32201.txt|https://gutenberg.pglaf.org/3/2/2/0/32201/32201-8.txt	?	-	pg32201.dat
+pg32634	https://gutenberg.pglaf.org/3/2/6/3/32634/32634-h/32634-h.htm|https://gutenberg.pglaf.org/3/2/6/3/32634/32634-h/32634-h.html|https://gutenberg.pglaf.org/3/2/6/3/32634/32634-0.txt|https://gutenberg.pglaf.org/3/2/6/3/32634/32634.txt|https://gutenberg.pglaf.org/3/2/6/3/32634/32634-8.txt	?	-	pg32634.dat
+pg32766	https://gutenberg.pglaf.org/3/2/7/6/32766/32766-h/32766-h.htm|https://gutenberg.pglaf.org/3/2/7/6/32766/32766-h/32766-h.html|https://gutenberg.pglaf.org/3/2/7/6/32766/32766-0.txt|https://gutenberg.pglaf.org/3/2/7/6/32766/32766.txt|https://gutenberg.pglaf.org/3/2/7/6/32766/32766-8.txt	?	-	pg32766.dat
+pg33202	https://gutenberg.pglaf.org/3/3/2/0/33202/33202-h/33202-h.htm|https://gutenberg.pglaf.org/3/3/2/0/33202/33202-h/33202-h.html|https://gutenberg.pglaf.org/3/3/2/0/33202/33202-0.txt|https://gutenberg.pglaf.org/3/3/2/0/33202/33202.txt|https://gutenberg.pglaf.org/3/3/2/0/33202/33202-8.txt	?	-	pg33202.dat
+pg33317	https://gutenberg.pglaf.org/3/3/3/1/33317/33317-h/33317-h.htm|https://gutenberg.pglaf.org/3/3/3/1/33317/33317-h/33317-h.html|https://gutenberg.pglaf.org/3/3/3/1/33317/33317-0.txt|https://gutenberg.pglaf.org/3/3/3/1/33317/33317.txt|https://gutenberg.pglaf.org/3/3/3/1/33317/33317-8.txt	?	-	pg33317.dat
+pg33330	https://gutenberg.pglaf.org/3/3/3/3/33330/33330-h/33330-h.htm|https://gutenberg.pglaf.org/3/3/3/3/33330/33330-h/33330-h.html|https://gutenberg.pglaf.org/3/3/3/3/33330/33330-0.txt|https://gutenberg.pglaf.org/3/3/3/3/33330/33330.txt|https://gutenberg.pglaf.org/3/3/3/3/33330/33330-8.txt	?	-	pg33330.dat
+pg33369	https://gutenberg.pglaf.org/3/3/3/6/33369/33369-h/33369-h.htm|https://gutenberg.pglaf.org/3/3/3/6/33369/33369-h/33369-h.html|https://gutenberg.pglaf.org/3/3/3/6/33369/33369-0.txt|https://gutenberg.pglaf.org/3/3/3/6/33369/33369.txt|https://gutenberg.pglaf.org/3/3/3/6/33369/33369-8.txt	?	-	pg33369.dat
+pg33726	https://gutenberg.pglaf.org/3/3/7/2/33726/33726-h/33726-h.htm|https://gutenberg.pglaf.org/3/3/7/2/33726/33726-h/33726-h.html|https://gutenberg.pglaf.org/3/3/7/2/33726/33726-0.txt|https://gutenberg.pglaf.org/3/3/7/2/33726/33726.txt|https://gutenberg.pglaf.org/3/3/7/2/33726/33726-8.txt	?	-	pg33726.dat
+pg34032	https://gutenberg.pglaf.org/3/4/0/3/34032/34032-h/34032-h.htm|https://gutenberg.pglaf.org/3/4/0/3/34032/34032-h/34032-h.html|https://gutenberg.pglaf.org/3/4/0/3/34032/34032-0.txt|https://gutenberg.pglaf.org/3/4/0/3/34032/34032.txt|https://gutenberg.pglaf.org/3/4/0/3/34032/34032-8.txt	?	-	pg34032.dat
+pg34137	https://gutenberg.pglaf.org/3/4/1/3/34137/34137-h/34137-h.htm|https://gutenberg.pglaf.org/3/4/1/3/34137/34137-h/34137-h.html|https://gutenberg.pglaf.org/3/4/1/3/34137/34137-0.txt|https://gutenberg.pglaf.org/3/4/1/3/34137/34137.txt|https://gutenberg.pglaf.org/3/4/1/3/34137/34137-8.txt	?	-	pg34137.dat
+pg36310	https://gutenberg.pglaf.org/3/6/3/1/36310/36310-h/36310-h.htm|https://gutenberg.pglaf.org/3/6/3/1/36310/36310-h/36310-h.html|https://gutenberg.pglaf.org/3/6/3/1/36310/36310-0.txt|https://gutenberg.pglaf.org/3/6/3/1/36310/36310.txt|https://gutenberg.pglaf.org/3/6/3/1/36310/36310-8.txt	?	-	pg36310.dat
+pg37945	https://gutenberg.pglaf.org/3/7/9/4/37945/37945-h/37945-h.htm|https://gutenberg.pglaf.org/3/7/9/4/37945/37945-h/37945-h.html|https://gutenberg.pglaf.org/3/7/9/4/37945/37945-0.txt|https://gutenberg.pglaf.org/3/7/9/4/37945/37945.txt|https://gutenberg.pglaf.org/3/7/9/4/37945/37945-8.txt	?	-	pg37945.dat
+pg38033	https://gutenberg.pglaf.org/3/8/0/3/38033/38033-h/38033-h.htm|https://gutenberg.pglaf.org/3/8/0/3/38033/38033-h/38033-h.html|https://gutenberg.pglaf.org/3/8/0/3/38033/38033-0.txt|https://gutenberg.pglaf.org/3/8/0/3/38033/38033.txt|https://gutenberg.pglaf.org/3/8/0/3/38033/38033-8.txt	?	-	pg38033.dat
+pg38157	https://gutenberg.pglaf.org/3/8/1/5/38157/38157-h/38157-h.htm|https://gutenberg.pglaf.org/3/8/1/5/38157/38157-h/38157-h.html|https://gutenberg.pglaf.org/3/8/1/5/38157/38157-0.txt|https://gutenberg.pglaf.org/3/8/1/5/38157/38157.txt|https://gutenberg.pglaf.org/3/8/1/5/38157/38157-8.txt	?	-	pg38157.dat
+pg38755	https://gutenberg.pglaf.org/3/8/7/5/38755/38755-h/38755-h.htm|https://gutenberg.pglaf.org/3/8/7/5/38755/38755-h/38755-h.html|https://gutenberg.pglaf.org/3/8/7/5/38755/38755-0.txt|https://gutenberg.pglaf.org/3/8/7/5/38755/38755.txt|https://gutenberg.pglaf.org/3/8/7/5/38755/38755-8.txt	?	-	pg38755.dat
+pg38986	https://gutenberg.pglaf.org/3/8/9/8/38986/38986-h/38986-h.htm|https://gutenberg.pglaf.org/3/8/9/8/38986/38986-h/38986-h.html|https://gutenberg.pglaf.org/3/8/9/8/38986/38986-0.txt|https://gutenberg.pglaf.org/3/8/9/8/38986/38986.txt|https://gutenberg.pglaf.org/3/8/9/8/38986/38986-8.txt	?	-	pg38986.dat
+pg39553	https://gutenberg.pglaf.org/3/9/5/5/39553/39553-h/39553-h.htm|https://gutenberg.pglaf.org/3/9/5/5/39553/39553-h/39553-h.html|https://gutenberg.pglaf.org/3/9/5/5/39553/39553-0.txt|https://gutenberg.pglaf.org/3/9/5/5/39553/39553.txt|https://gutenberg.pglaf.org/3/9/5/5/39553/39553-8.txt	?	-	pg39553.dat
+pg39763	https://gutenberg.pglaf.org/3/9/7/6/39763/39763-h/39763-h.htm|https://gutenberg.pglaf.org/3/9/7/6/39763/39763-h/39763-h.html|https://gutenberg.pglaf.org/3/9/7/6/39763/39763-0.txt|https://gutenberg.pglaf.org/3/9/7/6/39763/39763.txt|https://gutenberg.pglaf.org/3/9/7/6/39763/39763-8.txt	?	-	pg39763.dat
+pg40543	https://gutenberg.pglaf.org/4/0/5/4/40543/40543-h/40543-h.htm|https://gutenberg.pglaf.org/4/0/5/4/40543/40543-h/40543-h.html|https://gutenberg.pglaf.org/4/0/5/4/40543/40543-0.txt|https://gutenberg.pglaf.org/4/0/5/4/40543/40543.txt|https://gutenberg.pglaf.org/4/0/5/4/40543/40543-8.txt	?	-	pg40543.dat
+pg40854	https://gutenberg.pglaf.org/4/0/8/5/40854/40854-h/40854-h.htm|https://gutenberg.pglaf.org/4/0/8/5/40854/40854-h/40854-h.html|https://gutenberg.pglaf.org/4/0/8/5/40854/40854-0.txt|https://gutenberg.pglaf.org/4/0/8/5/40854/40854.txt|https://gutenberg.pglaf.org/4/0/8/5/40854/40854-8.txt	?	-	pg40854.dat
+pg42489	https://gutenberg.pglaf.org/4/2/4/8/42489/42489-h/42489-h.htm|https://gutenberg.pglaf.org/4/2/4/8/42489/42489-h/42489-h.html|https://gutenberg.pglaf.org/4/2/4/8/42489/42489-0.txt|https://gutenberg.pglaf.org/4/2/4/8/42489/42489.txt|https://gutenberg.pglaf.org/4/2/4/8/42489/42489-8.txt	?	-	pg42489.dat
+pg42745	https://gutenberg.pglaf.org/4/2/7/4/42745/42745-h/42745-h.htm|https://gutenberg.pglaf.org/4/2/7/4/42745/42745-h/42745-h.html|https://gutenberg.pglaf.org/4/2/7/4/42745/42745-0.txt|https://gutenberg.pglaf.org/4/2/7/4/42745/42745.txt|https://gutenberg.pglaf.org/4/2/7/4/42745/42745-8.txt	?	-	pg42745.dat
+pg42937	https://gutenberg.pglaf.org/4/2/9/3/42937/42937-h/42937-h.htm|https://gutenberg.pglaf.org/4/2/9/3/42937/42937-h/42937-h.html|https://gutenberg.pglaf.org/4/2/9/3/42937/42937-0.txt|https://gutenberg.pglaf.org/4/2/9/3/42937/42937.txt|https://gutenberg.pglaf.org/4/2/9/3/42937/42937-8.txt	?	-	pg42937.dat
+pg43191	https://gutenberg.pglaf.org/4/3/1/9/43191/43191-h/43191-h.htm|https://gutenberg.pglaf.org/4/3/1/9/43191/43191-h/43191-h.html|https://gutenberg.pglaf.org/4/3/1/9/43191/43191-0.txt|https://gutenberg.pglaf.org/4/3/1/9/43191/43191.txt|https://gutenberg.pglaf.org/4/3/1/9/43191/43191-8.txt	?	-	pg43191.dat
+pg45460	https://gutenberg.pglaf.org/4/5/4/6/45460/45460-h/45460-h.htm|https://gutenberg.pglaf.org/4/5/4/6/45460/45460-h/45460-h.html|https://gutenberg.pglaf.org/4/5/4/6/45460/45460-0.txt|https://gutenberg.pglaf.org/4/5/4/6/45460/45460.txt|https://gutenberg.pglaf.org/4/5/4/6/45460/45460-8.txt	?	-	pg45460.dat
+pg46781	https://gutenberg.pglaf.org/4/6/7/8/46781/46781-h/46781-h.htm|https://gutenberg.pglaf.org/4/6/7/8/46781/46781-h/46781-h.html|https://gutenberg.pglaf.org/4/6/7/8/46781/46781-0.txt|https://gutenberg.pglaf.org/4/6/7/8/46781/46781.txt|https://gutenberg.pglaf.org/4/6/7/8/46781/46781-8.txt	?	-	pg46781.dat
+pg46878	https://gutenberg.pglaf.org/4/6/8/7/46878/46878-h/46878-h.htm|https://gutenberg.pglaf.org/4/6/8/7/46878/46878-h/46878-h.html|https://gutenberg.pglaf.org/4/6/8/7/46878/46878-0.txt|https://gutenberg.pglaf.org/4/6/8/7/46878/46878.txt|https://gutenberg.pglaf.org/4/6/8/7/46878/46878-8.txt	?	-	pg46878.dat
+pg46896	https://gutenberg.pglaf.org/4/6/8/9/46896/46896-h/46896-h.htm|https://gutenberg.pglaf.org/4/6/8/9/46896/46896-h/46896-h.html|https://gutenberg.pglaf.org/4/6/8/9/46896/46896-0.txt|https://gutenberg.pglaf.org/4/6/8/9/46896/46896.txt|https://gutenberg.pglaf.org/4/6/8/9/46896/46896-8.txt	?	-	pg46896.dat
+pg47251	https://gutenberg.pglaf.org/4/7/2/5/47251/47251-h/47251-h.htm|https://gutenberg.pglaf.org/4/7/2/5/47251/47251-h/47251-h.html|https://gutenberg.pglaf.org/4/7/2/5/47251/47251-0.txt|https://gutenberg.pglaf.org/4/7/2/5/47251/47251.txt|https://gutenberg.pglaf.org/4/7/2/5/47251/47251-8.txt	?	-	pg47251.dat
+pg47733	https://gutenberg.pglaf.org/4/7/7/3/47733/47733-h/47733-h.htm|https://gutenberg.pglaf.org/4/7/7/3/47733/47733-h/47733-h.html|https://gutenberg.pglaf.org/4/7/7/3/47733/47733-0.txt|https://gutenberg.pglaf.org/4/7/7/3/47733/47733.txt|https://gutenberg.pglaf.org/4/7/7/3/47733/47733-8.txt	?	-	pg47733.dat
+pg47843	https://gutenberg.pglaf.org/4/7/8/4/47843/47843-h/47843-h.htm|https://gutenberg.pglaf.org/4/7/8/4/47843/47843-h/47843-h.html|https://gutenberg.pglaf.org/4/7/8/4/47843/47843-0.txt|https://gutenberg.pglaf.org/4/7/8/4/47843/47843.txt|https://gutenberg.pglaf.org/4/7/8/4/47843/47843-8.txt	?	-	pg47843.dat
+pg48120	https://gutenberg.pglaf.org/4/8/1/2/48120/48120-h/48120-h.htm|https://gutenberg.pglaf.org/4/8/1/2/48120/48120-h/48120-h.html|https://gutenberg.pglaf.org/4/8/1/2/48120/48120-0.txt|https://gutenberg.pglaf.org/4/8/1/2/48120/48120.txt|https://gutenberg.pglaf.org/4/8/1/2/48120/48120-8.txt	?	-	pg48120.dat
+pg48312	https://gutenberg.pglaf.org/4/8/3/1/48312/48312-h/48312-h.htm|https://gutenberg.pglaf.org/4/8/3/1/48312/48312-h/48312-h.html|https://gutenberg.pglaf.org/4/8/3/1/48312/48312-0.txt|https://gutenberg.pglaf.org/4/8/3/1/48312/48312.txt|https://gutenberg.pglaf.org/4/8/3/1/48312/48312-8.txt	?	-	pg48312.dat
+pg48450	https://gutenberg.pglaf.org/4/8/4/5/48450/48450-h/48450-h.htm|https://gutenberg.pglaf.org/4/8/4/5/48450/48450-h/48450-h.html|https://gutenberg.pglaf.org/4/8/4/5/48450/48450-0.txt|https://gutenberg.pglaf.org/4/8/4/5/48450/48450.txt|https://gutenberg.pglaf.org/4/8/4/5/48450/48450-8.txt	?	-	pg48450.dat
+pg48570	https://gutenberg.pglaf.org/4/8/5/7/48570/48570-h/48570-h.htm|https://gutenberg.pglaf.org/4/8/5/7/48570/48570-h/48570-h.html|https://gutenberg.pglaf.org/4/8/5/7/48570/48570-0.txt|https://gutenberg.pglaf.org/4/8/5/7/48570/48570.txt|https://gutenberg.pglaf.org/4/8/5/7/48570/48570-8.txt	?	-	pg48570.dat
+pg48798	https://gutenberg.pglaf.org/4/8/7/9/48798/48798-h/48798-h.htm|https://gutenberg.pglaf.org/4/8/7/9/48798/48798-h/48798-h.html|https://gutenberg.pglaf.org/4/8/7/9/48798/48798-0.txt|https://gutenberg.pglaf.org/4/8/7/9/48798/48798.txt|https://gutenberg.pglaf.org/4/8/7/9/48798/48798-8.txt	?	-	pg48798.dat
+pg48965	https://gutenberg.pglaf.org/4/8/9/6/48965/48965-h/48965-h.htm|https://gutenberg.pglaf.org/4/8/9/6/48965/48965-h/48965-h.html|https://gutenberg.pglaf.org/4/8/9/6/48965/48965-0.txt|https://gutenberg.pglaf.org/4/8/9/6/48965/48965.txt|https://gutenberg.pglaf.org/4/8/9/6/48965/48965-8.txt	?	-	pg48965.dat
+pg49774	https://gutenberg.pglaf.org/4/9/7/7/49774/49774-h/49774-h.htm|https://gutenberg.pglaf.org/4/9/7/7/49774/49774-h/49774-h.html|https://gutenberg.pglaf.org/4/9/7/7/49774/49774-0.txt|https://gutenberg.pglaf.org/4/9/7/7/49774/49774.txt|https://gutenberg.pglaf.org/4/9/7/7/49774/49774-8.txt	?	-	pg49774.dat
+pg49775	https://gutenberg.pglaf.org/4/9/7/7/49775/49775-h/49775-h.htm|https://gutenberg.pglaf.org/4/9/7/7/49775/49775-h/49775-h.html|https://gutenberg.pglaf.org/4/9/7/7/49775/49775-0.txt|https://gutenberg.pglaf.org/4/9/7/7/49775/49775.txt|https://gutenberg.pglaf.org/4/9/7/7/49775/49775-8.txt	?	-	pg49775.dat
+pg50003	https://gutenberg.pglaf.org/5/0/0/0/50003/50003-h/50003-h.htm|https://gutenberg.pglaf.org/5/0/0/0/50003/50003-h/50003-h.html|https://gutenberg.pglaf.org/5/0/0/0/50003/50003-0.txt|https://gutenberg.pglaf.org/5/0/0/0/50003/50003.txt|https://gutenberg.pglaf.org/5/0/0/0/50003/50003-8.txt	?	-	pg50003.dat
+pg50081	https://gutenberg.pglaf.org/5/0/0/8/50081/50081-h/50081-h.htm|https://gutenberg.pglaf.org/5/0/0/8/50081/50081-h/50081-h.html|https://gutenberg.pglaf.org/5/0/0/8/50081/50081-0.txt|https://gutenberg.pglaf.org/5/0/0/8/50081/50081.txt|https://gutenberg.pglaf.org/5/0/0/8/50081/50081-8.txt	?	-	pg50081.dat
+pg51567	https://gutenberg.pglaf.org/5/1/5/6/51567/51567-h/51567-h.htm|https://gutenberg.pglaf.org/5/1/5/6/51567/51567-h/51567-h.html|https://gutenberg.pglaf.org/5/1/5/6/51567/51567-0.txt|https://gutenberg.pglaf.org/5/1/5/6/51567/51567.txt|https://gutenberg.pglaf.org/5/1/5/6/51567/51567-8.txt	?	-	pg51567.dat
+pg51638	https://gutenberg.pglaf.org/5/1/6/3/51638/51638-h/51638-h.htm|https://gutenberg.pglaf.org/5/1/6/3/51638/51638-h/51638-h.html|https://gutenberg.pglaf.org/5/1/6/3/51638/51638-0.txt|https://gutenberg.pglaf.org/5/1/6/3/51638/51638.txt|https://gutenberg.pglaf.org/5/1/6/3/51638/51638-8.txt	?	-	pg51638.dat
+pg51929	https://gutenberg.pglaf.org/5/1/9/2/51929/51929-h/51929-h.htm|https://gutenberg.pglaf.org/5/1/9/2/51929/51929-h/51929-h.html|https://gutenberg.pglaf.org/5/1/9/2/51929/51929-0.txt|https://gutenberg.pglaf.org/5/1/9/2/51929/51929.txt|https://gutenberg.pglaf.org/5/1/9/2/51929/51929-8.txt	?	-	pg51929.dat
+pg52373	https://gutenberg.pglaf.org/5/2/3/7/52373/52373-h/52373-h.htm|https://gutenberg.pglaf.org/5/2/3/7/52373/52373-h/52373-h.html|https://gutenberg.pglaf.org/5/2/3/7/52373/52373-0.txt|https://gutenberg.pglaf.org/5/2/3/7/52373/52373.txt|https://gutenberg.pglaf.org/5/2/3/7/52373/52373-8.txt	?	-	pg52373.dat
+pg52492	https://gutenberg.pglaf.org/5/2/4/9/52492/52492-h/52492-h.htm|https://gutenberg.pglaf.org/5/2/4/9/52492/52492-h/52492-h.html|https://gutenberg.pglaf.org/5/2/4/9/52492/52492-0.txt|https://gutenberg.pglaf.org/5/2/4/9/52492/52492.txt|https://gutenberg.pglaf.org/5/2/4/9/52492/52492-8.txt	?	-	pg52492.dat
+pg53428	https://gutenberg.pglaf.org/5/3/4/2/53428/53428-h/53428-h.htm|https://gutenberg.pglaf.org/5/3/4/2/53428/53428-h/53428-h.html|https://gutenberg.pglaf.org/5/3/4/2/53428/53428-0.txt|https://gutenberg.pglaf.org/5/3/4/2/53428/53428.txt|https://gutenberg.pglaf.org/5/3/4/2/53428/53428-8.txt	?	-	pg53428.dat
+pg53514	https://gutenberg.pglaf.org/5/3/5/1/53514/53514-h/53514-h.htm|https://gutenberg.pglaf.org/5/3/5/1/53514/53514-h/53514-h.html|https://gutenberg.pglaf.org/5/3/5/1/53514/53514-0.txt|https://gutenberg.pglaf.org/5/3/5/1/53514/53514.txt|https://gutenberg.pglaf.org/5/3/5/1/53514/53514-8.txt	?	-	pg53514.dat
+pg53973	https://gutenberg.pglaf.org/5/3/9/7/53973/53973-h/53973-h.htm|https://gutenberg.pglaf.org/5/3/9/7/53973/53973-h/53973-h.html|https://gutenberg.pglaf.org/5/3/9/7/53973/53973-0.txt|https://gutenberg.pglaf.org/5/3/9/7/53973/53973.txt|https://gutenberg.pglaf.org/5/3/9/7/53973/53973-8.txt	?	-	pg53973.dat
+pg54127	https://gutenberg.pglaf.org/5/4/1/2/54127/54127-h/54127-h.htm|https://gutenberg.pglaf.org/5/4/1/2/54127/54127-h/54127-h.html|https://gutenberg.pglaf.org/5/4/1/2/54127/54127-0.txt|https://gutenberg.pglaf.org/5/4/1/2/54127/54127.txt|https://gutenberg.pglaf.org/5/4/1/2/54127/54127-8.txt	?	-	pg54127.dat
+pg54357	https://gutenberg.pglaf.org/5/4/3/5/54357/54357-h/54357-h.htm|https://gutenberg.pglaf.org/5/4/3/5/54357/54357-h/54357-h.html|https://gutenberg.pglaf.org/5/4/3/5/54357/54357-0.txt|https://gutenberg.pglaf.org/5/4/3/5/54357/54357.txt|https://gutenberg.pglaf.org/5/4/3/5/54357/54357-8.txt	?	-	pg54357.dat
+pg54565	https://gutenberg.pglaf.org/5/4/5/6/54565/54565-h/54565-h.htm|https://gutenberg.pglaf.org/5/4/5/6/54565/54565-h/54565-h.html|https://gutenberg.pglaf.org/5/4/5/6/54565/54565-0.txt|https://gutenberg.pglaf.org/5/4/5/6/54565/54565.txt|https://gutenberg.pglaf.org/5/4/5/6/54565/54565-8.txt	?	-	pg54565.dat
+pg54762	https://gutenberg.pglaf.org/5/4/7/6/54762/54762-h/54762-h.htm|https://gutenberg.pglaf.org/5/4/7/6/54762/54762-h/54762-h.html|https://gutenberg.pglaf.org/5/4/7/6/54762/54762-0.txt|https://gutenberg.pglaf.org/5/4/7/6/54762/54762.txt|https://gutenberg.pglaf.org/5/4/7/6/54762/54762-8.txt	?	-	pg54762.dat
+pg55462	https://gutenberg.pglaf.org/5/5/4/6/55462/55462-h/55462-h.htm|https://gutenberg.pglaf.org/5/5/4/6/55462/55462-h/55462-h.html|https://gutenberg.pglaf.org/5/5/4/6/55462/55462-0.txt|https://gutenberg.pglaf.org/5/5/4/6/55462/55462.txt|https://gutenberg.pglaf.org/5/5/4/6/55462/55462-8.txt	?	-	pg55462.dat
+pg55559	https://gutenberg.pglaf.org/5/5/5/5/55559/55559-h/55559-h.htm|https://gutenberg.pglaf.org/5/5/5/5/55559/55559-h/55559-h.html|https://gutenberg.pglaf.org/5/5/5/5/55559/55559-0.txt|https://gutenberg.pglaf.org/5/5/5/5/55559/55559.txt|https://gutenberg.pglaf.org/5/5/5/5/55559/55559-8.txt	?	-	pg55559.dat
+pg56239	https://gutenberg.pglaf.org/5/6/2/3/56239/56239-h/56239-h.htm|https://gutenberg.pglaf.org/5/6/2/3/56239/56239-h/56239-h.html|https://gutenberg.pglaf.org/5/6/2/3/56239/56239-0.txt|https://gutenberg.pglaf.org/5/6/2/3/56239/56239.txt|https://gutenberg.pglaf.org/5/6/2/3/56239/56239-8.txt	?	-	pg56239.dat
+pg56330	https://gutenberg.pglaf.org/5/6/3/3/56330/56330-h/56330-h.htm|https://gutenberg.pglaf.org/5/6/3/3/56330/56330-h/56330-h.html|https://gutenberg.pglaf.org/5/6/3/3/56330/56330-0.txt|https://gutenberg.pglaf.org/5/6/3/3/56330/56330.txt|https://gutenberg.pglaf.org/5/6/3/3/56330/56330-8.txt	?	-	pg56330.dat
+pg57240	https://gutenberg.pglaf.org/5/7/2/4/57240/57240-h/57240-h.htm|https://gutenberg.pglaf.org/5/7/2/4/57240/57240-h/57240-h.html|https://gutenberg.pglaf.org/5/7/2/4/57240/57240-0.txt|https://gutenberg.pglaf.org/5/7/2/4/57240/57240.txt|https://gutenberg.pglaf.org/5/7/2/4/57240/57240-8.txt	?	-	pg57240.dat
+pg57636	https://gutenberg.pglaf.org/5/7/6/3/57636/57636-h/57636-h.htm|https://gutenberg.pglaf.org/5/7/6/3/57636/57636-h/57636-h.html|https://gutenberg.pglaf.org/5/7/6/3/57636/57636-0.txt|https://gutenberg.pglaf.org/5/7/6/3/57636/57636.txt|https://gutenberg.pglaf.org/5/7/6/3/57636/57636-8.txt	?	-	pg57636.dat
+pg57952	https://gutenberg.pglaf.org/5/7/9/5/57952/57952-h/57952-h.htm|https://gutenberg.pglaf.org/5/7/9/5/57952/57952-h/57952-h.html|https://gutenberg.pglaf.org/5/7/9/5/57952/57952-0.txt|https://gutenberg.pglaf.org/5/7/9/5/57952/57952.txt|https://gutenberg.pglaf.org/5/7/9/5/57952/57952-8.txt	?	-	pg57952.dat
+pg58148	https://gutenberg.pglaf.org/5/8/1/4/58148/58148-h/58148-h.htm|https://gutenberg.pglaf.org/5/8/1/4/58148/58148-h/58148-h.html|https://gutenberg.pglaf.org/5/8/1/4/58148/58148-0.txt|https://gutenberg.pglaf.org/5/8/1/4/58148/58148.txt|https://gutenberg.pglaf.org/5/8/1/4/58148/58148-8.txt	?	-	pg58148.dat
+pg58399	https://gutenberg.pglaf.org/5/8/3/9/58399/58399-h/58399-h.htm|https://gutenberg.pglaf.org/5/8/3/9/58399/58399-h/58399-h.html|https://gutenberg.pglaf.org/5/8/3/9/58399/58399-0.txt|https://gutenberg.pglaf.org/5/8/3/9/58399/58399.txt|https://gutenberg.pglaf.org/5/8/3/9/58399/58399-8.txt	?	-	pg58399.dat
+pg58506	https://gutenberg.pglaf.org/5/8/5/0/58506/58506-h/58506-h.htm|https://gutenberg.pglaf.org/5/8/5/0/58506/58506-h/58506-h.html|https://gutenberg.pglaf.org/5/8/5/0/58506/58506-0.txt|https://gutenberg.pglaf.org/5/8/5/0/58506/58506.txt|https://gutenberg.pglaf.org/5/8/5/0/58506/58506-8.txt	?	-	pg58506.dat
+pg58683	https://gutenberg.pglaf.org/5/8/6/8/58683/58683-h/58683-h.htm|https://gutenberg.pglaf.org/5/8/6/8/58683/58683-h/58683-h.html|https://gutenberg.pglaf.org/5/8/6/8/58683/58683-0.txt|https://gutenberg.pglaf.org/5/8/6/8/58683/58683.txt|https://gutenberg.pglaf.org/5/8/6/8/58683/58683-8.txt	?	-	pg58683.dat
+pg58989	https://gutenberg.pglaf.org/5/8/9/8/58989/58989-h/58989-h.htm|https://gutenberg.pglaf.org/5/8/9/8/58989/58989-h/58989-h.html|https://gutenberg.pglaf.org/5/8/9/8/58989/58989-0.txt|https://gutenberg.pglaf.org/5/8/9/8/58989/58989.txt|https://gutenberg.pglaf.org/5/8/9/8/58989/58989-8.txt	?	-	pg58989.dat
+pg59161	https://gutenberg.pglaf.org/5/9/1/6/59161/59161-h/59161-h.htm|https://gutenberg.pglaf.org/5/9/1/6/59161/59161-h/59161-h.html|https://gutenberg.pglaf.org/5/9/1/6/59161/59161-0.txt|https://gutenberg.pglaf.org/5/9/1/6/59161/59161.txt|https://gutenberg.pglaf.org/5/9/1/6/59161/59161-8.txt	?	-	pg59161.dat
+pg59268	https://gutenberg.pglaf.org/5/9/2/6/59268/59268-h/59268-h.htm|https://gutenberg.pglaf.org/5/9/2/6/59268/59268-h/59268-h.html|https://gutenberg.pglaf.org/5/9/2/6/59268/59268-0.txt|https://gutenberg.pglaf.org/5/9/2/6/59268/59268.txt|https://gutenberg.pglaf.org/5/9/2/6/59268/59268-8.txt	?	-	pg59268.dat
+pg59493	https://gutenberg.pglaf.org/5/9/4/9/59493/59493-h/59493-h.htm|https://gutenberg.pglaf.org/5/9/4/9/59493/59493-h/59493-h.html|https://gutenberg.pglaf.org/5/9/4/9/59493/59493-0.txt|https://gutenberg.pglaf.org/5/9/4/9/59493/59493.txt|https://gutenberg.pglaf.org/5/9/4/9/59493/59493-8.txt	?	-	pg59493.dat
+pg59659	https://gutenberg.pglaf.org/5/9/6/5/59659/59659-h/59659-h.htm|https://gutenberg.pglaf.org/5/9/6/5/59659/59659-h/59659-h.html|https://gutenberg.pglaf.org/5/9/6/5/59659/59659-0.txt|https://gutenberg.pglaf.org/5/9/6/5/59659/59659.txt|https://gutenberg.pglaf.org/5/9/6/5/59659/59659-8.txt	?	-	pg59659.dat
+pg60930	https://gutenberg.pglaf.org/6/0/9/3/60930/60930-h/60930-h.htm|https://gutenberg.pglaf.org/6/0/9/3/60930/60930-h/60930-h.html|https://gutenberg.pglaf.org/6/0/9/3/60930/60930-0.txt|https://gutenberg.pglaf.org/6/0/9/3/60930/60930.txt|https://gutenberg.pglaf.org/6/0/9/3/60930/60930-8.txt	?	-	pg60930.dat
+pg61584	https://gutenberg.pglaf.org/6/1/5/8/61584/61584-h/61584-h.htm|https://gutenberg.pglaf.org/6/1/5/8/61584/61584-h/61584-h.html|https://gutenberg.pglaf.org/6/1/5/8/61584/61584-0.txt|https://gutenberg.pglaf.org/6/1/5/8/61584/61584.txt|https://gutenberg.pglaf.org/6/1/5/8/61584/61584-8.txt	?	-	pg61584.dat
+pg61850	https://gutenberg.pglaf.org/6/1/8/5/61850/61850-h/61850-h.htm|https://gutenberg.pglaf.org/6/1/8/5/61850/61850-h/61850-h.html|https://gutenberg.pglaf.org/6/1/8/5/61850/61850-0.txt|https://gutenberg.pglaf.org/6/1/8/5/61850/61850.txt|https://gutenberg.pglaf.org/6/1/8/5/61850/61850-8.txt	?	-	pg61850.dat
+pg61873	https://gutenberg.pglaf.org/6/1/8/7/61873/61873-h/61873-h.htm|https://gutenberg.pglaf.org/6/1/8/7/61873/61873-h/61873-h.html|https://gutenberg.pglaf.org/6/1/8/7/61873/61873-0.txt|https://gutenberg.pglaf.org/6/1/8/7/61873/61873.txt|https://gutenberg.pglaf.org/6/1/8/7/61873/61873-8.txt	?	-	pg61873.dat
+pg61928	https://gutenberg.pglaf.org/6/1/9/2/61928/61928-h/61928-h.htm|https://gutenberg.pglaf.org/6/1/9/2/61928/61928-h/61928-h.html|https://gutenberg.pglaf.org/6/1/9/2/61928/61928-0.txt|https://gutenberg.pglaf.org/6/1/9/2/61928/61928.txt|https://gutenberg.pglaf.org/6/1/9/2/61928/61928-8.txt	?	-	pg61928.dat
+pg61997	https://gutenberg.pglaf.org/6/1/9/9/61997/61997-h/61997-h.htm|https://gutenberg.pglaf.org/6/1/9/9/61997/61997-h/61997-h.html|https://gutenberg.pglaf.org/6/1/9/9/61997/61997-0.txt|https://gutenberg.pglaf.org/6/1/9/9/61997/61997.txt|https://gutenberg.pglaf.org/6/1/9/9/61997/61997-8.txt	?	-	pg61997.dat
+pg62131	https://gutenberg.pglaf.org/6/2/1/3/62131/62131-h/62131-h.htm|https://gutenberg.pglaf.org/6/2/1/3/62131/62131-h/62131-h.html|https://gutenberg.pglaf.org/6/2/1/3/62131/62131-0.txt|https://gutenberg.pglaf.org/6/2/1/3/62131/62131.txt|https://gutenberg.pglaf.org/6/2/1/3/62131/62131-8.txt	?	-	pg62131.dat
+pg62311	https://gutenberg.pglaf.org/6/2/3/1/62311/62311-h/62311-h.htm|https://gutenberg.pglaf.org/6/2/3/1/62311/62311-h/62311-h.html|https://gutenberg.pglaf.org/6/2/3/1/62311/62311-0.txt|https://gutenberg.pglaf.org/6/2/3/1/62311/62311.txt|https://gutenberg.pglaf.org/6/2/3/1/62311/62311-8.txt	?	-	pg62311.dat
+pg63371	https://gutenberg.pglaf.org/6/3/3/7/63371/63371-h/63371-h.htm|https://gutenberg.pglaf.org/6/3/3/7/63371/63371-h/63371-h.html|https://gutenberg.pglaf.org/6/3/3/7/63371/63371-0.txt|https://gutenberg.pglaf.org/6/3/3/7/63371/63371.txt|https://gutenberg.pglaf.org/6/3/3/7/63371/63371-8.txt	?	-	pg63371.dat
+pg64085	https://gutenberg.pglaf.org/6/4/0/8/64085/64085-h/64085-h.htm|https://gutenberg.pglaf.org/6/4/0/8/64085/64085-h/64085-h.html|https://gutenberg.pglaf.org/6/4/0/8/64085/64085-0.txt|https://gutenberg.pglaf.org/6/4/0/8/64085/64085.txt|https://gutenberg.pglaf.org/6/4/0/8/64085/64085-8.txt	?	-	pg64085.dat
+pg64204	https://gutenberg.pglaf.org/6/4/2/0/64204/64204-h/64204-h.htm|https://gutenberg.pglaf.org/6/4/2/0/64204/64204-h/64204-h.html|https://gutenberg.pglaf.org/6/4/2/0/64204/64204-0.txt|https://gutenberg.pglaf.org/6/4/2/0/64204/64204.txt|https://gutenberg.pglaf.org/6/4/2/0/64204/64204-8.txt	?	-	pg64204.dat
+pg65211	https://gutenberg.pglaf.org/6/5/2/1/65211/65211-h/65211-h.htm|https://gutenberg.pglaf.org/6/5/2/1/65211/65211-h/65211-h.html|https://gutenberg.pglaf.org/6/5/2/1/65211/65211-0.txt|https://gutenberg.pglaf.org/6/5/2/1/65211/65211.txt|https://gutenberg.pglaf.org/6/5/2/1/65211/65211-8.txt	?	-	pg65211.dat
+pg68258	https://gutenberg.pglaf.org/6/8/2/5/68258/68258-h/68258-h.htm|https://gutenberg.pglaf.org/6/8/2/5/68258/68258-h/68258-h.html|https://gutenberg.pglaf.org/6/8/2/5/68258/68258-0.txt|https://gutenberg.pglaf.org/6/8/2/5/68258/68258.txt|https://gutenberg.pglaf.org/6/8/2/5/68258/68258-8.txt	?	-	pg68258.dat
+pg68593	https://gutenberg.pglaf.org/6/8/5/9/68593/68593-h/68593-h.htm|https://gutenberg.pglaf.org/6/8/5/9/68593/68593-h/68593-h.html|https://gutenberg.pglaf.org/6/8/5/9/68593/68593-0.txt|https://gutenberg.pglaf.org/6/8/5/9/68593/68593.txt|https://gutenberg.pglaf.org/6/8/5/9/68593/68593-8.txt	?	-	pg68593.dat
+pg68838	https://gutenberg.pglaf.org/6/8/8/3/68838/68838-h/68838-h.htm|https://gutenberg.pglaf.org/6/8/8/3/68838/68838-h/68838-h.html|https://gutenberg.pglaf.org/6/8/8/3/68838/68838-0.txt|https://gutenberg.pglaf.org/6/8/8/3/68838/68838.txt|https://gutenberg.pglaf.org/6/8/8/3/68838/68838-8.txt	?	-	pg68838.dat
+pg68947	https://gutenberg.pglaf.org/6/8/9/4/68947/68947-h/68947-h.htm|https://gutenberg.pglaf.org/6/8/9/4/68947/68947-h/68947-h.html|https://gutenberg.pglaf.org/6/8/9/4/68947/68947-0.txt|https://gutenberg.pglaf.org/6/8/9/4/68947/68947.txt|https://gutenberg.pglaf.org/6/8/9/4/68947/68947-8.txt	?	-	pg68947.dat
+pg69172	https://gutenberg.pglaf.org/6/9/1/7/69172/69172-h/69172-h.htm|https://gutenberg.pglaf.org/6/9/1/7/69172/69172-h/69172-h.html|https://gutenberg.pglaf.org/6/9/1/7/69172/69172-0.txt|https://gutenberg.pglaf.org/6/9/1/7/69172/69172.txt|https://gutenberg.pglaf.org/6/9/1/7/69172/69172-8.txt	?	-	pg69172.dat
+pg69267	https://gutenberg.pglaf.org/6/9/2/6/69267/69267-h/69267-h.htm|https://gutenberg.pglaf.org/6/9/2/6/69267/69267-h/69267-h.html|https://gutenberg.pglaf.org/6/9/2/6/69267/69267-0.txt|https://gutenberg.pglaf.org/6/9/2/6/69267/69267.txt|https://gutenberg.pglaf.org/6/9/2/6/69267/69267-8.txt	?	-	pg69267.dat
+pg69320	https://gutenberg.pglaf.org/6/9/3/2/69320/69320-h/69320-h.htm|https://gutenberg.pglaf.org/6/9/3/2/69320/69320-h/69320-h.html|https://gutenberg.pglaf.org/6/9/3/2/69320/69320-0.txt|https://gutenberg.pglaf.org/6/9/3/2/69320/69320.txt|https://gutenberg.pglaf.org/6/9/3/2/69320/69320-8.txt	?	-	pg69320.dat
+pg69469	https://gutenberg.pglaf.org/6/9/4/6/69469/69469-h/69469-h.htm|https://gutenberg.pglaf.org/6/9/4/6/69469/69469-h/69469-h.html|https://gutenberg.pglaf.org/6/9/4/6/69469/69469-0.txt|https://gutenberg.pglaf.org/6/9/4/6/69469/69469.txt|https://gutenberg.pglaf.org/6/9/4/6/69469/69469-8.txt	?	-	pg69469.dat
+pg69470	https://gutenberg.pglaf.org/6/9/4/7/69470/69470-h/69470-h.htm|https://gutenberg.pglaf.org/6/9/4/7/69470/69470-h/69470-h.html|https://gutenberg.pglaf.org/6/9/4/7/69470/69470-0.txt|https://gutenberg.pglaf.org/6/9/4/7/69470/69470.txt|https://gutenberg.pglaf.org/6/9/4/7/69470/69470-8.txt	?	-	pg69470.dat
+pg69472	https://gutenberg.pglaf.org/6/9/4/7/69472/69472-h/69472-h.htm|https://gutenberg.pglaf.org/6/9/4/7/69472/69472-h/69472-h.html|https://gutenberg.pglaf.org/6/9/4/7/69472/69472-0.txt|https://gutenberg.pglaf.org/6/9/4/7/69472/69472.txt|https://gutenberg.pglaf.org/6/9/4/7/69472/69472-8.txt	?	-	pg69472.dat
+pg69522	https://gutenberg.pglaf.org/6/9/5/2/69522/69522-h/69522-h.htm|https://gutenberg.pglaf.org/6/9/5/2/69522/69522-h/69522-h.html|https://gutenberg.pglaf.org/6/9/5/2/69522/69522-0.txt|https://gutenberg.pglaf.org/6/9/5/2/69522/69522.txt|https://gutenberg.pglaf.org/6/9/5/2/69522/69522-8.txt	?	-	pg69522.dat
+pg69524	https://gutenberg.pglaf.org/6/9/5/2/69524/69524-h/69524-h.htm|https://gutenberg.pglaf.org/6/9/5/2/69524/69524-h/69524-h.html|https://gutenberg.pglaf.org/6/9/5/2/69524/69524-0.txt|https://gutenberg.pglaf.org/6/9/5/2/69524/69524.txt|https://gutenberg.pglaf.org/6/9/5/2/69524/69524-8.txt	?	-	pg69524.dat
+pg70435	https://gutenberg.pglaf.org/7/0/4/3/70435/70435-h/70435-h.htm|https://gutenberg.pglaf.org/7/0/4/3/70435/70435-h/70435-h.html|https://gutenberg.pglaf.org/7/0/4/3/70435/70435-0.txt|https://gutenberg.pglaf.org/7/0/4/3/70435/70435.txt|https://gutenberg.pglaf.org/7/0/4/3/70435/70435-8.txt	?	-	pg70435.dat
+pg70567	https://gutenberg.pglaf.org/7/0/5/6/70567/70567-h/70567-h.htm|https://gutenberg.pglaf.org/7/0/5/6/70567/70567-h/70567-h.html|https://gutenberg.pglaf.org/7/0/5/6/70567/70567-0.txt|https://gutenberg.pglaf.org/7/0/5/6/70567/70567.txt|https://gutenberg.pglaf.org/7/0/5/6/70567/70567-8.txt	?	-	pg70567.dat
+pg70687	https://gutenberg.pglaf.org/7/0/6/8/70687/70687-h/70687-h.htm|https://gutenberg.pglaf.org/7/0/6/8/70687/70687-h/70687-h.html|https://gutenberg.pglaf.org/7/0/6/8/70687/70687-0.txt|https://gutenberg.pglaf.org/7/0/6/8/70687/70687.txt|https://gutenberg.pglaf.org/7/0/6/8/70687/70687-8.txt	?	-	pg70687.dat
+pg70692	https://gutenberg.pglaf.org/7/0/6/9/70692/70692-h/70692-h.htm|https://gutenberg.pglaf.org/7/0/6/9/70692/70692-h/70692-h.html|https://gutenberg.pglaf.org/7/0/6/9/70692/70692-0.txt|https://gutenberg.pglaf.org/7/0/6/9/70692/70692.txt|https://gutenberg.pglaf.org/7/0/6/9/70692/70692-8.txt	?	-	pg70692.dat
+pg71303	https://gutenberg.pglaf.org/7/1/3/0/71303/71303-h/71303-h.htm|https://gutenberg.pglaf.org/7/1/3/0/71303/71303-h/71303-h.html|https://gutenberg.pglaf.org/7/1/3/0/71303/71303-0.txt|https://gutenberg.pglaf.org/7/1/3/0/71303/71303.txt|https://gutenberg.pglaf.org/7/1/3/0/71303/71303-8.txt	?	-	pg71303.dat
+pg71616	https://gutenberg.pglaf.org/7/1/6/1/71616/71616-h/71616-h.htm|https://gutenberg.pglaf.org/7/1/6/1/71616/71616-h/71616-h.html|https://gutenberg.pglaf.org/7/1/6/1/71616/71616-0.txt|https://gutenberg.pglaf.org/7/1/6/1/71616/71616.txt|https://gutenberg.pglaf.org/7/1/6/1/71616/71616-8.txt	?	-	pg71616.dat
+pg72876	https://gutenberg.pglaf.org/7/2/8/7/72876/72876-h/72876-h.htm|https://gutenberg.pglaf.org/7/2/8/7/72876/72876-h/72876-h.html|https://gutenberg.pglaf.org/7/2/8/7/72876/72876-0.txt|https://gutenberg.pglaf.org/7/2/8/7/72876/72876.txt|https://gutenberg.pglaf.org/7/2/8/7/72876/72876-8.txt	?	-	pg72876.dat
+pg72951	https://gutenberg.pglaf.org/7/2/9/5/72951/72951-h/72951-h.htm|https://gutenberg.pglaf.org/7/2/9/5/72951/72951-h/72951-h.html|https://gutenberg.pglaf.org/7/2/9/5/72951/72951-0.txt|https://gutenberg.pglaf.org/7/2/9/5/72951/72951.txt|https://gutenberg.pglaf.org/7/2/9/5/72951/72951-8.txt	?	-	pg72951.dat
+pg72952	https://gutenberg.pglaf.org/7/2/9/5/72952/72952-h/72952-h.htm|https://gutenberg.pglaf.org/7/2/9/5/72952/72952-h/72952-h.html|https://gutenberg.pglaf.org/7/2/9/5/72952/72952-0.txt|https://gutenberg.pglaf.org/7/2/9/5/72952/72952.txt|https://gutenberg.pglaf.org/7/2/9/5/72952/72952-8.txt	?	-	pg72952.dat
+pg73374	https://gutenberg.pglaf.org/7/3/3/7/73374/73374-h/73374-h.htm|https://gutenberg.pglaf.org/7/3/3/7/73374/73374-h/73374-h.html|https://gutenberg.pglaf.org/7/3/3/7/73374/73374-0.txt|https://gutenberg.pglaf.org/7/3/3/7/73374/73374.txt|https://gutenberg.pglaf.org/7/3/3/7/73374/73374-8.txt	?	-	pg73374.dat
+pg74363	https://gutenberg.pglaf.org/7/4/3/6/74363/74363-h/74363-h.htm|https://gutenberg.pglaf.org/7/4/3/6/74363/74363-h/74363-h.html|https://gutenberg.pglaf.org/7/4/3/6/74363/74363-0.txt|https://gutenberg.pglaf.org/7/4/3/6/74363/74363.txt|https://gutenberg.pglaf.org/7/4/3/6/74363/74363-8.txt	?	-	pg74363.dat
+pg75055	https://gutenberg.pglaf.org/7/5/0/5/75055/75055-h/75055-h.htm|https://gutenberg.pglaf.org/7/5/0/5/75055/75055-h/75055-h.html|https://gutenberg.pglaf.org/7/5/0/5/75055/75055-0.txt|https://gutenberg.pglaf.org/7/5/0/5/75055/75055.txt|https://gutenberg.pglaf.org/7/5/0/5/75055/75055-8.txt	?	-	pg75055.dat
+pg75185	https://gutenberg.pglaf.org/7/5/1/8/75185/75185-h/75185-h.htm|https://gutenberg.pglaf.org/7/5/1/8/75185/75185-h/75185-h.html|https://gutenberg.pglaf.org/7/5/1/8/75185/75185-0.txt|https://gutenberg.pglaf.org/7/5/1/8/75185/75185.txt|https://gutenberg.pglaf.org/7/5/1/8/75185/75185-8.txt	?	-	pg75185.dat
+pg75312	https://gutenberg.pglaf.org/7/5/3/1/75312/75312-h/75312-h.htm|https://gutenberg.pglaf.org/7/5/3/1/75312/75312-h/75312-h.html|https://gutenberg.pglaf.org/7/5/3/1/75312/75312-0.txt|https://gutenberg.pglaf.org/7/5/3/1/75312/75312.txt|https://gutenberg.pglaf.org/7/5/3/1/75312/75312-8.txt	?	-	pg75312.dat
+pg75352	https://gutenberg.pglaf.org/7/5/3/5/75352/75352-h/75352-h.htm|https://gutenberg.pglaf.org/7/5/3/5/75352/75352-h/75352-h.html|https://gutenberg.pglaf.org/7/5/3/5/75352/75352-0.txt|https://gutenberg.pglaf.org/7/5/3/5/75352/75352.txt|https://gutenberg.pglaf.org/7/5/3/5/75352/75352-8.txt	?	-	pg75352.dat
+pg75670	https://gutenberg.pglaf.org/7/5/6/7/75670/75670-h/75670-h.htm|https://gutenberg.pglaf.org/7/5/6/7/75670/75670-h/75670-h.html|https://gutenberg.pglaf.org/7/5/6/7/75670/75670-0.txt|https://gutenberg.pglaf.org/7/5/6/7/75670/75670.txt|https://gutenberg.pglaf.org/7/5/6/7/75670/75670-8.txt	?	-	pg75670.dat
+pg75805	https://gutenberg.pglaf.org/7/5/8/0/75805/75805-h/75805-h.htm|https://gutenberg.pglaf.org/7/5/8/0/75805/75805-h/75805-h.html|https://gutenberg.pglaf.org/7/5/8/0/75805/75805-0.txt|https://gutenberg.pglaf.org/7/5/8/0/75805/75805.txt|https://gutenberg.pglaf.org/7/5/8/0/75805/75805-8.txt	?	-	pg75805.dat
+pg76062	https://gutenberg.pglaf.org/7/6/0/6/76062/76062-h/76062-h.htm|https://gutenberg.pglaf.org/7/6/0/6/76062/76062-h/76062-h.html|https://gutenberg.pglaf.org/7/6/0/6/76062/76062-0.txt|https://gutenberg.pglaf.org/7/6/0/6/76062/76062.txt|https://gutenberg.pglaf.org/7/6/0/6/76062/76062-8.txt	?	-	pg76062.dat
+pg76878	https://gutenberg.pglaf.org/7/6/8/7/76878/76878-h/76878-h.htm|https://gutenberg.pglaf.org/7/6/8/7/76878/76878-h/76878-h.html|https://gutenberg.pglaf.org/7/6/8/7/76878/76878-0.txt|https://gutenberg.pglaf.org/7/6/8/7/76878/76878.txt|https://gutenberg.pglaf.org/7/6/8/7/76878/76878-8.txt	?	-	pg76878.dat
+pg76968	https://gutenberg.pglaf.org/7/6/9/6/76968/76968-h/76968-h.htm|https://gutenberg.pglaf.org/7/6/9/6/76968/76968-h/76968-h.html|https://gutenberg.pglaf.org/7/6/9/6/76968/76968-0.txt|https://gutenberg.pglaf.org/7/6/9/6/76968/76968.txt|https://gutenberg.pglaf.org/7/6/9/6/76968/76968-8.txt	?	-	pg76968.dat
+pg77002	https://gutenberg.pglaf.org/7/7/0/0/77002/77002-h/77002-h.htm|https://gutenberg.pglaf.org/7/7/0/0/77002/77002-h/77002-h.html|https://gutenberg.pglaf.org/7/7/0/0/77002/77002-0.txt|https://gutenberg.pglaf.org/7/7/0/0/77002/77002.txt|https://gutenberg.pglaf.org/7/7/0/0/77002/77002-8.txt	?	-	pg77002.dat
+pg77208	https://gutenberg.pglaf.org/7/7/2/0/77208/77208-h/77208-h.htm|https://gutenberg.pglaf.org/7/7/2/0/77208/77208-h/77208-h.html|https://gutenberg.pglaf.org/7/7/2/0/77208/77208-0.txt|https://gutenberg.pglaf.org/7/7/2/0/77208/77208.txt|https://gutenberg.pglaf.org/7/7/2/0/77208/77208-8.txt	?	-	pg77208.dat
+pg77678	https://gutenberg.pglaf.org/7/7/6/7/77678/77678-h/77678-h.htm|https://gutenberg.pglaf.org/7/7/6/7/77678/77678-h/77678-h.html|https://gutenberg.pglaf.org/7/7/6/7/77678/77678-0.txt|https://gutenberg.pglaf.org/7/7/6/7/77678/77678.txt|https://gutenberg.pglaf.org/7/7/6/7/77678/77678-8.txt	?	-	pg77678.dat
+pg77679	https://gutenberg.pglaf.org/7/7/6/7/77679/77679-h/77679-h.htm|https://gutenberg.pglaf.org/7/7/6/7/77679/77679-h/77679-h.html|https://gutenberg.pglaf.org/7/7/6/7/77679/77679-0.txt|https://gutenberg.pglaf.org/7/7/6/7/77679/77679.txt|https://gutenberg.pglaf.org/7/7/6/7/77679/77679-8.txt	?	-	pg77679.dat
+pg77700	https://gutenberg.pglaf.org/7/7/7/0/77700/77700-h/77700-h.htm|https://gutenberg.pglaf.org/7/7/7/0/77700/77700-h/77700-h.html|https://gutenberg.pglaf.org/7/7/7/0/77700/77700-0.txt|https://gutenberg.pglaf.org/7/7/7/0/77700/77700.txt|https://gutenberg.pglaf.org/7/7/7/0/77700/77700-8.txt	?	-	pg77700.dat
+pg77785	https://gutenberg.pglaf.org/7/7/7/8/77785/77785-h/77785-h.htm|https://gutenberg.pglaf.org/7/7/7/8/77785/77785-h/77785-h.html|https://gutenberg.pglaf.org/7/7/7/8/77785/77785-0.txt|https://gutenberg.pglaf.org/7/7/7/8/77785/77785.txt|https://gutenberg.pglaf.org/7/7/7/8/77785/77785-8.txt	?	-	pg77785.dat
+pg77850	https://gutenberg.pglaf.org/7/7/8/5/77850/77850-h/77850-h.htm|https://gutenberg.pglaf.org/7/7/8/5/77850/77850-h/77850-h.html|https://gutenberg.pglaf.org/7/7/8/5/77850/77850-0.txt|https://gutenberg.pglaf.org/7/7/8/5/77850/77850.txt|https://gutenberg.pglaf.org/7/7/8/5/77850/77850-8.txt	?	-	pg77850.dat
+pg78079	https://gutenberg.pglaf.org/7/8/0/7/78079/78079-h/78079-h.htm|https://gutenberg.pglaf.org/7/8/0/7/78079/78079-h/78079-h.html|https://gutenberg.pglaf.org/7/8/0/7/78079/78079-0.txt|https://gutenberg.pglaf.org/7/8/0/7/78079/78079.txt|https://gutenberg.pglaf.org/7/8/0/7/78079/78079-8.txt	?	-	pg78079.dat
+pg78608	https://gutenberg.pglaf.org/7/8/6/0/78608/78608-h/78608-h.htm|https://gutenberg.pglaf.org/7/8/6/0/78608/78608-h/78608-h.html|https://gutenberg.pglaf.org/7/8/6/0/78608/78608-0.txt|https://gutenberg.pglaf.org/7/8/6/0/78608/78608.txt|https://gutenberg.pglaf.org/7/8/6/0/78608/78608-8.txt	?	-	pg78608.dat
+pg79185	https://gutenberg.pglaf.org/7/9/1/8/79185/79185-h/79185-h.htm|https://gutenberg.pglaf.org/7/9/1/8/79185/79185-h/79185-h.html|https://gutenberg.pglaf.org/7/9/1/8/79185/79185-0.txt|https://gutenberg.pglaf.org/7/9/1/8/79185/79185.txt|https://gutenberg.pglaf.org/7/9/1/8/79185/79185-8.txt	?	-	pg79185.dat
+pg79232	https://gutenberg.pglaf.org/7/9/2/3/79232/79232-h/79232-h.htm|https://gutenberg.pglaf.org/7/9/2/3/79232/79232-h/79232-h.html|https://gutenberg.pglaf.org/7/9/2/3/79232/79232-0.txt|https://gutenberg.pglaf.org/7/9/2/3/79232/79232.txt|https://gutenberg.pglaf.org/7/9/2/3/79232/79232-8.txt	?	-	pg79232.dat
+pg79674	https://gutenberg.pglaf.org/7/9/6/7/79674/79674-h/79674-h.htm|https://gutenberg.pglaf.org/7/9/6/7/79674/79674-h/79674-h.html|https://gutenberg.pglaf.org/7/9/6/7/79674/79674-0.txt|https://gutenberg.pglaf.org/7/9/6/7/79674/79674.txt|https://gutenberg.pglaf.org/7/9/6/7/79674/79674-8.txt	?	-	pg79674.dat
