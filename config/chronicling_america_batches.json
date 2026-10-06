@@ -1,0 +1,687 @@
+[
+ {
+  "batch": "ak_amaranth_ver01",
+  "ingested": "2025-06-12",
+  "issues": 652,
+  "window_issues": 126,
+  "est_window_pages": 618,
+  "lccns": [
+   "sn95060105"
+  ]
+ },
+ {
+  "batch": "arhi_chalcopyrite_ver01",
+  "ingested": "2024-12-12",
+  "issues": 1426,
+  "window_issues": 1,
+  "est_window_pages": 7,
+  "lccns": [
+   "sn83003534"
+  ]
+ },
+ {
+  "batch": "arhi_dioptase_ver02",
+  "ingested": "2025-01-16",
+  "issues": 1721,
+  "window_issues": 93,
+  "est_window_pages": 560,
+  "lccns": [
+   "sn89051338",
+   "sn92050145"
+  ]
+ },
+ {
+  "batch": "arhi_epidote_ver01",
+  "ingested": "2025-02-05",
+  "issues": 1926,
+  "window_issues": 109,
+  "est_window_pages": 545,
+  "lccns": [
+   "sn93050521"
+  ]
+ },
+ {
+  "batch": "arhi_ilmenite_ver01",
+  "ingested": "2025-05-28",
+  "issues": 1720,
+  "window_issues": 17,
+  "est_window_pages": 75,
+  "lccns": [
+   "sn88051033"
+  ]
+ },
+ {
+  "batch": "arhi_jadeite_ver01",
+  "ingested": "2025-06-12",
+  "issues": 1572,
+  "window_issues": 100,
+  "est_window_pages": 580,
+  "lccns": [
+   "sn90050260"
+  ]
+ },
+ {
+  "batch": "arhi_kepler_ver01",
+  "ingested": "2023-08-14",
+  "issues": 965,
+  "window_issues": 139,
+  "est_window_pages": 1106,
+  "lccns": [
+   "sn88084068"
+  ]
+ },
+ {
+  "batch": "arhi_lunar_ver01",
+  "ingested": "2023-08-28",
+  "issues": 743,
+  "window_issues": 3,
+  "est_window_pages": 12,
+  "lccns": [
+   "sn89051273"
+  ]
+ },
+ {
+  "batch": "az_anthillgarnet_ver04",
+  "ingested": "2024-04-04",
+  "issues": 2104,
+  "window_issues": 1,
+  "est_window_pages": 5,
+  "lccns": [
+   "sn85032930"
+  ]
+ },
+ {
+  "batch": "az_bentonite_ver02",
+  "ingested": "2024-02-15",
+  "issues": 1249,
+  "window_issues": 434,
+  "est_window_pages": 3551,
+  "lccns": [
+   "sn89070012"
+  ]
+ },
+ {
+  "batch": "az_darkruby_ver02",
+  "ingested": "2024-03-11",
+  "issues": 1554,
+  "window_issues": 90,
+  "est_window_pages": 578,
+  "lccns": [
+   "sn97060135"
+  ]
+ },
+ {
+  "batch": "az_electrum_ver02",
+  "ingested": "2024-04-05",
+  "issues": 1747,
+  "window_issues": 310,
+  "est_window_pages": 1809,
+  "lccns": [
+   "sn95060694"
+  ]
+ },
+ {
+  "batch": "az_fireagate_ver02",
+  "ingested": "2024-07-01",
+  "issues": 2457,
+  "window_issues": 805,
+  "est_window_pages": 3426,
+  "lccns": [
+   "sn95060694"
+  ]
+ },
+ {
+  "batch": "az_gemsilica_ver01",
+  "ingested": "2024-06-06",
+  "issues": 1584,
+  "window_issues": 216,
+  "est_window_pages": 1499,
+  "lccns": [
+   "sn95060748",
+   "sn97060136"
+  ]
+ },
+ {
+  "batch": "az_hematite_ver01",
+  "ingested": "2024-07-02",
+  "issues": 1327,
+  "window_issues": 69,
+  "est_window_pages": 545,
+  "lccns": [
+   "sn95060626",
+   "sn96060594",
+   "sn96060595",
+   "sn96060596",
+   "sn97060135"
+  ]
+ },
+ {
+  "batch": "az_iotite_ver01",
+  "ingested": "2024-07-24",
+  "issues": 937,
+  "window_issues": 625,
+  "est_window_pages": 7383,
+  "lccns": [
+   "sn84020064"
+  ]
+ },
+ {
+  "batch": "az_jasper_ver03",
+  "ingested": "2025-01-24",
+  "issues": 874,
+  "window_issues": 625,
+  "est_window_pages": 5287,
+  "lccns": [
+   "sn84020064"
+  ]
+ },
+ {
+  "batch": "ct_bugmeat_ver01",
+  "ingested": "2024-10-28",
+  "issues": 884,
+  "window_issues": 494,
+  "est_window_pages": 5651,
+  "lccns": [
+   "sn91066932"
+  ]
+ },
+ {
+  "batch": "ct_collins_ver01",
+  "ingested": "2023-06-07",
+  "issues": 991,
+  "window_issues": 443,
+  "est_window_pages": 4335,
+  "lccns": [
+   "sn84022396"
+  ]
+ },
+ {
+  "batch": "ct_duracell_ver01",
+  "ingested": "2023-09-07",
+  "issues": 1205,
+  "window_issues": 54,
+  "est_window_pages": 490,
+  "lccns": [
+   "sn92051419"
+  ]
+ },
+ {
+  "batch": "ct_ethan_ver01",
+  "ingested": "2023-08-22",
+  "issues": 1372,
+  "window_issues": 443,
+  "est_window_pages": 3303,
+  "lccns": [
+   "sn92051419"
+  ]
+ },
+ {
+  "batch": "ct_hashbrown_ver01",
+  "ingested": "2025-08-14",
+  "issues": 1076,
+  "window_issues": 4,
+  "est_window_pages": 40,
+  "lccns": [
+   "sn93053895",
+   "sn93054052"
+  ]
+ },
+ {
+  "batch": "curiv_archylee_ver01",
+  "ingested": "2026-02-27",
+  "issues": 473,
+  "window_issues": 2,
+  "est_window_pages": 39,
+  "lccns": [
+   "sn82016196"
+  ]
+ },
+ {
+  "batch": "curiv_charlottabass_ver01",
+  "ingested": "2026-05-29",
+  "issues": 795,
+  "window_issues": 401,
+  "est_window_pages": 4052,
+  "lccns": [
+   "sn2011271197",
+   "sn88086183"
+  ]
+ },
+ {
+  "batch": "dlc_arbus_ver02",
+  "ingested": "2025-02-03",
+  "issues": 207,
+  "window_issues": 207,
+  "est_window_pages": 7557,
+  "lccns": [
+   "sn82016181"
+  ]
+ },
+ {
+  "batch": "dlc_arneaux_ver02",
+  "ingested": "2024-01-19",
+  "issues": 1044,
+  "window_issues": 165,
+  "est_window_pages": 1498,
+  "lccns": [
+   "sn87062236"
+  ]
+ },
+ {
+  "batch": "dlc_arnold_ver01",
+  "ingested": "2026-07-30",
+  "issues": 521,
+  "window_issues": 205,
+  "est_window_pages": 4187,
+  "lccns": [
+   "sn82016181"
+  ]
+ },
+ {
+  "batch": "dlc_avedon_ver01",
+  "ingested": "2025-09-18",
+  "issues": 261,
+  "window_issues": 261,
+  "est_window_pages": 10358,
+  "lccns": [
+   "sn82016181"
+  ]
+ },
+ {
+  "batch": "dlc_badger_ver02",
+  "ingested": "2025-09-02",
+  "issues": 919,
+  "window_issues": 359,
+  "est_window_pages": 3001,
+  "lccns": [
+   "ca06001655"
+  ]
+ },
+ {
+  "batch": "dlc_beals_ver01",
+  "ingested": "2026-08-13",
+  "issues": 359,
+  "window_issues": 359,
+  "est_window_pages": 9387,
+  "lccns": [
+   "sn82016181"
+  ]
+ },
+ {
+  "batch": "dlc_bloomfield_ver02",
+  "ingested": "2025-04-03",
+  "issues": 2344,
+  "window_issues": 602,
+  "est_window_pages": 2415,
+  "lccns": [
+   "sn85055101"
+  ]
+ },
+ {
+  "batch": "dlc_bullock_ver01",
+  "ingested": "2025-09-18",
+  "issues": 261,
+  "window_issues": 261,
+  "est_window_pages": 9757,
+  "lccns": [
+   "sn82016181"
+  ]
+ },
+ {
+  "batch": "dlc_capa_ver01",
+  "ingested": "2025-09-25",
+  "issues": 259,
+  "window_issues": 259,
+  "est_window_pages": 10298,
+  "lccns": [
+   "sn82016181"
+  ]
+ },
+ {
+  "batch": "dlc_cloudburst_ver01",
+  "ingested": "2023-11-17",
+  "issues": 1080,
+  "window_issues": 100,
+  "est_window_pages": 858,
+  "lccns": [
+   "sn83045838"
+  ]
+ },
+ {
+  "batch": "dlc_cole_ver01",
+  "ingested": "2026-09-03",
+  "issues": 367,
+  "window_issues": 315,
+  "est_window_pages": 9929,
+  "lccns": [
+   "sn82016181"
+  ]
+ },
+ {
+  "batch": "dlc_dicorcia_ver01",
+  "ingested": "2025-12-18",
+  "issues": 483,
+  "window_issues": 52,
+  "est_window_pages": 1118,
+  "lccns": [
+   "sn82016181"
+  ]
+ },
+ {
+  "batch": "dlc_divebomb_ver01",
+  "ingested": "2023-11-14",
+  "issues": 1063,
+  "window_issues": 706,
+  "est_window_pages": 6379,
+  "lccns": [
+   "sn83045838"
+  ]
+ },
+ {
+  "batch": "dlc_downtown_ver03",
+  "ingested": "2024-12-11",
+  "issues": 2384,
+  "window_issues": 1793,
+  "est_window_pages": 7175,
+  "lccns": [
+   "sn85055101"
+  ]
+ },
+ {
+  "batch": "dlc_drake_ver01",
+  "ingested": "2026-07-31",
+  "issues": 313,
+  "window_issues": 313,
+  "est_window_pages": 9374,
+  "lccns": [
+   "sn82016181"
+  ]
+ },
+ {
+  "batch": "dlc_eastliberty_ver03",
+  "ingested": "2024-12-26",
+  "issues": 2191,
+  "window_issues": 453,
+  "est_window_pages": 1815,
+  "lccns": [
+   "sn85055101"
+  ]
+ },
+ {
+  "batch": "dlc_eisner_ver01",
+  "ingested": "2026-09-03",
+  "issues": 311,
+  "window_issues": 209,
+  "est_window_pages": 7666,
+  "lccns": [
+   "sn82016181"
+  ]
+ },
+ {
+  "batch": "dlc_fireflight_ver02",
+  "ingested": "2024-01-16",
+  "issues": 955,
+  "window_issues": 605,
+  "est_window_pages": 5522,
+  "lccns": [
+   "sn83045838"
+  ]
+ },
+ {
+  "batch": "dlc_hine_ver02",
+  "ingested": "2026-01-21",
+  "issues": 515,
+  "window_issues": 50,
+  "est_window_pages": 1007,
+  "lccns": [
+   "sn82016181"
+  ]
+ },
+ {
+  "batch": "dlc_hodges_ver01",
+  "ingested": "2024-07-19",
+  "issues": 1627,
+  "window_issues": 495,
+  "est_window_pages": 2449,
+  "lccns": [
+   "sn83035387"
+  ]
+ },
+ {
+  "batch": "dlc_ifill_ver01",
+  "ingested": "2024-08-09",
+  "issues": 886,
+  "window_issues": 49,
+  "est_window_pages": 372,
+  "lccns": [
+   "sn87062236"
+  ]
+ },
+ {
+  "batch": "dlc_ironhide_ver02",
+  "ingested": "2024-03-21",
+  "issues": 1106,
+  "window_issues": 910,
+  "est_window_pages": 8448,
+  "lccns": [
+   "sn83045838"
+  ]
+ },
+ {
+  "batch": "dlc_jetfire_ver02",
+  "ingested": "2024-03-21",
+  "issues": 691,
+  "window_issues": 291,
+  "est_window_pages": 2701,
+  "lccns": [
+   "sn83045838",
+   "sn83045846"
+  ]
+ },
+ {
+  "batch": "dlc_kasebier_ver01",
+  "ingested": "2025-05-27",
+  "issues": 210,
+  "window_issues": 53,
+  "est_window_pages": 1993,
+  "lccns": [
+   "sn82016181"
+  ]
+ },
+ {
+  "batch": "dlc_kickback_ver02",
+  "ingested": "2024-03-21",
+  "issues": 572,
+  "window_issues": 119,
+  "est_window_pages": 1090,
+  "lccns": [
+   "sn83045846"
+  ]
+ },
+ {
+  "batch": "dlc_leibovitz_ver01",
+  "ingested": "2025-05-15",
+  "issues": 209,
+  "window_issues": 209,
+  "est_window_pages": 7884,
+  "lccns": [
+   "sn82016181"
+  ]
+ },
+ {
+  "batch": "dlc_mark_ver01",
+  "ingested": "2025-05-27",
+  "issues": 158,
+  "window_issues": 158,
+  "est_window_pages": 5908,
+  "lccns": [
+   "sn82016181"
+  ]
+ },
+ {
+  "batch": "dlc_overkill_ver03",
+  "ingested": "2024-08-13",
+  "issues": 894,
+  "window_issues": 104,
+  "est_window_pages": 1031,
+  "lccns": [
+   "sn83045846"
+  ]
+ },
+ {
+  "batch": "fu_estero_ver02",
+  "ingested": "2023-10-02",
+  "issues": 1427,
+  "window_issues": 120,
+  "est_window_pages": 667,
+  "lccns": [
+   "sn95047137",
+   "sn95047435",
+   "sn95047438"
+  ]
+ },
+ {
+  "batch": "fu_freeport_ver01",
+  "ingested": "2025-02-03",
+  "issues": 1004,
+  "window_issues": 104,
+  "est_window_pages": 816,
+  "lccns": [
+   "sn95047261"
+  ]
+ },
+ {
+  "batch": "fu_greenville_ver01",
+  "ingested": "2025-02-26",
+  "issues": 1089,
+  "window_issues": 76,
+  "est_window_pages": 452,
+  "lccns": [
+   "sn95047217"
+  ]
+ },
+ {
+  "batch": "fu_hastings_ver02",
+  "ingested": "2025-04-17",
+  "issues": 1019,
+  "window_issues": 480,
+  "est_window_pages": 4393,
+  "lccns": [
+   "sn95047334"
+  ]
+ },
+ {
+  "batch": "fu_jennings_ver01",
+  "ingested": "2025-05-01",
+  "issues": 847,
+  "window_issues": 444,
+  "est_window_pages": 4699,
+  "lccns": [
+   "sn95047246"
+  ]
+ },
+ {
+  "batch": "fu_kinard_ver01",
+  "ingested": "2025-05-28",
+  "issues": 1140,
+  "window_issues": 26,
+  "est_window_pages": 215,
+  "lccns": [
+   "sn95047246"
+  ]
+ },
+ {
+  "batch": "fu_lantana_ver01",
+  "ingested": "2025-10-31",
+  "issues": 935,
+  "window_issues": 400,
+  "est_window_pages": 3923,
+  "lccns": [
+   "sn95047333",
+   "sn98026438"
+  ]
+ },
+ {
+  "batch": "fu_madison_ver01",
+  "ingested": "2025-10-16",
+  "issues": 1257,
+  "window_issues": 83,
+  "est_window_pages": 476,
+  "lccns": [
+   "sn95047168"
+  ]
+ },
+ {
+  "batch": "gu_allmanbrothers_ver01",
+  "ingested": "2026-09-16",
+  "issues": 1824,
+  "window_issues": 548,
+  "est_window_pages": 3276,
+  "lccns": [
+   "sn82014200",
+   "sn89053116",
+   "sn90052131"
+  ]
+ },
+ {
+  "batch": "gu_bigfoot_ver02",
+  "ingested": "2025-04-14",
+  "issues": 1423,
+  "window_issues": 1324,
+  "est_window_pages": 9762,
+  "lccns": [
+   "sn82015425",
+   "sn85047544"
+  ]
+ },
+ {
+  "batch": "gu_cthulhu_ver03",
+  "ingested": "2025-04-17",
+  "issues": 1618,
+  "window_issues": 1255,
+  "est_window_pages": 8167,
+  "lccns": [
+   "sn82015425"
+  ]
+ },
+ {
+  "batch": "gu_jinn_ver01",
+  "ingested": "2025-06-26",
+  "issues": 1131,
+  "window_issues": 493,
+  "est_window_pages": 4108,
+  "lccns": [
+   "sn84020323"
+  ]
+ },
+ {
+  "batch": "in_archer_ver01",
+  "ingested": "2024-06-20",
+  "issues": 1505,
+  "window_issues": 489,
+  "est_window_pages": 4305,
+  "lccns": [
+   "sn86058053"
+  ]
+ },
+ {
+  "batch": "in_ilia_ver01",
+  "ingested": "2024-05-16",
+  "issues": 368,
+  "window_issues": 206,
+  "est_window_pages": 5608,
+  "lccns": [
+   "sn87055779"
+  ]
+ },
+ {
+  "batch": "in_janeway_ver01",
+  "ingested": "2024-05-13",
+  "issues": 447,
+  "window_issues": 447,
+  "est_window_pages": 10072,
+  "lccns": [
+   "sn87055779"
+  ]
+ }
+]

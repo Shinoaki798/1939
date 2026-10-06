@@ -155,3 +155,14 @@ federal_register:
   approved: 2026-10-05
   role: training only, legal/regulatory (capped with case law at 10 % of seen tokens). govinfo PDFs
         with an OCR text layer, two-column layout -> column-aware extraction; US public domain
+
+chronicling_america:
+  kind: url
+  files: ./config/chronicling_america_files.tsv    # grows as the batch survey completes
+  dest: ./data/raw/chronicling_america
+  lang: en
+  approved: 2026-10-05
+  role: training only. Chronicling America batch OCR (page-level ocr.txt) from batches ingested after
+        the American Stories snapshot (2023-04-22+), pages dated 1930-01-01..1939-06-30 only (filtered at
+        ingest). Contains some non-English titles (language filter) and new pages of AS titles (dedup
+        against AS on lccn + date + page). Batch list: config/chronicling_america_batches.json
