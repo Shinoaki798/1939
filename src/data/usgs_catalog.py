@@ -28,7 +28,8 @@ def records(series: str, first: int, last: int) -> list[dict]:
     while True:
         q = urllib.parse.urlencode({"seriesName": series, "startYear": first, "endYear": last,
                                     "page_size": 100, "page_number": page})
-        with urllib.request.urlopen(API + "?" + q, timeout=120) as r:
+        req = urllib.request.Request(API + "?" + q, headers={"User-Agent": "APS360-1939-corpus/1.0 (university course project)"})
+        with urllib.request.urlopen(req, timeout=120) as r:   # the API answers 403 to the default urllib agent
             d = json.load(r)
         out += d["records"]
         if len(out) >= d["recordCount"] or not d["records"]:
