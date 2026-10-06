@@ -1,0 +1,4 @@
+# English Wikisource pages-articles dump of 2026-10-01 (Wikimedia's sha1). Used only for the proofread
+# Popular Science Monthly vols 1-87 (src.data.ingest_extra rows_psm_wikisource). Fetched on the local PC.
+key	url	bytes	checksum
+enwikisource-20261001-pages-articles	https://dumps.wikimedia.org/enwikisource/20261001/enwikisource-20261001-pages-articles.xml.bz2	3428152987	sha1:cead83d928cdd963adec593ec371a953f8d59475

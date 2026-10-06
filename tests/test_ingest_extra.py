@@ -247,3 +247,12 @@ def test_html_to_text_and_mirror_urls():
     urls = mirror_urls("5001").split("|")
     assert urls[0] == "https://gutenberg.pglaf.org/5/0/0/5001/5001-h/5001-h.htm" and urls[-1].endswith("/5001-8.txt")
     assert mirror_urls("7").split("|")[2] == "https://gutenberg.pglaf.org/0/7/7-0.txt"
+
+
+def test_wikitext_to_text_keeps_text_and_joins_hyphenation():
+    from src.data.ingest_extra import wikitext_to_text
+
+    wt = ("<noinclude><pagequality level=\"4\" user=\"X\" />{{rh|94|THE POPULAR SCIENCE MONTHLY.}}</noinclude>"
+          "The {{sc|Theory}} of [[w:Evolution|evolution]] was ''widely'' {{hws|dis|discussed}}"
+          "<noinclude>{{smallrefs}}</noinclude>\n\n{{hwe|cussed|discussed}} in [[File:X.png|thumb]]1872.<ref>A note.</ref>")
+    assert wikitext_to_text(wt) == "The Theory of evolution was widely discussed\n\nin 1872.A note."

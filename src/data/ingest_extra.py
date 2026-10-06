@@ -576,6 +576,79 @@ def rows_ia_text(path: Path, key: str, cutoff: dt.date, stats: Counter, source: 
         yield row
 
 
+PSM_MAX_VOLUME = 87      # vols 1-87 (May 1872 - Sep 1915) are proofread on Wikisource
+_WS_TITLE = re.compile(r"^Page:Popular Science Monthly Volume (\d+)\.djvu/(\d+)$")
+_WS_QUALITY = re.compile(r'<pagequality level="(\d)"')
+_WS_NOINCLUDE = re.compile(r"<noinclude>.*?</noinclude>", re.S)
+_WS_TEMPLATE = re.compile(r"\{\{([^{}]*)\}\}")
+_WS_DROP = {"nop", "dhr", "rule", "clear", "dotted tc line", "rh", "running header", "pline", "ppoem", "gap"}
+
+
+def _ws_template(m: re.Match) -> str:
+    parts = [p.strip() for p in m.group(1).split("|")]
+    name = parts[0].lower()
+    if name in _WS_DROP or name.startswith("hwe"):
+        return ""
+    if name.startswith("hws"):
+        return parts[2] if len(parts) > 2 else (parts[1] if len(parts) > 1 else "")
+    positional = [p for p in parts[1:] if "=" not in p]
+    return positional[-1] if positional else ""
+
+
+def wikitext_to_text(wt: str) -> str:
+    """Plain text from a proofread Wikisource page: header/footer, templates (keeping their text),
+    tables, images, math and markup removed; hyphenated words across pages joined via hws/hwe."""
+    wt = _WS_NOINCLUDE.sub("", wt)
+    wt = re.sub(r"<math>.*?</math>|\{\|.*?\|\}", " ", wt, flags=re.S)
+    while _WS_TEMPLATE.search(wt):
+        wt = _WS_TEMPLATE.sub(_ws_template, wt)
+    wt = re.sub(r"\[\[(?:File|Image):[^\]]*\]\]", "", wt, flags=re.I)
+    wt = re.sub(r"\[\[(?:[^|\]]*\|)?([^\]]*)\]\]", r"\1", wt)
+    wt = re.sub(r"<br\s*/?>", "\n", wt)
+    wt = re.sub(r"<[^>]+>", "", wt).replace("'''", "").replace("''", "")
+    paras = (re.sub(r"\s+", " ", p).strip() for p in re.split(r"\n\s*\n", wt))
+    return "\n\n".join(p for p in paras if p)
+
+
+def rows_psm_wikisource(path: Path, key: str, cutoff: dt.date, stats: Counter):
+    """English Wikisource pages-articles dump: Popular Science Monthly vols <= PSM_MAX_VOLUME, Page namespace,
+    proofread or validated pages only (pagequality 3/4), assembled per volume in page order and cut into
+    ~2k-word documents. Keyed text: skips the OCR gates, gets the C1 screen. Dated by the volume's first year."""
+    import bz2
+    import xml.etree.ElementTree as ET
+    if not path.name.endswith(".xml.bz2"):
+        return
+    vols: dict[int, dict[int, str]] = {}
+    title = None
+    for _, el in ET.iterparse(bz2.open(path), events=("end",)):
+        tag = el.tag.rsplit("}", 1)[-1]
+        if tag == "title":
+            title = el.text or ""
+        elif tag == "text":
+            m = _WS_TITLE.match(title or "")
+            if m and int(m.group(1)) <= PSM_MAX_VOLUME:
+                stats["rows_in"] += 1
+                wt = el.text or ""
+                q = _WS_QUALITY.search(wt)
+                if not q or q.group(1) not in ("3", "4"):
+                    stats["dropped_not_proofread"] += 1
+                else:
+                    vols.setdefault(int(m.group(1)), {})[int(m.group(2))] = wikitext_to_text(wt)
+        elif tag == "page":
+            el.clear()
+    for vol in sorted(vols):
+        start = 1872 * 12 + 4 + 6 * (vol - 1)            # vol 1 = May 1872, six months per volume
+        year = start // 12
+        text = "\n\n".join(t for _, t in sorted(vols[vol].items()) if t)
+        for i, chunk in enumerate(ia_chunks(text)):
+            row = _row(f"psm_ws_v{vol:03d}_c{i:03d}", "psm_wikisource", dt.date(year, 1, 1),
+                       "Popular Science Monthly", "", "", chunk,
+                       {"volume": vol, "pages": len(vols[vol]), "chunk": i, "date_precision": "year",
+                        "bucket": "science"})
+            row["headline"] = f"Popular Science Monthly, Volume {vol}"
+            yield row
+
+
 _PG_START = re.compile(r"\*\*\*\s*START OF (?:THE|THIS) PROJECT GUTENBERG[^\n]*\n", re.I)
 _PG_END = re.compile(r"\n[^\n]*\*\*\*\s*END OF (?:THE|THIS) PROJECT GUTENBERG", re.I)
 _YEAR = re.compile(r"\b(1[5-9]\d\d|20\d\d)\b")
@@ -653,6 +726,7 @@ ADAPTERS = {"congressional_record": rows_congressional_record, "hmd_newspapers":
             "gutenberg_sci_de": functools.partial(rows_gutenberg, source="gutenberg_sci_de"),
             "jstor_ejc": rows_jstor_ejc, "royal_society_corpus": rows_royal_society_corpus,
             "jfm": rows_jfm,
+            "psm_wikisource": rows_psm_wikisource,
             "loc_pd_books": rows_loc_pd_books, "pre_1929_books": rows_pre_1929_books,
             "chronicling_america": rows_chronicling_america, "federal_register": rows_federal_register,
             "caselaw_access_project": rows_caselaw_access_project,

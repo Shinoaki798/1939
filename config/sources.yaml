@@ -673,3 +673,17 @@ usgs_pp:
   usgs_series: Professional Paper
   window: [1920-01-01, 1938-12-31]
   role: training, science bucket
+
+psm_wikisource:
+  kind: url
+  files: ./config/psm_wikisource_files.tsv
+  dest: ./data/raw/psm_wikisource
+  lang: en
+  approved: 2026-10-06
+  title: "Popular Science Monthly vols 1-87 (1872-1915), English Wikisource proofread transcription"
+  bucket: science
+  licence: "text US public domain; Wikisource transcription CC BY-SA 4.0"
+  access_method: "Wikimedia dump enwikisource-20261001-pages-articles.xml.bz2 (sha1), fetched on the local PC (5080 direct link too slow), ingested there; parquet shipped to the 5080"
+  ocr_or_keyed: keyed (proofread/validated pages only; skips the OCR gates, gets the C1 screen)
+  subject_filter_rule: "Page:Popular Science Monthly Volume N.djvu/P with N <= 87 and pagequality 3 or 4; Wikisource headers, templates, tables, images and math removed"
+  role: training, science bucket
