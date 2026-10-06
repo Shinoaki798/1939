@@ -411,8 +411,10 @@ Dated entries; each supersedes anything above it that it contradicts.
     target and any shortfall.
 - **2026-10-05 — German OCR threshold.** From `reports/ocr_quality_de.md`
   (lexicon = DTA ≤1938, 1.32M types, + 177k widespread pool types): hit rate
-  ≥ **0.75** (user). Words lost before cutoff: DDB 0.3–2.8 %, Europeana
-  16–21 %, VB 0 %. German supply in every period exceeds its 25 % cap, so the
+  ≥ **0.75** (user). Words lost before cutoff, German-language pages
+  1900–1939 only: DDB 0–4.3 %, Europeana 4.3–8.7 %, VB 0 % (the first table
+  also counted Czech/Polish/French pages and showed 16–21 % for Europeana;
+  those pages go at the language filter anyway). German supply in every period exceeds its 25 % cap, so the
   stricter threshold costs no seen tokens. The hit rate ignores digits and
   one-letter fragments (number tables, shredded OCR still reach ≥ 0.8), so a
   second gate, `word_share`, is applied too; its threshold is chosen by the
