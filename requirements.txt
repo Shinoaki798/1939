@@ -16,3 +16,5 @@ transformers
 ctranslate2
 sentencepiece
 sacremoses
+# Federal Register PDFs (OCR text layer, two columns): column-aware text blocks; pypdf has no block geometry
+pymupdf

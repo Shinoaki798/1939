@@ -65,3 +65,54 @@ def test_german_adapters_keep_post_cutoff_rows_until_1955(tmp_path):
     stats = Counter()
     rows = list(rows_europeana_newspapers_de(tmp_path / "eu.parquet", "de-1930", CUTOFF, stats))
     assert len(rows) == 1 and rows[0]["source"] == "europeana_newspapers_de" and stats["dropped_bad_date"] == 1
+
+
+def test_books_keep_1900_to_1938_only(tmp_path):
+    from src.data.ingest_extra import rows_loc_pd_books
+
+    t = pa.table({"lccn": ["a", "b", "c"], "title": ["T"] * 3, "author": ["A"] * 3, "year": [1899, 1925, 1941],
+                  "page_count": [10] * 3, "filename": ["a.txt", "b.txt", "c.txt"],
+                  "text": ["old book", "a book of 1925", "too late"]})
+    pq.write_table(t, tmp_path / "loc.parquet")
+    stats = Counter()
+    rows = list(rows_loc_pd_books(tmp_path / "loc.parquet", "train_00001", CUTOFF, stats))
+    assert [r["date"] for r in rows] == ["1925-01-01"] and stats["dropped_year_outside_1900_1938"] == 2
+    assert '"date_precision": "year"' in rows[0]["meta"]
+
+
+def test_chronicling_america_window_and_ids(tmp_path):
+    import io
+    import tarfile
+
+    from src.data.ingest_extra import rows_chronicling_america
+
+    path = tmp_path / "x_batch_ver01.tar.bz2"
+    with tarfile.open(path, "w:bz2") as tf:
+        for name, txt in [("x_batch_ver01/data/sn86069021/1931/05/14/ed-1/seq-3/ocr.txt", "Falmouth news 1931"),
+                          ("x_batch_ver01/data/sn86069021/1941/05/14/ed-1/seq-1/ocr.txt", "after the window"),
+                          ("x_batch_ver01/data/sn86069021/1931/05/14/ed-1/seq-3/ocr.xml", "<alto/>")]:
+            b = txt.encode()
+            info = tarfile.TarInfo(name); info.size = len(b)
+            tf.addfile(info, io.BytesIO(b))
+    stats = Counter()
+    rows = list(rows_chronicling_america(path, "x_batch_ver01", CUTOFF, stats))
+    assert [r["article_id"] for r in rows] == ["ca_sn86069021_1931-05-14_ed1_seq3"]
+    assert rows[0]["lccn"] == "sn86069021" and rows[0]["page"] == "p3" and stats["outside_window"] == 1
+
+
+def test_federal_register_reads_left_column_first(tmp_path):
+    import pytest
+    fitz = pytest.importorskip("fitz")
+    from src.data.ingest_extra import rows_federal_register
+
+    doc = fitz.open()
+    page = doc.new_page(width=600, height=800)
+    page.insert_text((40, 100), "LEFT ONE")
+    page.insert_text((40, 400), "LEFT TWO")
+    page.insert_text((340, 50), "RIGHT ONE")
+    path = tmp_path / "FR-1937-01-05.pdf"
+    doc.save(path)
+    rows = list(rows_federal_register(path, "FR-1937-01-05", CUTOFF, Counter()))
+    t = rows[0]["text"]
+    assert t.index("LEFT ONE") < t.index("LEFT TWO") < t.index("RIGHT ONE")
+    assert rows[0]["date"] == "1937-01-05"

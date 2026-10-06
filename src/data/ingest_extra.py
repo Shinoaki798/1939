@@ -21,6 +21,7 @@ import argparse
 import datetime as dt
 import json
 import os
+import re
 import sys
 import time
 from collections import Counter
@@ -167,7 +168,138 @@ def rows_voelkischer_beobachter_de(path: Path, key: str, cutoff: dt.date, stats:
                {"ia_identifier": key, "named_source": "NSDAP party daily"})
 
 
+BOOK_FIRST_YEAR, BOOK_LAST_YEAR = 1900, 1938   # year-only metadata: keep <= 1938 (1939 cannot be split)
+
+
+def _book_row(article_id, source, year, title, author, text, meta) -> dict:
+    meta = dict(meta, date_precision="year")
+    return _row(article_id, source, dt.date(year, 1, 1), title, "", author, text, meta)
+
+
+def rows_loc_pd_books(path: Path, key: str, cutoff: dt.date, stats: Counter):
+    """storytracer/LoC-PD-Books: one row per book; year-only, kept 1900-1938."""
+    cols = ["lccn", "title", "author", "year", "page_count", "filename", "text"]
+    for batch in pq.ParquetFile(path).iter_batches(batch_size=200, columns=cols):
+        for r in batch.to_pylist():
+            stats["rows_in"] += 1
+            y, text = r.get("year"), (r.get("text") or "").strip()
+            if not isinstance(y, int) or not BOOK_FIRST_YEAR <= y <= BOOK_LAST_YEAR:
+                stats["dropped_year_outside_1900_1938"] += 1
+                continue
+            if not text:
+                stats["dropped_empty"] += 1
+                continue
+            meta = {k: r.get(k) for k in ("lccn", "page_count", "filename")}
+            yield _book_row(f"loc_{r.get('lccn')}_{r.get('filename')}", "loc_pd_books", y, r.get("title") or "",
+                            r.get("author") or "", text, meta)
+
+
+def rows_pre_1929_books(path: Path, key: str, cutoff: dt.date, stats: Counter):
+    """common-pile/pre_1929_books (jsonl.gz): one row per book; year-only, kept 1900-1938."""
+    import ast
+    import gzip
+    with gzip.open(path, "rt", encoding="utf-8") as f:
+        for line in f:
+            stats["rows_in"] += 1
+            r = json.loads(line)
+            m = r.get("metadata") or {}
+            if isinstance(m, str):
+                m = ast.literal_eval(m)
+            try:
+                y = int(float(m.get("year")))
+            except (TypeError, ValueError, OverflowError):
+                stats["dropped_bad_date"] += 1
+                continue
+            text = (r.get("text") or "").strip()
+            if not BOOK_FIRST_YEAR <= y <= BOOK_LAST_YEAR:
+                stats["dropped_year_outside_1900_1938"] += 1
+                continue
+            if not text:
+                stats["dropped_empty"] += 1
+                continue
+            meta = {k: m.get(k) for k in ("htid", "language", "place")}
+            yield _book_row(f"p1929_{r.get('id')}", "pre_1929_books", y, m.get("title") or "",
+                            m.get("author") or "", text, meta)
+
+
+CA_FIRST, CA_LAST = dt.date(1930, 1, 1), dt.date(1939, 6, 30)   # option C window (HANDOFF §12)
+_CA_PAGE = re.compile(r"(?:^|/)(sn\d+|[a-z]{1,3}\d+)/(\d{4})/(\d{2})/(\d{2})/ed-(\d+)/seq-(\d+)/ocr\.txt$")
+
+
+def rows_chronicling_america(path: Path, key: str, cutoff: dt.date, stats: Counter):
+    """Chronicling America batch OCR tarball: one row per page (ocr.txt), window 1930-01-01..1939-06-30.
+    Page-level OCR, training only; pages of titles already in American Stories are removed at dedup
+    on (lccn, date, page)."""
+    import tarfile
+    with tarfile.open(path, "r|bz2") as tf:
+        for m in tf:
+            if not m.isfile() or not m.name.endswith("ocr.txt"):
+                continue
+            mm = _CA_PAGE.search(m.name)
+            if not mm:
+                stats["skipped_unparsed_name"] += 1
+                continue
+            stats["rows_in"] += 1
+            lccn, y, mo, d, ed, seq = mm.groups()
+            try:
+                date = dt.date(int(y), int(mo), int(d))
+            except ValueError:
+                stats["dropped_bad_date"] += 1
+                continue
+            if not CA_FIRST <= date <= CA_LAST:
+                stats["outside_window"] += 1
+                continue
+            text = tf.extractfile(m).read().decode("utf-8", "replace").strip()
+            if not text:
+                stats["dropped_empty"] += 1
+                continue
+            row = _row(f"ca_{lccn}_{date.isoformat()}_ed{ed}_seq{seq}", "chronicling_america", date, lccn, "", "",
+                       text, {"batch": key, "lccn": lccn, "edition": ed, "seq": seq})
+            row["lccn"], row["page"], row["edition"] = lccn, f"p{seq}", ed
+            yield row
+
+
+def _fr_page_text(page) -> str:
+    """Column-aware text of one Federal Register page: text blocks in the left half first, then the right
+    half, each top to bottom; full-width blocks (headers, tables) stay in vertical order."""
+    w = page.rect.width
+    blocks = [b for b in page.get_text("blocks") if b[6] == 0 and b[4].strip()]
+    def col(b):
+        x0, x1 = b[0], b[2]
+        return 0 if x1 <= w * 0.55 else (1 if x0 >= w * 0.45 else -1)
+    full = [b for b in blocks if col(b) == -1]
+    if len(full) > len(blocks) / 2:                 # mostly full-width: plain reading order
+        ordered = sorted(blocks, key=lambda b: (b[1], b[0]))
+    else:
+        ordered = sorted(blocks, key=lambda b: (max(col(b), 0), b[1], b[0]))
+    return "\n".join(b[4].strip() for b in ordered)
+
+
+def rows_federal_register(path: Path, key: str, cutoff: dt.date, stats: Counter):
+    """Federal Register daily issue PDF (OCR text layer): one row per issue."""
+    import fitz   # pymupdf
+    stats["rows_in"] += 1
+    try:
+        date = dt.date.fromisoformat(key[len("FR-"):])
+    except ValueError:
+        stats["dropped_bad_date"] += 1
+        return
+    if date > cutoff:
+        stats["dropped_after_cutoff"] += 1
+        return
+    with fitz.open(path) as doc:
+        text = "\n\n".join(_fr_page_text(p) for p in doc).strip()
+        n_pages = doc.page_count
+    if not text:
+        stats["dropped_empty"] += 1
+        return
+    yield _row(f"fr_{key}", "federal_register", date, "Federal Register", "", "", text,
+               {"issue": key, "pages": n_pages, "genre": "legal/regulatory"})
+
+
 ADAPTERS = {"congressional_record": rows_congressional_record, "hmd_newspapers": rows_hmd_newspapers,
+            "loc_pd_books": rows_loc_pd_books, "pre_1929_books": rows_pre_1929_books,
+            "chronicling_america": rows_chronicling_america, "federal_register": rows_federal_register,
             "ddb_newspapers_de": rows_ddb_newspapers_de,
             "europeana_newspapers_de": rows_europeana_newspapers_de,
             "voelkischer_beobachter_de": rows_voelkischer_beobachter_de}
