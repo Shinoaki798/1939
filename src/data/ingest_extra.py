@@ -505,7 +505,8 @@ def main() -> None:
         "stage": "ingested", "source": args.source, "hf_repo": src.get("hf_repo", args.source), "revision": raw_manifest["revision"],
         "cutoff": str(cfg["cutoff"]), "files": {}}
     # source-level provenance (science-bucket task, 2026-10-06); item-level title/year/language are row columns
-    manifest["source_meta"] = {k: src.get(k) for k in SOURCE_META_FIELDS}
+    manifest["source_meta"] = {k: (str(v) if isinstance(v, dt.date) else v)     # YAML dates -> ISO strings
+                               for k, v in ((k, src.get(k)) for k in SOURCE_META_FIELDS)}
 
     jobs = [(args.source, k, str(raw_dir / e["file"]), str(out_dir), str(cfg["cutoff"]), args.dry_run)
             for k, e in sorted(raw_manifest["files"].items())
