@@ -357,7 +357,7 @@ def main() -> None:
     raw_manifest = json.loads((raw_dir / "MANIFEST.json").read_text(encoding="utf-8"))
     mpath = out_dir / "MANIFEST.json"
     manifest = json.loads(mpath.read_text(encoding="utf-8")) if mpath.exists() else {
-        "stage": "ingested", "source": args.source, "hf_repo": src["hf_repo"], "revision": raw_manifest["revision"],
+        "stage": "ingested", "source": args.source, "hf_repo": src.get("hf_repo", args.source), "revision": raw_manifest["revision"],
         "cutoff": str(cfg["cutoff"]), "files": {}}
 
     jobs = [(args.source, k, str(raw_dir / e["file"]), str(out_dir), str(cfg["cutoff"]), args.dry_run)
