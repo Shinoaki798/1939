@@ -610,7 +610,12 @@ already answers.
 
 - Measured from the 5080: archive.org, Gutenberg mirror, GitHub and Wikimedia are unusable or very
   slow without the VPN; static.case.law and pubs.usgs.gov work directly; chroniclingamerica/tile.loc.gov
-  answer 403 directly. From the 2080: LoC ~50 MB/s, Wikimedia ~3 MB/s, archive.org slow.
+  answer 403 directly. From the 2080: LoC ~50 MB/s, Wikimedia ~3 MB/s. archive.org djvu.txt measured
+  2026-10-06 12:30 (10 files each, 1 s gap): 2.8-5.4 s/file from the 2080 vs 7-20 s/file on the 5080
+  through the VPN (Annalen d. Physik 2.8 vs 20.2); Gutenberg 4.7 vs 6.3 s/file (2 s gap); zbMATH OAI
+  ~5 s/page vs ~10 s (VPN) / ~50 s (direct). Since then the 2080 downloads archive.org, Gutenberg,
+  Dingler and JFM (`scripts/fetch_local_chain.sh`, key lists in `data/logs/local_keys/`, reverse file
+  order so a resumed 5080 chain meets it in the middle; `jfm_harvest --direct`).
 - Downloader routing: `src.data.download --via proxy|mirror|auto`. **Force `--via proxy` for archive.org,
   Gutenberg, GitHub** (the `auto` probe flaps and then hammers dead direct routes); `--via mirror`
   (= direct) for CAP and USGS.
@@ -619,7 +624,8 @@ already answers.
 - Check usage: `python3 scripts/vpn_usage.py --since 2026-10-06T05:45:00+00:00` on the box (sums
   MANIFEST bytes fetched via proxy; a floor). Tell Andrew before a planned download would exceed
   the remaining budget.
-- The VPN client on the box dropped twice on 2026-10-06 (nothing listening on 7890). Open item:
+- The VPN client on the box (Forest; see `reports/science_status_2026-10-06.md`) dropped three times on
+  2026-10-06 (nothing listening on 7890; the third time ~12:00, `forest-core.exe` gone). Open item:
   find out whether it can be restarted over SSH (identify the client and its executable; options are
   a scheduled task run in Andrew's interactive session via `schtasks /run`, or the client's own
   auto-start/auto-reconnect setting). Creating a task or changing client settings needs Andrew's OK.

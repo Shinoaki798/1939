@@ -67,8 +67,10 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--delay", type=float, default=2.0)
     ap.add_argument("--max-pages", type=int, default=0, help="stop after this many new pages (0 = all)")
+    ap.add_argument("--direct", action="store_true", help="no Windows-side proxy (the local PC)")
     args = ap.parse_args()
     cfg = load_config(repo_path("config/paths.yaml"))
+    proxy = None if args.direct else cfg["download"]["proxy"]
     src = load_config(repo_path(cfg["sources"]))["jfm"]
     dest = repo_path(src["dest"])
     pages = dest / "pages"
@@ -83,7 +85,7 @@ def main() -> None:
     cursor, new, restarted = state.get("cursor", 0), 0, False
     while True:
         try:
-            body = fetch(params, tries=3 if "resumptionToken" in params else 8, proxy=cfg["download"]["proxy"])
+            body = fetch(params, tries=3 if "resumptionToken" in params else 8, proxy=proxy)
         except SystemExit:
             # zbMATH answers a token it no longer knows with HTTP 500, not with badResumptionToken
             if "resumptionToken" not in params or restarted:

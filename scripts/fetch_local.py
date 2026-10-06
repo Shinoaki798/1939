@@ -69,12 +69,26 @@ def main() -> None:
         name = spec["file"].rsplit("/", 1)[-1]
         final, part = dest / name, dest / (name + ".part")
         algo, _, want = (spec.get("checksum") or "-").partition(":")
+        urls, alt = spec["url"].split("|"), 0   # "a|b|c": a 404 moves on to the next alternative
         for attempt in range(1, args.attempts + 1):
             t0 = time.time()
-            status = fetch(spec["url"], part, args.backoff)
+            url = urls[alt]
+            if spec["bytes"] is None and part.exists():
+                part.unlink()   # size unpublished: no resume, fetch the whole file each attempt
+            status = fetch(url, part, args.backoff)
             size = part.stat().st_size if part.exists() else 0
+            if status == 404:
+                if alt + 1 < len(urls):
+                    alt += 1
+                    continue
+                print(f"[{key}] 404 on every URL; giving up", flush=True)
+                break
             if spec["bytes"] is not None and size < spec["bytes"]:
                 print(f"[{key}] attempt {attempt}: HTTP {status}, {size}/{spec['bytes']} bytes", flush=True)
+                continue
+            if spec["bytes"] is None and (status not in (200, 206) or size == 0):
+                print(f"[{key}] attempt {attempt}: HTTP {status}, {size} bytes", flush=True)
+                time.sleep(min(60, 10 * attempt))
                 continue
             h = {"sha256": hashlib.sha256()}
             if algo in ("md5", "sha1"):
@@ -91,7 +105,7 @@ def main() -> None:
             part.replace(final)
             m["files"][key] = {"file": name, "bytes": size, "sha256": got["sha256"],
                                "verified_against": spec.get("checksum") if algo in got else "size only",
-                               "url": spec["url"], "via": "local-2080",
+                               "url": url, "via": "local-2080",
                                "verified_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")}
             tmp = mpath.with_suffix(".tmp")
             tmp.write_text(json.dumps(m, indent=2, sort_keys=True), encoding="utf-8")

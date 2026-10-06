@@ -1,4 +1,28 @@
-# Data collection: status and resume steps (2026-10-06, ~12:30 EDT)
+# Data collection: status and resume steps (2026-10-06, ~12:45 EDT)
+
+## Update 12:45 — downloads moved to the 2080
+
+- The 5080's VPN dropped again ~12:00 (`forest-core.exe` gone, nothing on 7890); its chains sit in
+  27-minute retry loops per file. The 5080 JFM run (direct, ~50 s/page) was stopped.
+- Speed test from the 2080 (HANDOFF §13.4): archive.org 2.8-5.4 s/file vs 7-20 s on the 5080, JFM
+  ~5 s/page. So the 2080 now runs, detached (`Start-Process` + Git Bash), logs in `data/logs/`:
+
+  | chain | sources (reverse chain order, each table walked backwards, minus keys the 5080 has) | files | est. |
+  |---|---|---|---|
+  | `en` | sciam, psm, jfi, americana, mwr, phr, physrev, naca, bstj, nbs_papers, nbs_jres, bams | 10,162 | ~12-15 h |
+  | `de` | sitzungsberichte, meyers6, encyklopaedie, crelle, math_annalen, physz, naturwiss, annalen_physik | 5,100 | ~5-7 h |
+  | `misc` (DELAY=2) | gutenberg_sci_en, gutenberg_sci_de, dingler | 2,137 | ~3 h |
+  | JFM (`jfm_harvest --direct`) | whole harvest from page 1 | ~2,233 pages | ~4-5 h |
+
+  Restart a chain (fetch_local skips verified keys):
+  `powershell -Command "Start-Process -WindowStyle Hidden 'C:\Program Files\Git\bin\bash.exe' -WorkingDirectory 'C:\Users\27409\Desktop\1939' -ArgumentList 'scripts/fetch_local_chain.sh','<name>','<source>',..."`
+- Then on the 2080: ingest each source (`python -m src.data.ingest_extra --source <s>`), pack
+  (`python scripts/transfer_ingested.py pack --sources <list> --out <dir>`), Andrew moves it by Baidu
+  Netdisk, merge on the 5080 as before. The 5080 keeps and ingests its own partial bams (370) and
+  annalen (66) files; the key sets are disjoint.
+- **The 5080's archive.org and Gutenberg chains must not resume** once the VPN is back: they would
+  fetch the same files and the merge refuses keys ingested on both machines. Stop them (Andrew's OK).
+
 
 Operating guide (machines, remote control, VPN budget, tools, pitfalls): `docs/HANDOFF.md` §13.
 
