@@ -25,7 +25,7 @@ import re
 import sys
 import time
 from collections import Counter
-from multiprocessing import Pool
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
 import pyarrow as pa
@@ -35,6 +35,7 @@ from src.data.download import load_config, repo_path
 from src.data.ingest import BATCH_ROWS, SCHEMA, guess_lang, sha256_file
 
 EXTRA_SCHEMA = SCHEMA.append(pa.field("meta", pa.string()))
+BATCH_BYTES = 256 << 20   # flush the parquet writer at this much text, whatever the row count
 
 
 def _row(article_id, source, date, newspaper, state, byline, text, meta) -> dict:
@@ -320,6 +321,7 @@ def ingest_file(job: tuple) -> dict:
     tmp = Path(out_dir) / f".tmp_{key}.parquet"
     writer = None if dry_run else pq.ParquetWriter(tmp, EXTRA_SCHEMA, compression="zstd")
     batch: list[dict] = []
+    batch_bytes = 0
     for row in ADAPTERS[source](Path(path), key, dt.date.fromisoformat(cutoff_iso), stats):
         stats["rows_out"] += 1
         stats["words"] += row["n_words"]
@@ -327,9 +329,12 @@ def ingest_file(job: tuple) -> dict:
         if writer is None:
             continue
         batch.append(row)
-        if len(batch) >= BATCH_ROWS:
+        batch_bytes += row["n_bytes"]
+        # flush by size as well as by rows: page-level sources (Europeana, DDB) carry ~20 kB per row, and
+        # 100k such rows as Python objects took ~9 GB and got a worker OOM-killed (2026-10-05)
+        if len(batch) >= BATCH_ROWS or batch_bytes >= BATCH_BYTES:
             writer.write_table(pa.Table.from_pylist(batch, schema=EXTRA_SCHEMA))
-            batch = []
+            batch, batch_bytes = [], 0
     result = {"key": key, "stats": dict(stats), "seconds": round(time.time() - t0, 1)}
     if writer is not None:
         if batch:
@@ -370,8 +375,10 @@ def main() -> None:
         out_dir.mkdir(parents=True, exist_ok=True)
 
     totals: Counter = Counter()
-    with Pool(min(args.workers, len(jobs))) as pool:
-        for res in pool.imap_unordered(ingest_file, jobs):
+    # ProcessPoolExecutor raises BrokenProcessPool if a worker dies (e.g. OOM); multiprocessing.Pool hung.
+    with ProcessPoolExecutor(max_workers=min(args.workers, len(jobs))) as ex:
+        for fut in as_completed([ex.submit(ingest_file, j) for j in jobs]):
+            res = fut.result()
             s = res["stats"]
             totals.update(s)
             print(f"{res['key']:>24} in={s.get('rows_in', 0):>9} out={s.get('rows_out', 0):>9} "
