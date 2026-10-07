@@ -4,6 +4,7 @@
 data_root: ./data
 raw: ./data/raw
 dedup: ./data/dedup
+selected: ./data/selected        # src.data.select: pool, language, dates, pre-1920 sample, normalised text
 filtered: ./data/filtered
 translated: ./data/translated
 tokenized: ./data/tokenized
