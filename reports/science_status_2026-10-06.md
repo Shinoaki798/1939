@@ -2,6 +2,19 @@
 
 Operating guide (machines, remote control, VPN budget, tools, pitfalls): `docs/HANDOFF.md` §13.
 
+## Update 2026-10-07 11:15
+
+- Windows Update restarted the 2080 at 01:43 (event 1074, svchost / TrustedInstaller); every local job
+  died and stayed down until 11:12. Relaunched (WMI, hidden). Andrew should pause updates on the 2080
+  until the hand-over is done (the 5080's updates are paused to 2026-11-05).
+- Done and ingested on the 2080: all German archive.org sources, Gutenberg en (1,906 books, 122.5M
+  words) and de (133, 9.0M), Dingler (new adapter; 43,811 articles, 71.5M words). German science on
+  the 2080: ~343M words before JFM.
+- Downloaded, not yet ingested: Sci. Am. (4,147), PSM 1916-30, JFI, Americana.
+- Still downloading: `en_a` MWR -> PHR -> Phys. Rev. (2,068 files); `en_b` NACA (1,900 left) -> BSTJ ->
+  NBS x2 -> BAMS (3,010 files); JFM 212,312 / 223,270 records saved, a new walk starts after the
+  overnight token loss.
+
 ## Where things stand
 
 - **All remaining downloads run on the 2080** (local PC, unmetered). Speed test 12:30 (HANDOFF §13.4):
