@@ -848,7 +848,17 @@ def ingest_file(job: tuple) -> dict:
         writer.close()
         digest = sha256_file(tmp)
         final = Path(out_dir) / f"{digest[:12]}.parquet"
-        os.replace(tmp, final)
+        # content-addressed: an existing file is the same bytes (e.g. the empty file of every dropped item).
+        # On Windows two workers renaming onto the same name collide (access denied), so keep the first.
+        try:
+            if final.exists():
+                os.remove(tmp)
+            else:
+                os.replace(tmp, final)
+        except PermissionError:
+            if not final.exists():
+                raise
+            os.remove(tmp)
         result.update({"file": final.name, "sha256": digest, "file_bytes": final.stat().st_size})
     return result
 
