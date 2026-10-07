@@ -552,6 +552,8 @@ Dated entries; each supersedes anything above it that it contradicts.
     Central; the token floor is 20 for article-, speech- and case-level
     sources, 50 for pages; Math. Annalen and Crelle come from archive.org with
     GDZ as fallback. HANDOFF governs.
+  - *JFM coverage (2026-10-07, user):* the OAI harvest was stopped at 222,808 of 223,270 records
+    (99.79 %); the missing 462 are not fetched. 137,372 unique reviews from volumes <= 61 (18.1M words).
   - *E-mail:* kept out of the public repo again (`\authoremail` +
     gitignored `docs/author_private.tex`); `docs/proposal.pdf` is the public
     build, `docs/proposal_submission.pdf` (gitignored) the one to submit.

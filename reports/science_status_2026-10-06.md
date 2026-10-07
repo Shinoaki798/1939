@@ -13,8 +13,11 @@ Operating guide (machines, remote control, VPN budget, tools, pitfalls): `docs/H
   `transfer_ingested.py merge --in /mnt/c/Users/AN/Downloads/1939_transfer2` (in tmux, as on 10-06).
   Key sets are disjoint from what the 5080 ingested itself (BAMS 370, Annalen 66, Gutenberg 997,
   Sitzungsberichte 1).
-- JFM still harvesting on the 2080 (215,620 / 223,270 records at 15:46; walk ~50 %); it goes in a
-  second, small hand-over (`--sources jfm`, ~0.1 GB).
+- JFM stopped at 17:55 with 222,808 / 223,270 OAI records (99.79 %; Andrew: drop the rest). Ingested
+  on the 2080: 148,795 rows = 137,372 unique reviews (vol <= 61), 18.1M words; 11,423 duplicate rows
+  from overlapping walks are dropped before MinHash. Second hand-over:
+  `C:\Users\27409\Desktop\1939_transfer_jfm.tar` (93,245,440 bytes); unpack and merge on the 5080 the
+  same way (`--in /mnt/c/Users/AN/Downloads/1939_transfer_jfm`). The 5080 never ingested JFM.
 
 ## Update 2026-10-07 11:15
 
