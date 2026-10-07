@@ -75,7 +75,8 @@ def test_match_keeps_earliest_and_finds_exact():
                     "page_level": [d[2] for d in docs], "n_words": [len(t) for t in toks],
                     "exact": [dedup.exact_hash(t) for t in toks],
                     "has_sig": [dedup.minhash(t) is not None for t in toks]})
-    dropped, kept, jd, reason, _ = dedup.match(sigs, idx)
+    thr = np.full(len(docs), dedup.THRESHOLD_OCR)
+    dropped, kept, jd, reason, uni, _ = dedup.match(sigs, idx, thr)
     got = {docs[d][0]: (docs[k][0], r) for d, k, r in zip(dropped, kept, reason)}
     assert got["late_copy"] == ("original", "near")
     assert got["dup_a"] == ("dup_b", "exact")             # same date: article-level beats page-level
@@ -86,3 +87,21 @@ def test_components_chain():
     rank = np.array([2, 0, 1, 3])
     lab = dedup.components(4, np.array([0, 2]), np.array([2, 1]), rank)
     assert lab.tolist() == [0, 0, 0, 3]
+
+
+def test_threshold_by_source_type():
+    base = dedup.comparison_tokens(text(300, 5))
+    noisy = list(base)
+    for i in range(0, len(noisy), 28):                     # ~4 % of words misread: J ~ 0.69
+        noisy[i] = noisy[i] + "x"
+    toks = [base, noisy]
+    sigs = np.stack([dedup.minhash(t) for t in toks])
+    j = float(dedup.jaccard(sigs[0], sigs[1]))
+    assert dedup.THRESHOLD_OCR <= j < dedup.THRESHOLD_KEYED
+    idx = pa.table({"article_id": ["a", "b"], "source": ["s", "s"], "date": ["1930-01-01", "1930-02-01"],
+                    "page_level": [False, False], "n_words": [300, 300],
+                    "exact": [dedup.exact_hash(t) for t in toks], "has_sig": [True, True]})
+    d_ocr = dedup.match(sigs, idx, np.array([0.6, 0.6]))[0]
+    d_mixed = dedup.match(sigs, idx, np.array([0.8, 0.6]))[0]      # a pair with an OCR side uses 0.60
+    d_keyed = dedup.match(sigs, idx, np.array([0.8, 0.8]))[0]
+    assert d_ocr.tolist() == [1] and d_mixed.tolist() == [1] and d_keyed.tolist() == []

@@ -574,6 +574,22 @@ Dated entries; each supersedes anything above it that it contradicts.
     near-duplicates across languages); MinHash signatures are computed per source wherever the data
     sits, and only the matching step needs the whole language pool. Split membership is a fixed hash of
     the document id (buckets of 1 %), applied to every source; only American Stories is scored.
+- **2026-10-07 — dedup decisions after the 2080 experiment (user; `reports/dedup_experiment_2080.md`).**
+  1. *MinHash threshold by source type:* OCR sources 0.60, keyed sources (JFM, DTA, Dingler, Gutenberg,
+     TCP) 0.80; a pair with an OCR side uses 0.60. Per-source threshold in the dedup MANIFEST; removal
+     rates at both 0.60 and 0.80 reported in `reports/audit_v1.md`; 30 pairs in the 0.55-0.65 band per
+     OCR source sampled for a sanity read.
+  2. *Paragraph-level dedup for page-level sources* (Chronicling America batch OCR, DDB, Europeana,
+     books, Federal Register), two passes:
+     a. REQUIRED before freeze: any paragraph of a page-level TRAINING document that matches an American
+        Stories held-out article (per-year 2 %, Val, Test-A) is removed; the held-out article always
+        wins, whatever the dates. Evaluation-integrity rule, not a quality rule. Hit counts per source
+        go into the final report.
+     b. Then paragraph dedup against the whole pool (wire reprints), keep earliest. May be partial if
+        time is short; (a) may not.
+  3. *Language filter, keyed sources:* items too short for the stopword vote (`und`) get the source's
+     language (JFM, DTA, Dingler -> de; Gutenberg -> the book's language); restores 9,668 JFM reviews.
+  4. Keep-earliest applies to 1 and 2b, not to 2a.
 
 ---
 

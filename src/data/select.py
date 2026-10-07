@@ -15,8 +15,9 @@ Rules (HANDOFF §5, §12 2026-10-05 ... 2026-10-07):
             config/science_books_selection.tsv; everything else is general.
   language  a document goes to the pool of its detected language if that is en or de. English also
             needs filters.is_native_english; American Stories also the title rule (filters.english_titles
-            per lccn and year, from the census). "und" (too few stopwords to tell) and other languages
-            are dropped and counted.
+            per lccn and year, from the census). "und" (too few stopwords to tell) is dropped, except in
+            keyed sources, where it takes the source's language (user, 2026-10-07: restores 9,668 short
+            JFM reviews). Other languages are dropped and counted.
   dates     pre (<= 1939-06-30), embargo (1939-07-01 .. 08-31: RQ3 conditioning only), post (1939-09-01 ..
             1955-12-31: test sets only). General text before 1900 is not in the pool (its recency weight
             is ~0); the science bucket keeps any year up to the cutoff.
@@ -120,7 +121,7 @@ def pool_sources(cfg: dict) -> dict:
         if not (ing / "MANIFEST.json").exists():
             continue
         out[name] = {"dir": str(ing), "science": src.get("bucket") == "science",
-                     "keyed": str(src.get("ocr_or_keyed", "")).startswith("keyed"),
+                     "keyed": str(src.get("ocr_or_keyed", "")).startswith("keyed"), "lang": src.get("lang", "en"),
                      "category": "science" if src.get("bucket") == "science" else CATEGORY.get(name, "other")}
     return out
 
@@ -146,7 +147,11 @@ def science_lists() -> tuple[set[str], set[str]]:
     return titles, books
 
 
-def doc_lang(source: str, lang: str, en_share, as_titles: dict | None, lccn: str, year: int) -> str | None:
+def doc_lang(source: str, lang: str, en_share, as_titles: dict | None, lccn: str, year: int,
+             und_default: str | None = None) -> str | None:
+    """Pool language of a document; und_default is the source language of a keyed source."""
+    if lang == "und" and und_default in LANGS:
+        return und_default
     if lang == "en":
         if not is_native_english(lang, en_share):
             return None
@@ -243,7 +248,8 @@ def _select_job(job: tuple) -> dict:
                 stats["drop_date"] += 1
                 continue
             lang = doc_lang(source, b["lang"][i], b["lang_en_share"][i], as_titles,
-                            (b.get("lccn") or [""] * batch.num_rows)[i] or "", year)
+                            (b.get("lccn") or [""] * batch.num_rows)[i] or "", year,
+                            info["lang"] if info["keyed"] else None)
             if lang is None:
                 stats[f"drop_lang_{b['lang'][i]}"] += 1
                 continue
@@ -283,7 +289,7 @@ def _select_job(job: tuple) -> dict:
     return {"input": Path(path).name, "stats": dict(stats), "outputs": outputs}
 
 
-def run(cfg: dict, only: list[str], workers: int, dry_run: bool) -> None:
+def run(cfg: dict, only: list[str], workers: int, dry_run: bool, force: bool = False) -> None:
     cpath = census_path(cfg)
     if not cpath.exists():
         sys.exit(f"{cpath} missing: run `python -m src.data.select census` first")
@@ -301,7 +307,7 @@ def run(cfg: dict, only: list[str], workers: int, dry_run: bool) -> None:
         manifest["params"] = {"census": cen["created_at"], "pre1920_rate": {k: v for k, v in cen["pre1920_rate"].items()},
                               "science": info["science"], "category": info["category"], "keyed": info["keyed"]}
         files = [(f, sha) for f, sha in ingested_files(ing)
-                 if dry_run or manifest["files"].get(f, {}).get("input_sha256") != sha]
+                 if dry_run or force or manifest["files"].get(f, {}).get("input_sha256") != sha]
         if not files:
             print(f"{source}: nothing to do", flush=True)
             continue
@@ -335,6 +341,7 @@ def main() -> None:
     ap.add_argument("--sources", default="", help="comma-separated subset (run only)")
     ap.add_argument("--workers", type=int, default=8)
     ap.add_argument("--dry-run", action="store_true", help="count only; write nothing")
+    ap.add_argument("--force", action="store_true", help="redo files already selected (after a rule change)")
     args = ap.parse_args()
     cfg = load_config(repo_path("config/paths.yaml"))
     if args.command == "census":
@@ -345,7 +352,7 @@ def main() -> None:
         print(f"census: {len(out['sources'])} sources; pre-1920 general words "
               f"{ {k: v for k, v in out['pre1920_words'].items()} } -> {p}", flush=True)
     else:
-        run(cfg, [s for s in args.sources.split(",") if s], args.workers, args.dry_run)
+        run(cfg, [s for s in args.sources.split(",") if s], args.workers, args.dry_run, args.force)
 
 
 if __name__ == "__main__":

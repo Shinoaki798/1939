@@ -1,24 +1,28 @@
-"""Exact and near-duplicate removal, per language pool (HANDOFF §5.2; §12 2026-10-07).
+"""Exact and near-duplicate removal of whole documents, per language pool (HANDOFF §5.2; §12 2026-10-07).
 
 Input: every selected parquet of one language, data/selected/<source>/<lang>/*.parquet. Output under
 data/dedup/<lang>/: drops.parquet (one row per removed document: article_id, source, date, reason,
-kept_id, jaccard) and MANIFEST.json (parameters, counts per source). A document that is not in
-drops.parquet survives. MinHash signatures are cached per selected file (sig/<sha12>.npy and
-sig/<sha12>.idx.parquet), so a rerun after new data arrives signs only the new files; the matching
-step always runs over the whole language pool.
+kept_id, jaccard) and MANIFEST.json (parameters, per-source thresholds, removal per source at the
+per-source thresholds and at a uniform 0.80). A document that is not in drops.parquet survives.
+MinHash signatures are cached per selected file (sig/<sha12>.npy and sig/<sha12>.idx.parquet), so a
+rerun after new data arrives signs only the new files; the matching always covers the whole pool.
 
   comparison form  lower case, letters-only tokens (the selected text is already NFC and, for German,
                    typography-normalised). Documents with fewer than SHINGLE tokens match exactly only.
   exact            identical comparison form (blake2b, 64 bit).
   near             MinHash of word SHINGLE-grams with NUM_PERM multiply-shift hashes; LSH with BANDS x
                    ROWS. Inside an LSH bucket every document is compared with the bucket's keeper on the
-                   full signature; an estimated Jaccard (share of equal values) >= THRESHOLD links them.
-                   Linked documents form clusters (connected components).
+                   full signature; an estimated Jaccard (share of equal values) at or above the pair's
+                   threshold links them. Linked documents form clusters (connected components).
+  thresholds       by source type (user, 2026-10-07): OCR sources 0.60, keyed sources (`ocr_or_keyed:
+                   keyed` in sources.yaml) 0.80; a pair with an OCR side uses 0.60. One OCR error spoils
+                   SHINGLE shingles, so true duplicates of noisy pages fall well below 0.80.
   keeper           per cluster the earliest date; ties: article-level before page-level source, then a
                    fixed hash of the id. Everything else in the cluster is dropped.
 
-At THRESHOLD 0.8 with 16 x 8 bands a pair with true Jaccard 0.8 becomes a candidate with probability
-~0.95, one at 0.85 ~0.99, one at 0.6 ~0.24 (then rejected on the full signature).
+With 32 x 4 bands a pair at true Jaccard 0.60 becomes a candidate with probability ~0.99, at 0.55 ~0.95,
+at 0.30 ~0.23 (then rejected on the full signature). Paragraph-level dedup of page-level sources is a
+separate stage (src.data.para_dedup).
 
     python -m src.data.dedup --lang en [--workers 8] [--dry-run] [--samples reports/dedup_samples_en.md]
 """
@@ -29,7 +33,6 @@ import argparse
 import datetime as dt
 import hashlib
 import json
-import os
 import random
 import re
 import sys
@@ -41,17 +44,18 @@ from pathlib import Path
 
 import numpy as np
 import pyarrow as pa
-import pyarrow.compute as pc
 import pyarrow.parquet as pq
 
 from src.data.download import load_config, repo_path
 
 SHINGLE = 5
 NUM_PERM = 128
-BANDS, ROWS = 16, 8
-THRESHOLD = 0.8
+BANDS, ROWS = 32, 4
+THRESHOLD_OCR, THRESHOLD_KEYED = 0.60, 0.80
+SAMPLE_BAND, SAMPLE_K = (0.55, 0.65), 30
 SEED = 1939
 TOKEN = re.compile(r"[^\W\d_]+", re.UNICODE)
+IN_RAM_BYTES = 4 << 30          # band keys above this size go to a memory-mapped file
 
 _rng = np.random.default_rng(SEED)
 PERM_A = _rng.integers(1, 2 ** 63, NUM_PERM, dtype=np.uint64) | np.uint64(1)    # odd multipliers
@@ -82,17 +86,25 @@ def exact_hash(tokens: list[str]) -> int:
     return int.from_bytes(d, "big", signed=True)
 
 
-def minhash(tokens: list[str]) -> np.ndarray | None:
-    """uint32[NUM_PERM] signature of the set of word SHINGLE-grams; None if the text is too short."""
+def shingles(tokens: list[str]) -> np.ndarray:
+    """uint64 hash of every word SHINGLE-gram (empty if the text is too short)."""
     n = len(tokens) - SHINGLE + 1
     if n < 1:
-        return None
+        return np.zeros(0, dtype=np.uint64)
     th = np.fromiter((token_hash(t) for t in tokens), dtype=np.uint64, count=len(tokens))
     sh = np.zeros(n, dtype=np.uint64)
     for j in range(SHINGLE):
         sh += th[j:j + n] * SHINGLE_MUL[j]
+    return sh
+
+
+def minhash(tokens: list[str]) -> np.ndarray | None:
+    """uint32[NUM_PERM] signature of the set of word SHINGLE-grams; None if the text is too short."""
+    sh = shingles(tokens)
+    if len(sh) == 0:
+        return None
     sig = np.full(NUM_PERM, np.iinfo(np.uint64).max, dtype=np.uint64)
-    for s in range(0, n, 4096):
+    for s in range(0, len(sh), 4096):
         block = sh[s:s + 4096, None] * PERM_A[None, :] + PERM_B[None, :]
         np.minimum(sig, block.min(axis=0), out=sig)
     return (sig >> np.uint64(32)).astype(np.uint32)
@@ -133,16 +145,17 @@ def _sign_job(job: tuple) -> dict:
     return {"path": path, "docs": len(sigs), "words": words, "seconds": round(time.time() - t0, 1)}
 
 
-def selected_files(cfg: dict, lang: str) -> list[tuple[str, str]]:
-    """(path, sha256) of every selected parquet of this language, from the per-source MANIFESTs."""
-    out = []
+def selected_files(cfg: dict, lang: str) -> tuple[list[tuple[str, str]], dict[str, bool]]:
+    """(path, sha256) of every selected parquet of this language, and keyed (True/False) per source."""
+    out, keyed = [], {}
     for m in sorted(repo_path(cfg["selected"]).glob("*/MANIFEST.json")):
         man = json.loads(m.read_text(encoding="utf-8"))
+        keyed[man["source"]] = bool(man.get("params", {}).get("keyed"))
         for e in man["files"].values():
             o = e["outputs"].get(lang)
             if o:
                 out.append((str(m.parent / o["file"]), o["sha256"]))
-    return sorted(set(out))
+    return sorted(set(out)), keyed
 
 
 # ---------------------------------------------------------------- matching
@@ -184,6 +197,8 @@ def group_pairs(keys: np.ndarray, rank: np.ndarray, valid: np.ndarray | None = N
 def components(n: int, u: np.ndarray, v: np.ndarray, rank: np.ndarray) -> np.ndarray:
     """Label of every document = best rank in its connected component (min-label propagation)."""
     lab = rank.copy()
+    if len(u) == 0:
+        return lab
     doc_of_rank = np.empty_like(rank)
     doc_of_rank[rank] = np.arange(n)
     for _ in range(200):
@@ -197,48 +212,67 @@ def components(n: int, u: np.ndarray, v: np.ndarray, rank: np.ndarray) -> np.nda
     raise RuntimeError("label propagation did not converge")
 
 
-def match(sig: np.ndarray, idx: pa.Table, sample_k: int = 20,
-          bins: tuple = ((0.80, 0.85), (0.70, 0.80))):
+def band_keys(sig: np.ndarray, out_path: Path | None = None) -> np.ndarray:
+    """keys[b, i] = hash of rows b*ROWS .. b*ROWS+ROWS-1 of document i's signature, one sequential pass."""
+    n = len(sig)
+    if out_path is not None and BANDS * n * 8 > IN_RAM_BYTES:
+        keys = np.lib.format.open_memmap(out_path, mode="w+", dtype=np.uint64, shape=(BANDS, n))
+    else:
+        keys = np.zeros((BANDS, n), dtype=np.uint64)
+    for r0 in range(0, n, 1_000_000):
+        block = np.asarray(sig[r0:r0 + 1_000_000]).astype(np.uint64)
+        for b in range(BANDS):
+            k = np.zeros(len(block), dtype=np.uint64)
+            for j in range(ROWS):
+                k += block[:, b * ROWS + j] * BAND_MUL[j]
+            keys[b, r0:r0 + len(block)] = k
+    return keys
+
+
+def match(sig: np.ndarray, idx: pa.Table, thr: np.ndarray, keys: np.ndarray | None = None,
+          sample_band: tuple = SAMPLE_BAND, sample_k: int = SAMPLE_K):
+    """Clusters at the per-document thresholds `thr` (a pair uses the lower one) and, for the report, at a
+    uniform THRESHOLD_KEYED. Returns dropped, their keepers, Jaccard to the keeper, reason, the drop mask
+    at the uniform threshold, and per-source samples of OCR pairs in `sample_band`."""
     n = len(idx)
     rank = priority_rank(idx)
     has_sig = idx.column("has_sig").to_numpy(zero_copy_only=False)
     exact = idx.column("exact").to_numpy()
+    src = idx.column("source").to_pylist()
+    keys = band_keys(sig) if keys is None else keys
     eu, ev = group_pairs(exact, rank)
-    us, vs, js = [eu], [ev], [np.ones(len(eu))]
+    pol_u, pol_v, uni_u, uni_v = [eu], [ev], [eu], [ev]
     random.seed(SEED)
-    samples = {f"{lo:.2f}-{hi:.2f}": [] for lo, hi in bins}
-    seen_bins = Counter()
+    samples: dict[str, list] = defaultdict(list)
+    seen: Counter = Counter()
+    lo, hi = sample_band
     for band in range(BANDS):
-        cols = sig[:, band * ROWS:(band + 1) * ROWS].astype(np.uint64)
-        key = np.zeros(n, dtype=np.uint64)
-        for j in range(ROWS):
-            key += cols[:, j] * BAND_MUL[j]
-        u, v = group_pairs(key, rank, valid=has_sig)
+        u, v = group_pairs(np.asarray(keys[band]), rank, valid=has_sig)
         if len(u) == 0:
             continue
-        j_est = np.concatenate([jaccard(sig[u[s:s + 500_000]], sig[v[s:s + 500_000]])
+        j_est = np.concatenate([jaccard(np.asarray(sig[u[s:s + 500_000]]), np.asarray(sig[v[s:s + 500_000]]))
                                 for s in range(0, len(u), 500_000)])
-        for lo, hi in bins:
-            name = f"{lo:.2f}-{hi:.2f}"
-            sel = np.flatnonzero((j_est >= lo) & (j_est < hi))
-            for t in sel[:5000]:                      # reservoir over all bands
-                seen_bins[name] += 1
-                if len(samples[name]) < sample_k:
-                    samples[name].append((int(u[t]), int(v[t]), float(j_est[t])))
-                elif random.random() < sample_k / seen_bins[name]:
-                    samples[name][random.randrange(sample_k)] = (int(u[t]), int(v[t]), float(j_est[t]))
-        ok = j_est >= THRESHOLD
-        us.append(u[ok]); vs.append(v[ok]); js.append(j_est[ok])
-    u, v = np.concatenate(us), np.concatenate(vs)
-    lab = components(n, u, v, rank) if len(u) else rank.copy()
+        ok_pol = j_est >= np.minimum(thr[u], thr[v])
+        ok_uni = j_est >= THRESHOLD_KEYED
+        pol_u.append(u[ok_pol]); pol_v.append(v[ok_pol]); uni_u.append(u[ok_uni]); uni_v.append(v[ok_uni])
+        for t in np.flatnonzero((j_est >= lo) & (j_est < hi) & (thr[u] < THRESHOLD_KEYED))[:20000]:
+            s = src[u[t]]
+            seen[s] += 1
+            pair = (int(u[t]), int(v[t]), float(j_est[t]))
+            if len(samples[s]) < sample_k:
+                samples[s].append(pair)
+            elif random.random() < sample_k / seen[s]:
+                samples[s][random.randrange(sample_k)] = pair
     doc_of_rank = np.empty_like(rank)
     doc_of_rank[rank] = np.arange(n)
-    keeper = doc_of_rank[lab]
+    keeper = doc_of_rank[components(n, np.concatenate(pol_u), np.concatenate(pol_v), rank)]
+    keeper_uni = doc_of_rank[components(n, np.concatenate(uni_u), np.concatenate(uni_v), rank)]
     dropped = np.flatnonzero(keeper != np.arange(n))
-    jd = np.where(exact[dropped] == exact[keeper[dropped]], 1.0,
-                  jaccard(sig[dropped], sig[keeper[dropped]]) if len(dropped) else 0.0)
-    reason = np.where(exact[dropped] == exact[keeper[dropped]], "exact", "near")
-    return dropped, keeper[dropped], jd, reason, samples
+    k = keeper[dropped]
+    same = exact[dropped] == exact[k]
+    jd = np.where(same, 1.0, jaccard(np.asarray(sig[dropped]), np.asarray(sig[k])) if len(dropped) else 0.0)
+    reason = np.where(same, "exact", "near")
+    return dropped, k, jd, reason, keeper_uni != np.arange(n), dict(samples)
 
 
 # ---------------------------------------------------------------- driver
@@ -249,16 +283,15 @@ def write_samples(path: Path, samples: dict, idx: pa.Table, files: list[str]) ->
     want = {aid[i] for i in ids}
     text: dict[str, tuple] = {}
     for f in files:
-        t = pq.read_table(f, columns=["article_id", "source", "date", "text"],
-                          filters=[("article_id", "in", list(want))])
+        t = pq.read_table(f, columns=["article_id", "source", "date", "text"], filters=[("article_id", "in", list(want))])
         for a, s, d, x in zip(*(t.column(c).to_pylist() for c in ("article_id", "source", "date", "text"))):
             text[a] = (s, d, x)
-    out = ["# Dedup samples near the threshold", "",
-           f"THRESHOLD {THRESHOLD}; MinHash {NUM_PERM} perms, {BANDS}x{ROWS} bands, word {SHINGLE}-grams.", ""]
-    for name, pairs in samples.items():
-        linked = float(name.split("-")[0]) >= THRESHOLD
-        out += [f"## Estimated Jaccard {name} ({'linked: duplicates' if linked else 'not linked'})", ""]
-        for k, (a, b, j) in enumerate(pairs, 1):
+    out = ["# Dedup samples, OCR sources, estimated Jaccard 0.55-0.65", "",
+           f"Thresholds: OCR {THRESHOLD_OCR}, keyed {THRESHOLD_KEYED}. MinHash {NUM_PERM} perms, {BANDS}x{ROWS} "
+           f"bands, word {SHINGLE}-grams. Pairs at or above {THRESHOLD_OCR} are linked (A = the later document).", ""]
+    for source, pairs in sorted(samples.items()):
+        out += [f"## {source} ({len(pairs)} pairs)", ""]
+        for k, (a, b, j) in enumerate(sorted(pairs, key=lambda p: p[2]), 1):
             for tag, i in (("A", a), ("B", b)):
                 s, d, x = text.get(aid[i], ("?", "?", ""))
                 snippet = " ".join(x.split())[:400].replace("|", "/")
@@ -272,14 +305,13 @@ def main() -> None:
     ap.add_argument("--lang", required=True, choices=["en", "de"])
     ap.add_argument("--workers", type=int, default=8)
     ap.add_argument("--dry-run", action="store_true", help="match and count; write no drops/MANIFEST")
-    ap.add_argument("--samples", default="", help="write near-threshold example pairs to this markdown file")
-    ap.add_argument("--sample-bins", default="0.80-0.85,0.70-0.80", help="Jaccard ranges to sample, lo-hi,...")
+    ap.add_argument("--samples", default="", help="write 0.55-0.65 example pairs per OCR source to this file")
     args = ap.parse_args()
     cfg = load_config(repo_path("config/paths.yaml"))
     out_dir = repo_path(cfg["dedup"]) / args.lang
     sig_dir = out_dir / "sig"
     sig_dir.mkdir(parents=True, exist_ok=True)
-    files = selected_files(cfg, args.lang)
+    files, keyed = selected_files(cfg, args.lang)
     if not files:
         sys.exit(f"no selected files for {args.lang}")
     t0 = time.time()
@@ -296,27 +328,45 @@ def main() -> None:
     t_sign = time.time() - t0
     shas = [sha[:12] for _, sha in files]
     idx = pa.concat_tables([pq.read_table(sig_dir / f"{s}.idx.parquet") for s in shas])
-    sig = np.concatenate([np.load(sig_dir / f"{s}.npy") for s in shas]) if shas else np.zeros((0, NUM_PERM), np.uint32)
+    n = len(idx)
+    if n * NUM_PERM * 4 > IN_RAM_BYTES:                      # the 5080 pool: one memory-mapped array
+        sig = np.lib.format.open_memmap(out_dir / "sig_all.npy", mode="w+", dtype=np.uint32, shape=(n, NUM_PERM))
+        r = 0
+        for s in shas:
+            a = np.load(sig_dir / f"{s}.npy")
+            sig[r:r + len(a)] = a
+            r += len(a)
+        sig.flush()
+    else:
+        sig = np.concatenate([np.load(sig_dir / f"{s}.npy") for s in shas])
+    src = idx.column("source").to_pylist()
+    thr_of = {s: THRESHOLD_KEYED if keyed.get(s) else THRESHOLD_OCR for s in set(src)}
+    thr = np.array([thr_of[s] for s in src], dtype=np.float64)
     t1 = time.time()
-    bins = tuple(tuple(float(x) for x in b.split("-")) for b in args.sample_bins.split(","))
-    dropped, kept, jd, reason, samples = match(sig, idx, bins=bins)
+    keys = band_keys(sig, out_dir / "band_keys.npy")
+    dropped, kept, jd, reason, uni_mask, samples = match(sig, idx, thr, keys)
     t_match = time.time() - t1
-    aid, src = idx.column("article_id").to_pylist(), idx.column("source").to_pylist()
-    dates, nw = idx.column("date").to_pylist(), idx.column("n_words").to_pylist()
+    aid, dates, nw = idx.column("article_id").to_pylist(), idx.column("date").to_pylist(), idx.column("n_words").to_pylist()
     per = defaultdict(Counter)
-    for i in range(len(idx)):
-        per[src[i]]["docs"] += 1
-        per[src[i]]["words"] += nw[i]
+    for i in range(n):
+        c = per[src[i]]
+        c["docs"] += 1
+        c["words"] += nw[i]
+        if uni_mask[i]:
+            c["dropped_at_0.80"] += 1
+            c["dropped_words_at_0.80"] += nw[i]
     for i, r in zip(dropped.tolist(), reason.tolist()):
         per[src[i]][f"dropped_{r}"] += 1
         per[src[i]]["dropped_words"] += nw[i]
-    print(f"{args.lang}: {len(idx):,} docs, dropped {len(dropped):,} "
-          f"(exact {int((reason == 'exact').sum()):,}, near {int((reason == 'near').sum()):,}); "
-          f"sign {t_sign:.0f}s ({signed_words / max(t_sign, 1e-9) / 1e6:.1f}M tokens/s), match {t_match:.0f}s", flush=True)
+    print(f"{args.lang}: {n:,} docs, dropped {len(dropped):,} (exact {int((reason == 'exact').sum()):,}, near "
+          f"{int((reason == 'near').sum()):,}); at a uniform 0.80: {int(uni_mask.sum()):,}; sign {t_sign:.0f}s "
+          f"({signed_words / max(t_sign, 1e-9) / 1e6:.1f}M tokens/s), match {t_match:.0f}s", flush=True)
     for s, c in sorted(per.items()):
-        print(f"  {s:24} docs={c['docs']:>9,} dropped={c['dropped_exact'] + c['dropped_near']:>8,} "
-              f"({100 * (c['dropped_exact'] + c['dropped_near']) / c['docs']:5.1f} %) "
-              f"words dropped {100 * c['dropped_words'] / max(c['words'], 1):5.1f} %", flush=True)
+        d = c["dropped_exact"] + c["dropped_near"]
+        print(f"  {s:24} thr={thr_of[s]:.2f} docs={c['docs']:>9,} dropped={d:>8,} ({100 * d / c['docs']:5.1f} %, "
+              f"words {100 * c['dropped_words'] / max(c['words'], 1):5.1f} %); at 0.80: "
+              f"{100 * c['dropped_at_0.80'] / c['docs']:5.1f} % docs, "
+              f"{100 * c['dropped_words_at_0.80'] / max(c['words'], 1):5.1f} % words", flush=True)
     if args.samples:
         write_samples(Path(args.samples), samples, idx, [p for p, _ in files])
         print(f"samples -> {args.samples}", flush=True)
@@ -328,10 +378,13 @@ def main() -> None:
     pq.write_table(drops, out_dir / "drops.parquet", compression="zstd")
     manifest = {"stage": "dedup", "lang": args.lang,
                 "created_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
-                "params": {"SHINGLE": SHINGLE, "NUM_PERM": NUM_PERM, "BANDS": BANDS, "ROWS": ROWS,
-                           "THRESHOLD": THRESHOLD, "SEED": SEED, "keeper": "earliest date, article-level, id hash"},
+                "params": {"SHINGLE": SHINGLE, "NUM_PERM": NUM_PERM, "BANDS": BANDS, "ROWS": ROWS, "SEED": SEED,
+                           "THRESHOLD_OCR": THRESHOLD_OCR, "THRESHOLD_KEYED": THRESHOLD_KEYED,
+                           "pair_threshold": "lower of the two documents' thresholds",
+                           "keeper": "earliest date, article-level, id hash"},
+                "threshold_per_source": dict(sorted(thr_of.items())),
                 "inputs": {s: sha for (_, sha), s in zip(files, shas)},
-                "docs": len(idx), "dropped": len(dropped),
+                "docs": n, "dropped": len(dropped), "dropped_at_uniform_0.80": int(uni_mask.sum()),
                 "per_source": {s: dict(c) for s, c in sorted(per.items())},
                 "seconds": {"sign": round(t_sign), "match": round(t_match)}}
     (out_dir / "MANIFEST.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
