@@ -2,6 +2,20 @@
 
 Operating guide (machines, remote control, VPN budget, tools, pitfalls): `docs/HANDOFF.md` §13.
 
+## Update 2026-10-07 15:50 — archive.org done, hand-over packed
+
+- All archive.org, Gutenberg and Dingler downloads are finished and ingested on the 2080 (23 sources,
+  799M words, 2.24 GB parquet). Packed with `transfer_ingested.py pack` into
+  `C:\Users\27409\Desktop\1939_transfer2\` and wrapped as `C:\Users\27409\Desktop\1939_transfer2.tar`
+  (2,275,799,040 bytes, sha256 337638930f5775b9..., 17,119 entries) for Baidu Netdisk.
+- On the 5080, after Andrew puts the tar in `C:\Users\AN\Downloads\`:
+  `ssh gpu 'cd /d C:\Users\AN\Downloads && tar -xf 1939_transfer2.tar'`, then
+  `transfer_ingested.py merge --in /mnt/c/Users/AN/Downloads/1939_transfer2` (in tmux, as on 10-06).
+  Key sets are disjoint from what the 5080 ingested itself (BAMS 370, Annalen 66, Gutenberg 997,
+  Sitzungsberichte 1).
+- JFM still harvesting on the 2080 (215,620 / 223,270 records at 15:46; walk ~50 %); it goes in a
+  second, small hand-over (`--sources jfm`, ~0.1 GB).
+
 ## Update 2026-10-07 11:15
 
 - Windows Update restarted the 2080 at 01:43 (event 1074, svchost / TrustedInstaller); every local job
