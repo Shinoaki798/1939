@@ -721,7 +721,83 @@ def rows_gutenberg(path: Path, key: str, cutoff: dt.date, stats: Counter, source
     yield row
 
 
+_TEI = "{http://www.tei-c.org/ns/1.0}"
+_DINGLER_VOL = re.compile(r"/sources/volumes/pj(\d+)\.xml$")
+_DINGLER_YEAR = re.compile(r"Jahrgang\s+(\d{4})")
+
+
+def _tei_text(el) -> str:
+    """Text of a TEI element without editorial additions: typed <note>s (the project's remarks, e.g.
+    "Anmerkungszeichen ... fehlt im Text") and <figDesc> placeholders are dropped, author footnotes
+    (untyped notes) kept. Block elements start a new line; cells and line breaks become spaces."""
+    parts: list[str] = []
+    flat = lambda s: (s or "").replace("\n", " ")   # source line wrapping is not a paragraph break
+
+    def walk(e) -> None:
+        tag = e.tag.rsplit("}", 1)[-1]
+        if tag == "figDesc" or (tag == "note" and e.get("type")):
+            parts.append(flat(e.tail))
+            return
+        if tag in ("p", "head", "item", "row", "titlePart", "bibl", "byline"):
+            parts.append("\n")
+        elif tag in ("cell", "lb"):
+            parts.append(" ")
+        parts.append(flat(e.text))
+        for c in e:
+            walk(c)
+        parts.append(flat(e.tail))
+
+    parts.append(flat(el.text))
+    for c in el:
+        walk(c)
+    lines = (" ".join(line.split()) for line in "".join(parts).split("\n"))
+    return "\n".join(line for line in lines if line)
+
+
+def rows_dingler(path: Path, key: str, cutoff: dt.date, stats: Counter):
+    """Dinglers Polytechnisches Journal, TEI volumes from the pinned GitHub tarball: one row per article
+    (<text type="art_*">); teiHeader, volume/issue front matter, editorial notes and figure placeholders
+    dropped. Keyed text: skips the OCR gates, gets the C1 screen. Dated by the volume's Jahrgang
+    (year-only). Historical typography (long s, combining e) is kept as in the source."""
+    import tarfile
+    import xml.etree.ElementTree as ET
+    with tarfile.open(path, "r:gz") as tar:
+        for member in tar:
+            v = _DINGLER_VOL.search(member.name)
+            if not v or not member.isfile():
+                continue
+            vol = int(v.group(1))
+            root = ET.parse(tar.extractfile(member)).getroot()
+            header = root.find(f"{_TEI}teiHeader")
+            titles = " ".join(t.text or "" for t in header.iter(f"{_TEI}title")) if header is not None else ""
+            y = _DINGLER_YEAR.search(titles)
+            for t in root.iter(f"{_TEI}text"):
+                if not t.get("type", "").startswith("art_"):
+                    continue
+                stats["rows_in"] += 1
+                if not y:
+                    stats["dropped_bad_date"] += 1
+                    continue
+                year = int(y.group(1))
+                if year > cutoff.year - 1:
+                    stats["dropped_after_cutoff"] += 1
+                    continue
+                text = _tei_text(t)
+                if not text:
+                    stats["dropped_empty"] += 1
+                    continue
+                aid = t.get("{http://www.w3.org/XML/1998/namespace}id") or f"pj{vol:03d}_{stats['rows_in']}"
+                front = t.find(f"{_TEI}front")
+                headline = " ".join(_tei_text(front).split())[:300] if front is not None else ""
+                row = _row(f"dingler_{aid}", "dingler", dt.date(year, 1, 1), "Polytechnisches Journal", "", "", text,
+                           {"volume": vol, "tei_id": aid, "article_type": t.get("type"), "date_precision": "year",
+                            "bucket": "science"})
+                row["headline"] = headline
+                yield row
+
+
 ADAPTERS = {"congressional_record": rows_congressional_record, "hmd_newspapers": rows_hmd_newspapers,
+            "dingler": rows_dingler,
             "gutenberg_sci_en": functools.partial(rows_gutenberg, source="gutenberg_sci_en"),
             "gutenberg_sci_de": functools.partial(rows_gutenberg, source="gutenberg_sci_de"),
             "jstor_ejc": rows_jstor_ejc, "royal_society_corpus": rows_royal_society_corpus,
