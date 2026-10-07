@@ -557,6 +557,23 @@ Dated entries; each supersedes anything above it that it contradicts.
   - *E-mail:* kept out of the public repo again (`\authoremail` +
     gitignored `docs/author_private.tex`); `docs/proposal.pdf` is the public
     build, `docs/proposal_submission.pdf` (gitignored) the one to submit.
+- **2026-10-07 — cleaning design (user answers to three questions).**
+  - *Pre-1920 is subsampled before dedup.* The selected pool takes pre-1920 general text (EN ~29B,
+    DE ~14.6B words, versus a cap of 8 % of seen tokens) by recency weight per year, about 4x what the
+    cap can use, with a floor per year so every year 1900-1919 keeps a usable held-out set (defaults:
+    4x, 20M words per year and language; adjustable). General text before 1900 is not in the pool
+    (its recency weight is ~0; the science bucket is unaffected). The per-year 2 % holdout is drawn
+    from this selected, deduplicated pool.
+  - *German historical typography is normalised in the training text:* long s -> s, a/o/u + combining
+    small e (U+0364) -> ä/ö/ü, applied uniformly to every German source at selection; raw and ingested
+    files keep the source form.
+  - *A near-duplicate cluster keeps its earliest-dated document* (ties: higher OCR score, then
+    article-level over page-level source, then the smaller id). This also keeps a post-cutoff reprint of
+    a pre-cutoff text out of the test sets.
+  - Implementation consequences (no further decision needed): dedup runs per language (no
+    near-duplicates across languages); MinHash signatures are computed per source wherever the data
+    sits, and only the matching step needs the whole language pool. Split membership is a fixed hash of
+    the document id (buckets of 1 %), applied to every source; only American Stories is scored.
 
 ---
 
