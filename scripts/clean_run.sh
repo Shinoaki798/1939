@@ -22,8 +22,8 @@ for step in $steps; do
     dedup_en) "$PY" -u -m src.data.dedup --lang en --workers 8 --samples reports/dedup_samples_en.md >> logs/dedup_en.log 2>&1 ;;
     dedup_de) "$PY" -u -m src.data.dedup --lang de --workers 8 --samples reports/dedup_samples_de.md >> logs/dedup_de.log 2>&1 ;;
     heldout)  "$PY" -u -m src.data.para_dedup heldout --lang en --workers 12 >> logs/para_dedup.log 2>&1 ;;
-    reprint_en) "$PY" -u -m src.data.para_dedup reprint --lang en --workers 8 >> logs/para_dedup.log 2>&1 ;;
-    reprint_de) "$PY" -u -m src.data.para_dedup reprint --lang de --workers 8 >> logs/para_dedup.log 2>&1 ;;
+    reprint_en) "$PY" -u -m src.data.para_dedup reprint --lang en --workers 6 >> logs/para_dedup.log 2>&1 ;;
+    reprint_de) "$PY" -u -m src.data.para_dedup reprint --lang de --workers 6 >> logs/para_dedup.log 2>&1 ;;
     filter_en) "$PY" -u -m src.data.filter --lang en --workers 14 >> logs/filter.log 2>&1 ;;
     filter_de) "$PY" -u -m src.data.filter --lang de --workers 14 >> logs/filter.log 2>&1 ;;
     audit)    "$PY" -u -m src.data.audit --out reports/audit_v1.md >> logs/audit.log 2>&1 ;;
