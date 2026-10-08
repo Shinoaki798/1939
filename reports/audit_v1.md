@@ -1174,14 +1174,98 @@ Keyed 92.8M w vs OCR 199.6M w (31.7 % keyed).
 | usgs_pp | US federal government work, public domain |
 | psm_wikisource | text US public domain; Wikisource transcription CC BY-SA 4.0 |
 
-## 8. Seen-token mixture against the caps (estimates)
+## 8. Training mixture: unique vs seen tokens (src.data.mixture; estimates)
 
-| slice | available (unique x epochs) | planned seen | share | rule |
-|---|---|---|---|---|
-| 1930-1939.06 (x2) | 9.43B tok | 8.97B tok | 89.7 % | repeated twice; German <= 25 %, books <= 12 %, legal <= 10 % (after caps 8.97B tok: German 2.24B tok, legal 897.2M tok, books 39.0M tok) |
-| 1920-1929 (x1) | 8.37B tok | 27.6M tok | 0.3 % | fills the remainder, <= 35 % |
-| pre-1920 (x1) | 2.78B tok | 0 tok | 0.0 % | <= 8 % |
-| science en (<= x2) | 1.70B tok | 750.1M tok | 7.5 % | <= 10 % of the language's seen tokens |
-| science de (<= x2) | 467.9M tok | 249.9M tok | 2.5 % | <= 10 % of the language's seen tokens |
-| German, all general slices |  | 2.25B tok | 22.5 % | <= 25 % per period |
-| total |  | 10.00B tok | 100 % | budget 10B |
+Profile 12B (budget 12.00B tok), drawn 2026-10-08T17:31:16+00:00; tokens = words x {'en': 1.35, 'de': 1.6} until the BPE exists (re-draw then). Second epoch only from 1934-01-01; within a period the order is by weight exp(-(1939 - year)/5); caps per period: German <= 25%, books <= 12%, legal <= 10% of the period's English (absolute: {'1930-39.06': 350000000.0}). User decisions 2026-10-08 (HANDOFF §12).
+
+| period | lang | category | unique | seen | of which 2nd epoch | seen / unique |
+|---|---|---|---|---|---|---|
+| 1930-39.06 | de | legislative | 72 tok | 144 tok | 72 tok | 2.00 |
+| 1930-39.06 | de | newspaper | 1.21B tok | 1.65B tok | 435.8M tok | 1.36 |
+| 1930-39.06 | en | books | 19.5M tok | 27.0M tok | 7.5M tok | 1.38 |
+| 1930-39.06 | en | legal | 585.6M tok | 350.0M tok | 0 tok | 0.60 |
+| 1930-39.06 | en | legislative | 104.7M tok | 166.0M tok | 61.3M tok | 1.59 |
+| 1930-39.06 | en | newspaper | 2.79B tok | 4.41B tok | 1.61B tok | 1.58 |
+| 1920-29 | de | books | 8.1k tok | 8.1k tok | 0 tok | 1.00 |
+| 1920-29 | de | newspaper | 1.73B tok | 650.0M tok | 0 tok | 0.38 |
+| 1920-29 | en | books | 1.48B tok | 311.9M tok | 0 tok | 0.21 |
+| 1920-29 | en | legal | 326.3M tok | 159.1M tok | 0 tok | 0.49 |
+| 1920-29 | en | legislative | 107.4M tok | 37.5M tok | 0 tok | 0.35 |
+| 1920-29 | en | newspaper | 5.21B tok | 1.44B tok | 0 tok | 0.28 |
+| 1900-19 | de | books | 29.8k tok | 0 tok | 0 tok | 0.00 |
+| 1900-19 | de | legislative | 336 tok | 0 tok | 0 tok | 0.00 |
+| 1900-19 | de | newspaper | 746.1M tok | 183.7M tok | 0 tok | 0.25 |
+| 1900-19 | en | books | 520.6M tok | 95.9M tok | 0 tok | 0.18 |
+| 1900-19 | en | legal | 146.4k tok | 25.3k tok | 0 tok | 0.17 |
+| 1900-19 | en | legislative | 19.0M tok | 6.3M tok | 0 tok | 0.33 |
+| 1900-19 | en | newspaper | 1.73B tok | 514.1M tok | 0 tok | 0.30 |
+| science | de | science | 467.9M tok | 276.0M tok | 0 tok | 0.59 |
+| science | en | science | 1.70B tok | 835.1M tok | 0 tok | 0.49 |
+
+| period | target | seen | 2nd epoch | German share | books share | legal / English | legal seen |
+|---|---|---|---|---|---|---|---|
+| 1930-39.06 | 7.37B tok | 6.60B tok | 2.12B tok | 25.0% | 0.4% | 7.1% | 350.0M tok |
+| 1920-29 | 2.60B tok | 2.60B tok | 0 tok | 25.0% | 12.0% | 8.2% | 159.1M tok |
+| 1900-19 | 800.0M tok | 800.0M tok | 0 tok | 23.0% | 12.0% | 0.0% | 25.3k tok |
+
+| science | target | seen | share of the language's seen tokens |
+|---|---|---|---|
+| en | 850.0M tok | 835.1M tok | 10.0% |
+| de | 300.0M tok | 276.0M tok | 10.0% |
+
+Total seen: 11.11B tok of the 12.00B tok budget (SHORT by 889.2M tok: the run is shorter). Max count 2; second-epoch rows before 1934: 0; general rows before 1900 selected: 0.
+
+Science by source:
+
+| lang | source | unique | seen |
+|---|---|---|---|
+| de | annalen_physik_ia | 130.4M tok | 130.4M tok |
+| de | dingler | 109.7M tok | 45.1M tok |
+| de | jfm | 25.1M tok | 25.1M tok |
+| de | meyers6_ia | 47.1M tok | 15.7M tok |
+| de | sitzungsberichte_ia | 31.6M tok | 14.2M tok |
+| de | naturwiss_ia | 33.2M tok | 14.2M tok |
+| de | physz_ia | 30.8M tok | 12.8M tok |
+| de | math_annalen_ia | 26.4M tok | 10.7M tok |
+| de | crelle_ia | 14.6M tok | 5.7M tok |
+| de | encyklopaedie_ia | 4.4M tok | 2.1M tok |
+| de | jstor_ejc | 574.8k tok | 94.1k tok |
+| de | bams_ia | 226.9k tok | 66.6k tok |
+| de | mwr_ia | 28.9k tok | 12.9k tok |
+| de | usgs_pp | 7.8k tok | 4.0k tok |
+| de | americana_ia | 3.3k tok | 3.3k tok |
+| de | jfi_ia | 3.3k tok | 0 tok |
+| de | naca_ia | 2.3k tok | 0 tok |
+| de | nature_ia | 13.0k tok | 0 tok |
+| de | phr_ia | 3.2k tok | 0 tok |
+| de | gutenberg_sci_de | 13.8M tok | 0 tok |
+| en | jstor_ejc | 341.1M tok | 341.1M tok |
+| en | sciam_ia | 188.9M tok | 135.4M tok |
+| en | royal_society_corpus | 94.4M tok | 67.3M tok |
+| en | nature_ia | 66.9M tok | 66.9M tok |
+| en | jfi_ia | 56.6M tok | 37.3M tok |
+| en | psm_wikisource | 41.6M tok | 30.9M tok |
+| en | eb11_ia | 27.2M tok | 25.2M tok |
+| en | physrev_ia | 36.2M tok | 24.7M tok |
+| en | americana_ia | 31.5M tok | 24.1M tok |
+| en | psm_ia | 24.3M tok | 16.8M tok |
+| en | phr_ia | 16.2M tok | 11.9M tok |
+| en | naca_ia | 15.6M tok | 11.2M tok |
+| en | usgs_pp | 11.8M tok | 9.1M tok |
+| en | bams_ia | 12.3M tok | 8.9M tok |
+| en | nbs_jres_ia | 9.8M tok | 6.7M tok |
+| en | pnas_ia | 6.4M tok | 6.4M tok |
+| en | mwr_ia | 8.9M tok | 6.2M tok |
+| en | bstj_ia | 4.3M tok | 3.1M tok |
+| en | nbs_papers_ia | 1.7M tok | 1.1M tok |
+| en | math_annalen_ia | 719.7k tok | 466.5k tok |
+| en | crelle_ia | 110.7k tok | 77.4k tok |
+| en | jfm | 86.0k tok | 52.8k tok |
+| en | sitzungsberichte_ia | 68.2k tok | 40.7k tok |
+| en | naturwiss_ia | 12.6k tok | 11.4k tok |
+| en | dingler | 5.0k tok | 5.0k tok |
+| en | gutenberg_sci_en | 223.9M tok | 0 tok |
+| en | loc_pd_books | 120.7M tok | 0 tok |
+| en | pre_1929_books | 356.8M tok | 0 tok |
+
+Selection files: `en/8c615552e9fa.parquet` (19,346,055 rows, sha256 8c615552e9fa), `de/54f289315d2d.parquet` (661,250 rows, sha256 54f289315d2d)

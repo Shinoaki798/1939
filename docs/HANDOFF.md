@@ -339,6 +339,13 @@ down immediately; it still satisfies every success criterion.
   training); when.
 - ~~(2026-10-08, audit §8) 1930s x2 fills the 10B budget; 1920s / pre-1920
   share?~~ Answered 2026-10-08 (§12, mixture after cleaning).
+- (2026-10-08, mixture) The draw is 0.89B short of 12B because the German and
+  legal caps bind inside the 1930s. Fill it from the 1920s (target 2.6B ->
+  ~3.45B, still <= 35 %), or run 11.1B?
+- (2026-10-08, quality read) Text normalisation of training-only sources at the
+  shard stage, same for every split of a source: Europeana repeated words,
+  DDB / RSC space before punctuation, ⸗ line-end hyphens, Congressional Record
+  commas. American Stories (scored) is left as it is.
 
 ## 12. Decisions log
 
@@ -641,6 +648,19 @@ Dated entries; each supersedes anything above it that it contradicts.
      placeholders). audit_v1.md reports unique vs seen tokens per period x language x category.
   6. Nothing before 1900 enters the general pool (unchanged).
   This answers the 2026-10-08 open question in §11.
+  - *Drawn* (`src/data/mixture.py`, `config/mixture.yaml`, audit §8; word-based estimates): 1930s 6.60B
+    (the German cap takes 0.44B of the 0.62B German second epoch; legal 0.35B, no legal repeated), 1920s
+    2.60B, pre-1920 0.80B, science EN 0.835B + DE 0.276B = 11.11B, **0.89B short of 12B**: the 7.37B
+    target assumed the 1930s uncapped. Science targets are upper bounds under rule 7's 10 % of each
+    language (DE general is only 2.48B after the caps). A capped class gives up second epochs before
+    first ones; a parent document is per language. Science tiers leave Gutenberg, LoC and pre-1929
+    science books at 0. Selection: `data/mixture/{en,de}/<sha12>.parquet` (article_id, count).
+  - *Quality read before the draw* (`reports/mixture_samples_2026-10-08.md`): American Stories,
+    Chronicling America, case law and both book sources are clean. Training-only artefacts: Europeana
+    repeats a word at every hyphenated line break (8.8 per 1,000 words; upstream extraction), DDB has a
+    space before punctuation on ~47 % of pages and Royal Society Corpus on all, ⸗ line-end hyphens stay
+    in DDB / Völkischer Beobachter / Meyers (18-30 per 1,000 words), the Congressional Record has no
+    commas (all printed as periods). Normalisation is open (§11).
 
 ---
 
