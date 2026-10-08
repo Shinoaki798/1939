@@ -696,6 +696,11 @@ already answers.
   conversation; then switch to the default permission mode or start a fresh session with §13.7.
 - `ProcessPoolExecutor`, not `multiprocessing.Pool` (hangs on OOM-killed workers); flush parquet by bytes.
 - Never `remote_pull.sh` without the branch argument.
+- When the 5080 cannot reach GitHub (VPN down and the direct route reset), `remote_pull.sh` fails; update
+  the box with a bundle instead: `git bundle create upd.bundle <box HEAD>..data/corpus-v1`, copy it over
+  ssh into WSL (`ssh gpu 'wsl -d Ubuntu -- bash -c "cat > /tmp/upd.bundle"' < upd.bundle`), then
+  `git pull --ff-only /tmp/upd.bundle data/corpus-v1` in `~/1939`. Always check `git log -1` on the box
+  before launching a chain (on 10-08 a chain was started on stale code).
 - Long jobs on the 2080: start them with WMI (`Invoke-CimMethod Win32_Process Create`, Git Bash as the
   command) and a hidden window (`ProcessStartupInformation` with `ShowWindow = 0`; a visible bash window
   invites closing it, which kills the job). `Start-Process` children were killed when the Claude
