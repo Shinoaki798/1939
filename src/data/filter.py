@@ -12,10 +12,11 @@ counts per source x period x outcome, C1 hits per term x year).
   OCR      hit rate, word share and token count are columns on every row (the OCR covariate, rule 4).
            The gates (src.data.ocr_quality.gate; Voelkischer Beobachter: segment cleanup) apply to train
            and val only; keyed sources skip them; held-out rows are never gated.
-  C1       a train or val row containing a C1 coinage (probes/c1_screen.csv, whole word, case-insensitive;
-           English `seed` terms, German `draft` terms until approved) is dropped whole and counted per term
-           and year (rule 6); in held-out rows hits are only counted.
-  train_ok split in (train, val), gate passed and no C1 term. Seen-token sampling happens later.
+  C1       rows containing a C1 coinage (probes/c1_screen.csv, whole word, case-insensitive) are KEPT and
+           counted per term, year and split; the term is a column (c1_term) and every hit is listed in the
+           audit for a misdating check (user, 2026-10-07: pre-cutoff hits are genuine in-window text such as
+           surnames, OCR noise, Popeye's Jeep; CLAUDE.md rule 6 revised).
+  train_ok split in (train, val) and gate passed. Seen-token sampling happens later.
 
     python -m src.data.filter --lang en [--workers 8] [--dry-run]
 """
@@ -166,11 +167,13 @@ def _filter_job(job: tuple) -> dict:
                 term = c1_hit(part, state["c1"])
                 if term:
                     stats[f"c1|{term}|{date[:4]}|{split}"] += 1
-                ok = split in ("train", "val") and not gate and not term
+                ok = split in ("train", "val") and not gate
                 nw = len(part.split())
                 stats[f"{src}|{per}|{split}|docs"] += 1
                 stats[f"{src}|{per}|{split}|words"] += nw
-                outcome = "ok" if ok else (gate or ("c1" if term else "not_train"))
+                outcome = "ok" if ok else (gate or "not_train")
+                if term:
+                    stats[f"{src}|{per}|{split}|c1_words"] += nw
                 stats[f"{src}|{per}|{split}|{outcome}_words"] += nw
                 if dry_run:
                     continue

@@ -226,7 +226,8 @@ def main() -> None:
                     cells = [f"{100 * c.get(f'{per}|train|{r}_words', 0) / w:.1f} %" for r in ("ok", "short", "hit_rate", "word_share", "c1")]
                     rows.append([s, per, fmt(w, " w")] + cells + [fmt(c.get(f"{per}|para_removed_words", 0), " w")])
             out += table(["source", "period", "train words", "kept", "short", "hit rate", "word share", "C1", "paragraphs removed"], rows)
-            out += ["C1 hits (term: year|split -> documents):", ""]
+            out += ["C1 hits, kept in training (rule 6 as revised 2026-10-07; term: year|split -> documents; "
+                    "the C1 column above is the share of words in documents with a hit):", ""]
             for term, c in sorted(man.get("c1_hits", {}).items()):
                 out.append(f"- {term}: {sum(c.values())} hits; " + ", ".join(f"{k} {v}" for k, v in sorted(c.items())))
             out.append("")

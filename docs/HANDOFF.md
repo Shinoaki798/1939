@@ -590,6 +590,17 @@ Dated entries; each supersedes anything above it that it contradicts.
   3. *Language filter, keyed sources:* items too short for the stopword vote (`und`) get the source's
      language (JFM, DTA, Dingler -> de; Gutenberg -> the book's language); restores 9,668 JFM reviews.
   4. Keep-earliest applies to 1 and 2b, not to 2a.
+- **2026-10-07 — C1 screen and German-language US papers (user).**
+  - *C1 hits are kept.* The screen on the 2080 data found only genuine pre-cutoff text (English: jeep 180
+    hits, mostly Popeye's Eugene the Jeep 1936-39 and surnames; radar 60, OCR noise and names; quisling 6,
+    the surname; genocide 1. German draft: Jeep 56, an engineer's surname in Dingler; Radar 8, OCR of the
+    balloonist Nadar). These are in-window text and stay in training ("ask it what radar is and it says a
+    balloonist"). CLAUDE.md rule 6 revised: screened, counted, kept; every hit listed in the audit for a
+    misdating check; C1 training frequencies reported with RQ1. The German list (Radar, Napalm, Kamikaze,
+    Jeep, Quisling, Genozid) is accepted as the screen list.
+  - *German-language articles of American papers* (American Stories ~368k articles / 86M words, Chronicling
+    America ~3k pages / 7M words) stay in the German pool; the English-only twin drops them with the rest
+    of the German slice.
 
 ---
 

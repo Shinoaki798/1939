@@ -5,7 +5,7 @@ HANDOFF holds the research design, every locked decision with its rationale,
 the instructor's constraints and the schedule. This file holds only the rules
 that must never be violated and the conventions of the repo.
 
-State as of 2026-10-01; rules 2, 4-7, 10, 11 revised 2026-10-05, rule 1 revised 2026-10-06 (HANDOFF §12). Proposal due 2026-10-16. The person you are working
+State as of 2026-10-01; rules 2, 4-7, 10, 11 revised 2026-10-05, rule 1 revised 2026-10-06, rule 6 revised 2026-10-07 (HANDOFF §12). Proposal due 2026-10-16. The person you are working
 with is Junlei An (goes by Andrew), an individual student on this project.
 
 ## Hard constraints (never violate, never "improve")
@@ -39,10 +39,14 @@ with is Junlei An (goes by Andrew), an individual student on this project.
    (reported, not a success criterion) and RQ3 conditioning contexts only.
    Other training-only sources (books, Congressional Record, legal text,
    page-level Chronicling America OCR) are never scored.
-6. **Any document, in either language, containing a C1 coinage is dropped
-   whole and counted** (EN list from the probe set; DE list drafted separately —
-   *Blitzkrieg* is attested in German before 1939 and is NOT a C1 term). Never
-   drop just the word. (The old translated-sentence rule is N/A: no translation.)
+6. **C1 coinages are screened, counted and kept** (revised 2026-10-07, user):
+   documents dated before the cutoff that contain a C1 term (EN list from the
+   probe set; DE list in `probes/c1_screen.csv` — *Blitzkrieg* is attested in
+   German before 1939 and is NOT a C1 term) are genuine in-window text
+   (surnames, OCR noise, Popeye's Jeep) and stay in training. Every hit is
+   counted per term x year x split and listed in the audit for a misdating
+   check; the training frequency of each C1 term is reported with RQ1. Never
+   delete just the word.
 7. **≤ 2 epochs, and only 1930-01-01…1939-06-30 text is repeated.** The 1920s
    fill the remainder (≤ 35 % of seen tokens), pre-1920 ≤ 8 %, German ≤ 25 % and
    books ≤ 12 % per period, legal/regulatory text ≤ 10 %. Model fixed at 350M on
