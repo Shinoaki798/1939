@@ -8,8 +8,8 @@ Sections: pipeline yield per source; unique training text by year x language and
 Val and Test-A/B/C sizes (American Stories, the only scored source); document dedup per source at the
 per-source thresholds and at a uniform 0.80; paragraph dedup (2a held-out protection hits per source
 and cutoff; 2b reprint removals); OCR gate outcomes per source x period; C1 hits per term x year x
-split; science bucket by language x decade x source with licence and keyed/OCR share; the seen-token
-mixture against the caps of CLAUDE.md rule 7 with any shortfall.
+split; science bucket by language x decade x source with licence and keyed/OCR share; the training mixture
+(src.data.mixture): unique vs seen tokens per period x language x category, caps and any shortfall.
 
     python -m src.data.audit [--out reports/audit_v1.md]
 """
@@ -27,9 +27,6 @@ import pyarrow.parquet as pq
 from src.data.download import load_config, repo_path
 
 TOKENS_PER_WORD = {"en": 1.35, "de": 1.6}       # estimate until the 48k BPE exists
-BUDGET = 10e9                                   # seen tokens (rule 7)
-CAPS = {"pre1920": 0.08, "1920s": 0.35, "german_per_period": 0.25, "books_per_period": 0.12, "legal": 0.10,
-        "science_per_language": 0.10}
 META = ["source", "category", "bucket", "keyed", "year", "period", "split", "test_set", "n_words", "train_ok",
         "gate", "c1_term"]
 
@@ -84,65 +81,52 @@ def scan_filtered(cfg: dict, lang: str) -> dict:
     return {"manifest": m, "agg": agg}
 
 
-def mixture(unique: dict[str, dict[str, float]]) -> list[list]:
-    """Seen-token plan per language from unique train tokens (estimates). unique[lang][key] with key in
-    1930-39.06|<cat>, 1920-29|<cat>, 1900-19|<cat>, <1900|<cat>, science|science."""
-    def period_total(lang_vals: dict[str, dict[str, float]], period: str, epochs: float) -> dict[str, float]:
-        """Seen tokens of one period across languages with the German, books and legal caps applied."""
-        en = {c: v * epochs for k, v in lang_vals["en"].items() if k.startswith(period + "|") for c in [k.split("|")[1]]}
-        de = sum(v * epochs for k, v in lang_vals["de"].items() if k.startswith(period + "|"))
-        free = sum(v for c, v in en.items() if c not in ("books", "legal"))
-        books, legal = en.get("books", 0), en.get("legal", 0)
-        total = free + books + legal + de
-        for _ in range(50):                                   # caps are shares of the period total
-            b, l, d = min(books, CAPS["books_per_period"] * total), min(legal, CAPS["legal"] * total), \
-                min(de, CAPS["german_per_period"] * total)
-            new = free + b + l + d
-            if abs(new - total) < 1:
-                break
-            total = new
-        return {"en_free": free, "books": b, "legal": l, "de": d, "total": total,
-                "available": free + books + legal + de}
+def mixture_section(cfg: dict) -> list[str]:
+    """Section 8 from data/mixture/MANIFEST.json (src.data.mixture): unique vs seen tokens per period x
+    language x category, period totals against targets, cap checks, science per source."""
+    m = load(repo_path(cfg["mixture"]) / "MANIFEST.json") if "mixture" in cfg else {}
+    out = ["## 8. Training mixture: unique vs seen tokens (src.data.mixture; estimates)", ""]
+    if not m:
+        return out + ["Not drawn yet: run `python -m src.data.mixture`.", ""]
+    p = m["params"]
+    prof = p["profiles"][m["profile"]]
+    out += [f"Profile {m['profile']} (budget {fmt(prof['budget'], ' tok')}), drawn {m['created_at']}; tokens = words x "
+            f"{p['tokens_per_word']} until the BPE exists (re-draw then). Second epoch only from "
+            f"{p['repeat_from_year']}-01-01; within a period the order is by weight exp(-(1939 - year)/"
+            f"{p['half_life_years']}); caps per period: German <= {p['caps']['german']:.0%}, books <= "
+            f"{p['caps']['books']:.0%}, legal <= {p['caps']['legal_of_english']:.0%} of the period's English "
+            f"(absolute: {p['caps'].get('legal_absolute', {})}). User decisions 2026-10-08 (HANDOFF §12).", ""]
+    order = {"1930-39.06": 0, "1920-29": 1, "1900-19": 2, "science": 3}
+    cells = sorted(m["cells"], key=lambda c: (order.get(c["period"], 9), c["lang"], c["category"]))
+    out += table(["period", "lang", "category", "unique", "seen", "of which 2nd epoch", "seen / unique"],
+                 [[c["period"], c["lang"], c["category"], fmt(c["unique_tokens"], " tok"), fmt(c["seen_tokens"], " tok"),
+                   fmt(c["second_epoch_tokens"], " tok"),
+                   f"{c['seen_tokens'] / c['unique_tokens']:.2f}" if c["unique_tokens"] else "-"] for c in cells])
+    ck = m["checks"]
     rows = []
-    p30 = period_total(unique, "1930-39.06", 2.0)
-    p20 = period_total(unique, "1920-29", 1.0)
-    pre = period_total({lang: {k.replace("1900-19", "pre").replace("<1900", "pre"): v for k, v in unique[lang].items()}
-                        for lang in unique}, "pre", 1.0)
-    sci = {lang: unique[lang].get("science|science", 0) for lang in ("en", "de")}
-    share = CAPS["science_per_language"] / (1 - CAPS["science_per_language"])     # science <= 10 % of the language
-    sci_seen = {lang: 0.0 for lang in sci}
-    for _ in range(50):                  # science is reserved first; it depends on each language's general tokens
-        general_budget = BUDGET - sum(sci_seen.values())
-        p30_seen = min(p30["total"], general_budget)
-        p20_seen = min(p20["total"], CAPS["1920s"] * BUDGET, general_budget - p30_seen)
-        pre_seen = min(pre["total"], CAPS["pre1920"] * BUDGET, general_budget - p30_seen - p20_seen)
-        fr = [(p, s / p["total"] if p["total"] else 0.0) for p, s in ((p30, p30_seen), (p20, p20_seen), (pre, pre_seen))]
-        by_lang = {"en": sum(f * (p["en_free"] + p["books"] + p["legal"]) for p, f in fr),
-                   "de": sum(f * p["de"] for p, f in fr)}
-        new = {lang: min(2 * sci[lang], share * by_lang[lang]) for lang in sci}
-        done = all(abs(new[lang] - sci_seen[lang]) < 1 for lang in sci)
-        sci_seen = new
-        if done:
-            break
-    total = p30_seen + p20_seen + pre_seen + sum(sci_seen.values())
-    de_seen = sum(f * p["de"] for p, f in fr)
-    rows.append(["1930-1939.06 (x2)", fmt(p30["available"], " tok"), fmt(p30_seen, " tok"),
-                 f"{100 * p30_seen / total:.1f} %", "repeated twice; German <= 25 %, books <= 12 %, legal <= 10 %"
-                 + (f" (after caps {fmt(p30['total'], ' tok')}: German {fmt(p30['de'], ' tok')}, legal "
-                    f"{fmt(p30['legal'], ' tok')}, books {fmt(p30['books'], ' tok')})")
-                 + ("" if p30_seen >= p30["total"] - 1 else "; budget reached inside this slice")])
-    rows.append(["1920-1929 (x1)", fmt(p20["total"], " tok"), fmt(p20_seen, " tok"), f"{100 * p20_seen / total:.1f} %",
-                 "fills the remainder, <= 35 %"])
-    rows.append(["pre-1920 (x1)", fmt(pre["total"], " tok"), fmt(pre_seen, " tok"), f"{100 * pre_seen / total:.1f} %",
-                 "<= 8 %"])
-    for lang in ("en", "de"):
-        rows.append([f"science {lang} (<= x2)", fmt(sci[lang], " tok"), fmt(sci_seen[lang], " tok"),
-                     f"{100 * sci_seen[lang] / total:.1f} %", "<= 10 % of the language's seen tokens"])
-    rows.append(["German, all general slices", "", fmt(de_seen, " tok"), f"{100 * de_seen / total:.1f} %",
-                 "<= 25 % per period"])
-    rows.append(["total", "", fmt(total, " tok"), "100 %",
-                 "budget 10B" + ("" if total >= BUDGET * 0.999 else f"; SHORT by {fmt(BUDGET - total, ' tok')}")])
-    return rows
+    for per in ("1930-39.06", "1920-29", "1900-19"):
+        c = ck[per]
+        rows.append([per, fmt(c["target"], " tok"), fmt(c["seen"], " tok"), fmt(c["second_epoch"], " tok"),
+                     f"{c['german_share']:.1%}", f"{c['books_share']:.1%}", f"{c['legal_share_of_english']:.1%}",
+                     fmt(c["legal_seen"], " tok")])
+    out += table(["period", "target", "seen", "2nd epoch", "German share", "books share", "legal / English",
+                  "legal seen"], rows)
+    out += table(["science", "target", "seen", "share of the language's seen tokens"],
+                 [[lang, fmt(ck[f"science_{lang}"]["target"], " tok"), fmt(ck[f"science_{lang}"]["seen"], " tok"),
+                   f"{ck[f'science_{lang}']['share_of_language']:.1%}"] for lang in ("en", "de")])
+    total, budget = m["total_seen"], prof["budget"]
+    out += [f"Total seen: {fmt(total, ' tok')} of the {fmt(budget, ' tok')} budget"
+            + ("" if total >= 0.999 * budget else f" (SHORT by {fmt(budget - total, ' tok')}: the run is shorter)")
+            + f". Max count {ck['max_count']}; second-epoch rows before {p['repeat_from_year']}: "
+            f"{ck['second_epoch_rows_before_repeat_year']}; general rows before 1900 selected: "
+            f"{ck['general_pre1900_rows_selected']}.", ""]
+    sci = sorted((s for s in m["sources"] if s["period"] == "science"), key=lambda s: (s["lang"], -s["seen_tokens"]))
+    out += ["Science by source:", ""]
+    out += table(["lang", "source", "unique", "seen"],
+                 [[s["lang"], s["source"], fmt(s["unique_tokens"], " tok"), fmt(s["seen_tokens"], " tok")] for s in sci])
+    out += [f"Selection files: " + ", ".join(f"`{o['file']}` ({o['rows']:,} rows, sha256 {o['sha256'][:12]})"
+                                             for o in m["outputs"].values()), ""]
+    return out
 
 
 def main() -> None:
@@ -169,12 +153,10 @@ def main() -> None:
                      f"{st['drop_pre1920_sample']:,}", f"{st['drop_ejc_not_science']:,}"])
     out += table(["source", "ingested", "selected", "language drop", "date drop", "pre-1920 sample drop", "EJC non-science"], rows)
 
-    unique: dict[str, dict[str, float]] = {}
     for lang in ("en", "de"):
         f = scan_filtered(cfg, lang)
         agg, man = f["agg"], f["manifest"]
         tpw = TOKENS_PER_WORD[lang]
-        unique[lang] = {k: v * tpw for k, v in agg["unique_by_period_cat"].items()}
         out += [f"## 2. {lang}: unique training text", ""]
         rows = [[k.split("|")[0], k.split("|")[1], fmt(v, " w"), fmt(v * tpw, " tok")]
                 for k, v in sorted(agg["unique_by_period_cat"].items())]
@@ -254,8 +236,7 @@ def main() -> None:
     out += ["## 7. Licence per science source", ""]
     out += table(["source", "licence"], [[n, str(v.get("licence", ""))[:140]] for n, v in sources.items()
                                          if isinstance(v, dict) and v.get("bucket") == "science"])
-    out += ["## 8. Seen-token mixture against the caps (estimates)", ""]
-    out += table(["slice", "available (unique x epochs)", "planned seen", "share", "rule"], mixture(unique))
+    out += mixture_section(cfg)
     Path(args.out).write_text("\n".join(out), encoding="utf-8")
     print(f"-> {args.out}")
 

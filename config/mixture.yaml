@@ -11,19 +11,19 @@ max_epochs: 2
 profile: 12B
 profiles:
   12B:
-    budget: 12.0e9
-    periods: {"1930-39.06": 7.37e9, "1920-29": 2.6e9, "1900-19": 0.8e9}
-    science: {en: 0.85e9, de: 0.30e9}
+    budget: 12.0e+9
+    periods: {"1930-39.06": 7.37e+9, "1920-29": 2.6e+9, "1900-19": 0.8e+9}
+    science: {en: 0.85e+9, de: 0.30e+9}
   10B:                        # "if the user overrides back to 10B": only the 1920s and pre-1920 move
-    budget: 10.0e9
-    periods: {"1930-39.06": 7.37e9, "1920-29": 1.4e9, "1900-19": 0.35e9}
-    science: {en: 0.85e9, de: 0.30e9}
+    budget: 10.0e+9
+    periods: {"1930-39.06": 7.37e+9, "1920-29": 1.4e+9, "1900-19": 0.35e+9}
+    science: {en: 0.85e+9, de: 0.30e+9}
 
 caps:                         # per period, shares of the period's seen tokens
   german: 0.25
   books: 0.12                 # English books (category books); German books are counted as German
   legal_of_english: 0.10      # category legal (case law, Federal Register) vs the period's English
-  legal_absolute: {"1930-39.06": 0.35e9}
+  legal_absolute: {"1930-39.06": 0.35e+9}
 
 # Science: tiers in order; within a tier uniform random order (no recency weighting). "*" = every other
 # science source of that language.

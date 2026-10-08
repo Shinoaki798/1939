@@ -174,14 +174,14 @@ def draw(meta: dict, mcfg: dict, profile: str) -> tuple[np.ndarray, dict]:
     for per in PERIODS:
         m = (~p_sci) & (p_per == code(meta, "period", per))
         second = (p_year[m] >= mcfg["repeat_from_year"]) if per == "1930-39.06" else np.zeros(int(m.sum()), dtype=bool)
-        count[m] = plan(p_tok[m], cls[m], key[m], second, prof["periods"][per], mcfg["caps"],
-                        mcfg["caps"].get("legal_absolute", {}).get(per, math.inf))
+        count[m] = plan(p_tok[m], cls[m], key[m], second, float(prof["periods"][per]), mcfg["caps"],
+                        float(mcfg["caps"].get("legal_absolute", {}).get(per, math.inf)))
     src_names = names(meta, "source")
     for li, lang in enumerate(LANGS):
         m = p_sci & (p_lang == li)
         k = science_key(src_names[p_src[m]], p_u[m], mcfg["science_tiers"][lang])
         count[m] = plan(p_tok[m], np.full(int(m.sum()), FREE, dtype=np.int8), k,
-                        np.full(int(m.sum()), mcfg["max_epochs"] >= 2), prof["science"][lang])
+                        np.full(int(m.sum()), mcfg["max_epochs"] >= 2), float(prof["science"][lang]))
     return count[inv], summary
 
 
