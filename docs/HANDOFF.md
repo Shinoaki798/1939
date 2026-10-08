@@ -339,13 +339,8 @@ down immediately; it still satisfies every success criterion.
   training); when.
 - ~~(2026-10-08, audit §8) 1930s x2 fills the 10B budget; 1920s / pre-1920
   share?~~ Answered 2026-10-08 (§12, mixture after cleaning).
-- (2026-10-08, mixture) The draw is 0.89B short of 12B because the German and
-  legal caps bind inside the 1930s. Fill it from the 1920s (target 2.6B ->
-  ~3.45B, still <= 35 %), or run 11.1B?
-- (2026-10-08, quality read) Text normalisation of training-only sources at the
-  shard stage, same for every split of a source: Europeana repeated words,
-  DDB / RSC space before punctuation, ⸗ line-end hyphens, Congressional Record
-  commas. American Stories (scored) is left as it is.
+- ~~(2026-10-08) 0.89B shortfall; text normalisation~~ Answered 2026-10-08
+  (§12: the 1920s fill the budget; all normalisations adopted).
 
 ## 12. Decisions log
 
@@ -661,6 +656,18 @@ Dated entries; each supersedes anything above it that it contradicts.
     space before punctuation on ~47 % of pages and Royal Society Corpus on all, ⸗ line-end hyphens stay
     in DDB / Völkischer Beobachter / Meyers (18-30 per 1,000 words), the Congressional Record has no
     commas (all printed as periods). Normalisation is open (§11).
+- **2026-10-08 — shortfall and normalisation (user answers to the two §11 questions).**
+  1. *The shortfall goes to the 1920s:* the 12B profile has `fill_to_budget: 1920-29` (ceiling 35 % of
+     the budget); drawn: 1930s 6.60B, 1920s 3.45B, pre-1920 0.80B, science EN 0.85B + DE 0.30B = 12.00B.
+  2. *All proposed normalisations are adopted* (`src/data/normalize.py`, applied when the training shards
+     are written, identically to every split of a source; American Stories and other sources untouched;
+     English line-break hyphens untouched): Europeana repeated words dropped; DDB and Royal Society
+     Corpus spaces before punctuation removed; German ⸗ joined before a lowercase word unless it is a
+     conjunction (suspended compound), otherwise "-"; Congressional Record ". " + lowercase -> ", " except
+     after a one-letter word, a number or a listed abbreviation. Measured on the filtered data (per 1,000
+     words): CR 44 commas, RSC 128 spaces, Europeana 8 repeats, DDB 118 spaces + 17 ⸗, VB 25 ⸗.
+  3. *Progress-report material* (user): every decision and operation from now on is also recorded in
+     `progress_report/material/` (earlier ones reconstructed there from this log, git and the reports).
 
 ---
 

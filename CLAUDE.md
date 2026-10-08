@@ -120,6 +120,9 @@ reports/                generated tables/figures
 
 ## Working style
 
+- Record every decision and every operation (what was run, where, outcome,
+  problems and fixes) in `progress_report/material/` as it happens (user,
+  2026-10-08); see its README for the four files.
 - One task per branch, named `data/<thing>`, `model/<thing>`, `eval/<thing>`.
 - Before writing code for a stage, print the plan and the exit gate for that
   stage from `docs/TASKS.md`, then implement.

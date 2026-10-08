@@ -1176,7 +1176,7 @@ Keyed 92.8M w vs OCR 199.6M w (31.7 % keyed).
 
 ## 8. Training mixture: unique vs seen tokens (src.data.mixture; estimates)
 
-Profile 12B (budget 12.00B tok), drawn 2026-10-08T17:31:16+00:00; tokens = words x {'en': 1.35, 'de': 1.6} until the BPE exists (re-draw then). Second epoch only from 1934-01-01; within a period the order is by weight exp(-(1939 - year)/5); caps per period: German <= 25%, books <= 12%, legal <= 10% of the period's English (absolute: {'1930-39.06': 350000000.0}). User decisions 2026-10-08 (HANDOFF §12).
+Profile 12B (budget 12.00B tok), drawn 2026-10-08T17:43:37+00:00; tokens = words x {'en': 1.35, 'de': 1.6} until the BPE exists (re-draw then). Second epoch only from 1934-01-01; within a period the order is by weight exp(-(1939 - year)/5); caps per period: German <= 25%, books <= 12%, legal <= 10% of the period's English (absolute: {'1930-39.06': 350000000.0}). User decisions 2026-10-08 (HANDOFF §12). The 1920-29 target is raised from 2.60B tok to 3.45B tok to fill the budget left by the caps (user, 2026-10-08).
 
 | period | lang | category | unique | seen | of which 2nd epoch | seen / unique |
 |---|---|---|---|---|---|---|
@@ -1187,11 +1187,11 @@ Profile 12B (budget 12.00B tok), drawn 2026-10-08T17:31:16+00:00; tokens = words
 | 1930-39.06 | en | legislative | 104.7M tok | 166.0M tok | 61.3M tok | 1.59 |
 | 1930-39.06 | en | newspaper | 2.79B tok | 4.41B tok | 1.61B tok | 1.58 |
 | 1920-29 | de | books | 8.1k tok | 8.1k tok | 0 tok | 1.00 |
-| 1920-29 | de | newspaper | 1.73B tok | 650.0M tok | 0 tok | 0.38 |
-| 1920-29 | en | books | 1.48B tok | 311.9M tok | 0 tok | 0.21 |
-| 1920-29 | en | legal | 326.3M tok | 159.1M tok | 0 tok | 0.49 |
-| 1920-29 | en | legislative | 107.4M tok | 37.5M tok | 0 tok | 0.35 |
-| 1920-29 | en | newspaper | 5.21B tok | 1.44B tok | 0 tok | 0.28 |
+| 1920-29 | de | newspaper | 1.73B tok | 862.6M tok | 0 tok | 0.50 |
+| 1920-29 | en | books | 1.48B tok | 413.9M tok | 0 tok | 0.28 |
+| 1920-29 | en | legal | 326.3M tok | 201.6M tok | 0 tok | 0.62 |
+| 1920-29 | en | legislative | 107.4M tok | 48.9M tok | 0 tok | 0.46 |
+| 1920-29 | en | newspaper | 5.21B tok | 1.92B tok | 0 tok | 0.37 |
 | 1900-19 | de | books | 29.8k tok | 0 tok | 0 tok | 0.00 |
 | 1900-19 | de | legislative | 336 tok | 0 tok | 0 tok | 0.00 |
 | 1900-19 | de | newspaper | 746.1M tok | 183.7M tok | 0 tok | 0.25 |
@@ -1199,39 +1199,39 @@ Profile 12B (budget 12.00B tok), drawn 2026-10-08T17:31:16+00:00; tokens = words
 | 1900-19 | en | legal | 146.4k tok | 25.3k tok | 0 tok | 0.17 |
 | 1900-19 | en | legislative | 19.0M tok | 6.3M tok | 0 tok | 0.33 |
 | 1900-19 | en | newspaper | 1.73B tok | 514.1M tok | 0 tok | 0.30 |
-| science | de | science | 467.9M tok | 276.0M tok | 0 tok | 0.59 |
-| science | en | science | 1.70B tok | 835.1M tok | 0 tok | 0.49 |
+| science | de | science | 467.9M tok | 299.6M tok | 0 tok | 0.64 |
+| science | en | science | 1.70B tok | 850.0M tok | 0 tok | 0.50 |
 
 | period | target | seen | 2nd epoch | German share | books share | legal / English | legal seen |
 |---|---|---|---|---|---|---|---|
 | 1930-39.06 | 7.37B tok | 6.60B tok | 2.12B tok | 25.0% | 0.4% | 7.1% | 350.0M tok |
-| 1920-29 | 2.60B tok | 2.60B tok | 0 tok | 25.0% | 12.0% | 8.2% | 159.1M tok |
+| 1920-29 | 3.45B tok | 3.45B tok | 0 tok | 25.0% | 12.0% | 7.8% | 201.6M tok |
 | 1900-19 | 800.0M tok | 800.0M tok | 0 tok | 23.0% | 12.0% | 0.0% | 25.3k tok |
 
 | science | target | seen | share of the language's seen tokens |
 |---|---|---|---|
-| en | 850.0M tok | 835.1M tok | 10.0% |
-| de | 300.0M tok | 276.0M tok | 10.0% |
+| en | 850.0M tok | 850.0M tok | 9.4% |
+| de | 300.0M tok | 299.6M tok | 10.0% |
 
-Total seen: 11.11B tok of the 12.00B tok budget (SHORT by 889.2M tok: the run is shorter). Max count 2; second-epoch rows before 1934: 0; general rows before 1900 selected: 0.
+Total seen: 12.00B tok of the 12.00B tok budget. Max count 2; second-epoch rows before 1934: 0; general rows before 1900 selected: 0.
 
 Science by source:
 
 | lang | source | unique | seen |
 |---|---|---|---|
 | de | annalen_physik_ia | 130.4M tok | 130.4M tok |
-| de | dingler | 109.7M tok | 45.1M tok |
+| de | dingler | 109.7M tok | 53.9M tok |
 | de | jfm | 25.1M tok | 25.1M tok |
-| de | meyers6_ia | 47.1M tok | 15.7M tok |
-| de | sitzungsberichte_ia | 31.6M tok | 14.2M tok |
-| de | naturwiss_ia | 33.2M tok | 14.2M tok |
-| de | physz_ia | 30.8M tok | 12.8M tok |
-| de | math_annalen_ia | 26.4M tok | 10.7M tok |
-| de | crelle_ia | 14.6M tok | 5.7M tok |
+| de | meyers6_ia | 47.1M tok | 18.6M tok |
+| de | sitzungsberichte_ia | 31.6M tok | 16.9M tok |
+| de | naturwiss_ia | 33.2M tok | 16.7M tok |
+| de | physz_ia | 30.8M tok | 15.1M tok |
+| de | math_annalen_ia | 26.4M tok | 13.6M tok |
+| de | crelle_ia | 14.6M tok | 7.0M tok |
 | de | encyklopaedie_ia | 4.4M tok | 2.1M tok |
-| de | jstor_ejc | 574.8k tok | 94.1k tok |
-| de | bams_ia | 226.9k tok | 66.6k tok |
-| de | mwr_ia | 28.9k tok | 12.9k tok |
+| de | jstor_ejc | 574.8k tok | 146.4k tok |
+| de | bams_ia | 226.9k tok | 99.8k tok |
+| de | mwr_ia | 28.9k tok | 16.1k tok |
 | de | usgs_pp | 7.8k tok | 4.0k tok |
 | de | americana_ia | 3.3k tok | 3.3k tok |
 | de | jfi_ia | 3.3k tok | 0 tok |
@@ -1240,27 +1240,27 @@ Science by source:
 | de | phr_ia | 3.2k tok | 0 tok |
 | de | gutenberg_sci_de | 13.8M tok | 0 tok |
 | en | jstor_ejc | 341.1M tok | 341.1M tok |
-| en | sciam_ia | 188.9M tok | 135.4M tok |
-| en | royal_society_corpus | 94.4M tok | 67.3M tok |
+| en | sciam_ia | 188.9M tok | 139.4M tok |
+| en | royal_society_corpus | 94.4M tok | 70.1M tok |
 | en | nature_ia | 66.9M tok | 66.9M tok |
-| en | jfi_ia | 56.6M tok | 37.3M tok |
-| en | psm_wikisource | 41.6M tok | 30.9M tok |
+| en | jfi_ia | 56.6M tok | 38.5M tok |
+| en | psm_wikisource | 41.6M tok | 32.1M tok |
+| en | americana_ia | 31.5M tok | 27.2M tok |
+| en | physrev_ia | 36.2M tok | 25.7M tok |
 | en | eb11_ia | 27.2M tok | 25.2M tok |
-| en | physrev_ia | 36.2M tok | 24.7M tok |
-| en | americana_ia | 31.5M tok | 24.1M tok |
-| en | psm_ia | 24.3M tok | 16.8M tok |
-| en | phr_ia | 16.2M tok | 11.9M tok |
-| en | naca_ia | 15.6M tok | 11.2M tok |
+| en | psm_ia | 24.3M tok | 17.1M tok |
+| en | phr_ia | 16.2M tok | 12.2M tok |
+| en | naca_ia | 15.6M tok | 11.5M tok |
+| en | bams_ia | 12.3M tok | 9.3M tok |
 | en | usgs_pp | 11.8M tok | 9.1M tok |
-| en | bams_ia | 12.3M tok | 8.9M tok |
-| en | nbs_jres_ia | 9.8M tok | 6.7M tok |
+| en | nbs_jres_ia | 9.8M tok | 6.8M tok |
+| en | mwr_ia | 8.9M tok | 6.4M tok |
 | en | pnas_ia | 6.4M tok | 6.4M tok |
-| en | mwr_ia | 8.9M tok | 6.2M tok |
-| en | bstj_ia | 4.3M tok | 3.1M tok |
+| en | bstj_ia | 4.3M tok | 3.3M tok |
 | en | nbs_papers_ia | 1.7M tok | 1.1M tok |
-| en | math_annalen_ia | 719.7k tok | 466.5k tok |
+| en | math_annalen_ia | 719.7k tok | 486.0k tok |
 | en | crelle_ia | 110.7k tok | 77.4k tok |
-| en | jfm | 86.0k tok | 52.8k tok |
+| en | jfm | 86.0k tok | 54.1k tok |
 | en | sitzungsberichte_ia | 68.2k tok | 40.7k tok |
 | en | naturwiss_ia | 12.6k tok | 11.4k tok |
 | en | dingler | 5.0k tok | 5.0k tok |
@@ -1268,4 +1268,4 @@ Science by source:
 | en | loc_pd_books | 120.7M tok | 0 tok |
 | en | pre_1929_books | 356.8M tok | 0 tok |
 
-Selection files: `en/8c615552e9fa.parquet` (19,346,055 rows, sha256 8c615552e9fa), `de/54f289315d2d.parquet` (661,250 rows, sha256 54f289315d2d)
+Selection files: `en/0a0011538d4a.parquet` (21,715,099 rows, sha256 0a0011538d4a), `de/39fd8820eddf.parquet` (716,596 rows, sha256 39fd8820eddf)
