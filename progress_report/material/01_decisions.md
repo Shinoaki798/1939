@@ -59,3 +59,5 @@ Who: "user" = Andrew (often after a reviewer's DECISION block), "instructor" = P
 | date | decision | who | why |
 |---|---|---|---|
 | 10-08 | Missing evaluation data is downloaded on the 5080 through the VPN (back on); ChroniclingAmericaQA dev + test only | user | success criterion 5 needs it; the train split is not used (no fine-tuning) |
+| 10-08 | ChroniclingAmericaQA train.json (1.38 GB) downloaded as fine-tuning material; a fine-tuning stage itself still conflicts with CLAUDE.md rule 1 / HANDOFF §6.6 (no tuning stage) and awaits the user's rule change | user | "fine-tuning will be needed in the end" |
+| 10-08 | Tokenizer: compare 32k / 48k / 64k byte-level BPE before freezing | user | 48k was an assumption; measure compression and OCR-junk share |

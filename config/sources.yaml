@@ -693,10 +693,12 @@ psm_wikisource:
 chroniclingamerica_qa:
   hf_repo: Bhawna/ChroniclingAmericaQA
   revision: 15e58335f3068cac08c5a27345ee0b076237df06
-  files: ./config/chroniclingamerica_qa_files.tsv   # dev + test only; train.json (1.38 GB) is not needed
+  files: ./config/chroniclingamerica_qa_files.tsv   # dev + test (evaluation); train (fine-tuning material, 2026-10-08)
   dest: ./data/eval/chroniclingamerica_qa
   lang: en
   approved: 2026-10-08
   title: "ChroniclingAmericaQA (Piryani, Mozafari & Jatowt, SIGIR 2024): QA over Chronicling America pages"
   licence: MIT
-  role: evaluation only; success criterion 5 (sanity on a pre-1920 subset); test 24,084 and dev 24,111 questions
+  role: evaluation only; success criterion 5 (sanity on a pre-1920 subset); test 24,084 and dev 24,111 questions.
+        train.json (439,302 questions) is fine-tuning material only (user 2026-10-08), unused while CLAUDE.md
+        rule 1 excludes a tuning stage; never in pretraining, the tokenizer, the mixture or a scored set
