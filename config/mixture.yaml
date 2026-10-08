@@ -24,6 +24,8 @@ caps:                         # per period, shares of the period's seen tokens
   books: 0.12                 # English books (category books); German books are counted as German
   legal_of_english: 0.10      # category legal (case law, Federal Register) vs the period's English
   legal_absolute: {"1930-39.06": 0.35e+9}
+  science_of_language: 0.10   # science <= 10 % of each language's seen tokens; the profile's science targets
+                              # are upper bounds below that
 
 # Science: tiers in order; within a tier uniform random order (no recency weighting). "*" = every other
 # science source of that language.

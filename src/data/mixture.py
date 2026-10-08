@@ -14,7 +14,8 @@ word counts x tokens_per_word until the BPE exists (decision 5: re-run this stag
                    (1930s also <= 0.35B). A capped class takes its units in key order until its cap; the
                    period takes accepted units in key order until its target. Caps depend on the period
                    total, so the plan is iterated to a fixed point.
-  science          per language (EN 0.85B, DE 0.30B), outside the period caps and recency weighting; tiers
+  science          per language (EN 0.85B, DE 0.30B, but never above 10 % of the language's seen tokens,
+                   i.e. 1/9 of its general seen tokens), outside the period caps and recency weighting; tiers
                    from config/mixture.yaml in order, uniform random order inside a tier, a second epoch only
                    if every first epoch fits.
 
@@ -119,7 +120,8 @@ def load_meta(cfg: dict, mcfg: dict) -> dict:
                 continue
             t = t.filter(pa.array(keep))
             h, u = uniform(t.column("parent_id").to_numpy(zero_copy_only=False), mcfg["seed"])
-            cols["h"].append(h)
+            # chunks of one item can land in both language pools: a parent is per language
+            cols["h"].append(h ^ np.uint64(li * 0x9E3779B97F4A7C15))
             cols["u"].append(u)
             for k in CODED:
                 d = t.column(k).combine_chunks().dictionary_encode()
@@ -177,11 +179,17 @@ def draw(meta: dict, mcfg: dict, profile: str) -> tuple[np.ndarray, dict]:
         count[m] = plan(p_tok[m], cls[m], key[m], second, float(prof["periods"][per]), mcfg["caps"],
                         float(mcfg["caps"].get("legal_absolute", {}).get(per, math.inf)))
     src_names = names(meta, "source")
+    share = float(mcfg["caps"]["science_of_language"])
+    summary["science_target"] = {}
     for li, lang in enumerate(LANGS):
+        general = float((p_tok * count)[(~p_sci) & (p_lang == li)].sum())
+        target = min(float(prof["science"][lang]), share / (1 - share) * general)   # rule 7: <= 10 % of the language
+        summary["science_target"][lang] = {"configured": float(prof["science"][lang]), "used": target,
+                                           "limit_from_share": share / (1 - share) * general}
         m = p_sci & (p_lang == li)
         k = science_key(src_names[p_src[m]], p_u[m], mcfg["science_tiers"][lang])
         count[m] = plan(p_tok[m], np.full(int(m.sum()), FREE, dtype=np.int8), k,
-                        np.full(int(m.sum()), mcfg["max_epochs"] >= 2), float(prof["science"][lang]))
+                        np.full(int(m.sum()), mcfg["max_epochs"] >= 2), target)
     return count[inv], summary
 
 
