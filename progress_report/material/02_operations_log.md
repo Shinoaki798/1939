@@ -104,3 +104,8 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
   publication_date, url. Test by decade: 1800s-1890s 19,097, 1900s 2,253, 1910s 2,516, 1920s 218. Note
   for `sanity_caqa.py`: the 1900-1919 contexts come from the same Chronicling America scans as American
   Stories, so their text may be in training (fine for a sanity check, to be stated).
+- ChroniclingAmericaQA train.json (1.38 GB, 62 s through the VPN, sha256-verified) stored as fine-tuning
+  material for post-project exploration.
+- Tokenizer comparison started on the 5080 (`scripts/tokenizer_run.sh`: sample → one 65,536 BPE run →
+  32,768 / 49,152 as merge prefixes → `reports/tokenizer_compare.md`). Unit test confirms a prefix of a
+  longer run equals a run stopped there (identical vocabulary and encodings).
