@@ -105,23 +105,32 @@ def mixture(unique: dict[str, dict[str, float]]) -> list[list]:
                 "available": free + books + legal + de}
     rows = []
     p30 = period_total(unique, "1930-39.06", 2.0)
-    sci = {lang: unique[lang].get("science|science", 0) for lang in ("en", "de")}
-    rest = BUDGET - p30["total"]
     p20 = period_total(unique, "1920-29", 1.0)
-    p20_seen = min(p20["total"], CAPS["1920s"] * BUDGET, max(rest, 0))
     pre = period_total({lang: {k.replace("1900-19", "pre").replace("<1900", "pre"): v for k, v in unique[lang].items()}
                         for lang in unique}, "pre", 1.0)
-    pre_seen = min(pre["total"], CAPS["pre1920"] * BUDGET, max(rest - p20_seen, 0))
-    general = p30["total"] + p20_seen + pre_seen
-    f20 = p20_seen / p20["total"] if p20["total"] else 0.0
-    fpre = pre_seen / pre["total"] if pre["total"] else 0.0
-    by_lang = {"en": sum(f * (p["en_free"] + p["books"] + p["legal"]) for p, f in ((p30, 1.0), (p20, f20), (pre, fpre))),
-               "de": sum(f * p["de"] for p, f in ((p30, 1.0), (p20, f20), (pre, fpre)))}
+    sci = {lang: unique[lang].get("science|science", 0) for lang in ("en", "de")}
     share = CAPS["science_per_language"] / (1 - CAPS["science_per_language"])     # science <= 10 % of the language
-    sci_seen = {lang: min(2 * sci[lang], share * by_lang[lang]) for lang in sci}
-    total = min(BUDGET, general + sum(sci_seen.values()))
-    rows.append(["1930-1939.06 (x2)", fmt(p30["available"], " tok"), fmt(p30["total"], " tok"),
-                 f"{100 * p30['total'] / total:.1f} %", "repeated twice; German <= 25 %, books <= 12 %, legal <= 10 %"])
+    sci_seen = {lang: 0.0 for lang in sci}
+    for _ in range(50):                  # science is reserved first; it depends on each language's general tokens
+        general_budget = BUDGET - sum(sci_seen.values())
+        p30_seen = min(p30["total"], general_budget)
+        p20_seen = min(p20["total"], CAPS["1920s"] * BUDGET, general_budget - p30_seen)
+        pre_seen = min(pre["total"], CAPS["pre1920"] * BUDGET, general_budget - p30_seen - p20_seen)
+        fr = [(p, s / p["total"] if p["total"] else 0.0) for p, s in ((p30, p30_seen), (p20, p20_seen), (pre, pre_seen))]
+        by_lang = {"en": sum(f * (p["en_free"] + p["books"] + p["legal"]) for p, f in fr),
+                   "de": sum(f * p["de"] for p, f in fr)}
+        new = {lang: min(2 * sci[lang], share * by_lang[lang]) for lang in sci}
+        done = all(abs(new[lang] - sci_seen[lang]) < 1 for lang in sci)
+        sci_seen = new
+        if done:
+            break
+    total = p30_seen + p20_seen + pre_seen + sum(sci_seen.values())
+    de_seen = sum(f * p["de"] for p, f in fr)
+    rows.append(["1930-1939.06 (x2)", fmt(p30["available"], " tok"), fmt(p30_seen, " tok"),
+                 f"{100 * p30_seen / total:.1f} %", "repeated twice; German <= 25 %, books <= 12 %, legal <= 10 %"
+                 + (f" (after caps {fmt(p30['total'], ' tok')}: German {fmt(p30['de'], ' tok')}, legal "
+                    f"{fmt(p30['legal'], ' tok')}, books {fmt(p30['books'], ' tok')})")
+                 + ("" if p30_seen >= p30["total"] - 1 else "; budget reached inside this slice")])
     rows.append(["1920-1929 (x1)", fmt(p20["total"], " tok"), fmt(p20_seen, " tok"), f"{100 * p20_seen / total:.1f} %",
                  "fills the remainder, <= 35 %"])
     rows.append(["pre-1920 (x1)", fmt(pre["total"], " tok"), fmt(pre_seen, " tok"), f"{100 * pre_seen / total:.1f} %",
@@ -129,6 +138,8 @@ def mixture(unique: dict[str, dict[str, float]]) -> list[list]:
     for lang in ("en", "de"):
         rows.append([f"science {lang} (<= x2)", fmt(sci[lang], " tok"), fmt(sci_seen[lang], " tok"),
                      f"{100 * sci_seen[lang] / total:.1f} %", "<= 10 % of the language's seen tokens"])
+    rows.append(["German, all general slices", "", fmt(de_seen, " tok"), f"{100 * de_seen / total:.1f} %",
+                 "<= 25 % per period"])
     rows.append(["total", "", fmt(total, " tok"), "100 %",
                  "budget 10B" + ("" if total >= BUDGET * 0.999 else f"; SHORT by {fmt(BUDGET - total, ' tok')}")])
     return rows
@@ -175,7 +186,7 @@ def main() -> None:
                       for y in yrs if agg["train_words_year"][y]])
         p2539 = sum(agg["train_words_year"][y] for y in yrs if 1925 <= y <= 1939)
         out += [f"1925-1939.06 total: {fmt(p2539, ' words')} ({fmt(p2539 * tpw, ' tokens est.')}); "
-                f"Val: {fmt(agg['val_words']['all'], ' words')}.", ""]
+                f"Val (all sources, not only American Stories): {fmt(agg['val_words']['all'], ' words')}.", ""]
         if lang == "en":
             out += ["## 3. Held-out and test sets (American Stories, the only scored source)", ""]
             out += table(["set", "articles", "words"],
