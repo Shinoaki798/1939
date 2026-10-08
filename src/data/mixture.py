@@ -6,7 +6,9 @@ split == train and train_ok are candidates; general (non-science) text before 19
 word counts x tokens_per_word until the BPE exists (decision 5: re-run this stage then).
 
   general periods  1930-39.06 (target 7.37B): every document once, documents from repeat_from_year on a
-                   second time; 1920-29 (2.6B) and 1900-19 (0.8B): sampled once. Within a period the order
+                   second time; 1920-29 (2.6B) and 1900-19 (0.8B): sampled once. A profile's fill_to_budget
+                   period then takes whatever the caps leave short of the budget (user 2026-10-08: the
+                   1920s), iterated with science, up to fill_max_share of the budget. Within a period the order
                    is an exponential race with weight w = exp(-(1939 - year) / half_life): key = -ln(u) / w,
                    u a seeded hash of the parent id, smallest key first; all first epochs come before any
                    second epoch. Caps per period, as shares of the period's seen tokens: German <= 25 %,
@@ -173,27 +175,52 @@ def draw(meta: dict, mcfg: dict, profile: str) -> tuple[np.ndarray, dict]:
     key = race_keys(p_u, p_year, mcfg["half_life_years"], mcfg["reference_year"])
     summary = {"candidate_parents": int(len(parents)),
                "excluded_general_pre1900_parents": int(((~p_sci) & (p_per == code(meta, "period", "<1900"))).sum())}
-    for per in PERIODS:
-        m = (~p_sci) & (p_per == code(meta, "period", per))
-        second = (p_year[m] >= mcfg["repeat_from_year"]) if per == "1930-39.06" else np.zeros(int(m.sum()), dtype=bool)
-        count[m] = plan(p_tok[m], cls[m], key[m], second, float(prof["periods"][per]), mcfg["caps"],
-                        float(mcfg["caps"].get("legal_absolute", {}).get(per, math.inf)))
     src_names = names(meta, "source")
     share = float(mcfg["caps"]["science_of_language"])
-    summary["science_target"] = {}
-    for li, lang in enumerate(LANGS):
-        general = float((p_tok * count)[(~p_sci) & (p_lang == li)].sum())
-        target = min(float(prof["science"][lang]), share / (1 - share) * general)   # rule 7: <= 10 % of the language
-        summary["science_target"][lang] = {"configured": float(prof["science"][lang]), "used": target,
-                                           "limit_from_share": share / (1 - share) * general}
-        m = p_sci & (p_lang == li)
-        k = science_key(src_names[p_src[m]], p_u[m], mcfg["science_tiers"][lang])
-        count[m] = plan(p_tok[m], np.full(int(m.sum()), FREE, dtype=np.int8), k,
-                        np.full(int(m.sum()), mcfg["max_epochs"] >= 2), target)
+
+    def plan_period(per: str, target: float) -> None:
+        m = (~p_sci) & (p_per == code(meta, "period", per))
+        second = (p_year[m] >= mcfg["repeat_from_year"]) if per == "1930-39.06" else np.zeros(int(m.sum()), dtype=bool)
+        count[m] = plan(p_tok[m], cls[m], key[m], second, target, mcfg["caps"],
+                        float(mcfg["caps"].get("legal_absolute", {}).get(per, math.inf)))
+
+    def plan_science() -> None:
+        summary["science_target"] = {}
+        for li, lang in enumerate(LANGS):
+            general = float((p_tok * count)[(~p_sci) & (p_lang == li)].sum())
+            limit = share / (1 - share) * general                  # rule 7: <= 10 % of the language
+            target = min(float(prof["science"][lang]), limit)
+            summary["science_target"][lang] = {"configured": float(prof["science"][lang]), "used": target,
+                                               "limit_from_share": limit}
+            m = p_sci & (p_lang == li)
+            k = science_key(src_names[p_src[m]], p_u[m], mcfg["science_tiers"][lang])
+            count[m] = plan(p_tok[m], np.full(int(m.sum()), FREE, dtype=np.int8), k,
+                            np.full(int(m.sum()), mcfg["max_epochs"] >= 2), target)
+
+    targets = {per: float(prof["periods"][per]) for per in PERIODS}
+    for per in PERIODS:
+        plan_period(per, targets[per])
+    plan_science()
+    fill = prof.get("fill_to_budget")          # user 2026-10-08: a shortfall after the caps goes to this period
+    if fill:
+        ceiling = float(prof.get("fill_max_share", 1.0)) * float(prof["budget"])
+        seen = float((p_tok * count).sum())
+        for _ in range(30):
+            gap = float(prof["budget"]) - seen
+            if abs(gap) < 1e6 or targets[fill] >= ceiling:
+                break
+            targets[fill] = min(ceiling, targets[fill] + gap)
+            plan_period(fill, targets[fill])
+            plan_science()
+            new_seen = float((p_tok * count).sum())
+            if abs(new_seen - seen) < 1e6:                 # the period is exhausted
+                break
+            seen = new_seen
+    summary["period_targets_used"] = targets
     return count[inv], summary
 
 
-def tables(meta: dict, count: np.ndarray, mcfg: dict, profile: str) -> dict:
+def tables(meta: dict, count: np.ndarray, mcfg: dict, profile: str, targets: dict) -> dict:
     """Unique vs seen tokens per period x language x category and per source; cap checks."""
     sci = meta["bucket"] == code(meta, "bucket", "science")
     df = pd.DataFrame({"lang": meta["lang"], "period": np.where(sci, -1, meta["period"]),
@@ -221,7 +248,7 @@ def tables(meta: dict, count: np.ndarray, mcfg: dict, profile: str) -> dict:
         tot = float(d["seen"].sum()) or 1.0
         en_seen = float(d.loc[d["lang"] == en, "seen"].sum()) or 1.0
         lg = float(d.loc[(d["lang"] == en) & (d["category"] == legal), "seen"].sum())
-        checks[p] = {"seen": float(d["seen"].sum()), "target": mcfg["profiles"][profile]["periods"][p],
+        checks[p] = {"seen": float(d["seen"].sum()), "target": targets[p],
                      "second_epoch": float(d["second"].sum()),
                      "german_share": float(d.loc[d["lang"] == de, "seen"].sum()) / tot,
                      "books_share": float(d.loc[(d["lang"] == en) & (d["category"] == books), "seen"].sum()) / tot,
@@ -284,6 +311,9 @@ def write(meta: dict, count: np.ndarray, out_root: Path, mcfg: dict) -> dict:
         digest = hashlib.sha256(tmp.read_bytes()).hexdigest()
         final = tmp.parent / f"{digest[:12]}.parquet"
         os.replace(tmp, final)
+        for old in tmp.parent.glob("*.parquet"):          # this stage's own earlier draws
+            if old != final:
+                old.unlink()
         outputs[lang] = {"file": f"{lang}/{final.name}", "sha256": digest, "rows": rows}
     return outputs
 
@@ -310,7 +340,7 @@ def main() -> None:
     meta = load_meta(cfg, mcfg)
     print(f"{len(meta['tokens']):,} candidate rows loaded, {(dt.datetime.now() - t0).seconds}s", flush=True)
     count, summary = draw(meta, mcfg, profile)
-    tab = tables(meta, count, mcfg, profile)
+    tab = tables(meta, count, mcfg, profile, summary["period_targets_used"])
     print_plan(tab)
     if args.dry_run:
         return

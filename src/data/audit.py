@@ -95,7 +95,10 @@ def mixture_section(cfg: dict) -> list[str]:
             f"{p['repeat_from_year']}-01-01; within a period the order is by weight exp(-(1939 - year)/"
             f"{p['half_life_years']}); caps per period: German <= {p['caps']['german']:.0%}, books <= "
             f"{p['caps']['books']:.0%}, legal <= {p['caps']['legal_of_english']:.0%} of the period's English "
-            f"(absolute: {p['caps'].get('legal_absolute', {})}). User decisions 2026-10-08 (HANDOFF §12).", ""]
+            f"(absolute: {p['caps'].get('legal_absolute', {})}). User decisions 2026-10-08 (HANDOFF §12)."
+            + (f" The {prof['fill_to_budget']} target is raised from {fmt(prof['periods'][prof['fill_to_budget']], ' tok')} "
+               f"to {fmt(m['period_targets_used'][prof['fill_to_budget']], ' tok')} to fill the budget left by the caps "
+               f"(user, 2026-10-08)." if prof.get("fill_to_budget") else ""), ""]
     order = {"1930-39.06": 0, "1920-29": 1, "1900-19": 2, "science": 3}
     cells = sorted(m["cells"], key=lambda c: (order.get(c["period"], 9), c["lang"], c["category"]))
     out += table(["period", "lang", "category", "unique", "seen", "of which 2nd epoch", "seen / unique"],

@@ -14,6 +14,8 @@ profiles:
     budget: 12.0e+9
     periods: {"1930-39.06": 7.37e+9, "1920-29": 2.6e+9, "1900-19": 0.8e+9}
     science: {en: 0.85e+9, de: 0.30e+9}
+    fill_to_budget: "1920-29"   # user 2026-10-08: the caps leave the 1930s at ~6.6B; the 1920s take the rest
+    fill_max_share: 0.35        # of the budget (the 1920s cap of the 2026-10-05 mixture)
   10B:                        # "if the user overrides back to 10B": only the 1920s and pre-1920 move
     budget: 10.0e+9
     periods: {"1930-39.06": 7.37e+9, "1920-29": 1.4e+9, "1900-19": 0.35e+9}
