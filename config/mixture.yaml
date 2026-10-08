@@ -1,0 +1,38 @@
+# Training mixture (user decisions 2026-10-08, HANDOFF §12; CLAUDE.md rule 7). Seen tokens.
+# Token counts are word counts x tokens_per_word until the 48k BPE exists (decision 5: re-run then).
+
+tokens_per_word: {en: 1.35, de: 1.6}
+half_life_years: 5            # within a period, sampling order by weight ∝ exp(-(1939 - year) / 5)
+reference_year: 1939
+seed: 20261008
+repeat_from_year: 1934        # second epoch only for 1934-01-01 … 1939-06-30
+max_epochs: 2
+
+profile: 12B
+profiles:
+  12B:
+    budget: 12.0e9
+    periods: {"1930-39.06": 7.37e9, "1920-29": 2.6e9, "1900-19": 0.8e9}
+    science: {en: 0.85e9, de: 0.30e9}
+  10B:                        # "if the user overrides back to 10B": only the 1920s and pre-1920 move
+    budget: 10.0e9
+    periods: {"1930-39.06": 7.37e9, "1920-29": 1.4e9, "1900-19": 0.35e9}
+    science: {en: 0.85e9, de: 0.30e9}
+
+caps:                         # per period, shares of the period's seen tokens
+  german: 0.25
+  books: 0.12                 # English books (category books); German books are counted as German
+  legal_of_english: 0.10      # category legal (case law, Federal Register) vs the period's English
+  legal_absolute: {"1930-39.06": 0.35e9}
+
+# Science: tiers in order; within a tier uniform random order (no recency weighting). "*" = every other
+# science source of that language.
+science_tiers:
+  en:
+    - [pnas_ia, nature_ia, jstor_ejc]
+    - ["*"]
+    - [gutenberg_sci_en, pre_1929_books, loc_pd_books]
+  de:
+    - [annalen_physik_ia, jfm]
+    - ["*"]
+    - [gutenberg_sci_de]

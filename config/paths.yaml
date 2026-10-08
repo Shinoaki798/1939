@@ -6,6 +6,7 @@ raw: ./data/raw
 dedup: ./data/dedup
 selected: ./data/selected        # src.data.select: pool, language, dates, pre-1920 sample, normalised text
 filtered: ./data/filtered
+mixture: ./data/mixture          # src.data.mixture: per-document seen counts (config/mixture.yaml)
 translated: ./data/translated
 tokenized: ./data/tokenized
 splits_manifest: ./data/splits/MANIFEST.json

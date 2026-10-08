@@ -337,13 +337,8 @@ down immediately; it still satisfies every success criterion.
 - (2026-10-06, twin) Gallup 1939 figures for RQ3: collected by hand per
   proposition from the Gallup volume (evaluation reference only, never
   training); when.
-- (2026-10-08, audit §8) The cleaned 1930-1939.06 pool seen twice (after the
-  German and legal caps) is 8.97B tokens, so with science (~1.0B) the 10B budget
-  leaves the 1920s 28M tokens and pre-1920 none. That follows the §12 rule
-  ("recent periods up-weighted by repetition before any older period"), but the
-  model will then have seen almost nothing before 1930. Keep it, or reserve a
-  share for the 1920s / pre-1920 (e.g. 1930s seen ~1.5x)? Decide before the
-  sampler is written.
+- ~~(2026-10-08, audit §8) 1930s x2 fills the 10B budget; 1920s / pre-1920
+  share?~~ Answered 2026-10-08 (§12, mixture after cleaning).
 
 ## 12. Decisions log
 
@@ -631,6 +626,21 @@ Dated entries; each supersedes anything above it that it contradicts.
   - *1920-22 spike:* English train words are 1.1-1.2B per year 1920-22 vs 0.42B in 1923 and ~0.25B later,
     in American Stories itself (held-out sets show the same jump): Chronicling America long covered
     only public-domain years (<= 1922).
+- **2026-10-08 — mixture after cleaning (user, reply to the recount; supersedes the 10-05 mixture line).**
+  1. *Budget 12B seen tokens* (was 10B). 350M on the 5080 ~117 h, start 10-22; H100 fallback ~18 h. If
+     the user goes back to 10B: 1920s 1.4B, pre-1920 0.35B, nothing else moves.
+  2. *Repetition:* a second epoch ONLY for 1934-01-01 … 1939-06-30 (2.65B seen); 1930-1933 one epoch.
+     Within every period the sampling order is by weight ∝ exp(-(1939 - year)/5).
+  3. *Period targets (seen):* 1930s 7.37B (4.72 + 2.65); 1920s 2.6B sampled from 8.84B; pre-1920 0.8B
+     sampled from 3.02B; science 1.15B.
+  4. *Caps, per period:* German ≤ 25 %; books ≤ 12 %; legal ≤ 10 % of the period's ENGLISH (new; case law
+     is 17 % of 1930s English: sample it down to ≤ 0.35B). Science ≤ 10 % of each language overall:
+     EN 0.85B, DE 0.30B; within science PNAS, Nature, JSTOR STEM, Annalen der Physik, JFM come before
+     Gutenberg and the pre-1929 science books.
+  5. All numbers are re-derived from the real tokenizer once it is trained (1.35 / 1.6 tokens per word are
+     placeholders). audit_v1.md reports unique vs seen tokens per period x language x category.
+  6. Nothing before 1900 enters the general pool (unchanged).
+  This answers the 2026-10-08 open question in §11.
 
 ---
 

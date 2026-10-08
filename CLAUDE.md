@@ -5,7 +5,7 @@ HANDOFF holds the research design, every locked decision with its rationale,
 the instructor's constraints and the schedule. This file holds only the rules
 that must never be violated and the conventions of the repo.
 
-State as of 2026-10-01; rules 2, 4-7, 10, 11 revised 2026-10-05, rule 1 revised 2026-10-06, rule 6 revised 2026-10-07 (HANDOFF §12). Proposal due 2026-10-16. The person you are working
+State as of 2026-10-01; rules 2, 4-7, 10, 11 revised 2026-10-05, rule 1 revised 2026-10-06, rule 6 revised 2026-10-07, rule 7 revised 2026-10-08 (HANDOFF §12). Proposal due 2026-10-16. The person you are working
 with is Junlei An (goes by Andrew), an individual student on this project.
 
 ## Hard constraints (never violate, never "improve")
@@ -47,14 +47,18 @@ with is Junlei An (goes by Andrew), an individual student on this project.
    counted per term x year x split and listed in the audit for a misdating
    check; the training frequency of each C1 term is reported with RQ1. Never
    delete just the word.
-7. **≤ 2 epochs, and only 1930-01-01…1939-06-30 text is repeated.** The 1920s
-   fill the remainder (≤ 35 % of seen tokens), pre-1920 ≤ 8 %, German ≤ 25 % and
-   books ≤ 12 % per period, legal/regulatory text ≤ 10 %. Model fixed at 350M on
-   up to 10B seen tokens; if the cleaned pool is short the run is shorter —
-   never a third pass, never more pre-1920 text. Exception (2026-10-06): the
-   **science bucket** (`bucket: science` in `config/sources.yaml`) sits outside
-   the period caps and recency weighting, any year, ≤ 10 % of each language's
-   seen tokens after dedup + gates; ≤ 2 epochs still applies.
+7. **≤ 2 epochs, and only 1934-01-01…1939-06-30 text is repeated** (revised
+   2026-10-08, user; HANDOFF §12). Budget 12B seen tokens, model fixed at 350M.
+   Targets: 1930s 7.37B (all once + 1934–39.06 again), 1920s 2.6B, pre-1920
+   0.8B (10B fallback: 1920s 1.4B, pre-1920 0.35B), science 1.15B; within a
+   period the sampling order is by weight ∝ exp(-(1939-year)/5). Caps per
+   period: German ≤ 25 %, books ≤ 12 %, legal ≤ 10 % of the period's English
+   (1930s case law ≤ 0.35B). If the cleaned pool is short the run is shorter —
+   never a third pass, never more pre-1920 text. The **science bucket**
+   (`bucket: science` in `config/sources.yaml`) sits outside the period caps and
+   recency weighting, any year, ≤ 10 % of each language's seen tokens (EN
+   0.85B, DE 0.30B; PNAS, Nature, JSTOR STEM, Annalen der Physik, JFM first);
+   ≤ 2 epochs still applies.
 8. **Report bits-per-byte, never per-token perplexity, for any cross-model
    number.** Every reported number carries a bootstrap 95 % CI over items.
 9. **Probe set and proposition set are frozen (checksummed) before the model
