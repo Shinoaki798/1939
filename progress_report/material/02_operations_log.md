@@ -116,3 +116,6 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
   placeholders were ~15 % low). OCR junk among added word-initial tokens 0.0 / 0.3 / 0.7 %. Probe terms
   that are single tokens: blitz, occupation, resistance (+ collaboration at 64k), all C3 sense-shift words
   (ordinary pre-1939 words); no C1 coinage is a single token. `reports/tokenizer_compare.md`.
+- Tokenizer frozen: `data/tokenizer/bpe_49152/tokenizer.json` (sha256 a5f5186e…), `config/tokenizer.yaml`;
+  `config/model_ladder.yaml` updated (vocab 49,152, context 2048, selected s335m), TASKS/HANDOFF aligned.
+  C1/C2 probe check passes (radar → rad|ar, Quisling → Qu|is|ling, Genozid → Gen|oz|id; 1939 → 1|9|3|9).

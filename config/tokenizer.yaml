@@ -1,0 +1,19 @@
+# Frozen tokenizer (user, 2026-10-08; HANDOFF §12). Byte-level BPE, 49,152 tokens, trained by
+# `python -m src.data.tokenizer sample/train` on the 5080; chosen from reports/tokenizer_compare.md.
+# Every model (main run, twin, baselines) uses exactly this file; check its sha256 before use.
+
+vocab_size: 49152
+file: data/tokenizer/bpe_49152/tokenizer.json
+sha256: a5f5186e7d5810efce13f98eba5e7509547700609958de48c9508b71c817f57a
+prefix_of: data/tokenizer/bpe_65536/tokenizer.json     # the first 48,895 merges of the 64k run
+normalizer: NFC
+pre_tokenizer: digits split one by one, then GPT-2 byte-level regex (no prefix space)
+special_tokens: ["<|endoftext|>"]            # id 0; separates documents
+dtype: uint16                                # ids < 65,536
+training_sample:
+  file: data/tokenizer/sample/101d73d683a7.parquet
+  sha256: 101d73d683a753172173764d3ebf22739a4e5ab45b5f6e2d43ac8ff9982bc2fb
+  documents: {en: 596417, de: 18777}
+  rule: mixture-weighted (rate 0.04 x seen passes), ocr_hit >= 0.85 (keyed sources kept), text normalised
+  mixture_manifest_sha256: 4fe5fe575ab238cfc254e7cd8526d883b5a000602412474f0307c282d4544987
+probe_check: no C1/C2 term of probes/rq1_seed.csv or probes/c1_screen.csv is a single token (passed 2026-10-08)
