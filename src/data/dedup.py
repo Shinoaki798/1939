@@ -19,6 +19,9 @@ rerun after new data arrives signs only the new files; the matching always cover
                    SHINGLE shingles, so true duplicates of noisy pages fall well below 0.80.
   keeper           per cluster the earliest date; ties: article-level before page-level source, then a
                    fixed hash of the id. Everything else in the cluster is dropped.
+  scale            documents under MIN_LSH_WORDS words match exactly only; candidates are verified on 8-bit
+                   b-bit signatures held in RAM (Li and König 2010, bias corrected), and clusters are grown
+                   band by band in a vectorised union-find, so memory stays O(documents) on the 5080 pool.
 
 With 32 x 4 bands a pair at true Jaccard 0.60 becomes a candidate with probability ~0.99, at 0.55 ~0.95,
 at 0.30 ~0.23 (then rejected on the full signature). Paragraph-level dedup of page-level sources is a
@@ -57,6 +60,7 @@ SAMPLE_BAND, SAMPLE_K = (0.55, 0.65), 30
 SEED = 1939
 TOKEN = re.compile(r"[^\W\d_]+", re.UNICODE)
 IN_RAM_BYTES = 4 << 30          # band keys above this size go to a memory-mapped file
+MIN_LSH_WORDS = 25              # shorter documents match exactly only (too few shingles to compare)
 
 _rng = np.random.default_rng(SEED)
 PERM_A = _rng.integers(1, 2 ** 63, NUM_PERM, dtype=np.uint64) | np.uint64(1)    # odd multipliers
@@ -210,22 +214,67 @@ def group_pairs(keys: np.ndarray, rank: np.ndarray, valid: np.ndarray | None = N
     return order[m], keeper[m]
 
 
+class Components:
+    """Vectorised union-find over rank positions; the root of every set is its best (lowest) rank, i.e.
+    the cluster's keeper. Memory is O(documents): edges are applied band by band and then discarded."""
+
+    def __init__(self, rank: np.ndarray):
+        self.rank = rank
+        self.parent = np.arange(len(rank), dtype=np.int64)
+
+    def _find(self, r: np.ndarray) -> np.ndarray:
+        while True:
+            p = self.parent[r]
+            if np.array_equal(p, r):
+                return r
+            r = p
+
+    def _compress(self) -> None:
+        while True:
+            pp = self.parent[self.parent]
+            if np.array_equal(pp, self.parent):
+                return
+            self.parent = pp
+
+    def union(self, u: np.ndarray, v: np.ndarray) -> None:
+        a, b = self.rank[u], self.rank[v]
+        for _ in range(1000):
+            ra, rb = self._find(a), self._find(b)
+            m = ra != rb
+            if not m.any():
+                return
+            a, b, ra, rb = a[m], b[m], ra[m], rb[m]
+            np.minimum.at(self.parent, np.maximum(ra, rb), np.minimum(ra, rb))   # hook the later root
+            self._compress()
+        raise RuntimeError("union-find did not converge")
+
+    def keeper(self, doc_of_rank: np.ndarray) -> np.ndarray:
+        self._compress()
+        return doc_of_rank[self.parent[self.rank]]
+
+
 def components(n: int, u: np.ndarray, v: np.ndarray, rank: np.ndarray) -> np.ndarray:
-    """Label of every document = best rank in its connected component (min-label propagation)."""
-    lab = rank.copy()
-    if len(u) == 0:
-        return lab
-    doc_of_rank = np.empty_like(rank)
-    doc_of_rank[rank] = np.arange(n)
-    for _ in range(200):
-        m = np.minimum(lab[u], lab[v])
-        before = lab.copy()
-        np.minimum.at(lab, u, m)
-        np.minimum.at(lab, v, m)
-        lab = np.minimum(lab, lab[doc_of_rank[lab]])          # pointer jumping
-        if np.array_equal(lab, before):
-            return lab
-    raise RuntimeError("label propagation did not converge")
+    """Label of every document = best rank in its connected component."""
+    c = Components(rank)
+    if len(u):
+        c.union(u, v)
+    c._compress()
+    return c.parent[rank]
+
+
+def low_bits(sig: np.ndarray) -> np.ndarray:
+    """b-bit minwise hashing (Li and König 2010): the low byte of every value, read in one sequential pass;
+    128 bytes per document keeps the 5080 pool in RAM for verification."""
+    out = np.empty(sig.shape, dtype=np.uint8)
+    for r0 in range(0, len(sig), 1_000_000):
+        out[r0:r0 + 1_000_000] = np.asarray(sig[r0:r0 + 1_000_000]) & np.uint32(0xFF)
+    return out
+
+
+def jaccard_b(a8: np.ndarray, b8: np.ndarray) -> np.ndarray:
+    """Jaccard from 8-bit values: P(equal) = J + (1 - J) / 256."""
+    p = (a8 == b8).mean(axis=-1)
+    return np.clip((p - 1 / 256) / (1 - 1 / 256), 0.0, 1.0)
 
 
 def band_keys(sig: np.ndarray, out_path: Path | None = None) -> np.ndarray:
@@ -246,31 +295,44 @@ def band_keys(sig: np.ndarray, out_path: Path | None = None) -> np.ndarray:
 
 
 def match(sig: np.ndarray, idx: pa.Table, thr: np.ndarray, keys: np.ndarray | None = None,
-          sample_band: tuple = SAMPLE_BAND, sample_k: int = SAMPLE_K):
+          sample_band: tuple = SAMPLE_BAND, sample_k: int = SAMPLE_K, sig8: np.ndarray | None = None):
     """Clusters at the per-document thresholds `thr` (a pair uses the lower one) and, for the report, at a
-    uniform THRESHOLD_KEYED. Returns dropped, their keepers, Jaccard to the keeper, reason, the drop mask
-    at the uniform threshold, and per-source samples of OCR pairs in `sample_band`."""
+    uniform THRESHOLD_KEYED. Documents shorter than MIN_LSH_WORDS match exactly only. Returns dropped,
+    their keepers, Jaccard to the keeper, reason, the drop mask at the uniform threshold, and per-source
+    samples of OCR pairs in `sample_band`."""
     n = len(idx)
+    t0 = time.time()
     rank = priority_rank(idx)
+    doc_of_rank = np.empty_like(rank)
+    doc_of_rank[rank] = np.arange(n)
     has_sig = idx.column("has_sig").to_numpy(zero_copy_only=False)
+    words = idx.column("n_words").to_numpy(zero_copy_only=False)
+    lsh_ok = has_sig & (words >= MIN_LSH_WORDS)
     exact = idx.column("exact").to_numpy()
     codes, names = source_codes(idx)
     keys = band_keys(sig) if keys is None else keys
+    sig8 = low_bits(sig) if sig8 is None else sig8
+    pol, uni = Components(rank), Components(rank)
     eu, ev = group_pairs(exact, rank)
-    pol_u, pol_v, uni_u, uni_v = [eu], [ev], [eu], [ev]
+    pol.union(eu, ev)
+    uni.union(eu, ev)
+    if n > 1_000_000:
+        print(f"  exact: {len(eu):,} pairs; {int(lsh_ok.sum()):,} of {n:,} documents in LSH; {time.time() - t0:.0f}s",
+              flush=True)
     random.seed(SEED)
     samples: dict[str, list] = defaultdict(list)
     seen: Counter = Counter()
     lo, hi = sample_band
     for band in range(BANDS):
-        u, v = group_pairs(np.asarray(keys[band]), rank, valid=has_sig)
+        u, v = group_pairs(np.asarray(keys[band]), rank, valid=lsh_ok)
         if len(u) == 0:
             continue
-        j_est = np.concatenate([jaccard(np.asarray(sig[u[s:s + 500_000]]), np.asarray(sig[v[s:s + 500_000]]))
-                                for s in range(0, len(u), 500_000)])
+        j_est = np.concatenate([jaccard_b(sig8[u[s:s + 2_000_000]], sig8[v[s:s + 2_000_000]])
+                                for s in range(0, len(u), 2_000_000)])
         ok_pol = j_est >= np.minimum(thr[u], thr[v])
         ok_uni = j_est >= THRESHOLD_KEYED
-        pol_u.append(u[ok_pol]); pol_v.append(v[ok_pol]); uni_u.append(u[ok_uni]); uni_v.append(v[ok_uni])
+        pol.union(u[ok_pol], v[ok_pol])
+        uni.union(u[ok_uni], v[ok_uni])
         for t in np.flatnonzero((j_est >= lo) & (j_est < hi) & (thr[u] < THRESHOLD_KEYED))[:20000]:
             s = names[codes[u[t]]]
             seen[s] += 1
@@ -279,14 +341,15 @@ def match(sig: np.ndarray, idx: pa.Table, thr: np.ndarray, keys: np.ndarray | No
                 samples[s].append(pair)
             elif random.random() < sample_k / seen[s]:
                 samples[s][random.randrange(sample_k)] = pair
-    doc_of_rank = np.empty_like(rank)
-    doc_of_rank[rank] = np.arange(n)
-    keeper = doc_of_rank[components(n, np.concatenate(pol_u), np.concatenate(pol_v), rank)]
-    keeper_uni = doc_of_rank[components(n, np.concatenate(uni_u), np.concatenate(uni_v), rank)]
+        if n > 1_000_000:
+            print(f"  band {band + 1}/{BANDS}: {len(u):,} candidates, {int(ok_pol.sum()):,} linked; "
+                  f"{time.time() - t0:.0f}s", flush=True)
+    keeper = pol.keeper(doc_of_rank)
+    keeper_uni = uni.keeper(doc_of_rank)
     dropped = np.flatnonzero(keeper != np.arange(n))
     k = keeper[dropped]
     same = exact[dropped] == exact[k]
-    jd = np.where(same, 1.0, jaccard(np.asarray(sig[dropped]), np.asarray(sig[k])) if len(dropped) else 0.0)
+    jd = np.where(same, 1.0, jaccard_b(sig8[dropped], sig8[k]) if len(dropped) else 0.0)
     reason = np.where(same, "exact", "near")
     return dropped, k, jd, reason, keeper_uni != np.arange(n), dict(samples)
 
@@ -364,7 +427,9 @@ def main() -> None:
     thr = np.array([thr_of[s] for s in names], dtype=np.float64)[codes]
     t1 = time.time()
     keys = band_keys(sig, out_dir / "band_keys.npy")
-    dropped, kept, jd, reason, uni_mask, samples = match(sig, idx, thr, keys)
+    sig8 = low_bits(sig)
+    print(f"band keys and 8-bit signatures ready, {time.time() - t1:.0f}s", flush=True)
+    dropped, kept, jd, reason, uni_mask, samples = match(sig, idx, thr, keys, sig8=sig8)
     t_match = time.time() - t1
     nw = idx.column("n_words").to_numpy(zero_copy_only=False).astype(np.float64)
     k = len(names)
