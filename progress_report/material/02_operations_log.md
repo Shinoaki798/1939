@@ -88,3 +88,10 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
   category.
 - `src/data/normalize.py` (training-only text fixes) written and measured on the filtered data.
 - `progress_report/material/` started (this folder).
+- Review (user question: tokenizer size; is data collection over?). Findings: config/model_ladder.yaml
+  (vocab 32768, context 1024), TASKS Phase 1 ("32k BPE, English only") and HANDOFF §5.4/§6.1 still carry
+  the pre-2026-10-05 tokenizer and context; HF `tokenizers` is installed on the 5080, `sentencepiece` is
+  not. RQ3 context supply in the filtered data: English 1939-06 73,440 American Stories articles, 08-18..31
+  31,678; German 1939-06 ~2,200 pages (DDB 1,665, Europeana 563), 08-18..31 ~700 pages (DDB 447,
+  Europeana 257; German-language American Stories is OCR-gated). ChroniclingAmericaQA (sanity
+  criterion 5) is not in `config/sources.yaml` and has not been downloaded.
