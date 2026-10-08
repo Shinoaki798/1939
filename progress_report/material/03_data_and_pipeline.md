@@ -63,3 +63,11 @@ German-language American Stories articles are 99 % OCR-gated (Fraktur read as La
 | Europeana | repeated word at line breaks removed | 8 |
 | DDB | spaces 118, ⸗ joined 11, ⸗ → "-" 6 | |
 | Völkischer Beobachter | ⸗ joined 19, ⸗ → "-" 6 | |
+
+## Tokenizer comparison (2026-10-08, `reports/tokenizer_compare.md`)
+
+| vocab | EN bytes/token | EN tokens/word | DE bytes/token | DE tokens/word | embedding (d 1024) | output layer / body FLOPs | OCR junk in added tokens |
+|---|---|---|---|---|---|---|---|
+| 32,768 | 3.592 | 1.593 | 3.327 | 2.002 | 33.6M | 11.1 % | 0.0 % |
+| 49,152 | 3.688 | 1.551 | 3.480 | 1.914 | 50.3M | 16.7 % | 0.3 % |
+| 65,536 | 3.743 | 1.529 | 3.582 | 1.860 | 67.1M | 22.2 % | 0.7 % |

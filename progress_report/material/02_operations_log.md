@@ -109,3 +109,10 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
 - Tokenizer comparison started on the 5080 (`scripts/tokenizer_run.sh`: sample → one 65,536 BPE run →
   32,768 / 49,152 as merge prefixes → `reports/tokenizer_compare.md`). Unit test confirms a prefix of a
   longer run equals a run stopped there (identical vocabulary and encodings).
+- Tokenizer comparison done on the 5080 (16:00-16:03): sample 615,194 documents (EN 596,417 / 1.03 GB,
+  DE 18,777 pages / 0.23 GB; 7,373 dropped at ocr_hit < 0.85); one 65,536 BPE run in 129 s; 32k/48k cut as
+  prefixes. Held-out bytes per token, EN American Stories / DE: 32k 3.592 / 3.327, 48k 3.688 / 3.480, 64k
+  3.743 / 3.582; tokens per word EN 1.593 / 1.551 / 1.529, DE 2.002 / 1.914 / 1.860 (the 1.35 / 1.6
+  placeholders were ~15 % low). OCR junk among added word-initial tokens 0.0 / 0.3 / 0.7 %. Probe terms
+  that are single tokens: blitz, occupation, resistance (+ collaboration at 64k), all C3 sense-shift words
+  (ordinary pre-1939 words); no C1 coinage is a single token. `reports/tokenizer_compare.md`.
