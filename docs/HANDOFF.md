@@ -648,6 +648,12 @@ already answers.
   GitHub fetch if the proxy is down and moves aside reports/config tables that the box generated.
 - Tables generated on the box (`config/*_files.tsv`, `*_items.tsv`, reports) must be copied back and
   committed locally: `ssh gpu 'wsl -d Ubuntu -- bash -c "cd /home/an/1939 && tar czf - <files> | base64 -w0"' | ... | base64 -d | tar xzf -`.
+- Temperatures, fans, memory and NVMe wear (installed 2026-10-08 at Andrew's request): the PawnIO driver
+  (service `PawnIO`, uninstaller in `C:\Program Files\PawnIO`) plus LibreHardwareMonitor 0.9.6 unpacked in
+  `C:\Users\AN\Tools\LibreHardwareMonitor` (only its library is used; the GUI does not run). Read with
+  `ssh gpu 'powershell -NoProfile -ExecutionPolicy Bypass -File C:\Users\AN\Tools\hw_temps.ps1'`
+  (source: `scripts/hw_temps.ps1`). Baseline under the 2b pass: CPU Tctl ~55 °C at 40 % load, GPU idle 26 °C,
+  990 PRO 43–45 °C, 1 % used, 22 TB written lifetime.
 - Rules (from remote-gpu.md): ask Andrew before shutdown/reboot, sshd/firewall/Tailscale changes, Windows
   update or power settings, deleting remote data; no password login, no port forwarding; kill only
   processes/sessions you created; never write secrets anywhere.
