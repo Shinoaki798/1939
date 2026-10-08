@@ -226,10 +226,30 @@ def census_path(cfg: dict) -> Path:
 
 # ---------------------------------------------------------------- run
 
+FLUSH_ROWS = 50_000             # write selected rows in batches: an American Stories year does not fit a worker's RAM
+
+
 def _select_job(job: tuple) -> dict:
     source, path, out_root, info, rates, as_titles, ejc_titles, sci_books, dry_run = job
     stats: Counter = Counter()
     rows: dict[str, list[dict]] = {lang: [] for lang in LANGS}
+    writers: dict[str, pq.ParquetWriter] = {}
+    tmps: dict[str, Path] = {}
+    counts: Counter = Counter()
+
+    def flush(lang: str) -> None:
+        if not rows[lang]:
+            return
+        if lang not in writers:
+            d = Path(out_root) / source / lang
+            d.mkdir(parents=True, exist_ok=True)
+            tmps[lang] = d / f".tmp_{Path(path).stem}.parquet"
+            writers[lang] = pq.ParquetWriter(tmps[lang], OUT_SCHEMA, compression="zstd")
+        writers[lang].write_table(pa.Table.from_pylist(rows[lang], schema=OUT_SCHEMA))
+        counts[f"{lang}_rows"] += len(rows[lang])
+        counts[f"{lang}_words"] += sum(r["n_words"] for r in rows[lang])
+        rows[lang] = []
+
     pf = pq.ParquetFile(path)
     cols = [c for c in META_COLS + ["text", "headline"] if c in pf.schema_arrow.names]
     for batch in pf.iter_batches(batch_size=20_000, columns=cols):
@@ -270,22 +290,23 @@ def _select_job(job: tuple) -> dict:
                 "lccn": (b.get("lccn") or [""] * batch.num_rows)[i] or "",
                 "headline": (b.get("headline") or [""] * batch.num_rows)[i] or "",
                 "text": text, "n_bytes": len(text.encode("utf-8")), "n_words": len(text.split())})
+            if len(rows[lang]) >= FLUSH_ROWS:
+                flush(lang)
     outputs = {}
-    for lang, rs in rows.items():
-        if not rs:
+    for lang in LANGS:
+        flush(lang)
+        if lang not in writers:
             continue
-        d = Path(out_root) / source / lang
-        d.mkdir(parents=True, exist_ok=True)
-        tmp = d / f".tmp_{Path(path).stem}.parquet"
-        pq.write_table(pa.Table.from_pylist(rs, schema=OUT_SCHEMA), tmp, compression="zstd")
+        writers[lang].close()
+        tmp = tmps[lang]
         digest = sha256_file(tmp)
-        final = d / f"{digest[:12]}.parquet"
+        final = tmp.parent / f"{digest[:12]}.parquet"
         if final.exists():
             os.remove(tmp)
         else:
             os.replace(tmp, final)
-        outputs[lang] = {"file": f"{lang}/{final.name}", "sha256": digest, "rows": len(rs),
-                         "words": sum(r["n_words"] for r in rs)}
+        outputs[lang] = {"file": f"{lang}/{final.name}", "sha256": digest, "rows": counts[f"{lang}_rows"],
+                         "words": counts[f"{lang}_words"]}
     return {"input": Path(path).name, "stats": dict(stats), "outputs": outputs}
 
 

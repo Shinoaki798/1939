@@ -306,6 +306,7 @@ def main() -> None:
     ap.add_argument("--workers", type=int, default=8)
     ap.add_argument("--dry-run", action="store_true", help="match and count; write no drops/MANIFEST")
     ap.add_argument("--samples", default="", help="write 0.55-0.65 example pairs per OCR source to this file")
+    ap.add_argument("--sign-only", action="store_true", help="sign new files and stop (before all data is in)")
     args = ap.parse_args()
     cfg = load_config(repo_path("config/paths.yaml"))
     out_dir = repo_path(cfg["dedup"]) / args.lang
@@ -326,6 +327,9 @@ def main() -> None:
                 if k % 200 == 0 or k == len(jobs):
                     print(f"signed {k}/{len(jobs)} files, {signed_words:,} tokens, {time.time() - t0:.0f}s", flush=True)
     t_sign = time.time() - t0
+    if args.sign_only:
+        print(f"signed {len(jobs)} new files in {t_sign:.0f}s; {len(files)} files in the pool", flush=True)
+        return
     shas = [sha[:12] for _, sha in files]
     idx = pa.concat_tables([pq.read_table(sig_dir / f"{s}.idx.parquet") for s in shas])
     n = len(idx)
