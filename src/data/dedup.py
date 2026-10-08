@@ -44,6 +44,7 @@ from pathlib import Path
 
 import numpy as np
 import pyarrow as pa
+import pyarrow.compute as pc
 import pyarrow.parquet as pq
 
 from src.data.download import load_config, repo_path
@@ -161,15 +162,29 @@ def selected_files(cfg: dict, lang: str) -> tuple[list[tuple[str, str]], dict[st
 
 # ---------------------------------------------------------------- matching
 
+def _chunked(col: pa.ChunkedArray, size: int = 2_000_000):
+    for start in range(0, len(col), size):
+        yield col.slice(start, size).to_pylist()
+
+
 def priority_rank(idx: pa.Table) -> np.ndarray:
-    """rank[i] = position of document i in keeper order (earliest date, article-level, id hash)."""
-    date = np.array([int(d.replace("-", "")[:8] or 0) for d in idx.column("date").to_pylist()], dtype=np.int64)
+    """rank[i] = position of document i in keeper order (earliest date, article-level, id hash). Built in
+    chunks: a Python list of every id of the 5080 pool would not fit beside the signatures."""
+    n = len(idx)
+    date = np.concatenate([np.fromiter((int((d or "0").replace("-", "")[:8] or 0) for d in c), dtype=np.int64, count=len(c))
+                           for c in _chunked(idx.column("date"))]) if n else np.zeros(0, np.int64)
     page = idx.column("page_level").to_numpy(zero_copy_only=False).astype(np.int8)
-    idh = np.array([zlib.crc32(a.encode("utf-8")) for a in idx.column("article_id").to_pylist()], dtype=np.int64)
+    idh = np.concatenate([np.fromiter((zlib.crc32(a.encode("utf-8")) for a in c), dtype=np.int64, count=len(c))
+                          for c in _chunked(idx.column("article_id"))]) if n else np.zeros(0, np.int64)
     order = np.lexsort((idh, page, date))
     rank = np.empty_like(order)
     rank[order] = np.arange(len(order))
     return rank
+
+
+def source_codes(idx: pa.Table) -> tuple[np.ndarray, list[str]]:
+    enc = pc.dictionary_encode(idx.column("source")).combine_chunks()
+    return enc.indices.to_numpy(zero_copy_only=False).astype(np.int32), enc.dictionary.to_pylist()
 
 
 def group_pairs(keys: np.ndarray, rank: np.ndarray, valid: np.ndarray | None = None):
@@ -239,7 +254,7 @@ def match(sig: np.ndarray, idx: pa.Table, thr: np.ndarray, keys: np.ndarray | No
     rank = priority_rank(idx)
     has_sig = idx.column("has_sig").to_numpy(zero_copy_only=False)
     exact = idx.column("exact").to_numpy()
-    src = idx.column("source").to_pylist()
+    codes, names = source_codes(idx)
     keys = band_keys(sig) if keys is None else keys
     eu, ev = group_pairs(exact, rank)
     pol_u, pol_v, uni_u, uni_v = [eu], [ev], [eu], [ev]
@@ -257,7 +272,7 @@ def match(sig: np.ndarray, idx: pa.Table, thr: np.ndarray, keys: np.ndarray | No
         ok_uni = j_est >= THRESHOLD_KEYED
         pol_u.append(u[ok_pol]); pol_v.append(v[ok_pol]); uni_u.append(u[ok_uni]); uni_v.append(v[ok_uni])
         for t in np.flatnonzero((j_est >= lo) & (j_est < hi) & (thr[u] < THRESHOLD_KEYED))[:20000]:
-            s = src[u[t]]
+            s = names[codes[u[t]]]
             seen[s] += 1
             pair = (int(u[t]), int(v[t]), float(j_est[t]))
             if len(samples[s]) < sample_k:
@@ -279,9 +294,9 @@ def match(sig: np.ndarray, idx: pa.Table, thr: np.ndarray, keys: np.ndarray | No
 # ---------------------------------------------------------------- driver
 
 def write_samples(path: Path, samples: dict, idx: pa.Table, files: list[str]) -> None:
-    ids = {i for pairs in samples.values() for a, b, _ in pairs for i in (a, b)}
-    aid = idx.column("article_id").to_pylist()
-    want = {aid[i] for i in ids}
+    ids = sorted({i for pairs in samples.values() for a, b, _ in pairs for i in (a, b)})
+    aid = dict(zip(ids, idx.column("article_id").take(pa.array(ids, pa.int64())).to_pylist())) if ids else {}
+    want = set(aid.values())
     text: dict[str, tuple] = {}
     for f in files:
         t = pq.read_table(f, columns=["article_id", "source", "date", "text"], filters=[("article_id", "in", list(want))])
@@ -344,27 +359,28 @@ def main() -> None:
         sig.flush()
     else:
         sig = np.concatenate([np.load(sig_dir / f"{s}.npy") for s in shas])
-    src = idx.column("source").to_pylist()
-    thr_of = {s: THRESHOLD_KEYED if keyed.get(s) else THRESHOLD_OCR for s in set(src)}
-    thr = np.array([thr_of[s] for s in src], dtype=np.float64)
+    codes, names = source_codes(idx)
+    thr_of = {s: THRESHOLD_KEYED if keyed.get(s) else THRESHOLD_OCR for s in names}
+    thr = np.array([thr_of[s] for s in names], dtype=np.float64)[codes]
     t1 = time.time()
     keys = band_keys(sig, out_dir / "band_keys.npy")
     dropped, kept, jd, reason, uni_mask, samples = match(sig, idx, thr, keys)
     t_match = time.time() - t1
-    aid, dates, nw = idx.column("article_id").to_pylist(), idx.column("date").to_pylist(), idx.column("n_words").to_pylist()
-    per = defaultdict(Counter)
-    for i in range(n):
-        c = per[src[i]]
-        c["docs"] += 1
-        c["words"] += nw[i]
-        if uni_mask[i]:
-            c["dropped_at_0.80"] += 1
-            c["dropped_words_at_0.80"] += nw[i]
-    for i, r in zip(dropped.tolist(), reason.tolist()):
-        per[src[i]][f"dropped_{r}"] += 1
-        per[src[i]]["dropped_words"] += nw[i]
-    print(f"{args.lang}: {n:,} docs, dropped {len(dropped):,} (exact {int((reason == 'exact').sum()):,}, near "
-          f"{int((reason == 'near').sum()):,}); at a uniform 0.80: {int(uni_mask.sum()):,}; sign {t_sign:.0f}s "
+    nw = idx.column("n_words").to_numpy(zero_copy_only=False).astype(np.float64)
+    k = len(names)
+    docs, words = np.bincount(codes, minlength=k), np.bincount(codes, weights=nw, minlength=k)
+    uni_docs = np.bincount(codes[uni_mask], minlength=k)
+    uni_words = np.bincount(codes[uni_mask], weights=nw[uni_mask], minlength=k)
+    is_exact = reason == "exact"
+    d_exact = np.bincount(codes[dropped[is_exact]], minlength=k)
+    d_near = np.bincount(codes[dropped[~is_exact]], minlength=k)
+    d_words = np.bincount(codes[dropped], weights=nw[dropped], minlength=k)
+    per = {names[j]: {"docs": int(docs[j]), "words": int(words[j]), "dropped_exact": int(d_exact[j]),
+                      "dropped_near": int(d_near[j]), "dropped_words": int(d_words[j]),
+                      "dropped_at_0.80": int(uni_docs[j]), "dropped_words_at_0.80": int(uni_words[j])}
+           for j in range(k)}
+    print(f"{args.lang}: {n:,} docs, dropped {len(dropped):,} (exact {int(is_exact.sum()):,}, near "
+          f"{int((~is_exact).sum()):,}); at a uniform 0.80: {int(uni_mask.sum()):,}; sign {t_sign:.0f}s "
           f"({signed_words / max(t_sign, 1e-9) / 1e6:.1f}M tokens/s), match {t_match:.0f}s", flush=True)
     for s, c in sorted(per.items()):
         d = c["dropped_exact"] + c["dropped_near"]
@@ -377,9 +393,11 @@ def main() -> None:
         print(f"samples -> {args.samples}", flush=True)
     if args.dry_run:
         return
-    drops = pa.table({"article_id": [aid[i] for i in dropped.tolist()], "source": [src[i] for i in dropped.tolist()],
-                      "date": [dates[i] for i in dropped.tolist()], "reason": reason.tolist(),
-                      "kept_id": [aid[i] for i in kept.tolist()], "jaccard": jd.astype(np.float32)})
+    take = pa.array(dropped, pa.int64())
+    drops = pa.table({"article_id": idx.column("article_id").take(take), "source": idx.column("source").take(take),
+                      "date": idx.column("date").take(take), "reason": pa.array(reason.tolist(), pa.string()),
+                      "kept_id": idx.column("article_id").take(pa.array(kept, pa.int64())),
+                      "jaccard": pa.array(jd.astype(np.float32))})
     pq.write_table(drops, out_dir / "drops.parquet", compression="zstd")
     manifest = {"stage": "dedup", "lang": args.lang,
                 "created_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
@@ -390,7 +408,7 @@ def main() -> None:
                 "threshold_per_source": dict(sorted(thr_of.items())),
                 "inputs": {s: sha for (_, sha), s in zip(files, shas)},
                 "docs": n, "dropped": len(dropped), "dropped_at_uniform_0.80": int(uni_mask.sum()),
-                "per_source": {s: dict(c) for s, c in sorted(per.items())},
+                "per_source": dict(sorted(per.items())),
                 "seconds": {"sign": round(t_sign), "match": round(t_match)}}
     (out_dir / "MANIFEST.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     print(f"-> {out_dir}", flush=True)

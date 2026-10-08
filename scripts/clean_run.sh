@@ -3,7 +3,8 @@
 # (signatures are cached per selected file, so a later run only signs files added since).
 # Start via WMI so it outlives the SSH session:
 #   (echo '$Script = "clean_run.sh"'; cat scripts/start_download.ps1) | ssh gpu 'powershell -NoProfile -Command -'
-# Optional argument: steps to run (default "census select sign_en sign_de").
+# Optional argument: steps to run (default "census select sign_en sign_de"); later steps: dedup_en dedup_de
+# heldout reprint_en reprint_de filter_en filter_de audit.
 set -uo pipefail
 cd "$HOME/1939"
 mkdir -p logs
@@ -18,6 +19,14 @@ for step in $steps; do
     select)  "$PY" -u -m src.data.select run --workers 8 >> logs/select.log 2>&1 ;;
     sign_en) "$PY" -u -m src.data.dedup --lang en --workers 8 --sign-only >> logs/dedup_en.log 2>&1 ;;
     sign_de) "$PY" -u -m src.data.dedup --lang de --workers 8 --sign-only >> logs/dedup_de.log 2>&1 ;;
+    dedup_en) "$PY" -u -m src.data.dedup --lang en --workers 8 --samples reports/dedup_samples_en.md >> logs/dedup_en.log 2>&1 ;;
+    dedup_de) "$PY" -u -m src.data.dedup --lang de --workers 8 --samples reports/dedup_samples_de.md >> logs/dedup_de.log 2>&1 ;;
+    heldout)  "$PY" -u -m src.data.para_dedup heldout --lang en --workers 8 >> logs/para_dedup.log 2>&1 ;;
+    reprint_en) "$PY" -u -m src.data.para_dedup reprint --lang en --workers 6 >> logs/para_dedup.log 2>&1 ;;
+    reprint_de) "$PY" -u -m src.data.para_dedup reprint --lang de --workers 6 >> logs/para_dedup.log 2>&1 ;;
+    filter_en) "$PY" -u -m src.data.filter --lang en --workers 8 >> logs/filter.log 2>&1 ;;
+    filter_de) "$PY" -u -m src.data.filter --lang de --workers 8 >> logs/filter.log 2>&1 ;;
+    audit)    "$PY" -u -m src.data.audit --out reports/audit_v1.md >> logs/audit.log 2>&1 ;;
     *) echo "unknown step $step" >> "$log"; false ;;
   esac
   rc=$?; echo "$(date -Is) $step exit $rc" >> "$log"
