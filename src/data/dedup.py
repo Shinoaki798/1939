@@ -59,7 +59,6 @@ THRESHOLD_OCR, THRESHOLD_KEYED = 0.60, 0.80
 SAMPLE_BAND, SAMPLE_K = (0.55, 0.65), 30
 SEED = 1939
 TOKEN = re.compile(r"[^\W\d_]+", re.UNICODE)
-IN_RAM_BYTES = 4 << 30          # band keys above this size go to a memory-mapped file
 MIN_LSH_WORDS = 25              # shorter documents match exactly only (too few shingles to compare)
 
 _rng = np.random.default_rng(SEED)
@@ -277,13 +276,10 @@ def jaccard_b(a8: np.ndarray, b8: np.ndarray) -> np.ndarray:
     return np.clip((p - 1 / 256) / (1 - 1 / 256), 0.0, 1.0)
 
 
-def band_keys(sig: np.ndarray, out_path: Path | None = None) -> np.ndarray:
-    """keys[b, i] = hash of rows b*ROWS .. b*ROWS+ROWS-1 of document i's signature, one sequential pass."""
+def band_keys(sig: np.ndarray) -> np.ndarray:
+    """keys[b, i] = hash of rows b*ROWS .. b*ROWS+ROWS-1 of document i's signature (small pools, tests)."""
     n = len(sig)
-    if out_path is not None and BANDS * n * 8 > IN_RAM_BYTES:
-        keys = np.lib.format.open_memmap(out_path, mode="w+", dtype=np.uint64, shape=(BANDS, n))
-    else:
-        keys = np.zeros((BANDS, n), dtype=np.uint64)
+    keys = np.zeros((BANDS, n), dtype=np.uint64)
     for r0 in range(0, n, 1_000_000):
         block = np.asarray(sig[r0:r0 + 1_000_000]).astype(np.uint64)
         for b in range(BANDS):
@@ -292,6 +288,43 @@ def band_keys(sig: np.ndarray, out_path: Path | None = None) -> np.ndarray:
                 k += block[:, b * ROWS + j] * BAND_MUL[j]
             keys[b, r0:r0 + len(block)] = k
     return keys
+
+
+class StreamedBandKeys:
+    """Band keys computed from the per-file signature arrays, `per_pass` bands at a time, as the high 32
+    bits of the band hash (a rare collision only adds a candidate that verification rejects). Nothing is
+    written to disk: rerunning the 5080 pool no longer writes 50 GB of merged signatures and keys."""
+
+    def __init__(self, files: list[Path], n: int, per_pass: int = BANDS // 2):
+        self.files, self.n, self.per = files, n, per_pass
+        self.lo, self.keys = None, None
+
+    def __getitem__(self, band: int) -> np.ndarray:
+        lo = (band // self.per) * self.per
+        if lo != self.lo:
+            self.keys = None
+            keys = np.empty((self.per, self.n), dtype=np.uint32)
+            r = 0
+            for f in self.files:
+                a = np.load(f)
+                for b in range(lo, lo + self.per):
+                    k = np.zeros(len(a), dtype=np.uint64)
+                    for j in range(ROWS):
+                        k += a[:, b * ROWS + j].astype(np.uint64) * BAND_MUL[j]
+                    keys[b - lo, r:r + len(a)] = (k >> np.uint64(32)).astype(np.uint32)
+                r += len(a)
+            self.lo, self.keys = lo, keys
+        return self.keys[band - lo]
+
+
+def streamed_low_bits(files: list[Path], n: int) -> np.ndarray:
+    out = np.empty((n, NUM_PERM), dtype=np.uint8)
+    r = 0
+    for f in files:
+        a = np.load(f)
+        out[r:r + len(a)] = a & np.uint32(0xFF)
+        r += len(a)
+    return out
 
 
 def match(sig: np.ndarray, idx: pa.Table, thr: np.ndarray, keys: np.ndarray | None = None,
@@ -411,25 +444,17 @@ def main() -> None:
         return
     shas = [sha[:12] for _, sha in files]
     idx = pa.concat_tables([pq.read_table(sig_dir / f"{s}.idx.parquet") for s in shas])
+    # 65M ids exceed the 2 GB offsets of `string`: take() on them needs large_string
+    idx = idx.cast(pa.schema([f.with_type(pa.large_string()) if f.type == pa.string() else f for f in idx.schema]))
     n = len(idx)
-    if n * NUM_PERM * 4 > IN_RAM_BYTES:                      # the 5080 pool: one memory-mapped array
-        sig = np.lib.format.open_memmap(out_dir / "sig_all.npy", mode="w+", dtype=np.uint32, shape=(n, NUM_PERM))
-        r = 0
-        for s in shas:
-            a = np.load(sig_dir / f"{s}.npy")
-            sig[r:r + len(a)] = a
-            r += len(a)
-        sig.flush()
-    else:
-        sig = np.concatenate([np.load(sig_dir / f"{s}.npy") for s in shas])
+    sig_files = [sig_dir / f"{s}.npy" for s in shas]
     codes, names = source_codes(idx)
     thr_of = {s: THRESHOLD_KEYED if keyed.get(s) else THRESHOLD_OCR for s in names}
     thr = np.array([thr_of[s] for s in names], dtype=np.float64)[codes]
     t1 = time.time()
-    keys = band_keys(sig, out_dir / "band_keys.npy")
-    sig8 = low_bits(sig)
-    print(f"band keys and 8-bit signatures ready, {time.time() - t1:.0f}s", flush=True)
-    dropped, kept, jd, reason, uni_mask, samples = match(sig, idx, thr, keys, sig8=sig8)
+    sig8 = streamed_low_bits(sig_files, n)
+    print(f"8-bit signatures ready, {time.time() - t1:.0f}s", flush=True)
+    dropped, kept, jd, reason, uni_mask, samples = match(None, idx, thr, StreamedBandKeys(sig_files, n), sig8=sig8)
     t_match = time.time() - t1
     nw = idx.column("n_words").to_numpy(zero_copy_only=False).astype(np.float64)
     k = len(names)
@@ -459,9 +484,10 @@ def main() -> None:
     if args.dry_run:
         return
     take = pa.array(dropped, pa.int64())
-    drops = pa.table({"article_id": idx.column("article_id").take(take), "source": idx.column("source").take(take),
-                      "date": idx.column("date").take(take), "reason": pa.array(reason.tolist(), pa.string()),
-                      "kept_id": idx.column("article_id").take(pa.array(kept, pa.int64())),
+    s_ = lambda a: a.cast(pa.string())
+    drops = pa.table({"article_id": s_(idx.column("article_id").take(take)), "source": s_(idx.column("source").take(take)),
+                      "date": s_(idx.column("date").take(take)), "reason": pa.array(reason.tolist(), pa.string()),
+                      "kept_id": s_(idx.column("article_id").take(pa.array(kept, pa.int64()))),
                       "jaccard": pa.array(jd.astype(np.float32))})
     pq.write_table(drops, out_dir / "drops.parquet", compression="zstd")
     manifest = {"stage": "dedup", "lang": args.lang,
