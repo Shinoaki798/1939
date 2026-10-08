@@ -95,3 +95,7 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
   31,678; German 1939-06 ~2,200 pages (DDB 1,665, Europeana 563), 08-18..31 ~700 pages (DDB 447,
   Europeana 257; German-language American Stories is OCR-gated). ChroniclingAmericaQA (sanity
   criterion 5) is not in `config/sources.yaml` and has not been downloaded.
+- ChroniclingAmericaQA registered as an evaluation-only source (`config/sources.yaml`, MIT, revision
+  15e58335; dev.json 75 MB + test.json 75 MB, the 1.38 GB train.json skipped; dest `data/eval/`);
+  `select.pool_sources` now also skips every "evaluation only" source. Downloaded on the 5080 through the
+  VPN (user OK, VPN back on).

@@ -53,3 +53,9 @@ Who: "user" = Andrew (often after a reviewer's DECISION block), "instructor" = P
 | 10-08 | The 5080 is dedicated to the project: Steam and other background apps closed, Wallpaper Engine and ToDesk kept; WSL memory 48 GB + 16 GB swap | user |
 | 10-08 | Hardware monitoring allowed (PawnIO + LibreHardwareMonitor library); unused installers removed | user |
 | 10-08 | Long unattended runs: hourly check-ins with progress, memory, temperatures and disk writes | user |
+
+## Evaluation data (2026-10-08)
+
+| date | decision | who | why |
+|---|---|---|---|
+| 10-08 | Missing evaluation data is downloaded on the 5080 through the VPN (back on); ChroniclingAmericaQA dev + test only | user | success criterion 5 needs it; the train split is not used (no fine-tuning) |
