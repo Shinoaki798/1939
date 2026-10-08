@@ -64,18 +64,23 @@ def _sample_file(job: tuple) -> dict:
     aid = t.column("article_id").to_numpy(zero_copy_only=False)
     _, u = uniform(aid, SEED)
     idx = np.flatnonzero(u < 2 * rate)                   # superset: count <= 2
-    idx = [i for i in idx if aid[i] in chosen and u[i] < rate * chosen[aid[i]]]
-    if not idx:
-        return {"text": [], "source": [], "lang": [], "dropped_ocr": 0}
-    t = pq.read_table(path, columns=["text", "source", "ocr_hit", "keyed"]).take(pa.array(idx))
+    idx = np.array([i for i in idx if aid[i] in chosen and u[i] < rate * chosen[aid[i]]], dtype=np.int64)
     out = {"text": [], "source": [], "lang": [], "dropped_ocr": 0}
-    for text, src, hit, keyed in zip(*(t.column(c).to_pylist() for c in ("text", "source", "ocr_hit", "keyed"))):
-        if not keyed and hit is not None and not math.isnan(hit) and hit < min_ocr:
-            out["dropped_ocr"] += 1
-            continue
-        out["text"].append(normalize(text or "", src, lang))
-        out["source"].append(src)
-        out["lang"].append(lang)
+    if not len(idx):
+        return out
+    off = 0      # batch by batch: a whole file's text column can exceed 2 GB of string offsets
+    for b in pq.ParquetFile(path).iter_batches(batch_size=4096, columns=["text", "source", "ocr_hit", "keyed"]):
+        lo, hi = np.searchsorted(idx, off), np.searchsorted(idx, off + b.num_rows)
+        if hi > lo:
+            t = b.take(pa.array(idx[lo:hi] - off))
+            for text, src, hit, keyed in zip(*(t.column(c).to_pylist() for c in ("text", "source", "ocr_hit", "keyed"))):
+                if not keyed and hit is not None and not math.isnan(hit) and hit < min_ocr:
+                    out["dropped_ocr"] += 1
+                    continue
+                out["text"].append(normalize(text or "", src, lang))
+                out["source"].append(src)
+                out["lang"].append(lang)
+        off += b.num_rows
     return out
 
 
