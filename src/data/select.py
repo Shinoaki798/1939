@@ -115,7 +115,7 @@ def pool_sources(cfg: dict) -> dict:
     sources = load_config(repo_path(cfg["sources"]))
     out = {}
     for name, src in sources.items():
-        if not isinstance(src, dict) or name in EXCLUDED or "anchor" in str(src.get("role", "")):
+        if not isinstance(src, dict) or name in EXCLUDED or "lexicon anchor" in str(src.get("role", "")):
             continue
         ing = ingested_dir(cfg, name, src)
         if not (ing / "MANIFEST.json").exists():
