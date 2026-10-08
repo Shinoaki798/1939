@@ -264,10 +264,13 @@ def compare(cfg: dict, sizes: tuple[int, ...], n_en: int, n_de: int, out_md: str
         junk = [w for w in words if not starts_a_word(w[1:].lower())]
         added.append((s, s - prev, len(words), len(junk), junk[:25]))
         prev = s
+    # C1 coinages and C2 compositions must not be single tokens (a tokenizer fitted on later text would
+    # contain them); C3 sense-shift and C4 proper-noun terms are ordinary pre-1939 words (user, 2026-10-08)
     probes = []
-    for f in ("probes/rq1_seed.csv", "probes/c1_screen.csv"):
-        with open(repo_path(f), encoding="utf-8") as fh:
-            probes += [r["term"] for r in csv.DictReader(fh)]
+    with open(repo_path("probes/rq1_seed.csv"), encoding="utf-8") as fh:
+        probes += [r["term"] for r in csv.DictReader(fh) if r["class"] in ("C1", "C2")]
+    with open(repo_path("probes/c1_screen.csv"), encoding="utf-8") as fh:
+        probes += [r["term"] for r in csv.DictReader(fh)]
     single = {s: sorted({p for p in probes for form in (" " + p, " " + p.capitalize())
                          if len(tok.encode(form).ids) == 1}) for s, tok in toks.items()}
     body = 12 * N_LAYER * D_MODEL ** 2
@@ -285,7 +288,7 @@ def compare(cfg: dict, sizes: tuple[int, ...], n_en: int, n_de: int, out_md: str
             "|---|---|---|---|---|"]
     out += [f"| {s:,} | {a:,} | {w:,} | {j:,} ({j / max(w, 1):.1%}) | {' '.join(x.strip() for x in ex)} |"
             for s, a, w, j, ex in added]
-    out += ["", "Probe terms that are a single token (must be none): " +
+    out += ["", "C1/C2 probe terms that are a single token (must be none): " +
             "; ".join(f"{s:,}: {', '.join(v) or 'none'}" for s, v in single.items()), ""]
     Path(out_md).write_text("\n".join(out), encoding="utf-8")
     print("\n".join(out), flush=True)

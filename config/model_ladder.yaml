@@ -4,8 +4,8 @@
 
 tokens_per_param: 20
 max_epochs: 2
-context_length: 1024
-vocab_size: 32768
+context_length: 2048     # HANDOFF §12 2026-10-05 (the main run)
+vocab_size: 49152        # byte-level BPE, chosen 2026-10-08 (reports/tokenizer_compare.md)
 
 rungs:
   - name: s90m
@@ -33,7 +33,7 @@ rungs:
     n_head: 16
     est_hours_5080: 40
 
-selected: null   # set after reports/audit_v1.md
+selected: s335m  # 24 x 1024 x 16 heads, ~350M (HANDOFF §12 2026-10-05; CLAUDE.md rule 7: fixed at 350M)
 
 baselines:
   # instructor-mandated progression; same tokenizer and token budget

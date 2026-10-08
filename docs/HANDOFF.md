@@ -151,6 +151,7 @@ Late: −20 % within 24 h; nothing accepted after.
   report residual hit rate as a floor on contamination. Report it honestly.
 
 ### 5.4 Tokenizer
+*Superseded (2026-10-05/08, §12): bilingual EN + DE byte-level BPE, 49,152 tokens.*
 32,768-token BPE trained on **native-English pre-cutoff text only**. An
 off-the-shelf tokenizer leaks (fitted on *radar*, *Hiroshima*); a tokenizer
 trained on translated text would let the translator define 1939 vocabulary.
@@ -681,6 +682,14 @@ Dated entries; each supersedes anything above it that it contradicts.
     train.json as fine-tuning material; `select` skips "evaluation only" sources.
   - *Tokenizer:* compare 32k / 48k / 64k byte-level BPE before freezing (`src/data/tokenizer.py`,
     `reports/tokenizer_compare.md`).
+- **2026-10-08 — tokenizer chosen (user).** 48k = 49,152 byte-level BPE (NFC, digits split one by one,
+  `<|endoftext|>`), trained on a mixture-weighted sample of the normalised training text (615k documents,
+  1.26 GB). Held-out bytes/token EN 3.688 (32k 3.592, 64k 3.743), DE 3.480 (3.327, 3.582); OCR junk among
+  added tokens 0.3 %; ids fit uint16. Real tokens per word are EN 1.55, DE 1.91 (placeholders 1.35 / 1.6),
+  so the mixture is re-drawn on real counts (the 1920s fill shrinks to ~2.45B). The probe-token check
+  covers C1/C2 terms only: C3 sense-shift (blitz, occupation, resistance, collaboration) and C4 proper
+  nouns are ordinary pre-1939 words and may be single tokens. `config/model_ladder.yaml`: vocab 49,152,
+  context 2048, selected s335m; frozen tokenizer in `config/tokenizer.yaml`.
 
 ---
 

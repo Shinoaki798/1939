@@ -27,9 +27,10 @@ Dates are hard (see HANDOFF §4, §9).
       1939-06-30; Val disjoint 2 % ≤ cutoff; Embargo 1939-07-01…08-31 set
       aside; Test-A/B/C defined. Assert: no article in two splits; no article
       ≥ 1939-07-01 in Train or Val. Write `data/splits/MANIFEST.json`.
-- [ ] `src/data/tokenizer.py`: train 32k BPE on Train (native English) only.
-      Save vocab + merges + sha256. Assert the vocab does not contain any
-      whole-word probe term from `probes/rq1_seed.csv` as a single token.
+- [x] `src/data/tokenizer.py`: byte-level BPE, 48k (49,152; chosen 2026-10-08 from the 32k/48k/64k
+      comparison, `reports/tokenizer_compare.md`), trained on a mixture-weighted sample of EN + DE
+      training text (normalised). Save vocab + merges + sha256 (`config/tokenizer.yaml`). Assert no C1/C2
+      probe term is a single token (C3/C4 terms are ordinary pre-1939 words; user, 2026-10-08).
 - [ ] Tokenise all splits; write `data/tokenized/MANIFEST.json`.
   Gate: v1 frozen; manifest checksummed; `reports/audit_v1.md` committed;
   model size chosen and written to `config/model_ladder.yaml` → `selected`.
