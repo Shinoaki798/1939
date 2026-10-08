@@ -47,6 +47,7 @@ from src.data.para_dedup import CUTOFF as PARA_CUTOFF
 from src.data.splits import parent_id, split_of, test_set
 
 CHUNK_MAX, CHUNK_WORDS, CHUNK_TAIL = 10_000, 2_000, 500
+FLUSH_ROWS = 20_000          # output rows held per worker before they are written (one row group)
 C1_FILE = "probes/c1_screen.csv"
 
 OUT_SCHEMA = pa.schema([
@@ -124,13 +125,29 @@ def _worker_state(lang: str, drops_file: str, para_files: tuple, source: str) ->
     return _W
 
 
+def _flush(rows: list[dict], writer, tmp: Path | None, out_dir: str, path: str):
+    """Append rows to this input's temporary output file (opened on first use) and empty the list."""
+    if writer is None:
+        d = Path(out_dir) / rows[0]["source"]
+        d.mkdir(parents=True, exist_ok=True)
+        tmp = d / f".tmp_{Path(path).stem}.parquet"
+        writer = pq.ParquetWriter(tmp, OUT_SCHEMA, compression="zstd")
+    writer.write_table(pa.Table.from_pylist(rows, schema=OUT_SCHEMA))
+    rows.clear()
+    return writer, tmp
+
+
 def _filter_job(job: tuple) -> dict:
     path, lang, drops_file, para_files, out_dir, dry_run = job
     stats: Counter = Counter()
     rows: list[dict] = []
+    writer, tmp, n_rows = None, None, 0
     pf = pq.ParquetFile(path)
     state = None
     for batch in pf.iter_batches(batch_size=2000):
+        if len(rows) >= FLUSH_ROWS:
+            n_rows += len(rows)
+            writer, tmp = _flush(rows, writer, tmp, out_dir, path)
         b = batch.to_pydict()
         for i in range(batch.num_rows):
             src = b["source"][i]
@@ -183,19 +200,19 @@ def _filter_job(job: tuple) -> dict:
                              "split": split, "test_set": test_set(date, split) or "", "text": part, "n_words": nw,
                              "n_bytes": len(part.encode("utf-8")), "ocr_hit": hit, "ocr_word_share": ws,
                              "ocr_tokens": ntok, "gate": gate, "c1_term": term, "train_ok": ok})
-    out = {}
     if rows:
-        d = Path(out_dir) / rows[0]["source"]
-        d.mkdir(parents=True, exist_ok=True)
-        tmp = d / f".tmp_{Path(path).stem}.parquet"
-        pq.write_table(pa.Table.from_pylist(rows, schema=OUT_SCHEMA), tmp, compression="zstd")
+        n_rows += len(rows)
+        writer, tmp = _flush(rows, writer, tmp, out_dir, path)
+    out = {}
+    if writer is not None:
+        writer.close()
         digest = sha256_file(tmp)
-        final = d / f"{digest[:12]}.parquet"
+        final = tmp.parent / f"{digest[:12]}.parquet"
         if final.exists():
             os.remove(tmp)
         else:
             os.replace(tmp, final)
-        out = {"file": f"{rows[0]['source']}/{final.name}", "sha256": digest, "rows": len(rows)}
+        out = {"file": f"{tmp.parent.name}/{final.name}", "sha256": digest, "rows": n_rows}
     return {"input": path, "output": out, "stats": dict(stats)}
 
 
