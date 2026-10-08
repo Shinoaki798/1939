@@ -337,6 +337,13 @@ down immediately; it still satisfies every success criterion.
 - (2026-10-06, twin) Gallup 1939 figures for RQ3: collected by hand per
   proposition from the Gallup volume (evaluation reference only, never
   training); when.
+- (2026-10-08, audit §8) The cleaned 1930-1939.06 pool seen twice (after the
+  German and legal caps) is 8.97B tokens, so with science (~1.0B) the 10B budget
+  leaves the 1920s 28M tokens and pre-1920 none. That follows the §12 rule
+  ("recent periods up-weighted by repetition before any older period"), but the
+  model will then have seen almost nothing before 1930. Keep it, or reserve a
+  share for the 1920s / pre-1920 (e.g. 1930s seen ~1.5x)? Decide before the
+  sampler is written.
 
 ## 12. Decisions log
 
@@ -601,6 +608,29 @@ Dated entries; each supersedes anything above it that it contradicts.
   - *German-language articles of American papers* (American Stories ~368k articles / 86M words, Chronicling
     America ~3k pages / 7M words) stay in the German pool; the English-only twin drops them with the rest
     of the German slice.
+- **2026-10-08 — cleaning run on the 5080 (implementation; no new decision).** Chain finished 06:00;
+  `reports/audit_v1.md` generated from the stage MANIFESTs.
+  - *Paragraph blocks of single-line pages.* DDB and Europeana pages are one line of ~3,000 words, so
+    line-boundary blocks made every German page one block (page-level matching only). A line over 120
+    words is now cut after the first sentence end past 60 words (at 120 without one); German 2b then
+    removed 1.69M of 18.5M DDB blocks (117M words) and 0.54M of 23.4M Europeana blocks (37M words).
+    English blocks are unchanged (Chronicling America OCR is line by line).
+  - *2a also runs on the German pool* (reference: the German American Stories held-out 2 %, 4.2M
+    5-grams): 9 blocks / 635 words removed. English 2a: Chronicling America 11.0M words, books 5.0M,
+    Federal Register 79k.
+  - *2b scope per language:* English = Chronicling America + Federal Register (1930-39 only have such
+    training text); German = DDB, Europeana, Chronicling America German pages. English 2b removed 2.29M
+    of 14.7M CA blocks (143M words) and 104k of 212k Federal Register blocks (6.7M words; sampled hits are
+    genuine regulatory repetition: amended rules reprinting earlier text, statute quotations, form orders).
+  - *German American Stories is 99 % OCR-gated* (hit rate): Fraktur read as Latin script, e.g. "Beiten ber,
+    iino Die 8inter bodIt"; 0.84M of 82.7M train words survive. The German-language US slice is therefore
+    effectively Chronicling America's ~6M words.
+  - *Mixture after caps* (estimate, audit §8): 1930-39.06 x2 = 8.97B tok (German capped at 2.24B,
+    legal at 0.90B), science en 0.75B + de 0.25B, 1920s 28M, pre-1920 0 — the 1930s slice alone fills the
+    10B budget, so the 1920s and pre-1920 barely enter (open question §11).
+  - *1920-22 spike:* English train words are 1.1-1.2B per year 1920-22 vs 0.42B in 1923 and ~0.25B later,
+    in American Stories itself (held-out sets show the same jump): Chronicling America long covered
+    only public-domain years (<= 1922).
 
 ---
 
@@ -721,6 +751,12 @@ already answers.
   JFM is harvested and ingested on the 2080 only; the 5080's 521 pages (an older walk) are not used.
 - On the 5080, check memory and kill hung or finished project processes on every visit (Andrew,
   2026-10-06: stray python loops keep the box hot); keep the two WSL `sleep infinity` keep-alives.
+- **WSL memory near its 48 GB cap makes Windows page to the SSD** (2026-10-08: ~160 GB/h, the 990 PRO
+  counter went 1 % -> 2 %). Windows has ~14 GB left when the VM is full; measure with
+  `\Memory\Pages Output/sec` and `\Hyper-V Virtual Storage Device(*)\Write Bytes/sec` (scripts in
+  `C:\Users\AN\Tools`). Workers must stream their output (filter now writes 20k-row groups) and the
+  chain should keep WSL "used" well under ~35 GB. 14 CPU workers ran the 9800X3D at 88 C / 154 W; 8 keep
+  it near 80 C.
 
 ### 13.7 Starting prompt for a new session
 
