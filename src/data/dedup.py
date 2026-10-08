@@ -126,8 +126,8 @@ def _sign_job(job: tuple) -> dict:
     t0 = time.time()
     pf = pq.ParquetFile(path)
     rows: dict[str, list] = defaultdict(list)
-    sigs = []
-    words = 0
+    arr = np.zeros((pf.metadata.num_rows, NUM_PERM), dtype=np.uint32)      # one array: a list of small ones doubles RAM
+    r = words = 0
     for batch in pf.iter_batches(batch_size=2000, columns=["article_id", "source", "date", "page_level", "n_words", "text"]):
         b = batch.to_pydict()
         for i in range(batch.num_rows):
@@ -138,11 +138,12 @@ def _sign_job(job: tuple) -> dict:
                 rows[k].append(b[k][i])
             rows["exact"].append(exact_hash(toks))
             rows["has_sig"].append(sig is not None)
-            sigs.append(sig if sig is not None else np.zeros(NUM_PERM, dtype=np.uint32))
-    arr = np.stack(sigs) if sigs else np.zeros((0, NUM_PERM), dtype=np.uint32)
-    np.save(sig_path, arr)
+            if sig is not None:
+                arr[r] = sig
+            r += 1
+    np.save(sig_path, arr[:r])
     pq.write_table(pa.Table.from_pydict(rows, schema=IDX_SCHEMA), idx_path, compression="zstd")
-    return {"path": path, "docs": len(sigs), "words": words, "seconds": round(time.time() - t0, 1)}
+    return {"path": path, "docs": r, "words": words, "seconds": round(time.time() - t0, 1)}
 
 
 def selected_files(cfg: dict, lang: str) -> tuple[list[tuple[str, str]], dict[str, bool]]:

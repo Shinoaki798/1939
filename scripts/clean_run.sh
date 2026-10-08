@@ -16,8 +16,8 @@ for step in $steps; do
   case "$step" in
     census)  "$PY" -u -m src.data.select census --workers 12 >> logs/select.log 2>&1 ;;
     select)  "$PY" -u -m src.data.select run --workers 8 >> logs/select.log 2>&1 ;;
-    sign_en) "$PY" -u -m src.data.dedup --lang en --workers 14 --sign-only >> logs/dedup_en.log 2>&1 ;;
-    sign_de) "$PY" -u -m src.data.dedup --lang de --workers 14 --sign-only >> logs/dedup_de.log 2>&1 ;;
+    sign_en) "$PY" -u -m src.data.dedup --lang en --workers 8 --sign-only >> logs/dedup_en.log 2>&1 ;;
+    sign_de) "$PY" -u -m src.data.dedup --lang de --workers 8 --sign-only >> logs/dedup_de.log 2>&1 ;;
     *) echo "unknown step $step" >> "$log"; false ;;
   esac
   rc=$?; echo "$(date -Is) $step exit $rc" >> "$log"
