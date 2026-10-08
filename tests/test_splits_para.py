@@ -35,6 +35,21 @@ def test_blocks_cover_text_at_line_boundaries():
     assert len(text[spans[-1][0]:].split()) >= para_dedup.MIN_TAIL
 
 
+def test_blocks_cut_single_line_pages_at_sentence_ends():
+    sent = "Die Regierung hat heute in Berlin einen neuen Erlass veroeffentlicht und die Presse unterrichtet. "
+    text = (sent * 60).strip()                                                  # one line, 14 words per sentence
+    spans = para_dedup.blocks(text)
+    assert len(spans) > 5 and spans[0][0] == 0 and spans[-1][1] == len(text)
+    assert all(a[1] == b[0] for a, b in zip(spans, spans[1:]))
+    assert all(text[s:e].rstrip().endswith(".") for s, e in spans)
+    assert all(para_dedup.BLOCK_WORDS <= len(text[s:e].split()) <= 2 * para_dedup.BLOCK_WORDS + para_dedup.MIN_TAIL
+               for s, e in spans)
+    nostop = " ".join(["wort"] * 1000)                                          # no sentence end at all
+    sp = para_dedup.blocks(nostop)
+    assert all(len(nostop[s:e].split()) <= 2 * para_dedup.BLOCK_WORDS + para_dedup.MIN_TAIL for s, e in sp)
+    assert "".join(nostop[s:e] for s, e in sp) == nostop
+
+
 def test_containment_and_bloom():
     a = "the council passed the ordinance over the mayor's veto by a vote of six to two on monday evening"
     ref = np.unique(shingles(comparison_tokens(a + " and adjourned")))

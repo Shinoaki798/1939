@@ -4,14 +4,17 @@ Page-level sources (whole OCR pages or whole books: Chronicling America batch OC
 and pre-1929 books, Federal Register) carry reprinted articles inside pages, which whole-document MinHash
 cannot see. Their text has no paragraph marks (one OCR line per line), so a document is cut at line
 boundaries into blocks of at least BLOCK_WORDS words (a tail shorter than MIN_TAIL joins the previous
-block); block i of a document is reproducible from its text. Containment of a block = share of its
+block); block i of a document is reproducible from its text. A line longer than 2 x BLOCK_WORDS words
+(DDB and Europeana pages are a single line of ~3,000 words) is first cut after the first sentence end
+past BLOCK_WORDS words, or after 2 x BLOCK_WORDS words when no sentence ends. Containment of a block = share of its
 distinct word-5-gram hashes (src.data.dedup.shingles) found in a reference set. Only TRAINING documents
 (src.data.splits) that survived document dedup lose blocks; removed blocks are listed, not cut here.
 
   heldout (2a, required before freeze): reference = 5-grams of every American Stories article in the
           holdout or Val split that survived document dedup. A block with containment >= CUTOFF is removed,
           whatever the dates (evaluation integrity). Hit counts at several cutoffs go to the MANIFEST.
-          German pages cannot match English articles (different language pool), so 2a runs on `en`.
+          Runs per language pool: the German pool holds the German-language American Stories articles,
+          whose held-out 2 % feeds the German per-year bpb curve.
   reprint (2b, may be partial): documents of the language pool in date order (ties: article-level first,
           then id hash); a page-level training block whose containment in the 5-grams of everything
           earlier (rolling window of the current and previous year, a Bloom filter) is >= CUTOFF is
@@ -34,6 +37,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import re
 import shutil
 import sys
 import time
@@ -65,15 +69,40 @@ DROP_SCHEMA = pa.schema([("article_id", pa.string()), ("source", pa.string()), (
 COLS = ["article_id", "source", "date", "date_class", "page_level", "text"]
 
 
-def blocks(text: str, min_words: int = BLOCK_WORDS, min_tail: int = MIN_TAIL) -> list[tuple[int, int]]:
-    """(start, end) character spans of the blocks of a document, cut at line boundaries."""
-    spans, start, n, pos = [], 0, 0, 0
+_TOKEN = re.compile(r"\S+")
+_SENTENCE_END = (".", "!", "?", ".“", ".”", ".»", ".\"")
+
+
+def _units(text: str, min_words: int = BLOCK_WORDS):
+    """(end, n_words) of the units blocks are built from, in order: lines, with a line over 2 x min_words words
+    cut after the first sentence end past min_words words (or after 2 x min_words words)."""
+    pos = 0
     for line in text.splitlines(keepends=True):
+        n = len(line.split())
+        if n <= 2 * min_words:
+            pos += len(line)
+            yield pos, n
+            continue
+        start, k = 0, 0
+        for m in _TOKEN.finditer(line):
+            k += 1
+            if k >= 2 * min_words or (k >= min_words and m.group().endswith(_SENTENCE_END)):
+                yield pos + m.end(), k
+                start, k = m.end(), 0
         pos += len(line)
-        n += len(line.split())
+        if start < len(line):
+            yield pos, k
+
+
+def blocks(text: str, min_words: int = BLOCK_WORDS, min_tail: int = MIN_TAIL) -> list[tuple[int, int]]:
+    """(start, end) character spans of the blocks of a document, cut at line boundaries (long lines at
+    sentence ends, see _units)."""
+    spans, start, n = [], 0, 0
+    for end, k in _units(text, min_words):
+        n += k
         if n >= min_words:
-            spans.append((start, pos))
-            start, n = pos, 0
+            spans.append((start, end))
+            start, n = end, 0
     if start < len(text) and text[start:].strip():
         if spans and n < min_tail:
             spans[-1] = (spans[-1][0], len(text))
