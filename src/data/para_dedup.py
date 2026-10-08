@@ -16,7 +16,8 @@ distinct word-5-gram hashes (src.data.dedup.shingles) found in a reference set. 
           then id hash); a page-level training block whose containment in the 5-grams of everything
           earlier (rolling window of the current and previous year, a Bloom filter) is >= CUTOFF is
           removed; every other block and every article-level document adds its 5-grams. Article-level
-          documents are references only (their duplicates are document dedup's business).
+          documents are references only (their duplicates are document dedup's business). Years run in
+          parallel: each year job fills its previous-year filter from that year's text itself.
 
 CUTOFF 0.5: on 30 duplicate Chronicling America page pairs (2080 experiment) the median block
 containment was 0.82 and 84 % of blocks reached 0.5; against unrelated pages no block reached 0.3.
@@ -232,14 +233,78 @@ def _year_shard_job(job: tuple) -> dict:
         for k, v in (("article_id", aid), ("source", src), ("date", date), ("split", split),
                      ("droppable", src in sources and split == "train"), ("page_level", bool(page)), ("text", text)):
             y[k].append(v)
-    out = {}
+    words, droppable = {}, set()
     stem = Path(path).stem
     for year, cols in by_year.items():
         d = Path(shard_dir) / str(year)
         d.mkdir(parents=True, exist_ok=True)
         pq.write_table(pa.table(cols), d / f"{stem}.parquet", compression="zstd")
-        out[year] = sum(len(t.split()) for t in cols["text"])
-    return out
+        words[year] = sum(len(t.split()) for t in cols["text"])
+        if any(cols["droppable"]):
+            droppable.add(year)
+    return {"words": words, "droppable_years": droppable}
+
+
+def _load_year(shard_dir: Path, year: int) -> dict | None:
+    files = sorted((shard_dir / str(year)).glob("*.parquet"))
+    if not files:
+        return None
+    t = pa.concat_tables([pq.read_table(f) for f in files])
+    return {c: t.column(c).to_pylist() for c in ("article_id", "source", "date", "page_level", "droppable", "text")}
+
+
+def _reprint_year_job(job: tuple) -> dict:
+    """One year: the previous year's text fills one Bloom filter, then this year's documents run in date
+    order (ties: article-level first, then id hash) against both. Years are independent, so they run in
+    parallel; the previous year is inserted whole (its own removed blocks repeat earlier text anyway)."""
+    shard_dir, year, words_prev, words_cur, heldout_path = job
+    shard_dir = Path(shard_dir)
+    heldout_blocks = set()
+    if heldout_path:
+        t = pq.read_table(heldout_path, columns=["article_id", "block", "containment"], filters=[("containment", ">=", CUTOFF)])
+        heldout_blocks = set(zip(t.column("article_id").to_pylist(), t.column("block").to_pylist()))
+    prev = None
+    py = _load_year(shard_dir, year - 1)
+    if py is not None:
+        prev = Bloom(int(words_prev * 1.05))
+        for text in py["text"]:
+            sh = np.unique(shingles(comparison_tokens(text)))
+            if len(sh):
+                prev.add(sh)
+        del py
+    d = _load_year(shard_dir, year)
+    cur = Bloom(int(words_cur * 1.05))
+    aid, src, date, page, drop_ok, text = (d[c] for c in ("article_id", "source", "date", "page_level", "droppable", "text"))
+    order = sorted(range(len(aid)), key=lambda i: (date[i], bool(page[i]), zlib.crc32(aid[i].encode("utf-8"))))
+    rows, stats = defaultdict(list), Counter()
+    for i in order:
+        if not drop_ok[i]:
+            sh = np.unique(shingles(comparison_tokens(text[i])))
+            if len(sh):
+                cur.add(sh)
+            continue
+        stats[f"{src[i]}|docs"] += 1
+        for k, span in enumerate(blocks(text[i])):
+            if (aid[i], k) in heldout_blocks:
+                continue
+            sh = block_shingles(text[i], span)
+            if len(sh) == 0:
+                continue
+            stats[f"{src[i]}|blocks"] += 1
+            seen = cur.contains(sh)
+            if prev is not None:
+                seen |= prev.contains(sh)
+            c = float(seen.mean())
+            if c >= CUTOFF:
+                nw = len(text[i][span[0]:span[1]].split())
+                stats[f"{src[i]}|hits@{CUTOFF}"] += 1
+                stats[f"{src[i]}|words@{CUTOFF}"] += nw
+                for key, val in (("article_id", aid[i]), ("source", src[i]), ("date", date[i]), ("block", k),
+                                 ("start", span[0]), ("end", span[1]), ("n_words", nw), ("containment", c)):
+                    rows[key].append(val)
+            else:
+                cur.add(sh)
+    return {"year": year, "rows": dict(rows), "stats": dict(stats)}
 
 
 def reprint(cfg: dict, lang: str, sources: set[str], workers: int) -> None:
@@ -251,55 +316,26 @@ def reprint(cfg: dict, lang: str, sources: set[str], workers: int) -> None:
         shutil.rmtree(shard_dir)
     t0 = time.time()
     words_by_year: Counter = Counter()
+    droppable_years: set[int] = set()
     with ProcessPoolExecutor(max_workers=min(workers, len(files))) as ex:
         for fut in as_completed([ex.submit(_year_shard_job, (p, drops, str(shard_dir), sources)) for p, _ in files]):
-            words_by_year.update(fut.result())
-    heldout_blocks = set()
+            r = fut.result()
+            words_by_year.update(r["words"])
+            droppable_years.update(r["droppable_years"])
     hp = od / "heldout_drops.parquet"
-    if hp.exists():
-        t = pq.read_table(hp, columns=["article_id", "block", "containment"])
-        heldout_blocks = {(a, b) for a, b, c in zip(*(t.column(x).to_pylist() for x in ("article_id", "block", "containment")))
-                          if c >= CUTOFF}
-    print(f"shards written for {len(words_by_year)} years, {time.time() - t0:.0f}s", flush=True)
+    print(f"shards written for {len(words_by_year)} years ({len(droppable_years)} with page-level training "
+          f"documents), {time.time() - t0:.0f}s", flush=True)
     rows, stats = defaultdict(list), Counter()
-    prev = None
-    for year in sorted(words_by_year):
-        cur = Bloom(int(words_by_year[year] * 1.05))
-        t = pa.concat_tables([pq.read_table(f) for f in sorted((shard_dir / str(year)).glob("*.parquet"))])
-        aid, src, date = (t.column(c).to_pylist() for c in ("article_id", "source", "date"))
-        page = t.column("page_level").to_pylist()
-        order = sorted(range(len(aid)), key=lambda i: (date[i], bool(page[i]), zlib.crc32(aid[i].encode("utf-8"))))
-        drop_ok, text = t.column("droppable").to_pylist(), t.column("text").to_pylist()
-        for i in order:
-            if not drop_ok[i]:
-                sh = np.unique(shingles(comparison_tokens(text[i])))
-                if len(sh):
-                    cur.add(sh)
-                continue
-            stats[f"{src[i]}|docs"] += 1
-            for k, span in enumerate(blocks(text[i])):
-                if (aid[i], k) in heldout_blocks:
-                    continue
-                sh = block_shingles(text[i], span)
-                if len(sh) == 0:
-                    continue
-                stats[f"{src[i]}|blocks"] += 1
-                seen = cur.contains(sh)
-                if prev is not None:
-                    seen |= prev.contains(sh)
-                c = float(seen.mean())
-                if c >= CUTOFF:
-                    nw = len(text[i][span[0]:span[1]].split())
-                    stats[f"{src[i]}|hits@{CUTOFF}"] += 1
-                    stats[f"{src[i]}|words@{CUTOFF}"] += nw
-                    for key, val in (("article_id", aid[i]), ("source", src[i]), ("date", date[i]), ("block", k),
-                                     ("start", span[0]), ("end", span[1]), ("n_words", nw), ("containment", c)):
-                        rows[key].append(val)
-                else:
-                    cur.add(sh)
-        prev = cur
-        print(f"{year}: {sum(v for k, v in stats.items() if k.endswith(f'hits@{CUTOFF}')):,} blocks removed so far, "
-              f"{time.time() - t0:.0f}s", flush=True)
+    jobs = [(str(shard_dir), y, words_by_year.get(y - 1, 0), words_by_year[y], str(hp) if hp.exists() else "")
+            for y in sorted(droppable_years)]
+    with ProcessPoolExecutor(max_workers=min(workers, max(1, len(jobs)))) as ex:
+        for fut in as_completed([ex.submit(_reprint_year_job, j) for j in jobs]):
+            r = fut.result()
+            stats.update(r["stats"])
+            for k, v in r["rows"].items():
+                rows[k].extend(v)
+            print(f"{r['year']}: {sum(v for k, v in r['stats'].items() if k.endswith(f'hits@{CUTOFF}')):,} blocks removed, "
+                  f"{time.time() - t0:.0f}s", flush=True)
     shutil.rmtree(shard_dir, ignore_errors=True)
     write_pass(od, "reprint", rows, stats, {"sources": sorted(sources), "window": "current + previous year",
                                             "bloom": {"bits_per_item": BLOOM_BITS_PER_ITEM, "k": BLOOM_K},

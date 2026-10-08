@@ -1,0 +1,13 @@
+term,lang,regex,status,note
+radar,en,\bradars?\b,seed,rq1_seed.csv C1 (1940)
+genocide,en,\bgenocid(?:e|es|al)\b,seed,rq1_seed.csv C1 (1944)
+napalm,en,\bnapalm\b,seed,rq1_seed.csv C1 (1942)
+kamikaze,en,\bkamikazes?\b,seed,rq1_seed.csv C1 (1945); also the 1937 Asahi record flight 'Kamikaze': check hits by year
+jeep,en,\bjeeps?\b,seed,rq1_seed.csv C1 (1941); also Eugene the Jeep (Popeye comics from 1936): check hits by year
+quisling,en,\bquislings?\b,seed,rq1_seed.csv C1 (1940); also the surname of the Norwegian politician before 1940: check hits by year
+Radar,de,\bradar(?:s|e|en)?\b,draft,needs Andrew's OK
+Napalm,de,\bnapalm\b,draft,needs Andrew's OK
+Kamikaze,de,\bkamikazen?\b,draft,needs Andrew's OK; see the en note
+Jeep,de,\bjeeps?\b,draft,needs Andrew's OK
+Quisling,de,\bquisling(?:e|s)?\b,draft,needs Andrew's OK; see the en note
+Genozid,de,\bgenozid(?:e|s|es)?\b,draft,needs Andrew's OK (Völkermord is older and not C1; Blitzkrieg is attested before 1939)
