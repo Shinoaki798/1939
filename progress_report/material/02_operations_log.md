@@ -99,3 +99,8 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
   15e58335; dev.json 75 MB + test.json 75 MB, the 1.38 GB train.json skipped; dest `data/eval/`);
   `select.pool_sources` now also skips every "evaluation only" source. Downloaded on the 5080 through the
   VPN (user OK, VPN back on).
+- ChroniclingAmericaQA downloaded on the 5080 (15:45-15:46, VPN, both files sha256-verified):
+  test 24,084 / dev 24,111 questions; fields question, answer, context (corrected paragraph), raw_ocr,
+  publication_date, url. Test by decade: 1800s-1890s 19,097, 1900s 2,253, 1910s 2,516, 1920s 218. Note
+  for `sanity_caqa.py`: the 1900-1919 contexts come from the same Chronicling America scans as American
+  Stories, so their text may be in training (fine for a sanity check, to be stated).
