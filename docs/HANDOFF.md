@@ -263,6 +263,9 @@ been in the news since the 1920s) and `Hitler died in` (should *not* produce
 1945 or a bunker). Optional few-shot Q/A template with pre-1939-only examples.
 **No instruction-tuning stage**: modern-written Q/A pairs are a contamination
 vector and a second training stage breaks the "one run" discipline.
+*2026-10-08 (user):* fine-tuning is allowed as post-project exploration only —
+a copy of the finished main model, after the graded work; no reported number
+comes from it (§12).
 
 ## 7. Ethics (from the proposal; keep in the final report)
 - Pre-1939 newspapers carry period racial/ethnic/gender language; the model
@@ -668,6 +671,16 @@ Dated entries; each supersedes anything above it that it contradicts.
      words): CR 44 commas, RSC 128 spaces, Europeana 8 repeats, DDB 118 spaces + 17 ⸗, VB 25 ⸗.
   3. *Progress-report material* (user): every decision and operation from now on is also recorded in
      `progress_report/material/` (earlier ones reconstructed there from this log, git and the reports).
+- **2026-10-08 — fine-tuning and evaluation data (user).**
+  - *Fine-tuning = post-project exploration.* No tuning stage inside the project (CLAUDE.md rule 1, §6.6
+    unchanged for the graded work); after it, a copy of the finished main model may be fine-tuned on
+    period-safe data (ChroniclingAmericaQA train: pre-1920 contexts but machine-generated modern
+    questions, to be stated; better, period Q&A columns such as Haskin's "Answers to Questions" mined
+    from American Stories; never modern instruction sets). No RQ, bpb or sanity number comes from it.
+  - *ChroniclingAmericaQA* (MIT, revision 15e58335) on the 5080: dev + test for success criterion 5,
+    train.json as fine-tuning material; `select` skips "evaluation only" sources.
+  - *Tokenizer:* compare 32k / 48k / 64k byte-level BPE before freezing (`src/data/tokenizer.py`,
+    `reports/tokenizer_compare.md`).
 
 ---
 

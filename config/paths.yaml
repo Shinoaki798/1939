@@ -9,6 +9,7 @@ filtered: ./data/filtered
 mixture: ./data/mixture          # src.data.mixture: per-document seen counts (config/mixture.yaml)
 translated: ./data/translated
 tokenized: ./data/tokenized
+tokenizer: ./data/tokenizer        # src.data.tokenizer: sample, bpe_<size>/
 splits_manifest: ./data/splits/MANIFEST.json
 runs: ./runs
 reports: ./reports

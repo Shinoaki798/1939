@@ -14,9 +14,12 @@ with is Junlei An (goes by Andrew), an individual student on this project.
    HANDOFF §12): the main model (English + German) and, for RQ2 only, an
    English-only twin identical in size, tokenizer, English tokens and schedule
    with the German slice removed. No other control Transformer, no ablation,
-   no second scale, no seed sweep, no instruction-tuning stage. All other
-   controls are constructed at evaluation time. Baselines (vanilla RNN, LSTM,
-   GRU, n-gram) are not Transformers and may be retrained.
+   no second scale, no seed sweep, no instruction-tuning stage in the project.
+   All other controls are constructed at evaluation time. Baselines (vanilla
+   RNN, LSTM, GRU, n-gram) are not Transformers and may be retrained.
+   Fine-tuning a copy of the finished main model is allowed only as
+   post-project exploration (user 2026-10-08), on period-safe data, and no
+   reported RQ, bpb or sanity number ever comes from a tuned model.
 2. **The Transformer is decoder-only with causal self-attention, trained with
    next-token cross-entropy from random initialisation.** No encoder, no
    masked-LM objective, no pretrained weights anywhere in the model. There is
