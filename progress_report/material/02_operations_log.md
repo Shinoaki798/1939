@@ -155,3 +155,15 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
   reading the filtered files, and Windows was paging (up to ~180k pages/s). The page cache was dropped
   (Windows back to 24 GB free, paging 0), and `scripts/drop_cache_loop.sh` now runs as root and drops the
   cache every 2 min until the tokeniser ends.
+- Tokenisation finished at 03:11 (72 min; 26,603 files, 56 GB uint16). Round trip checked on 139 EN and
+  171 DE documents, no mismatch. Tokens by split: EN train 18.69B, val 0.39B, holdout 0.46B, embargo
+  0.03B, post 2.92B; DE train 6.34B, val 0.13B, holdout 0.15B, embargo 0.02B, post 0.29B. Train counts
+  include OCR-gated rows, which the mixture skips.
+- WSL memory cap lowered to 40 GB (user OK; `.wslconfig.bak-20261009b`), WSL restarted.
+- Mixture redrawn on real token counts (+1 <|endoftext|> per document). Main: 1930s 7.37B (target
+  reached; second epochs 2.28B, German 25.0 %, legal 0.35B = 6.3 % of English), 1920s 2.68B, pre-1920 0.80B,
+  science EN 0.85B + DE 0.30B = 12.00B. Twin (English only): 1930s 7.20B (1930s German 1.84B replaced by
+  1.44B of 1930-33 second epochs, 0.23B unused case law, 0.17B moved to the 1920s), 1920s 2.85B, pre-1920
+  0.80B, science 1.15B = 12.00B. In the main draw 0.27B of 1934-39 non-legal English is seen only once
+  (the 1930s target stops the second epochs); the user is asked whether the twin should complete those
+  first.
