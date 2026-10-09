@@ -22,7 +22,7 @@ word counts x tokens_per_word until the BPE exists (decision 5: re-run this stag
                    if every first epoch fits.
 
 Output data/mixture/<lang>/<sha12>.parquet (article_id, parent_id, source, lang, period, category, year,
-n_words, est_tokens, count) for every row with count >= 1, and data/mixture/MANIFEST.json (parameters,
+n_words, tokens, count) for every row with count >= 1, and data/mixture/MANIFEST.json (parameters,
 inputs, unique vs seen tokens per period x language x category, per source, cap checks).
 
     python -m src.data.mixture [--profile 12B] [--dry-run]
@@ -54,7 +54,7 @@ META = ["parent_id", "source", "bucket", "category", "period", "split", "train_o
 CODED = ("source", "bucket", "category", "period")
 OUT_SCHEMA = pa.schema([("article_id", pa.string()), ("parent_id", pa.string()), ("source", pa.string()),
                         ("lang", pa.string()), ("period", pa.string()), ("category", pa.string()),
-                        ("year", pa.int16()), ("n_words", pa.int32()), ("est_tokens", pa.float32()),
+                        ("year", pa.int16()), ("n_words", pa.int32()), ("tokens", pa.float32()),
                         ("count", pa.int8())])
 
 
@@ -118,11 +118,23 @@ def load_meta(cfg: dict, mcfg: dict) -> dict:
     vocab = {k: {} for k in CODED}
     cols = defaultdict(list)
     files, inputs = [], []
+    real = mcfg.get("token_source", "words") == "tokenized"
+    if real:            # n_tokens per filtered row from src.data.tokenize_corpus, + 1 <|endoftext|> per document
+        troot = repo_path(cfg["tokenized"])
+        tm = json.loads((troot / "MANIFEST.json").read_text(encoding="utf-8"))
+        inputs.append(("tokenized", str(troot / "MANIFEST.json"),
+                       hashlib.sha256((troot / "MANIFEST.json").read_bytes()).hexdigest()))
     for li, lang in enumerate(LANGS):
         root = repo_path(cfg["filtered"]) / lang
         m = json.loads((root / "MANIFEST.json").read_text(encoding="utf-8"))
         for o in sorted(m["outputs"].values(), key=lambda o: o["file"]):
             t = pq.read_table(root / o["file"], columns=META)
+            if real:
+                tok = tm["outputs"][f"{lang}/{o['file']}"]
+                if tok.get("filtered_sha256") != o["sha256"]:
+                    raise SystemExit(f"{lang}/{o['file']}: tokenized from another version; rerun tokenize_corpus")
+                n_tok = pq.read_table(troot / tok["index"], columns=["n_tokens"]).column("n_tokens")
+                t = t.append_column("n_tokens", n_tok)
             keep = _candidates(t)
             files.append((lang, root / o["file"], int(keep.sum())))
             if not keep.any():
@@ -139,13 +151,18 @@ def load_meta(cfg: dict, mcfg: dict) -> dict:
                 cols[k].append(lut[d.indices.to_numpy(zero_copy_only=False)])
             cols["year"].append(t.column("year").to_numpy(zero_copy_only=False).astype(np.int16))
             cols["n_words"].append(t.column("n_words").to_numpy(zero_copy_only=False).astype(np.int64))
+            if real:
+                cols["n_tok"].append(t.column("n_tokens").to_numpy(zero_copy_only=False).astype(np.int64) + 1)
             cols["lang"].append(np.full(t.num_rows, li, dtype=np.int8))
         inputs.append((lang, str(root / "MANIFEST.json"),
                        hashlib.sha256((root / "MANIFEST.json").read_bytes()).hexdigest()))
     out = {k: np.concatenate(v) for k, v in cols.items()}
     out.update(inputs=inputs, files=files, vocab=vocab)
-    tpw = np.array([mcfg["tokens_per_word"][lang] for lang in LANGS])
-    out["tokens"] = out["n_words"] * tpw[out["lang"]]
+    if real:
+        out["tokens"] = out.pop("n_tok").astype(np.float64)
+    else:
+        tpw = np.array([mcfg["tokens_per_word"][lang] for lang in LANGS])
+        out["tokens"] = out["n_words"] * tpw[out["lang"]]
     return out
 
 
@@ -316,6 +333,7 @@ def write(meta: dict, count: np.ndarray, out_root: Path, mcfg: dict) -> dict:
         if n == 0:
             continue
         c = count[pos:pos + n]
+        tk = meta["tokens"][pos:pos + n]
         pos += n
         sel = c > 0
         if not sel.any():
@@ -325,12 +343,11 @@ def write(meta: dict, count: np.ndarray, out_root: Path, mcfg: dict) -> dict:
         t = t.filter(pa.array(_candidates(t))).filter(pa.array(sel))
         per = np.where(t.column("bucket").to_numpy(zero_copy_only=False) == "science", "science",
                        t.column("period").to_numpy(zero_copy_only=False))
-        words = t.column("n_words").to_numpy(zero_copy_only=False)
         tbl = pa.table({"article_id": t.column("article_id"), "parent_id": t.column("parent_id"),
                         "source": t.column("source"), "lang": pa.array([lang] * t.num_rows),
                         "period": pa.array(per.astype(str)), "category": t.column("category"),
                         "year": t.column("year").cast(pa.int16()), "n_words": t.column("n_words").cast(pa.int32()),
-                        "est_tokens": pa.array((words * mcfg["tokens_per_word"][lang]).astype(np.float32)),
+                        "tokens": pa.array(tk[sel].astype(np.float32)),
                         "count": pa.array(c[sel].astype(np.int8))}, schema=OUT_SCHEMA)
         if lang not in writers:
             (out_root / lang).mkdir(parents=True, exist_ok=True)
@@ -385,7 +402,9 @@ def main() -> None:
     out_root = repo_path(cfg["mixture"])
     common = {"created_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), "profile": profile,
               "params": mcfg, "inputs": [{"lang": l, "manifest": p, "sha256": s} for l, p, s in meta["inputs"]],
-              "token_estimate": "n_words x tokens_per_word (placeholder until the BPE exists)"}
+              "token_source": ("n_tokens from data/tokenized (+1 <|endoftext|> per document)"
+                               if mcfg.get("token_source") == "tokenized" else
+                               "n_words x tokens_per_word (placeholder until the BPE exists)")}
     outputs = write(meta, count, out_root, mcfg)
     manifest = {"stage": "mixture", **common, "outputs": outputs, **{k: v for k, v in summary.items() if k != "twin"},
                 **tab, "seconds": (dt.datetime.now() - t0).seconds}

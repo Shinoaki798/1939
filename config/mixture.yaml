@@ -1,5 +1,7 @@
 # Training mixture (user decisions 2026-10-08, HANDOFF §12; CLAUDE.md rule 7). Seen tokens.
-# Token counts are word counts x tokens_per_word until the 48k BPE exists (decision 5: re-run then).
+# token_source: tokenized = real n_tokens from data/tokenized (+1 <|endoftext|> per document);
+# words = word counts x tokens_per_word (the placeholder used before the 48k BPE existed).
+token_source: tokenized
 
 tokens_per_word: {en: 1.35, de: 1.6}
 half_life_years: 5            # within a period, sampling order by weight ∝ exp(-(1939 - year) / 5)

@@ -90,8 +90,9 @@ def mixture_section(cfg: dict) -> list[str]:
         return out + ["Not drawn yet: run `python -m src.data.mixture`.", ""]
     p = m["params"]
     prof = p["profiles"][m["profile"]]
-    out += [f"Profile {m['profile']} (budget {fmt(prof['budget'], ' tok')}), drawn {m['created_at']}; tokens = words x "
-            f"{p['tokens_per_word']} until the BPE exists (re-draw then). Second epoch only from "
+    source = m.get("token_source") or f"words x {p['tokens_per_word']} (placeholder until the BPE exists)"
+    out += [f"Profile {m['profile']} (budget {fmt(prof['budget'], ' tok')}), drawn {m['created_at']}; tokens: "
+            f"{source}. Second epoch only from "
             f"{p['repeat_from_year']}-01-01; within a period the order is by weight exp(-(1939 - year)/"
             f"{p['half_life_years']}); caps per period: German <= {p['caps']['german']:.0%}, books <= "
             f"{p['caps']['books']:.0%}, legal <= {p['caps']['legal_of_english']:.0%} of the period's English "
@@ -129,6 +130,21 @@ def mixture_section(cfg: dict) -> list[str]:
                  [[s["lang"], s["source"], fmt(s["unique_tokens"], " tok"), fmt(s["seen_tokens"], " tok")] for s in sci])
     out += [f"Selection files: " + ", ".join(f"`{o['file']}` ({o['rows']:,} rows, sha256 {o['sha256'][:12]})"
                                              for o in m["outputs"].values()), ""]
+    tw = load(repo_path(cfg["mixture"]) / "MANIFEST_twin.json")
+    if tw:
+        main_seen = m.get("period_seen", {})
+        out += ["### The English-only twin (compute-matched; user, 2026-10-09)", "",
+                "Each period's German seen tokens are replaced by English of the same period (1930s: second "
+                "epochs of 1930-33 English; 1920s and pre-1920: the period redrawn without German; science "
+                "likewise); never a third epoch. Shortfall = what could not be replaced under these rules.", ""]
+        out += table(["period", "main seen", "of which German", "twin seen", "shortfall"],
+                     [[per, fmt(main_seen.get(per, 0), " tok"), fmt(tw["replaced_german"].get(per, 0), " tok"),
+                       fmt(tw["period_seen"].get(per, 0), " tok"), fmt(tw["shortfall"].get(per, 0), " tok")]
+                      for per in ("1930-39.06", "1920-29", "1900-19")]
+                     + [["science", fmt(main_seen.get("science", 0), " tok"), "",
+                         fmt(tw["period_seen"].get("science", 0), " tok"), fmt(tw["shortfall"].get("science", 0), " tok")],
+                        ["total", fmt(m["total_seen"], " tok"), "", fmt(tw["total_seen"], " tok"),
+                         fmt(m["total_seen"] - tw["total_seen"], " tok")]])
     return out
 
 
