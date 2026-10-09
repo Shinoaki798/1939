@@ -114,10 +114,16 @@ def test_twin_replaces_german_period_by_period():
             assert (twin[en] >= count[en]).all(), per                        # English only grows
     y = meta["year"]
     extra = (twin == 2) & (count == 1)
-    assert extra.any() and (y[extra] < 1934).all() and (y[extra] >= 1930).all()
+    assert extra.any() and (y[extra] >= 1930).all()
     legal = meta["category"] == meta["vocab"]["category"]["legal"]
     p30 = (meta["period"] == 0) & ~sci
     assert not (legal & p30 & (twin == 2)).any()
+    # 1934-39 English the main run saw once gets its second pass before any 1930-33 document does
+    late_once = p30 & ~de & ~legal & (y >= 1934) & (count == 1)
+    if (extra & (y < 1934)).any():
+        assert (twin[late_once] == 2).sum() >= 0.99 * late_once.sum()
+    assert abs(s["twin"]["known_differences"]["second_pass_of_1934_39_english_seen_once_in_main"]
+               - (tok * ((twin == 2) & late_once)).sum()) < 1
     # this pool has less 1930-33 English than 1930s German: every candidate gets its second epoch, then the
     # unused 1930s case law (once, legal <= 10 % of the twin's 1930s), then the rest moves to the 1920s
     cand = p30 & ~de & ~legal & (y < 1934) & (count == 1)

@@ -85,7 +85,7 @@ def mixture_section(cfg: dict) -> list[str]:
     """Section 8 from data/mixture/MANIFEST.json (src.data.mixture): unique vs seen tokens per period x
     language x category, period totals against targets, cap checks, science per source."""
     m = load(repo_path(cfg["mixture"]) / "MANIFEST.json") if "mixture" in cfg else {}
-    out = ["## 8. Training mixture: unique vs seen tokens (src.data.mixture; estimates)", ""]
+    out = ["## 8. Training mixture: unique vs seen tokens (src.data.mixture)", ""]
     if not m:
         return out + ["Not drawn yet: run `python -m src.data.mixture`.", ""]
     p = m["params"]
@@ -145,6 +145,22 @@ def mixture_section(cfg: dict) -> list[str]:
                          fmt(tw["period_seen"].get("science", 0), " tok"), fmt(tw["shortfall"].get("science", 0), " tok")],
                         ["total", fmt(m["total_seen"], " tok"), "", fmt(tw["total_seen"], " tok"),
                          fmt(m["total_seen"] - tw["total_seen"], " tok")]])
+        if tw.get("filled"):
+            out += ["1930s German replaced by: " + ", ".join(f"{k.replace('_', ' ')} {fmt(v, ' tok')}"
+                                                             for k, v in tw["filled"].items()) + ".", ""]
+        for k, v in tw.get("known_differences", {}).items():
+            out += [f"Known difference: {k.replace('_', ' ')}: {fmt(v, ' tok')}.", ""]
+        order = {"1930-39.06": 0, "1920-29": 1, "1900-19": 2, "science": 3}
+        cells = {}
+        for side, man in (("main", m), ("twin", tw)):
+            for c in man["cells"]:
+                cells.setdefault((c["period"], c["lang"], c["category"]), {})[side] = c["seen_tokens"]
+        rows = [[p, l, c, fmt(v.get("main", 0), " tok"), fmt(v.get("twin", 0), " tok"),
+                 ("+" if v.get("twin", 0) >= v.get("main", 0) else "-") + fmt(abs(v.get("twin", 0) - v.get("main", 0)), " tok")]
+                for (p, l, c), v in sorted(cells.items(), key=lambda kv: (order.get(kv[0][0], 9), kv[0][1], kv[0][2]))
+                if v.get("main", 0) or v.get("twin", 0)]
+        out += ["Main and twin side by side (seen tokens per period x language x category):", ""]
+        out += table(["period", "lang", "category", "main", "twin", "twin - main"], rows)
     return out
 
 

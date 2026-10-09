@@ -253,10 +253,17 @@ def draw(meta: dict, mcfg: dict, profile: str) -> tuple[np.ndarray, dict]:
         total = float((p_tok * count)[m].sum())
         tw["replaced_german"][per] = german
         if per == "1930-39.06":
-            # 1. a second epoch of 1930-33 English (legal stays at its absolute cap)
-            cand = m & (p_lang == en) & (count == 1) & (p_year < mcfg["repeat_from_year"]) & (cls != LEGAL)
-            twin[take_in_order(p_tok, key, cand, german)] = 2
-            # 2. the 1930s case law the main run left out, once, while legal <= 10 % of the twin's 1930s English
+            # user, 2026-10-09: (1) the second pass of 1934-39 English the main run saw only once (its 1930s
+            # target stopped the second epochs); (2) a second epoch of 1930-33 English; legal stays at its cap
+            once = m & (p_lang == en) & (count == 1) & (cls != LEGAL)
+            late = take_in_order(p_tok, key, once & (p_year >= mcfg["repeat_from_year"]), german)
+            twin[late] = 2
+            tw["known_differences"] = {"second_pass_of_1934_39_english_seen_once_in_main": float(p_tok[late].sum())}
+            early = take_in_order(p_tok, key, once & (p_year < mcfg["repeat_from_year"]), german - float(p_tok[late].sum()))
+            twin[early] = 2
+            tw["filled"]["1934_39_second_pass"] = float(p_tok[late].sum())
+            tw["filled"]["1930_33_second_epoch"] = float(p_tok[early].sum())
+            # (3) the 1930s case law the main run left out, once, while legal <= 10 % of the twin's 1930s English
             gap = total - float((p_tok * twin)[m].sum())
             legal_room = mcfg["caps"]["legal_of_english"] * total - float((p_tok * twin)[m & (cls == LEGAL)].sum())
             unused_legal = m & (p_lang == en) & (cls == LEGAL) & (count == 0)
