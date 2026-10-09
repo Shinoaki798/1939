@@ -139,3 +139,6 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
 - 5080: WSLg's weston crashed every 103 s and wrote a 171 MB crash dump each time (~6 GB/h, ~140 GB/day
   of SSD writes; most of the 87 GB the SSD counter gained overnight). `.wslconfig` gets
   `guiApplications=false` (user OK), WSL restarted, keepalive task relaunched.
+- WSLg fix verified: no crash dump in the 5 minutes after the restart (the loop had produced one every
+  103 s); the remaining 1.5 GB of dumps removed; idle disk writes on the 5080 fell from 2.1 MB/s to
+  0.27 MB/s.
