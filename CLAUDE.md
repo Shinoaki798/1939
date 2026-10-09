@@ -12,8 +12,10 @@ with is Junlei An (goes by Andrew), an individual student on this project.
 
 1. **Two Transformer runs, one architecture** (user decision 2026-10-06,
    HANDOFF §12): the main model (English + German) and, for RQ2 only, an
-   English-only twin identical in size, tokenizer, English tokens and schedule
-   with the German slice removed. No other control Transformer, no ablation,
+   English-only twin identical in size, bilingual 48k tokenizer, 12B seen
+   tokens, steps and schedule, whose German slice is replaced by English of the
+   same periods under the same repetition rule (compute-matched, revised
+   2026-10-09, user). No other control Transformer, no ablation,
    no second scale, no seed sweep, no instruction-tuning stage in the project.
    All other controls are constructed at evaluation time. Baselines (vanilla
    RNN, LSTM, GRU, n-gram) are not Transformers and may be retrained.

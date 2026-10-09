@@ -345,6 +345,7 @@ down immediately; it still satisfies every success criterion.
   share?~~ Answered 2026-10-08 (§12, mixture after cleaning).
 - ~~(2026-10-08) 0.89B shortfall; text normalisation~~ Answered 2026-10-08
   (§12: the 1920s fill the budget; all normalisations adopted).
+- ~~(2026-10-06, twin) twin token budget~~ Answered 2026-10-09: compute-matched (§12).
 
 ## 12. Decisions log
 
@@ -690,6 +691,17 @@ Dated entries; each supersedes anything above it that it contradicts.
   covers C1/C2 terms only: C3 sense-shift (blitz, occupation, resistance, collaboration) and C4 proper
   nouns are ordinary pre-1939 words and may be single tokens. `config/model_ladder.yaml`: vocab 49,152,
   context 2048, selected s335m; frozen tokenizer in `config/tokenizer.yaml`.
+- **2026-10-09 — the English-only twin is compute-matched (user, pasted DECISION; answers §11).**
+  Same 12B seen tokens, steps, schedule and bilingual 48k tokenizer as the main run. Each period's German
+  slice is replaced by English of the same period under the same repetition rule, so period shares are
+  identical and only the language differs: 1930s German → a second epoch of 1930-1933 English (1934-39
+  stays at two epochs; no third epoch anywhere); 1920s German → extra 1920s English, same recency weights;
+  pre-1920 German → extra pre-1920 English. (Implementation reading, not in the block: German science is
+  replaced by English science the same way, within rule 7's 10 % per language.) The twin's mixture
+  manifest sits next to the main one. RQ2 is evaluated on English: US-context propositions, the RQ1 Δ
+  profile, the C4 forced choice, per-year English bpb; the DE-context battery runs on the twin only for
+  completeness. If the twin's English bpb is better, that is reported as the cost of the German slice.
+  CLAUDE.md rule 1 reworded (the proposal's "identical English tokens" is superseded; HANDOFF governs).
 
 ---
 
