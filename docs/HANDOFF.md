@@ -702,6 +702,10 @@ Dated entries; each supersedes anything above it that it contradicts.
   profile, the C4 forced choice, per-year English bpb; the DE-context battery runs on the twin only for
   completeness. If the twin's English bpb is better, that is reported as the cost of the German slice.
   CLAUDE.md rule 1 reworded (the proposal's "identical English tokens" is superseded; HANDOFF governs).
+  - *1930s shortfall (user, 2026-10-09):* 1930-33 non-legal English (1.23B in the estimate draw) cannot
+    cover 1930s German (1.65B) with one more epoch. Fill order: (1) second epochs of 1930-33 non-legal
+    English; (2) the 1930s case law the main run left out, once, while legal stays <= 10 % of the twin's
+    1930s English; (3) the rest moves to the 1920s (extra 1920s English, same race order). Totals match.
 
 ---
 

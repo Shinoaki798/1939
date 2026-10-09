@@ -245,20 +245,34 @@ def draw(meta: dict, mcfg: dict, profile: str) -> tuple[np.ndarray, dict]:
     # The English-only twin (user, 2026-10-09): same seen tokens per period as the main run, the German
     # slice replaced by English of the same period under the same repetition rule; no third epoch.
     twin = np.where(p_lang == de, 0, count).astype(np.int8)
-    tw = {"replaced_german": {}, "shortfall": {}}
+    tw = {"replaced_german": {}, "shortfall": {}, "filled": {}}
+    carry = 0.0                            # what the 1930s cannot hold moves to the 1920s (user, 2026-10-09)
     for per in PERIODS:
         m = (~p_sci) & (p_per == code(meta, "period", per))
         german = float((p_tok * count)[m & (p_lang == de)].sum())
         total = float((p_tok * count)[m].sum())
         tw["replaced_german"][per] = german
-        if per == "1930-39.06":           # a second epoch of 1930-33 English (legal stays at its absolute cap)
+        if per == "1930-39.06":
+            # 1. a second epoch of 1930-33 English (legal stays at its absolute cap)
             cand = m & (p_lang == en) & (count == 1) & (p_year < mcfg["repeat_from_year"]) & (cls != LEGAL)
             twin[take_in_order(p_tok, key, cand, german)] = 2
-        else:                              # the period redrawn without German: extra English, same race order
-            me = m & (p_lang == en)
-            twin[me] = plan(p_tok[me], cls[me], key[me], np.zeros(int(me.sum()), dtype=bool), total, mcfg["caps"],
-                            float(mcfg["caps"].get("legal_absolute", {}).get(per, math.inf)))
-        tw["shortfall"][per] = total - float((p_tok * twin)[m].sum())
+            # 2. the 1930s case law the main run left out, once, while legal <= 10 % of the twin's 1930s English
+            gap = total - float((p_tok * twin)[m].sum())
+            legal_room = mcfg["caps"]["legal_of_english"] * total - float((p_tok * twin)[m & (cls == LEGAL)].sum())
+            unused_legal = m & (p_lang == en) & (cls == LEGAL) & (count == 0)
+            add = take_in_order(p_tok, key, unused_legal, max(0.0, min(gap, legal_room)))
+            twin[add] = 1
+            tw["filled"]["1930s_unused_legal"] = float(p_tok[add].sum())
+            carry = total - float((p_tok * twin)[m].sum())
+            tw["filled"]["moved_to_1920s"] = carry
+            tw["shortfall"][per] = 0.0
+            continue
+        # the period redrawn without German: extra English, same race order (the 1920s also take the carry)
+        target = total + (carry if per == "1920-29" else 0.0)
+        me = m & (p_lang == en)
+        twin[me] = plan(p_tok[me], cls[me], key[me], np.zeros(int(me.sum()), dtype=bool), target, mcfg["caps"],
+                        float(mcfg["caps"].get("legal_absolute", {}).get(per, math.inf)))
+        tw["shortfall"][per] = target - float((p_tok * twin)[m].sum())
     ms = p_sci & (p_lang == en)
     sci_main = float((p_tok * count)[p_sci].sum())
     sci_target = min(sci_main, share / (1 - share) * float((p_tok * twin)[~p_sci].sum()))

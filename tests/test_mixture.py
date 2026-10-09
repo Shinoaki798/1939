@@ -105,24 +105,28 @@ def test_twin_replaces_german_period_by_period():
     count, twin, s = mx.draw(meta, mcfg, "t")
     de, sci = meta["lang"] == 1, meta["bucket"] == 1
     assert twin.max() <= 2 and twin[de].sum() == 0 and count[de].sum() > 0
-    for per, code in meta["vocab"]["period"].items():
-        if per == "<1900":
-            continue
-        m = (meta["period"] == code) & ~sci
-        main_seen, twin_seen = (meta["tokens"] * count)[m].sum(), (meta["tokens"] * twin)[m].sum()
-        short = s["twin"]["shortfall"][per]
-        assert abs((main_seen - twin_seen) - short) < 1 and -3000 <= short, per
-        en = m & ~de
-        assert (twin[en] >= count[en]).all(), per                            # English only grows
+    tok = meta["tokens"]
+    seen = {per: ((tok * count)[(meta["period"] == c) & ~sci].sum(), (tok * twin)[(meta["period"] == c) & ~sci].sum())
+            for per, c in meta["vocab"]["period"].items() if per != "<1900"}
+    for per, c in meta["vocab"]["period"].items():
+        if per != "<1900":
+            en = (meta["period"] == c) & ~sci & ~de
+            assert (twin[en] >= count[en]).all(), per                        # English only grows
     y = meta["year"]
     extra = (twin == 2) & (count == 1)
     assert extra.any() and (y[extra] < 1934).all() and (y[extra] >= 1930).all()
     legal = meta["category"] == meta["vocab"]["category"]["legal"]
-    assert not (legal & (meta["period"] == 0) & (twin == 2)).any()
-    # this pool has less 1930-33 English than 1930s German: every candidate gets its second epoch, the rest
-    # is a recorded shortfall (never a third epoch)
-    cand = (meta["period"] == 0) & ~de & ~sci & (y < 1934) & ~legal & (count == 1)
-    assert s["twin"]["shortfall"]["1930-39.06"] > 3000 and (twin[cand] == 2).sum() >= 0.99 * cand.sum()
-    for per in ("1920-29", "1900-19"):
-        assert abs(s["twin"]["shortfall"][per]) <= 3000, per
+    p30 = (meta["period"] == 0) & ~sci
+    assert not (legal & p30 & (twin == 2)).any()
+    # this pool has less 1930-33 English than 1930s German: every candidate gets its second epoch, then the
+    # unused 1930s case law (once, legal <= 10 % of the twin's 1930s), then the rest moves to the 1920s
+    cand = p30 & ~de & ~legal & (y < 1934) & (count == 1)
+    assert (twin[cand] == 2).sum() >= 0.99 * cand.sum()
+    f = s["twin"]["filled"]
+    assert f["1930s_unused_legal"] > 0 and f["moved_to_1920s"] > 0
+    assert (tok * twin)[p30 & legal].sum() <= 0.10 * seen["1930-39.06"][0] + 3000
+    assert abs(seen["1930-39.06"][0] - seen["1930-39.06"][1] - f["moved_to_1920s"]) <= 1
+    assert abs(seen["1920-29"][1] - seen["1920-29"][0] - f["moved_to_1920s"]) <= 3000
+    assert abs(seen["1900-19"][1] - seen["1900-19"][0]) <= 3000
+    assert abs(sum(v[0] for v in seen.values()) - sum(v[1] for v in seen.values())) <= 6000   # compute-matched
     assert abs((meta["tokens"] * twin)[sci].sum() - (meta["tokens"] * count)[sci].sum()) <= 3000
