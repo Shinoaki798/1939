@@ -70,3 +70,59 @@ def test_uniform_is_deterministic_and_seeded():
     h3, _ = mx.uniform(ids, 2)
     assert (h1 == h2).all() and (u1 == u2).all() and not (h1 == h3).all()
     assert ((u1 > 0) & (u1 < 1)).all()
+
+
+def _meta(n: int = 30000, seed: int = 5):
+    """A synthetic candidate pool: periods, languages, categories, a little science."""
+    rng = np.random.default_rng(seed)
+    year = rng.integers(1900, 1940, n).astype(np.int16)
+    period_name = np.where(year < 1920, "1900-19", np.where(year < 1930, "1920-29", "1930-39.06"))
+    lang = (rng.random(n) < 0.25).astype(np.int8)                     # 1 = de
+    cat_name = np.where(lang == 1, "newspaper", rng.choice(["newspaper", "books", "legal", "legislative"], n,
+                                                             p=[0.7, 0.1, 0.15, 0.05]))
+    sci = rng.random(n) < 0.08
+    vocab = {"source": {"s": 0}, "bucket": {"general": 0, "science": 1},
+             "category": {c: i for i, c in enumerate(["newspaper", "books", "legal", "legislative", "science"])},
+             "period": {p: i for i, p in enumerate(["1930-39.06", "1920-29", "1900-19", "<1900"])}}
+    ids = np.array([f"d{i}" for i in range(n)], dtype=object)
+    h, u = mx.uniform(ids, 1)
+    h = h ^ (lang.astype(np.uint64) * np.uint64(0x9E3779B97F4A7C15))
+    return {"h": h, "u": u, "tokens": rng.integers(200, 3000, n).astype(np.float64), "lang": lang,
+            "source": np.zeros(n, dtype=np.int16), "bucket": sci.astype(np.int16),
+            "category": np.array([vocab["category"]["science" if s else c] for s, c in zip(sci, cat_name)], dtype=np.int16),
+            "period": np.array([vocab["period"][p] for p in period_name], dtype=np.int16), "year": year, "vocab": vocab}
+
+
+def test_twin_replaces_german_period_by_period():
+    meta = _meta()
+    tot = meta["tokens"].sum()
+    mcfg = {"seed": 1, "half_life_years": 5, "reference_year": 1939, "repeat_from_year": 1934, "max_epochs": 2,
+            "caps": {"german": 0.25, "books": 0.12, "legal_of_english": 0.10, "science_of_language": 0.10,
+                     "legal_absolute": {"1930-39.06": 0.02 * tot}},
+            "science_tiers": {"en": [["*"]], "de": [["*"]]},
+            "profiles": {"t": {"budget": 0.55 * tot, "science": {"en": 0.03 * tot, "de": 0.01 * tot},
+                               "periods": {"1930-39.06": 0.5 * tot, "1920-29": 0.08 * tot, "1900-19": 0.03 * tot}}}}
+    count, twin, s = mx.draw(meta, mcfg, "t")
+    de, sci = meta["lang"] == 1, meta["bucket"] == 1
+    assert twin.max() <= 2 and twin[de].sum() == 0 and count[de].sum() > 0
+    for per, code in meta["vocab"]["period"].items():
+        if per == "<1900":
+            continue
+        m = (meta["period"] == code) & ~sci
+        main_seen, twin_seen = (meta["tokens"] * count)[m].sum(), (meta["tokens"] * twin)[m].sum()
+        short = s["twin"]["shortfall"][per]
+        assert abs((main_seen - twin_seen) - short) < 1 and -3000 <= short, per
+        en = m & ~de
+        assert (twin[en] >= count[en]).all(), per                            # English only grows
+    y = meta["year"]
+    extra = (twin == 2) & (count == 1)
+    assert extra.any() and (y[extra] < 1934).all() and (y[extra] >= 1930).all()
+    legal = meta["category"] == meta["vocab"]["category"]["legal"]
+    assert not (legal & (meta["period"] == 0) & (twin == 2)).any()
+    # this pool has less 1930-33 English than 1930s German: every candidate gets its second epoch, the rest
+    # is a recorded shortfall (never a third epoch)
+    cand = (meta["period"] == 0) & ~de & ~sci & (y < 1934) & ~legal & (count == 1)
+    assert s["twin"]["shortfall"]["1930-39.06"] > 3000 and (twin[cand] == 2).sum() >= 0.99 * cand.sum()
+    for per in ("1920-29", "1900-19"):
+        assert abs(s["twin"]["shortfall"][per]) <= 3000, per
+    assert abs((meta["tokens"] * twin)[sci].sum() - (meta["tokens"] * count)[sci].sum()) <= 3000

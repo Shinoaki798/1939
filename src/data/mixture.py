@@ -100,6 +100,13 @@ def plan(tokens: np.ndarray, cls: np.ndarray, key: np.ndarray, second: np.ndarra
     return np.bincount(order[accept], minlength=n).astype(np.int8)
 
 
+def take_in_order(tokens: np.ndarray, key: np.ndarray, mask: np.ndarray, amount: float) -> np.ndarray:
+    """Indices of the `mask` units, smallest key first, whose cumulative tokens stay within `amount`."""
+    idx = np.flatnonzero(mask)
+    order = idx[np.argsort(key[idx], kind="stable")]
+    return order[np.cumsum(tokens[order]) <= amount]
+
+
 def _candidates(t: pa.Table) -> np.ndarray:
     return np.asarray(t.column("train_ok").to_numpy(zero_copy_only=False), dtype=bool) & \
         (np.asarray(t.column("split").to_numpy(zero_copy_only=False)) == "train")
@@ -217,7 +224,34 @@ def draw(meta: dict, mcfg: dict, profile: str) -> tuple[np.ndarray, dict]:
                 break
             seen = new_seen
     summary["period_targets_used"] = targets
-    return count[inv], summary
+
+    # The English-only twin (user, 2026-10-09): same seen tokens per period as the main run, the German
+    # slice replaced by English of the same period under the same repetition rule; no third epoch.
+    twin = np.where(p_lang == de, 0, count).astype(np.int8)
+    tw = {"replaced_german": {}, "shortfall": {}}
+    for per in PERIODS:
+        m = (~p_sci) & (p_per == code(meta, "period", per))
+        german = float((p_tok * count)[m & (p_lang == de)].sum())
+        total = float((p_tok * count)[m].sum())
+        tw["replaced_german"][per] = german
+        if per == "1930-39.06":           # a second epoch of 1930-33 English (legal stays at its absolute cap)
+            cand = m & (p_lang == en) & (count == 1) & (p_year < mcfg["repeat_from_year"]) & (cls != LEGAL)
+            twin[take_in_order(p_tok, key, cand, german)] = 2
+        else:                              # the period redrawn without German: extra English, same race order
+            me = m & (p_lang == en)
+            twin[me] = plan(p_tok[me], cls[me], key[me], np.zeros(int(me.sum()), dtype=bool), total, mcfg["caps"],
+                            float(mcfg["caps"].get("legal_absolute", {}).get(per, math.inf)))
+        tw["shortfall"][per] = total - float((p_tok * twin)[m].sum())
+    ms = p_sci & (p_lang == en)
+    sci_main = float((p_tok * count)[p_sci].sum())
+    sci_target = min(sci_main, share / (1 - share) * float((p_tok * twin)[~p_sci].sum()))
+    k = science_key(src_names[p_src[ms]], p_u[ms], mcfg["science_tiers"]["en"])
+    twin[ms] = plan(p_tok[ms], np.full(int(ms.sum()), FREE, dtype=np.int8), k,
+                    np.full(int(ms.sum()), mcfg["max_epochs"] >= 2), sci_target)
+    tw["science_target"] = sci_target
+    tw["shortfall"]["science"] = sci_main - float((p_tok * twin)[ms].sum())
+    summary["twin"] = tw
+    return count[inv], twin[inv], summary
 
 
 def tables(meta: dict, count: np.ndarray, mcfg: dict, profile: str, targets: dict) -> dict:
@@ -339,19 +373,28 @@ def main() -> None:
     t0 = dt.datetime.now()
     meta = load_meta(cfg, mcfg)
     print(f"{len(meta['tokens']):,} candidate rows loaded, {(dt.datetime.now() - t0).seconds}s", flush=True)
-    count, summary = draw(meta, mcfg, profile)
+    count, twin, summary = draw(meta, mcfg, profile)
     tab = tables(meta, count, mcfg, profile, summary["period_targets_used"])
     print_plan(tab)
+    tab_twin = tables(meta, twin, mcfg, profile, {p: tab["period_seen"].get(p, 0.0) for p in PERIODS})
+    print("  --- twin (English only, compute-matched)", flush=True)
+    print_plan(tab_twin)
+    print("  twin: " + json.dumps(summary["twin"]), flush=True)
     if args.dry_run:
         return
     out_root = repo_path(cfg["mixture"])
+    common = {"created_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), "profile": profile,
+              "params": mcfg, "inputs": [{"lang": l, "manifest": p, "sha256": s} for l, p, s in meta["inputs"]],
+              "token_estimate": "n_words x tokens_per_word (placeholder until the BPE exists)"}
     outputs = write(meta, count, out_root, mcfg)
-    manifest = {"stage": "mixture", "created_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
-                "profile": profile, "params": mcfg,
-                "inputs": [{"lang": l, "manifest": p, "sha256": s} for l, p, s in meta["inputs"]],
-                "token_estimate": "n_words x tokens_per_word (placeholder until the BPE exists)",
-                "outputs": outputs, **summary, **tab, "seconds": (dt.datetime.now() - t0).seconds}
+    manifest = {"stage": "mixture", **common, "outputs": outputs, **{k: v for k, v in summary.items() if k != "twin"},
+                **tab, "seconds": (dt.datetime.now() - t0).seconds}
     (out_root / "MANIFEST.json").write_text(json.dumps(manifest, indent=1), encoding="utf-8")
+    twin_out = write(meta, twin, out_root / "twin", mcfg)
+    manifest_twin = {"stage": "mixture_twin", **common, "rule": "compute-matched English-only twin (user, 2026-10-09)",
+                     "main_manifest_sha256": hashlib.sha256((out_root / "MANIFEST.json").read_bytes()).hexdigest(),
+                     "outputs": twin_out, **summary["twin"], **tab_twin}
+    (out_root / "MANIFEST_twin.json").write_text(json.dumps(manifest_twin, indent=1), encoding="utf-8")
     print(f"-> {out_root}", flush=True)
 
 
