@@ -133,3 +133,9 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
 - 5080: `data/raw/ncse` (384 MB, excluded source, never ingested, referenced by no MANIFEST) removed
   (user OK). Kept by the user's choice: scratch that a rerun would reuse (paragraph-dedup year shards,
   held-out shingles, MinHash signature caches) and every raw download of the supplementary corpora.
+- Disk cleanup on both machines (user-approved lists; Andrew ran the scripts): 2080 C: free 351 → 494 GB
+  (redundant project data, transfer packs, caches, some game data, recycle bin, unused WSL distro);
+  5080 C: free 372 → 592 GB (NVIDIA shader cache 67 GB, games, caches, recycle bin, hibernation off).
+- 5080: WSLg's weston crashed every 103 s and wrote a 171 MB crash dump each time (~6 GB/h, ~140 GB/day
+  of SSD writes; most of the 87 GB the SSD counter gained overnight). `.wslconfig` gets
+  `guiApplications=false` (user OK), WSL restarted, keepalive task relaunched.

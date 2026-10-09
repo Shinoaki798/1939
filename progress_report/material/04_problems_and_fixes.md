@@ -68,3 +68,7 @@ Each entry: problem → cause → fix → effect. Material for the "challenges" 
 17. **Remote shell quoting**: the box's SSH shell is Windows cmd, which breaks nested quotes containing
     `|`; multi-line PowerShell piped to stdin fails silently. → Remote work goes through
     `wsl -d Ubuntu -- bash -s` with a heredoc; PowerShell one-liners or `-File` scripts.
+
+18. **A silent SSD writer: WSLg's weston crash loop** on the 5080 (no GUI apps are used): a 171 MB dump
+    every 103 s, ~6 GB/h. Found while cleaning the disk (`Temp\wsl-crashes` refilled after deletion).
+    → WSLg disabled (`guiApplications=false`).
