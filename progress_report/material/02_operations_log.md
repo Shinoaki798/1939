@@ -130,3 +130,6 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
   redundant and left for the user to delete with one command (the C: Recycle Bin holds only ~32 GB).
 - 5080 cleanup candidates listed for the user (scratch: paragraph-dedup year shards 41 GB, held-out
   shingle array 2 GB, MinHash signature caches 34 GB; raw of supplementary corpora ~150 GB).
+- 5080: `data/raw/ncse` (384 MB, excluded source, never ingested, referenced by no MANIFEST) removed
+  (user OK). Kept by the user's choice: scratch that a rerun would reuse (paragraph-dedup year shards,
+  held-out shingles, MinHash signature caches) and every raw download of the supplementary corpora.
