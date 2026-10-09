@@ -142,3 +142,11 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
 - WSLg fix verified: no crash dump in the 5 minutes after the restart (the loop had produced one every
   103 s); the remaining 1.5 GB of dumps removed; idle disk writes on the 5080 fell from 2.1 MB/s to
   0.27 MB/s.
+
+## 2026-10-09 — twin mixture
+
+- Twin draw implemented (`src/data/mixture.py`, `data/mixture/MANIFEST_twin.json`, tests). Preview on the
+  word-based estimates: 1920s and pre-1920 German are fully replaced by English of the same period, and
+  science too, but the 1930s fall 0.42B short. The DECISION assumed 2.07B of 1930-33 English for a second
+  epoch, while 1930-33 non-legal English is 1.23B (estimate; ~1.4B in real tokens) against 1.65B of 1930s
+  German. With no third epoch the twin would total 11.58B. Options put to the user.
