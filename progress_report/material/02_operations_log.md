@@ -150,3 +150,8 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
   science too, but the 1930s fall 0.42B short. The DECISION assumed 2.07B of 1930-33 English for a second
   epoch, while 1930-33 non-legal English is 1.23B (estimate; ~1.4B in real tokens) against 1.65B of 1930s
   German. With no third epoch the twin would total 11.58B. Options put to the user.
+- Tokenisation started on the 5080 at 01:59 (26,603 filtered files, 8 workers x 2 threads, CPU ~82 °C).
+  At ~02:20 the watcher flagged Windows memory at 1.1 GB: the WSL page cache had grown to 36 GB from
+  reading the filtered files, and Windows was paging (up to ~180k pages/s). The page cache was dropped
+  (Windows back to 24 GB free, paging 0), and `scripts/drop_cache_loop.sh` now runs as root and drops the
+  cache every 2 min until the tokeniser ends.

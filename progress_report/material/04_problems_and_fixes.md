@@ -72,3 +72,8 @@ Each entry: problem → cause → fix → effect. Material for the "challenges" 
 18. **A silent SSD writer: WSLg's weston crash loop** on the 5080 (no GUI apps are used): a 171 MB dump
     every 103 s, ~6 GB/h. Found while cleaning the disk (`Temp\wsl-crashes` refilled after deletion).
     → WSLg disabled (`guiApplications=false`).
+
+19. **The WSL page cache starves Windows again** during tokenisation (36 GB of cache, Windows 1.1 GB
+    free, paging up to ~700 MB/s). → Page cache dropped every 2 min while the job runs
+    (`scripts/drop_cache_loop.sh`, root, via WMI). Lasting fix proposed: a lower WSL memory cap so the
+    guest trims its own cache.
