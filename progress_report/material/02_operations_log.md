@@ -167,3 +167,9 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
   0.80B, science 1.15B = 12.00B. In the main draw 0.27B of 1934-39 non-legal English is seen only once
   (the 1930s target stops the second epochs); the user is asked whether the twin should complete those
   first.
+- Twin redrawn with the user's fill order: 1930s German 1.84B replaced by the 1934-39 second pass 0.27B
+  (recorded known difference), 1930-33 second epochs 1.44B and unused 1930s case law 0.14B (twin legal 6.6 %
+  of 1930s English); moved to the 1920s ~0. Twin period totals equal the main run's (1930s 7.37B, 1920s
+  2.68B, pre-1920 0.80B, science 1.15B). Audit section 8 shows main and twin side by side.
+- Document-order question researched (industry practice: Megatron, OLMo, Pythia, Llama 3 document masking,
+  best-fit packing, data-constrained repetition, memorisation-by-order, curriculum studies); answer to user.

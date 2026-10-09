@@ -1174,9 +1174,9 @@ Keyed 92.8M w vs OCR 199.6M w (31.7 % keyed).
 | usgs_pp | US federal government work, public domain |
 | psm_wikisource | text US public domain; Wikisource transcription CC BY-SA 4.0 |
 
-## 8. Training mixture: unique vs seen tokens (src.data.mixture; estimates)
+## 8. Training mixture: unique vs seen tokens (src.data.mixture)
 
-Profile 12B (budget 12.00B tok), drawn 2026-10-09T07:15:53+00:00; tokens: n_tokens from data/tokenized (+1 <|endoftext|> per document). Second epoch only from 1934-01-01; within a period the order is by weight exp(-(1939 - year)/5); caps per period: German <= 25%, books <= 12%, legal <= 10% of the period's English (absolute: {'1930-39.06': 350000000.0}). User decisions 2026-10-08 (HANDOFF §12). The 1920-29 target is raised from 2.60B tok to 2.68B tok to fill the budget left by the caps (user, 2026-10-08).
+Profile 12B (budget 12.00B tok), drawn 2026-10-09T09:17:12+00:00; tokens: n_tokens from data/tokenized (+1 <|endoftext|> per document). Second epoch only from 1934-01-01; within a period the order is by weight exp(-(1939 - year)/5); caps per period: German <= 25%, books <= 12%, legal <= 10% of the period's English (absolute: {'1930-39.06': 350000000.0}). User decisions 2026-10-08 (HANDOFF §12). The 1920-29 target is raised from 2.60B tok to 2.68B tok to fill the budget left by the caps (user, 2026-10-08).
 
 | period | lang | category | unique | seen | of which 2nd epoch | seen / unique |
 |---|---|---|---|---|---|---|
@@ -1276,8 +1276,36 @@ Each period's German seen tokens are replaced by English of the same period (193
 
 | period | main seen | of which German | twin seen | shortfall |
 |---|---|---|---|---|
-| 1930-39.06 | 7.37B tok | 1.84B tok | 7.20B tok | 0 tok |
-| 1920-29 | 2.68B tok | 670.0M tok | 2.85B tok | 19 tok |
+| 1930-39.06 | 7.37B tok | 1.84B tok | 7.37B tok | 0 tok |
+| 1920-29 | 2.68B tok | 670.0M tok | 2.68B tok | 13 tok |
 | 1900-19 | 800.0M tok | 186.0M tok | 800.0M tok | 1.3k tok |
 | science | 1.15B tok |  | 1.15B tok | 5.6k tok |
 | total | 12.00B tok |  | 12.00B tok | 6.9k tok |
+
+1930s German replaced by: 1934 39 second pass 266.4M tok, 1930 33 second epoch 1.44B tok, 1930s unused legal 136.2M tok, moved to 1920s 3.0k tok.
+
+Known difference: second pass of 1934 39 english seen once in main: 266.4M tok.
+
+Main and twin side by side (seen tokens per period x language x category):
+
+| period | lang | category | main | twin | twin - main |
+|---|---|---|---|---|---|
+| 1930-39.06 | de | legislative | 138 tok | 0 tok | -138 tok |
+| 1930-39.06 | de | newspaper | 1.84B tok | 0 tok | -1.84B tok |
+| 1930-39.06 | en | books | 31.6M tok | 47.8M tok | +16.2M tok |
+| 1930-39.06 | en | legal | 350.0M tok | 486.2M tok | +136.2M tok |
+| 1930-39.06 | en | legislative | 141.7M tok | 187.4M tok | +45.8M tok |
+| 1930-39.06 | en | newspaper | 5.00B tok | 6.65B tok | +1.64B tok |
+| 1920-29 | de | books | 9.2k tok | 0 tok | -9.2k tok |
+| 1920-29 | de | newspaper | 670.0M tok | 0 tok | -670.0M tok |
+| 1920-29 | en | books | 321.3M tok | 321.3M tok | +0 tok |
+| 1920-29 | en | legal | 144.2M tok | 191.5M tok | +47.3M tok |
+| 1920-29 | en | legislative | 31.4M tok | 43.0M tok | +11.6M tok |
+| 1920-29 | en | newspaper | 1.51B tok | 2.12B tok | +611.1M tok |
+| 1900-19 | de | newspaper | 186.0M tok | 0 tok | -186.0M tok |
+| 1900-19 | en | books | 95.9M tok | 95.9M tok | +0 tok |
+| 1900-19 | en | legal | 18.7k tok | 36.0k tok | +17.3k tok |
+| 1900-19 | en | legislative | 5.1M tok | 6.9M tok | +1.8M tok |
+| 1900-19 | en | newspaper | 513.0M tok | 697.2M tok | +184.1M tok |
+| science | de | science | 299.8M tok | 0 tok | -299.8M tok |
+| science | en | science | 850.0M tok | 1.15B tok | +299.8M tok |
