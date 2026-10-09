@@ -119,3 +119,14 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
 - Tokenizer frozen: `data/tokenizer/bpe_49152/tokenizer.json` (sha256 a5f5186e…), `config/tokenizer.yaml`;
   `config/model_ladder.yaml` updated (vocab 49,152, context 2048, selected s335m), TASKS/HANDOFF aligned.
   C1/C2 probe check passes (radar → rad|ar, Quisling → Qu|is|ling, Genozid → Gen|oz|id; 1939 → 1|9|3|9).
+
+## 2026-10-09 — cleanup
+
+- Local (2080): the 10-07 pipeline-experiment outputs `data/selected`, `data/dedup`, `data/filtered`,
+  `data/para_dedup` (9.5 GB) removed; superseded by the full run on the 5080 (results in
+  `reports/dedup_experiment_2080.md`). Every source fetched on the 2080 (15 English, 11 German) was
+  confirmed present in the 5080's ingested data; the remaining local copies (`data/raw` except the SCOWL
+  lexicon anchor, `data/foreign`, `data/ingested`: 77 GB) and the Desktop transfer packs (4.4 GB) are
+  redundant and left for the user to delete with one command (the C: Recycle Bin holds only ~32 GB).
+- 5080 cleanup candidates listed for the user (scratch: paragraph-dedup year shards 41 GB, held-out
+  shingle array 2 GB, MinHash signature caches 34 GB; raw of supplementary corpora ~150 GB).
