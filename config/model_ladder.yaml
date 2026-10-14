@@ -4,7 +4,7 @@
 
 tokens_per_param: 20
 max_epochs: 2
-context_length: 2048     # HANDOFF §12 2026-10-05 (the main run)
+context_length: 4096     # HANDOFF §12 2026-10-14 (user; was 2048)
 vocab_size: 49152        # byte-level BPE, chosen 2026-10-08 (reports/tokenizer_compare.md)
 
 rungs:

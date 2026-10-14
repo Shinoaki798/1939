@@ -706,6 +706,15 @@ Dated entries; each supersedes anything above it that it contradicts.
     cover 1930s German (1.65B) with one more epoch. Fill order: (1) second epochs of 1930-33 non-legal
     English; (2) the 1930s case law the main run left out, once, while legal stays <= 10 % of the twin's
     1930s English; (3) the rest moves to the 1920s (extra 1920s English, same race order). Totals match.
+  - *Revised fill order (user DECISIONS, 2026-10-09):* (1) the second pass of the 0.27B of 1934-39 English
+    the main draw saw once (its 1930s target stops the second epochs), recorded as a known difference;
+    (2) second epochs of 1930-33 English; (3) unused 1930s case law only if still short, legal <= 10 % of
+    1930s English. Drawn on real tokens: 0.27B + 1.44B + 0.14B; twin period totals equal the main run's.
+- **2026-10-14 — context length 4096 (user; was 2048).** Document lengths in the main draw: median 168
+  tokens, American Stories p99 1,225; but 53 % of seen tokens sit in documents longer than 2048 (whole
+  newspaper pages 4-6k, mostly unrelated articles side by side; book, journal and case-law pieces
+  1.5-5k, ~11 % of seen tokens, which fit whole at 4096). Cost ~+15 % compute (~135 h per run on the
+  5080 instead of ~117 h). `config/model_ladder.yaml` context_length 4096.
 
 ---
 
