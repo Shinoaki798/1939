@@ -57,14 +57,16 @@ happened next --- the war, a third Roosevelt term, nuclear weapons --- against
 what informed people believed at the time? Deep learning is the
 instrument: these quantities exist only in a trained model's next-token
 distribution. Training ends \textbf{30 June 1939}; July--August 1939 is an
-\textbf{embargo}, excluded from training and scored evaluation.
+\textbf{embargo}, excluded from training and scoring.
 
 \section*{Illustration}
 \begin{figure}[!h]
   \centering
-  \includegraphics[width=\textwidth]{figures/overview.pdf}
-  \vspace{-0.9em}
-  \caption{One boundary, one model and its English-only twin. Shapes are hypothesised, not results.}
+  \includegraphics[width=\textwidth]{figures/overview.pdf}\\[0.2em]
+  \includegraphics[width=\textwidth]{figures/architecture.pdf}
+  \vspace{-1.5em}
+  \caption{Top: one boundary, one model and its English-only twin (shapes hypothesised, not results).
+  Bottom: the Transformer of both runs, each layer with its size.}
   \label{fig:overview}
 \end{figure}
 \vspace{-0.9em}
@@ -85,8 +87,7 @@ Gallup's 1939 polls \citep{gallup1939} give RQ3 a hindsight-free human
 reference.
 
 \section*{Data Processing}
-\textbf{Sources.} All text is pre-cutoff, in the original language; nothing is
-machine-translated. \emph{English:} American Stories \citep{dell2023},
+\textbf{Sources.} All text is pre-cutoff and in the original language. \emph{English:} American Stories \citep{dell2023},
 article-level text from Chronicling America, is the backbone and sole source
 of scored sets; training-only additions: Chronicling America batch OCR for the
 1930s \citep{chronam2026}, the Congressional
@@ -99,70 +100,63 @@ German is $\le$25\% of seen tokens per period. \emph{Science} ($\le$10\%, exempt
 1915--39 \citep{pnas}, the 1911 Britannica \citep{eb1911}, the
 \emph{Jahrbuch \"uber die Fortschritte der Mathematik} \citep{jfm} and
 G\"ottingen's digitised mathematics journals \citep{gdz}.
-\textbf{Recency weighting.}
-The pool centres on the 1910s but the model must live in 1939: the 1930s are
-seen twice; the 1920s fill the remainder ($\le$35\%); pre-1920 $\le$8\%;
+\textbf{Recency weighting}, as the model must live in 1939: 1934--39 is
+seen twice, the rest of the 1930s once; the 1920s fill the remainder ($\le$35\%); pre-1920 $\le$8\%;
 within a period, weight $\propto\exp(-(1939-\text{year})/5)$.
 \textbf{Splits} by publication date, never shuffled: a fixed 2\% of every year
-1900--1955, per language, is held out and never trained on; \textsc{Train} $=$
+1900--1955, per language, is held out; \textsc{Train} $=$
 the rest $\le$1939-06-30; \textsc{Val} $=$ a disjoint 2\% $\le$ cutoff;
 \textsc{Test-A/B/C} $=$ held-out 1930--38 / 1939-09--45 / 1946--55.
-\textbf{Cleaning}, in order: (1)~language filter (stopword vote); (2)~MinHash dedup of reprints (word 5-grams, Jaccard
+\textbf{Cleaning}: (1)~language filter (stopword vote); (2)~MinHash dedup of reprints (word 5-grams, Jaccard
 $\ge$0.8) before splitting; (3)~OCR quality per language: period-lexicon hit
-rate $\ge$0.75 and word-like share $\ge$0.70, $\ge$50 tokens; (4)~documents
-containing a C1 coinage (English or German list) are dropped whole.
-\textbf{Format:} 48k BPE trained only on native pre-cutoff English and
-German; 2048-token sequences; all numbers are bits-per-byte. \textbf{RQ1 probe set:} $\sim$200 post-cutoff
+rate $\ge$0.75 and word-like share $\ge$0.70, $\ge$50 tokens; (4)~C1 coinages are
+screened and counted; pre-cutoff hits (surnames, OCR noise) are period text and stay.
+\textbf{Format:} 48k BPE trained on native pre-cutoff English and
+German; 4096-token sequences; all numbers are bits-per-byte. \textbf{RQ1 probe set:} $\sim$200 post-cutoff
 terms in four classes (C1 coinage \textit{radar}; C2 compositional
 \textit{atomic bomb}; C3 new sense \textit{blitz}; C4 new association
 \textit{Hiroshima}), each with a frequency-matched control in $\ge$5 contexts,
 frozen in advance. \textbf{RQ3
 propositions:} $\ge$120 binary propositions resolved after 1939-09-01, in
 three tiers by what was knowable in June 1939 --- \emph{near} (war in Europe
-this year), \emph{mid} (a third Roosevelt term, US entry, a self-sustaining
-chain reaction), \emph{far} (Hitler defeated, a fission weapon used) --- each
-with same-topic US (English) and German (German) contexts from June and late
-August 1939 (embargo as conditioning only), in period language, three wordings each;
-continuations are English; the 1939 Gallup figure is recorded where polled.
+this year), \emph{mid} (a third Roosevelt term, a chain reaction), \emph{far}
+(a fission weapon used) --- each with same-topic US (English) and German contexts
+from June and late August 1939 (embargo as context only), three wordings each,
+English continuations, and the Gallup figure where polled.
 
 \section*{Architecture}
-A \textbf{decoder-only Transformer} as in the course: token embeddings;
-stacked blocks of \textbf{causally masked} multi-head self-attention and
-position-wise feed-forward layers with residuals and layer normalisation;
-softmax over the vocabulary --- a next-token predictor. Decoder-only because every measurement is a
-sequence probability of unseen text: a masked encoder's pseudo-likelihoods
-give none, and an encoder--decoder has no source sequence. From scratch, no pretrained weights. \textbf{Two runs, one architecture:} the main
+A \textbf{decoder-only Transformer} (Figure~\ref{fig:overview}, bottom), a next-token
+predictor written from scratch and trained from random initialisation; decoder-only because every
+measurement is the probability of unseen text, which a masked encoder does not give. \textbf{Two runs, one architecture:} the main
 model (English+German) and, for RQ2 only, a \textbf{twin} identical in size, tokenizer,
-English tokens and schedule but with the German slice removed. \textbf{Size:}
-350M parameters (24 layers, $d{=}1024$, 16 heads, 48k vocab) on up to 10B seen
-tokens ($\approx$29/parameter); no text is seen more than twice (repetition raises memorisation). Compute $\approx$2.1$\times$10$^{19}$
-FLOPs per run: $\sim$85\,h on the RTX~5080 or 15\,h on a rented H100. \textbf{Measurement.}
+token budget and schedule, its German slice replaced by English of the same periods. \textbf{Size:}
+349M parameters on 12B seen tokens, no text seen more than twice; $\approx$3$\times$10$^{19}$
+FLOPs per run: $\sim$130\,h on the RTX~5080 or $\sim$22\,h on a rented H100. \textbf{Measurement.}
 RQ1: for term class $c$, $\Delta_c=\mathbb{E}_{t\in\mathcal{T}_c}[s(t)]-
 \mathbb{E}_{t\in\mathcal{C}_c}[s(t)]$, $s$ the surprisal in fixed contexts,
-$\mathcal{C}_c$ matched controls, plus a C4 forced-choice test (naval station vs.\ attack) that doubles as a
+$\mathcal{C}_c$ matched controls, plus a C4 forced choice (naval station vs.\ attack) that doubles as a
 contamination check. RQ3: forced choice between two continuations, the normalised log-likelihood
 ratio as probability, Brier per tier, perspective and window against chance,
 the $n$-gram floor and Gallup. RQ2: the same batteries on the twin; the paired difference is the
-effect of the German press. All with bootstrap 95\% CIs. \textbf{Success:} $\Delta_{C2}$
+German-press effect. All with bootstrap 95\% CIs. \textbf{Success:} $\Delta_{C2}$
 significantly smallest and a step at 1939 (RQ1); mid-tier Brier better than
 chance and not worse than Gallup (RQ3); a significant paired difference on
-DE-context propositions (RQ2).
+the English batteries --- US-context propositions, $\Delta_c$, per-year bpb (RQ2).
 
 \section*{Baseline Model}
-Following the course progression, with the same split, tokenizer and budget:
+With the same split, tokenizer and budget:
 a \textbf{vanilla RNN}, an \textbf{LSTM} and a \textbf{GRU} language model
 (2 layers, $\sim$50M parameters, next-token objective), which justify the
-Transformer as primary model. A \textbf{modified Kneser--Ney 5-gram} (KenLM
+Transformer; a \textbf{modified Kneser--Ney 5-gram} (KenLM
 defaults) is the non-neural floor. \textbf{Plan} (individual): corpus frozen 20
-Oct; baselines 17--21 Oct; main Transformer 22 Oct--1 Nov; twin in November.
+Oct; main Transformer 22--31 Oct; twin and baselines 1--12 Nov.
 
 \section*{Ethical Considerations}
 Pre-1939 newspapers carry the racial, ethnic and gender language of their
 time; the model reproduces it, documented, not sanitised. German press after
-1933 was state-controlled, so the ``German perspective'' is what Germans were
-permitted to read; results describe a record, not nations or culpability. In
-collection, OCR noise concentrates in older and German (Fraktur) text, and
-unreliable book dates are caught by the C1 screen. Sources are public domain or openly licensed and attributed; the model is
+1933 was state-controlled: the ``German perspective'' is what Germans were
+permitted to read, not a verdict on a nation. In
+collection, OCR noise concentrates in older and Fraktur text. Sources are public domain or openly licensed; the model is
 released non-commercially, not for querying the private people the papers name.
 
 \newpage

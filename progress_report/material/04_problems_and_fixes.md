@@ -77,3 +77,12 @@ Each entry: problem → cause → fix → effect. Material for the "challenges" 
     free, paging up to ~700 MB/s). → Page cache dropped every 2 min while the job runs
     (`scripts/drop_cache_loop.sh`, root, via WMI). Lasting fix proposed: a lower WSL memory cap so the
     guest trims its own cache.
+
+20. **The proposal page limit is 2 pages of main text, not 3** (Quercus rubric). The committed proposal
+    fitted; the 2026-10-14 edits and the architecture figure did not. → Figure stacked into Figure 1,
+    sentences trimmed; page fill measured with a ragged-bottom probe build (`\pagetotal` before each
+    section) instead of by eye.
+
+21. **TinyTeX `tlmgr update --self` fails on Windows** ("failed to rename temp\updater-w32"; the old
+    repository mirror also had no verified key). → Missing packages unpacked from the TeX Live archive on
+    CTAN into `texmf-local`.

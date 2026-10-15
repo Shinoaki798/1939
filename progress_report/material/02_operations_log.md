@@ -173,3 +173,25 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
   2.68B, pre-1920 0.80B, science 1.15B). Audit section 8 shows main and twin side by side.
 - Document-order question researched (industry practice: Megatron, OLMo, Pythia, Llama 3 document masking,
   best-fit packing, data-constrained repetition, memorisation-by-order, curriculum studies); answer to user.
+
+## 2026-10-14 — proposal revision
+- Context length 4096 recorded (config, HANDOFF). Proposal checked against the current design: seven
+  statements out of date (C1 handling, twin definition, RQ2 success criterion, token budget, compute,
+  sequence length, which 1930s years repeat); six edits made in `docs/proposal.tex`.
+- Quercus requirements read (APS360 course page, "Project Proposal" rubric and "project guidelines"):
+  LaTeX on the course template; **main text at most 2 pages**, references unlimited; a submission reaching
+  3 pages loses 20 %, over 3 pages is not accepted. Rubric: introduction 4, illustration 4 (overall model or
+  idea, "core idea and architecture"), background (>= 5 works) 4, data processing 4, architecture 2,
+  baseline 2, ethics 2, GitHub link 1, references 1, writing 1. GitHub repo confirmed public.
+- LaTeX build on the 2080: TinyTeX lacked environ, lineno, units (nicefrac), trimspaces. `tlmgr` could not
+  update itself on Windows; the four packages were taken from the TeX Live archive on CTAN and placed in
+  TinyTeX's `texmf-local` (mktexlsr). Builds work.
+- With the six edits the main text ran 2 lines onto page 3. Architecture figure redrawn as one row
+  (`scripts/make_architecture_figure.py`: embedding, 24 x [RMSNorm, causal attention, +, RMSNorm, SwiGLU, +],
+  output; shapes and parameter counts). Preview in the scratchpad (not in `docs/`): figure stacked under the
+  overview figure in Figure 1, text trimmed; main text exactly 2 pages, references page 3, also with the
+  private author line. Waiting for the user's approval before writing it into `docs/`.
+- User approved the preview. `docs/proposal.tex` updated, `docs/figures/architecture.{pdf,png}` written by
+  `scripts/make_architecture_figure.py`; `docs/proposal.pdf` (public) and `docs/proposal_submission.pdf`
+  (with the private author line, gitignored) rebuilt: 3 pages each, main text ends on page 2. Submission zip
+  (PDF + LaTeX source) sent to the user, who uploads it to Quercus by 2026-10-16 23:59.
