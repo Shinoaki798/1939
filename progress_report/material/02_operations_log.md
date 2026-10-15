@@ -195,3 +195,8 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
   `scripts/make_architecture_figure.py`; `docs/proposal.pdf` (public) and `docs/proposal_submission.pdf`
   (with the private author line, gitignored) rebuilt: 3 pages each, main text ends on page 2. Submission zip
   (PDF + LaTeX source) sent to the user, who uploads it to Quercus by 2026-10-16 23:59.
+- Rubric re-check on the user's request: all ten items covered. One factual fix made: the science sources
+  in Data Processing now name what is actually used (JSTOR Early Journal Content; Internet Archive scans of
+  Annalen der Physik, Scientific American, Nature, PNAS, the 1911 Britannica; JFM via zbMATH Open) instead
+  of PNAS via PubMed Central, Britannica via Wikisource and Goettingen GDZ, none of which the corpus uses.
+  Rebuilt: 3 pages, main text ends on page 2; submission PDF sent to the user.

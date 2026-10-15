@@ -96,10 +96,10 @@ Record \citep{gentzkow2018}, the Federal Register \citep{fedreg} and case law
 \citep{locpdbooks} ($\le$12\%). \emph{German:} newspapers from Europeana
 \citep{europeana2015} and the Deutsches Zeitungsportal \citep{ddb2024}, deduplicated by title and date, plus the NSDAP daily
 \emph{V\"olkischer Beobachter} (1925, 1930) \citep{vb1925};
-German is $\le$25\% of seen tokens per period. \emph{Science} ($\le$10\%, exempt from recency weighting): PNAS
-1915--39 \citep{pnas}, the 1911 Britannica \citep{eb1911}, the
-\emph{Jahrbuch \"uber die Fortschritte der Mathematik} \citep{jfm} and
-G\"ottingen's digitised mathematics journals \citep{gdz}.
+German is $\le$25\% of seen tokens per period. \emph{Science} ($\le$10\%, no recency weighting):
+JSTOR Early Journal Content \citep{jstorejc}, Internet Archive scans of \emph{Annalen der Physik},
+\emph{Scientific American}, \emph{Nature} and the 1911 Britannica \citep{iascience}, and the JFM
+mathematics reviews \citep{jfm}.
 \textbf{Recency weighting}, as the model must live in 1939: 1934--39 is
 seen twice, the rest of the 1930s once; the 1920s fill the remainder ($\le$35\%); pre-1920 $\le$8\%;
 within a period, weight $\propto\exp(-(1939-\text{year})/5)$.
