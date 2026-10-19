@@ -38,5 +38,15 @@ class RecurrentLM(nn.Module):
 
     def forward(self, idx: torch.Tensor) -> torch.Tensor:
         """Token ids (B, T) -> hidden states (B, T, h) before the output layer."""
-        out, _ = self.rnn(self.emb(idx))
+        x = self.emb(idx)
+        if x.is_cuda and torch.is_autocast_enabled("cuda"):
+            # Autocast runs cuDNN RNNs in float16 whatever dtype is asked for, and there is no loss scaling
+            # here. Run the recurrence in the autocast dtype (bfloat16) instead: bf16 copies of the fp32
+            # weights, so gradients still reach the fp32 parameters.
+            dt = torch.get_autocast_dtype("cuda")
+            with torch.autocast("cuda", enabled=False):
+                w = {n: p.to(dt) for n, p in self.rnn.named_parameters()}
+                out, _ = torch.func.functional_call(self.rnn, w, (x.to(dt),))
+            return out
+        out, _ = self.rnn(x)
         return out
