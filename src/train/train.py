@@ -239,7 +239,8 @@ def train(run: dict, run_dir: Path, stream: Stream, vals: list[ValSlice], device
 
 def resolve(args, defaults: dict, ladder: dict) -> dict:
     run = dict(defaults)
-    for k in ("lr", "tokens", "warmup_steps", "micro_batch_rows", "stream", "seed"):
+    for k in ("lr", "tokens", "warmup_steps", "micro_batch_rows", "stream", "seed", "checkpoint_every_steps",
+              "eval_every_steps"):
         v = getattr(args, k)
         if v is not None:
             run[k] = v
@@ -259,6 +260,8 @@ def main() -> None:
     ap.add_argument("--micro-batch-rows", dest="micro_batch_rows", type=int)
     ap.add_argument("--stream")
     ap.add_argument("--seed", type=int)
+    ap.add_argument("--checkpoint-every", dest="checkpoint_every_steps", type=int, help="resume tests only")
+    ap.add_argument("--eval-every", dest="eval_every_steps", type=int)
     ap.add_argument("--stop-after", type=int, help="stop after this step (resume tests)")
     args = ap.parse_args()
     cfg = load_config(repo_path("config/paths.yaml"))
