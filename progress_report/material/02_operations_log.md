@@ -241,3 +241,11 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
   The first attempt found two bugs: evaluation outside autocast multiplied fp16 hidden states by fp32 weights, and
   autocast runs cuDNN RNNs in float16 even when bfloat16 is asked for (no loss scaling here). Fixed: the recurrence
   runs in bf16 on bf16 copies of the fp32 weights; evaluation casts to the weight dtype. Speed unchanged (~189k tok/s).
+- Resume test Transformer s335m (checkpoint every 30, SIGKILL at step 50, resume to 110): steps 40 and 50 agree to
+  a relative 1.1e-5; steady 29.3k tok/s in the real loop (-> ~114 h for 12B); Val after 110 steps: English 2.796 bpb.
+  Box git: `core.fileMode false` (chmod +x on scripts had marked the tree dirty in `git_sha.txt`).
+- Teaching prompt for the lecture artifact (lectures 3-6: stream and shards, baselines, training loop, evaluation;
+  updates to lectures 0-2) given to the user before training; branch pushed to GitHub at 7ede386.
+- Training started (WMI launch): `scripts/baselines_run.sh` (LR probes, then LSTM, GRU, RNN on 12B tokens, each
+  followed by per-year bpb) and `scripts/ngram_run.sh` (KenLM on the first 1B tokens, CPU). Hourly watcher
+  (`~/scratch/watch_train.sh 3600`) wakes me on the hour or on trouble.
