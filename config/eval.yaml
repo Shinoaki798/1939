@@ -1,0 +1,12 @@
+# Evaluation sets and settings (src.eval). The same documents are scored for every model.
+
+seed: 20261019
+bootstrap: 1000                 # resamples over documents for every 95 % CI (rule 8)
+
+bpb_by_year:
+  # held-out split: 2 % of every year 1900-1955 per language, never trained on (rule 4); embargo dates excluded
+  years: [1900, 1955]
+  en: {sources: [american_stories], tokens_per_year: 1.0e+6}             # scored curve (rule 5)
+  de: {sources: [ddb_newspapers_de, europeana_newspapers_de], tokens_per_year: 1.0e+6}   # reported only
+  stride: 2048                  # documents longer than the context: windows of `context` advancing by this
+  batch_tokens: {transformer: 16384, recurrent: 131072}

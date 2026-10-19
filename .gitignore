@@ -14,3 +14,4 @@ docs/APS360.sty
 # private author details and the submission PDF built from them (e-mail stays out of the public repo)
 docs/author_private.tex
 docs/proposal_submission.pdf
+runs/*/model.binary

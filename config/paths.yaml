@@ -52,3 +52,4 @@ year_range: [1900, 1955]
 holdout_fraction_per_year: 0.02
 val_fraction: 0.02
 shards: ./data/shards            # src.data.stream: training rows in final order (config/stream.yaml)
+kenlm_bin: ~/kenlm/build/bin     # lmplz, build_binary (KenLM built from source on the 5080; src.model.ngram)

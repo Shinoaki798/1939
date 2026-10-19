@@ -52,10 +52,10 @@ def splitmix(x: np.ndarray) -> np.ndarray:
     return x ^ (x >> np.uint64(31))
 
 
-def order_copies(parents: np.ndarray, count: np.ndarray, seed: int) -> pd.DataFrame:
-    """Stream order of the copies of each parent: columns parent (index into `parents`), copy, half."""
-    h, _ = uniform(parents, seed)
-    idx = np.repeat(np.arange(len(parents)), count)
+def order_from_hash(h: np.ndarray, count: np.ndarray) -> pd.DataFrame:
+    """Stream order of the copies of each parent from its seeded 64-bit hash: columns parent (index into
+    h), copy, half. Copy 0 goes to the half given by the hash's lowest bit, copy 1 to the other half."""
+    idx = np.repeat(np.arange(len(h)), count)
     copy = (np.arange(len(idx)) - np.repeat(np.cumsum(count) - count, count)).astype(np.int8)
     half = ((h[idx] & np.uint64(1)).astype(np.int8) ^ copy).astype(np.int8)
     key = splitmix(h[idx] ^ (copy.astype(np.uint64) * COPY_SALT))
@@ -63,10 +63,18 @@ def order_copies(parents: np.ndarray, count: np.ndarray, seed: int) -> pd.DataFr
     return pd.DataFrame({"parent": idx[o], "copy": copy[o], "half": half[o]})
 
 
-def chunk_number(article_ids: pd.Series) -> np.ndarray:
-    """Chunk index from an `_c<digits>` suffix (0 when there is none)."""
-    n = article_ids.str.extract(r"_c(\d+)$", expand=False)
-    return n.fillna("0").astype(np.int64).to_numpy()
+def order_copies(parents: np.ndarray, count: np.ndarray, seed: int) -> pd.DataFrame:
+    """order_from_hash on the seeded hash of parent id strings."""
+    h, _ = uniform(parents, seed)
+    return order_from_hash(h, count)
+
+
+def chunk_number(article_ids) -> np.ndarray:
+    """Chunk index from an `_c<digits>` suffix (0 when there is none); a pandas Series or an Arrow array."""
+    if isinstance(article_ids, pd.Series):
+        article_ids = pa.array(article_ids)
+    n = pc.struct_field(pc.extract_regex(article_ids, r"_c(?P<n>\d+)$"), [0])
+    return pc.fill_null(pc.cast(n, pa.int64()), 0).to_numpy(zero_copy_only=False)
 
 
 def expand(rows: pd.DataFrame, copies: pd.DataFrame) -> pd.DataFrame:
@@ -84,45 +92,48 @@ def expand(rows: pd.DataFrame, copies: pd.DataFrame) -> pd.DataFrame:
                          "half": np.repeat(copies["half"].to_numpy(), lens)})
 
 
-def read_index(troot: Path, tman: dict, langs: list[str], split: str, workers: int = 16) -> pd.DataFrame:
-    """Tokenized documents of one split: article id hash, file id, offset, n_tokens, n_bytes, source, lang."""
-    items = [(k, o) for k, o in sorted(tman["outputs"].items()) if k.split("/")[0] in langs]
+def id_hash(ids) -> np.ndarray:
+    """64-bit hash of article ids (strings, or an Arrow string array)."""
+    if isinstance(ids, (pa.Array, pa.ChunkedArray)):
+        ids = ids.to_numpy(zero_copy_only=False)
+    return pd.util.hash_array(np.asarray(ids, dtype=object), hash_key="1939stream000000")
+
+
+def read_index(troot: Path, tman: dict, langs: list[str], split: str, sources: list[str] | None = None,
+               keep_ids: bool = False, workers: int = 16) -> pd.DataFrame:
+    """Tokenized documents of one split, numeric columns only (memory): id hash h, file, offset, n_tokens,
+    n_bytes; the article id strings too with keep_ids. attrs: bin path per file."""
+    items = [(k, o) for k, o in sorted(tman["outputs"].items())
+             if k.split("/")[0] in langs and (sources is None or k.split("/")[1] in sources)]
 
     def one(i: int) -> pd.DataFrame | None:
-        k, o = items[i]
-        t = pq.read_table(troot / o["index"])
+        t = pq.read_table(troot / items[i][1]["index"])
         t = t.filter(pc.equal(t.column("split"), split))
         if t.num_rows == 0:
             return None
-        d = pd.DataFrame({"aid": t.column("article_id").to_pandas(), "offset": t.column("offset").to_numpy(),
-                          "n_tokens": t.column("n_tokens").to_numpy(), "n_bytes": t.column("n_bytes").to_numpy()})
-        d["file"] = np.int32(i)
+        d = pd.DataFrame({"h": id_hash(t.column("article_id")), "file": np.full(t.num_rows, i, np.int32),
+                          "offset": t.column("offset").to_numpy(), "n_tokens": t.column("n_tokens").to_numpy(),
+                          "n_bytes": t.column("n_bytes").to_numpy()})
+        if keep_ids:
+            d["aid"] = t.column("article_id").to_pandas()
         return d
     with ThreadPoolExecutor(workers) as ex:
         parts = [d for d in ex.map(one, range(len(items))) if d is not None]
     d = pd.concat(parts, ignore_index=True)
     d.attrs["files"] = [o["bin"] for _, o in items]
-    d.attrs["sources"] = [k.split("/")[1] for k, _ in items]
-    d.attrs["langs"] = [k.split("/")[0] for k, _ in items]
     return d
 
 
-def id_hash(ids) -> np.ndarray:
-    return pd.util.hash_array(np.asarray(ids, dtype=object), hash_key="1939stream000000")
-
-
-def locate(mix: pd.DataFrame, idx: pd.DataFrame) -> pd.DataFrame:
-    """Join mixture rows to their tokenized location by article id; every row must be found once."""
-    left = pd.DataFrame({"h": id_hash(mix["article_id"])})
-    right = pd.DataFrame({"h": id_hash(idx["aid"]), "file": idx["file"].to_numpy(), "offset": idx["offset"].to_numpy(),
-                          "n_tokens": idx["n_tokens"].to_numpy(), "n_bytes": idx["n_bytes"].to_numpy()})
-    if right["h"].duplicated().any():
+def locate(h: np.ndarray, idx: pd.DataFrame) -> pd.DataFrame:
+    """Tokenized location (file, offset, n_tokens, n_bytes) of each article id hash; every one must be found
+    exactly once among the tokenized documents."""
+    if idx["h"].duplicated().any():
         raise SystemExit("article id hash collision or duplicate article id in the tokenized index")
-    j = left.merge(right, on="h", how="left", validate="many_to_one")
+    j = pd.DataFrame({"h": h}).merge(idx[["h", "file", "offset", "n_tokens", "n_bytes"]], on="h", how="left",
+                                     validate="many_to_one")
     if j["file"].isna().any():
         raise SystemExit(f"{int(j['file'].isna().sum()):,} mixture rows not found among tokenized train documents")
-    return j.drop(columns="h").astype({"file": np.int32, "offset": np.int64, "n_tokens": np.int64,
-                                       "n_bytes": np.int64})
+    return j.drop(columns="h").astype({"file": np.int32, "offset": np.int64, "n_tokens": np.int64, "n_bytes": np.int64})
 
 
 def write_shards(order: pd.DataFrame, files: list[str], troot: Path, out: Path, scfg: dict,
@@ -165,17 +176,36 @@ def write_shards(order: pd.DataFrame, files: list[str], troot: Path, out: Path, 
     return recs
 
 
-def summarize(order: pd.DataFrame) -> dict:
-    """Tokens per half x lang x period x source, and the distance between the two copies of a parent."""
+def summarize(order: pd.DataFrame, names: dict) -> dict:
+    """Tokens per half x lang x period x source, and the distance between the two copies of a parent.
+    order: codes in columns lang, period, source (names[col] maps them back)."""
     t = order.assign(tok=order["n_tokens"] + 1)
-    by = t.groupby(["half", "lang", "period", "source"], observed=True)["tok"].sum()
-    cells = [{"half": int(h), "lang": l, "period": p, "source": s, "tokens": int(v)} for (h, l, p, s), v in by.items()]
-    two = t[t.groupby("parent_id")["copy"].transform("max") == 1]
-    gap = (two.groupby("parent_id")["start"].max() - two.groupby("parent_id")["start"].min()).to_numpy()
+    by = t.groupby(["half", "lang", "period", "source"])["tok"].sum()
+    cells = [{"half": int(h), "lang": names["lang"][l], "period": names["period"][p], "source": names["source"][s],
+              "tokens": int(v)} for (h, l, p, s), v in by.items()]
+    first = t.groupby(["parent_code", "copy"])["start"].min().unstack()
+    gap = (first[1] - first[0]).dropna().to_numpy() if 1 in first.columns else np.zeros(0)
     q = np.percentile(gap, [0, 1, 50]) if len(gap) else [0, 0, 0]
     return {"cells": cells, "tokens_by_half": {int(k): int(v) for k, v in t.groupby("half")["tok"].sum().items()},
             "copies_gap_tokens": {"parents_seen_twice": int(len(gap)), "min": int(q[0]), "p1": int(q[1]),
                                   "median": int(q[2])}}
+
+
+def load_mixture(path: Path, seed: int) -> tuple[pd.DataFrame, pa.ChunkedArray, dict]:
+    """One mixture file as numeric columns (memory): article id hash, seeded parent hash, chunk, codes for
+    lang / period / source, count; plus the article id strings as Arrow and the code -> name tables."""
+    t = pq.read_table(path, columns=["article_id", "parent_id", "source", "lang", "period", "count"])
+    t = t.filter(pc.greater(t.column("count"), 0))
+    d = pd.DataFrame({"h": id_hash(t.column("article_id")),
+                      "ph": uniform(t.column("parent_id").to_numpy(zero_copy_only=False), seed)[0],
+                      "chunk": chunk_number(t.column("article_id")),
+                      "count": t.column("count").to_numpy().astype(np.int64)})
+    names = {}
+    for col in ("lang", "period", "source"):
+        enc = pc.dictionary_encode(t.column(col)).combine_chunks()
+        d[col] = enc.indices.to_numpy().astype(np.int16)
+        names[col] = enc.dictionary.to_pylist()
+    return d, t.column("article_id"), names
 
 
 def build_stream(name: str, cfg: dict, scfg: dict, dry_run: bool) -> dict:
@@ -185,34 +215,42 @@ def build_stream(name: str, cfg: dict, scfg: dict, dry_run: bool) -> dict:
     mman = json.loads(mman_path.read_text(encoding="utf-8"))
     tman_path = troot / "MANIFEST.json"
     tman = json.loads(tman_path.read_text(encoding="utf-8"))
-    cols = ["article_id", "parent_id", "source", "lang", "period", "year", "count"]
-    parts = []
+    frames, ids, names = [], [], {"lang": [], "period": [], "source": []}
     for lang in spec["langs"]:
         f = mroot / mman["outputs"][lang]["file"]
         if not f.exists():
-            f = mman_path.parent / name / mman["outputs"][lang]["file"]
-        parts.append(pq.read_table(f, columns=cols).to_pandas())
-    mix = pd.concat(parts, ignore_index=True)
-    mix = mix[mix["count"] > 0].reset_index(drop=True)
+            f = mroot / name / mman["outputs"][lang]["file"]
+        d, a, nm = load_mixture(f, int(scfg["seed"]))
+        for col in names:                                   # one code table across languages
+            remap = np.array([names[col].index(v) if v in names[col] else names[col].append(v) or len(names[col]) - 1
+                              for v in nm[col]], dtype=np.int16)
+            d[col] = remap[d[col].to_numpy()]
+        frames.append(d)
+        ids.extend(a.chunks)
+    mix = pd.concat(frames, ignore_index=True)
+    ids = pa.chunked_array(ids)
+    del frames
     print(f"{name}: {len(mix):,} documents, {int(mix['count'].sum()):,} copies", flush=True)
     idx = read_index(troot, tman, spec["langs"], "train")
-    loc = locate(mix, idx)
-    mix = pd.concat([mix, loc], axis=1)
-    mix["chunk"] = chunk_number(mix["article_id"])
-    code, parents = pd.factorize(mix["parent_id"])
-    parents = np.asarray(parents, dtype=object)
-    mix["parent_code"] = code
+    mix = pd.concat([mix, locate(mix["h"].to_numpy(), idx)], axis=1)
+    files = idx.attrs["files"]
+    del idx
+    mix["parent_code"] = pd.factorize(mix["ph"])[0]
+    mix["row_id"] = np.arange(len(mix))
     mix = mix.sort_values(["parent_code", "chunk"], kind="stable").reset_index(drop=True)
-    pcount = mix.groupby("parent_code")["count"].max().to_numpy()
-    if (mix.groupby("parent_code")["count"].nunique() > 1).any():
+    g = mix.groupby("parent_code")["count"]
+    if (g.min() != g.max()).any():
         raise SystemExit("chunks of one parent have different seen counts")
-    copies = order_copies(parents, pcount.astype(np.int64), int(scfg["seed"]))
+    ph = mix.groupby("parent_code")["ph"].first().to_numpy()
+    copies = order_from_hash(ph, g.max().to_numpy())
     ex = expand(mix[["parent_code"]], copies)
     order = mix.iloc[ex["row"].to_numpy()].reset_index(drop=True)
     order["copy"], order["half"] = ex["copy"].to_numpy(), ex["half"].to_numpy()
+    del mix, ex
     out = repo_path(cfg["shards"]) / name
-    recs = write_shards(order, idx.attrs["files"], troot, out, scfg, dry_run)
-    summary = summarize(order)
+    recs = write_shards(order, files, troot, out, scfg, dry_run)
+    summary = summarize(order, names)
+    first_ids = ids.take(pa.array(order["row_id"].to_numpy()[:5])).to_pylist()
     manifest = {"stage": "shards", "stream": name,
                 "created_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
                 "config": scfg | {"val": None}, "dtype": "uint16 little-endian",
@@ -222,12 +260,14 @@ def build_stream(name: str, cfg: dict, scfg: dict, dry_run: bool) -> dict:
                            "tokenizer_sha256": tman["tokenizer"]["sha256"]},
                 "documents": int(len(order)), "tokens": int(sum(r["tokens"] for r in recs)),
                 "rows": int((sum(r["tokens"] for r in recs) - 1) // int(scfg["context"])),
-                "shards": recs, "first_documents": order["article_id"].head(5).tolist()} | summary
+                "shards": recs, "first_documents": first_ids} | summary
     print(json.dumps({k: manifest[k] for k in ("documents", "tokens", "rows", "tokens_by_half", "copies_gap_tokens")}),
           flush=True)
     if not dry_run:
-        pq.write_table(pa.Table.from_pandas(order[["article_id", "copy", "half", "start", "n_tokens"]],
-                                            preserve_index=False), out / "order.parquet", compression="zstd")
+        pq.write_table(pa.table({"article_id": ids.take(pa.array(order["row_id"].to_numpy())),
+                                 "copy": order["copy"].to_numpy(), "half": order["half"].to_numpy(),
+                                 "start": order["start"].to_numpy(), "n_tokens": order["n_tokens"].to_numpy()}),
+                       out / "order.parquet", compression="zstd")
         (out / "MANIFEST.json").write_text(json.dumps(manifest, indent=1), encoding="utf-8")
     return manifest
 
@@ -240,11 +280,9 @@ def build_val(cfg: dict, scfg: dict, dry_run: bool) -> dict:
     out = repo_path(cfg["shards"]) / "val"
     res = {}
     for lang, spec in scfg["val"].items():
-        idx = read_index(troot, tman, [lang], "val")
-        src = np.asarray(idx.attrs["sources"])[idx["file"].to_numpy()]
-        d = idx[np.isin(src, spec["sources"])].copy()
-        h, _ = uniform(d["aid"].to_numpy(dtype=object), int(scfg["seed"]))
-        d = d.iloc[np.argsort(h, kind="stable")]
+        idx = read_index(troot, tman, [lang], "val", sources=spec["sources"], keep_ids=True)
+        h, _ = uniform(idx["aid"].to_numpy(dtype=object), int(scfg["seed"]))
+        d = idx.iloc[np.argsort(h, kind="stable")]
         keep = int(np.searchsorted(np.cumsum(d["n_tokens"].to_numpy() + 1), float(spec["tokens"]))) + 1
         d = d.iloc[:keep].reset_index(drop=True)
         n = d["n_tokens"].to_numpy()
