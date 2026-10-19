@@ -258,3 +258,10 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
 - LSTM probes: lr 5e-4 Val English 2.648 bpb; lr 1e-3 stuck near loss 7.65 from step 100 (2.893); lr 2e-3 the same
   by step 160. Queue stopped at that unfinished probe, grid extension deployed, queue relaunched (finished probes
   skipped, the interrupted one restarted).
+- 5080 cleanup (user: delete what is confirmed unneeded): uv and pip caches (8.4 GB), `conda clean --all`, old
+  scratch files in /tmp from earlier sessions, checkpoints of the two finished LSTM probes (2.4 GB; the choice reads
+  only the logs), the ingested data of the excluded HMD source (6.1 GB). WSL free 136 -> 146 GB.
+  Disk picture: Windows C: (the 2 TB drive, 1.86 TB usable) 1,473 GB used / 389 GB free; the WSL disk file
+  `ext4.vhdx` is 888 GB and does not shrink when files are deleted inside WSL (compaction needs `wsl --shutdown`).
+  Kept, pending the user: pipeline intermediates only needed to rerun cleaning (selected 49 GB, dedup 34 GB,
+  para_dedup 43 GB, English ingested 115 GB, German ingested 50 GB); raw downloads stay (user rule).
