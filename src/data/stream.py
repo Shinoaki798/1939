@@ -124,16 +124,20 @@ def read_index(troot: Path, tman: dict, langs: list[str], split: str, sources: l
     return d
 
 
-def locate(h: np.ndarray, idx: pd.DataFrame) -> pd.DataFrame:
-    """Tokenized location (file, offset, n_tokens, n_bytes) of each article id hash; every one must be found
-    exactly once among the tokenized documents."""
-    if idx["h"].duplicated().any():
-        raise SystemExit("article id hash collision or duplicate article id in the tokenized index")
-    j = pd.DataFrame({"h": h}).merge(idx[["h", "file", "offset", "n_tokens", "n_bytes"]], on="h", how="left",
-                                     validate="many_to_one")
-    if j["file"].isna().any():
-        raise SystemExit(f"{int(j['file'].isna().sum()):,} mixture rows not found among tokenized train documents")
-    return j.drop(columns="h").astype({"file": np.int32, "offset": np.int64, "n_tokens": np.int64, "n_bytes": np.int64})
+def locate(h: np.ndarray, n_tokens: np.ndarray, idx: pd.DataFrame) -> pd.DataFrame:
+    """Tokenized location (file, offset, n_tokens, n_bytes) of each mixture row, matched on the article id
+    hash and checked against the mixture's token count. An id that occurs twice among the tokenized
+    documents (one Dingler id names two articles) is resolved by the token count; every row must end with
+    exactly one match."""
+    left = pd.DataFrame({"h": h, "want": n_tokens, "pos": np.arange(len(h))})
+    j = left.merge(idx[["h", "file", "offset", "n_tokens", "n_bytes"]], on="h", how="left")
+    j = j[j["n_tokens"] == j["want"]]
+    if len(j) != len(h) or j["pos"].duplicated().any():
+        bad = len(h) - j["pos"].nunique()
+        raise SystemExit(f"{bad:,} mixture rows without exactly one tokenized train document of the same length")
+    j = j.sort_values("pos")
+    return j.drop(columns=["h", "want", "pos"]).reset_index(drop=True).astype(
+        {"file": np.int32, "offset": np.int64, "n_tokens": np.int64, "n_bytes": np.int64})
 
 
 def write_shards(order: pd.DataFrame, files: list[str], troot: Path, out: Path, scfg: dict,
@@ -194,12 +198,13 @@ def summarize(order: pd.DataFrame, names: dict) -> dict:
 def load_mixture(path: Path, seed: int) -> tuple[pd.DataFrame, pa.ChunkedArray, dict]:
     """One mixture file as numeric columns (memory): article id hash, seeded parent hash, chunk, codes for
     lang / period / source, count; plus the article id strings as Arrow and the code -> name tables."""
-    t = pq.read_table(path, columns=["article_id", "parent_id", "source", "lang", "period", "count"])
+    t = pq.read_table(path, columns=["article_id", "parent_id", "source", "lang", "period", "tokens", "count"])
     t = t.filter(pc.greater(t.column("count"), 0))
     d = pd.DataFrame({"h": id_hash(t.column("article_id")),
                       "ph": uniform(t.column("parent_id").to_numpy(zero_copy_only=False), seed)[0],
                       "chunk": chunk_number(t.column("article_id")),
-                      "count": t.column("count").to_numpy().astype(np.int64)})
+                      "count": t.column("count").to_numpy().astype(np.int64),
+                      "want": np.rint(t.column("tokens").to_numpy() - 1).astype(np.int64)})   # n_tokens + 1 in the mixture
     names = {}
     for col in ("lang", "period", "source"):
         enc = pc.dictionary_encode(t.column(col)).combine_chunks()
@@ -232,7 +237,8 @@ def build_stream(name: str, cfg: dict, scfg: dict, dry_run: bool) -> dict:
     del frames
     print(f"{name}: {len(mix):,} documents, {int(mix['count'].sum()):,} copies", flush=True)
     idx = read_index(troot, tman, spec["langs"], "train")
-    mix = pd.concat([mix, locate(mix["h"].to_numpy(), idx)], axis=1)
+    mix = pd.concat([mix, locate(mix["h"].to_numpy(), mix.pop("want").to_numpy(), idx)], axis=1)
+    dup_ids = int(idx["h"].duplicated().sum())
     files = idx.attrs["files"]
     del idx
     mix["parent_code"] = pd.factorize(mix["ph"])[0]
@@ -260,7 +266,7 @@ def build_stream(name: str, cfg: dict, scfg: dict, dry_run: bool) -> dict:
                            "tokenizer_sha256": tman["tokenizer"]["sha256"]},
                 "documents": int(len(order)), "tokens": int(sum(r["tokens"] for r in recs)),
                 "rows": int((sum(r["tokens"] for r in recs) - 1) // int(scfg["context"])),
-                "shards": recs, "first_documents": first_ids} | summary
+                "duplicate_ids_in_tokenized_train": dup_ids, "shards": recs, "first_documents": first_ids} | summary
     print(json.dumps({k: manifest[k] for k in ("documents", "tokens", "rows", "tokens_by_half", "copies_gap_tokens")}),
           flush=True)
     if not dry_run:
