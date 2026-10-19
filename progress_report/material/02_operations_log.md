@@ -249,3 +249,6 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
 - Training started (WMI launch): `scripts/baselines_run.sh` (LR probes, then LSTM, GRU, RNN on 12B tokens, each
   followed by per-year bpb) and `scripts/ngram_run.sh` (KenLM on the first 1B tokens, CPU). Hourly watcher
   (`~/scratch/watch_train.sh 3600`) wakes me on the hour or on trouble.
+- Resume-test checkpoints on the 5080 deleted (9.1 GB; user OK). The KenLM job was restarted with the ARPA
+  output gzipped on the fly (`src/model/ngram.py`): uncompressed ARPA for ~1.7B n-grams is ~70 GB and the box has
+  ~150 GB free beside the shards. Smoke test on 2M tokens: binary loads and scores. Relaunched; watcher restarted.
