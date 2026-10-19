@@ -200,3 +200,21 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
   Annalen der Physik, Scientific American, Nature, PNAS, the 1911 Britannica; JFM via zbMATH Open) instead
   of PNAS via PubMed Central, Britannica via Wikisource and Goettingen GDZ, none of which the corpus uses.
   Rebuilt: 3 pages, main text ends on page 2; submission PDF sent to the user.
+
+## 2026-10-19 — throughput and n-gram measurements for the baseline plan (5080, scratch scripts)
+- Scratch scripts in `~/scratch` on the 5080 (not project code): random token ids, fwd + bwd + AdamW, bf16
+  autocast, chunked cross-entropy with checkpointing (logits never stored whole), context 4096.
+- Transformer 349.2M (RMSNorm, RoPE, SwiGLU, SDPA causal, tied embeddings, torch.compile): 27.5k tok/s at
+  1 x 4096 (peak 8.9 GB) -> ~121 h for 12B; 30.3k tok/s at 2 x 4096 (peak 13.0 GB, too close to the card's
+  ~14.3 GB usable under Windows).
+- Recurrent baselines, 2 layers, tied embeddings, cuDNN: RNN h960 (50.9M), LSTM h800 (49.6M), GRU h832
+  (49.2M). With an eager chunked loss at 16 x 4096: ~83k tok/s. At 64 x 4096 the eager version needed
+  13.2 GB and fell to 9k tok/s (Windows sysmem fallback). With the chunk loss compiled: 64 x 4096 =
+  2^18 tokens per step, 7-11 GB, ~190k tok/s for all three -> 17.6 h each for 12B, 3.7 h for 2.5B. The
+  49k-way output layer, not the recurrence, dominates.
+- Distinct n-grams on a 300M-token sample of the main mixture's unique documents (EN + DE): at 300M,
+  2-gram 23.9M, 3-gram 112M, 4-gram 198M, 5-gram 249M; growth exponents 0.62 / 0.81 / 0.91 / 0.95.
+  Extrapolated: 1B tokens -> ~1.7B n-grams (orders 2-5); all 9.7B unique tokens -> ~13.6B. A KenLM
+  5-gram with default estimation on the full stream does not fit the 40 GB WSL limit; ~1B tokens does
+  (trie ~18 GB, temporary ARPA ~80 GB).
+- Host disk: Windows C: 552 GB free; WSL ext4 200 GB free. KenLM, cmake and g++ are not installed on the box.

@@ -1,0 +1,17 @@
+# Training stream (src.data.stream; decisions 2026-10-19, HANDOFF §12).
+# The mixture's documents in their final order, packed into rows of `context` tokens and written once.
+
+seed: 20261019            # hash key for halves and positions; the twin uses the same seed
+context: 4096             # tokens per row (config/model_ladder.yaml context_length)
+eos_id: 0                 # <|endoftext|> after every document
+rows_per_shard: 65536     # 65,536 x 4,096 = 268M tokens = 512 MiB per shard
+
+streams:
+  main: {manifest: MANIFEST.json, langs: [en, de]}
+  twin: {manifest: MANIFEST_twin.json, langs: [en]}
+
+# Fixed Val slices for monitoring during training (split = val, <= cutoff; rule 4). Documents drawn by
+# seeded hash, back to back with <|endoftext|>. English is American Stories only, the scored source (rule 5).
+val:
+  en: {sources: [american_stories], tokens: 8.0e+6}
+  de: {sources: [ddb_newspapers_de, europeana_newspapers_de], tokens: 4.0e+6}

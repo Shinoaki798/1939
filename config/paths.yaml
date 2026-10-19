@@ -51,3 +51,4 @@ test_start: 1939-09-01
 year_range: [1900, 1955]
 holdout_fraction_per_year: 0.02
 val_fraction: 0.02
+shards: ./data/shards            # src.data.stream: training rows in final order (config/stream.yaml)

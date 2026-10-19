@@ -35,9 +35,15 @@ rungs:
 
 selected: s335m  # 24 x 1024 x 16 heads, ~350M (HANDOFF §12 2026-10-05; CLAUDE.md rule 7: fixed at 350M)
 
+transformer:            # the selected rung's remaining settings (src/model/transformer.py)
+  ffn_hidden: 2688      # SwiGLU width, 8 d / 3 rounded down to a multiple of 64; 349,225,984 parameters in all
+  rope_base: 10000.0
+
 baselines:
-  # instructor-mandated progression; same tokenizer and token budget
-  - {name: ngram_kn5, type: kenlm, order: 5}
-  - {name: rnn_50m,  type: rnn,  n_layer: 2, target_params_m: 50}
-  - {name: lstm_50m, type: lstm, n_layer: 2, target_params_m: 50}
-  - {name: gru_50m,  type: gru,  n_layer: 2, target_params_m: 50}
+  # instructor-mandated progression; same tokenizer, main stream and 12B tokens (decisions 2026-10-19).
+  # hidden: width solved from V*h + n_layer*g*(2h^2 + 2h) = 50M (g = 1 RNN, 3 GRU, 4 LSTM), rounded to a
+  # multiple of 32/64; tied embeddings, so the embedding width equals h.
+  - {name: ngram_kn5, type: kenlm, order: 5, train_tokens: 1.0e+9}   # first 1B tokens of the main stream
+  - {name: rnn_50m,  type: rnn,  n_layer: 2, hidden: 960, target_params_m: 50}    # 50,876,160
+  - {name: lstm_50m, type: lstm, n_layer: 2, hidden: 800, target_params_m: 50}    # 49,574,400
+  - {name: gru_50m,  type: gru,  n_layer: 2, hidden: 832, target_params_m: 50}    # 49,211,136
