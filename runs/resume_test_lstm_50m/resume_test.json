@@ -1,0 +1,14 @@
+{
+ "run": "resume_test_lstm_50m",
+ "killed_after_step": 150,
+ "resumed_steps_compared": [
+  110,
+  120,
+  130,
+  140,
+  150
+ ],
+ "max_relative_loss_difference": 0.0,
+ "finished_step": 350,
+ "passed": true
+}

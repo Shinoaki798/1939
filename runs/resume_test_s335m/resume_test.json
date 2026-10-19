@@ -1,0 +1,11 @@
+{
+ "run": "resume_test_s335m",
+ "killed_after_step": 50,
+ "resumed_steps_compared": [
+  40,
+  50
+ ],
+ "max_relative_loss_difference": 1.051459754727614e-05,
+ "finished_step": 110,
+ "passed": true
+}
