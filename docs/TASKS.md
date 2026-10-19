@@ -25,7 +25,7 @@ Dates are hard (HANDOFF §4). Rewritten 2026-10-19 for the current plan (no tran
       first 1B tokens), `src/train/train.py` (resumable, checkpoints every 500 steps, GPU temperature every
       100 steps), `src/eval/bpb_by_year.py`; tests.
 - [x] Resume test, LSTM (`scripts/resume_test.sh`; `runs/resume_test_lstm_50m/resume_test.json`).
-- [ ] Resume test, Transformer s335m.
+- [x] Resume test, Transformer s335m (`runs/resume_test_s335m/resume_test.json`).
 - [ ] LR probes {5e-4, 1e-3, 2e-3} x 200M tokens per recurrent model; best by Val English bpb.
 - [ ] Full runs, 12B tokens each (~17.6 h): LSTM, GRU, RNN (`scripts/baselines_run.sh`); KN 5-gram on CPU
       in parallel (`scripts/ngram_run.sh`).
