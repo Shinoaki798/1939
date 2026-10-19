@@ -1,115 +1,64 @@
 # TASKS — ordered, with gates
 
 Work top to bottom. Each task has an exit gate; do not start the next task
-until the gate is met and recorded in `reports/`. Check boxes as you go.
-Dates are hard (see HANDOFF §4, §9).
+until the gate is met and recorded in `reports/` or `progress_report/material/`.
+Dates are hard (HANDOFF §4). Rewritten 2026-10-19 for the current plan (no translation stage since
+2026-10-05; English-only twin since 2026-10-06; 12B tokens, context 4096; baselines on the full stream).
 
-## Phase 0 — repo bootstrap (today)
-- [x] `git init`, add `.gitignore`, `requirements.txt`, `config/paths.yaml`
-      with real paths filled in by the user.
-- [ ] `tests/` runs green on an empty repo (pytest discovers nothing).
-- [ ] Verify the 5080 is visible (`torch.cuda.is_available()`), log driver +
-      torch versions to `runs/env.txt`.
-- [ ] Verify SSH to the translation box; log its GPU to `runs/env_remote.txt`.
-  Gate: both machines reachable; versions recorded.
+## Phase 0 — repo bootstrap — done
+- [x] Repo, `.gitignore`, `requirements.txt`, `config/paths.yaml`; the 5080 (WSL) reachable over SSH;
+      versions recorded per run in `runs/<name>/env.txt`.
 
-## Phase 1 — corpus v1 (freeze 2026-10-10)
-- [ ] `src/data/ingest.py`: stream American Stories from HuggingFace; keep
-      `article_id, newspaper, date (ISO), lang, text`. `--dry-run` prints
-      article and token counts by year. Target years 1900–1955.
-- [ ] `reports/audit_v1.md`: table of articles/tokens/bytes by year; histogram
-      of OCR quality by year. **This decides the model size** (HANDOFF §6.1).
-- [ ] `src/data/ocr_quality.py`: period-lexicon hit rate per article; store as
-      column. Propose a drop threshold from the histogram; user confirms.
-- [ ] `src/data/dedup.py`: MinHash near-dedup (datasketch), run on the full
-      pool **before** any split. Report removed fraction by year.
-- [ ] `src/data/splits.py`: per-year 2 % holdout (1900–1955); Train ≤
-      1939-06-30; Val disjoint 2 % ≤ cutoff; Embargo 1939-07-01…08-31 set
-      aside; Test-A/B/C defined. Assert: no article in two splits; no article
-      ≥ 1939-07-01 in Train or Val. Write `data/splits/MANIFEST.json`.
-- [x] `src/data/tokenizer.py`: byte-level BPE, 48k (49,152; chosen 2026-10-08 from the 32k/48k/64k
-      comparison, `reports/tokenizer_compare.md`), trained on a mixture-weighted sample of EN + DE
-      training text (normalised). Save vocab + merges + sha256 (`config/tokenizer.yaml`). Assert no C1/C2
-      probe term is a single token (C3/C4 terms are ordinary pre-1939 words; user, 2026-10-08).
-- [ ] Tokenise all splits; write `data/tokenized/MANIFEST.json`.
-  Gate: v1 frozen; manifest checksummed; `reports/audit_v1.md` committed;
-  model size chosen and written to `config/model_ladder.yaml` → `selected`.
+## Phase 1 — corpus v1 — done (2026-10-07 … 10-09)
+- [x] Ingest, select, MinHash dedup on the selected pool, date splits (2 % holdout per year and language,
+      Val 2 % ≤ cutoff, embargo set aside), paragraph dedup, OCR gates, C1 screen (counted, kept).
+- [x] `reports/audit_v1.md`; mixture main + twin, 12.00B seen tokens each (`config/mixture.yaml`).
+- [x] Tokenizer: byte-level BPE 49,152 (`config/tokenizer.yaml`); every split tokenised and verified.
 
-## Phase 1b — RQ3 contexts (parallel, hours)
-- [ ] Draft `probes/rq3_propositions.csv` (≈60 rows: id, proposition, true
-      continuation, false continuation, resolution source).
-- [ ] For each proposition, locate one US, one DE, one FR same-topic article
-      from June 1939 and from 1939-08-18…08-31. Translate DE/FR with the
-      pinned NMT model on the remote box. Store under `probes/rq3_contexts/`.
-  Gate: ≈180 contexts present; translator revision recorded.
+## Phase 2 — training stream — done (2026-10-19)
+- [x] `src/data/stream.py`: parent documents ordered by seeded hash in two halves, `<|endoftext|>` after
+      each, rows of 4,096, shards written once in final order; main, twin and Val slices.
+- [x] Per-year bpb sets (`src/eval/bpb_by_year.py --build-set`).
 
-## Phase 2 — translation for corpus v2 (remote box, parallel; freeze 2026-10-24)
-- [ ] `src/data/translate.py`: NLLB-200 (pinned revision) via ctranslate2 or
-      transformers; sentence-split → translate → rejoin; keep source lang and
-      original article_id; write translated shards with manifest.
-- [ ] Sources in priority: Chronicling America foreign-language titles →
-      Gallica → Deutsches Zeitungsportal → (stretch) Chinese. Record bulk
-      access status in `reports/sources.md`.
-- [ ] Probe filter: drop any translated **sentence** containing a probe term
-      or inflection from the frozen RQ1 list (use the seed list until frozen,
-      then re-run with the frozen list).
-- [ ] Per-year 2 % holdout on translated articles too.
-- [ ] `reports/translation.md`: tokens by language/year; residual probe hit
-      rate; OOV rate vs 1930s lexicon.
-  Gate: v2 frozen on 24 Oct **only if complete**; otherwise the Transformer
-  trains on v1 and this phase continues as an extension.
+## Phase 3 — baselines (2026-10-19 … 10-24)
+- [x] `src/model/recurrent.py` (RNN h960, LSTM h800, GRU h832, ~50M, tied), `src/model/ngram.py` (KenLM,
+      first 1B tokens), `src/train/train.py` (resumable, checkpoints every 500 steps, GPU temperature every
+      100 steps), `src/eval/bpb_by_year.py`; tests.
+- [x] Resume test, LSTM (`scripts/resume_test.sh`; `runs/resume_test_lstm_50m/resume_test.json`).
+- [ ] Resume test, Transformer s335m.
+- [ ] LR probes {5e-4, 1e-3, 2e-3} x 200M tokens per recurrent model; best by Val English bpb.
+- [ ] Full runs, 12B tokens each (~17.6 h): LSTM, GRU, RNN (`scripts/baselines_run.sh`); KN 5-gram on CPU
+      in parallel (`scripts/ngram_run.sh`).
+- [ ] Per-year bpb (English scored, German reported) with bootstrap CIs for all four; `reports/baselines_v1.md`.
+  Gate: four baselines evaluated; both resume tests passed. **Do not start Phase 4 before this gate.**
 
-## Phase 3 — evaluation harness (on dummy weights, before any real model)
-- [ ] `src/eval/bpb_by_year.py`: bits-per-byte on each per-year held-out set;
-      bootstrap CI over documents; OCR-quality covariate regression.
-- [ ] `src/eval/probes.py`: Δ_c per class; bootstrap CI over terms.
-- [ ] `src/eval/foresight.py`: forced-choice LLR scoring; Brier + log score
-      per perspective × window; bootstrap over propositions.
-- [ ] `src/eval/detector.py`: features → monotone calibration map; ε̂ with CI;
-      passage-dating AUC.
-- [ ] `src/eval/sanity_caqa.py`: pre-1920 ChroniclingAmericaQA subset.
-- [ ] All of the above run end to end on a randomly initialised model.
-  Gate: harness produces every table/figure the final report needs, from
-  dummy weights, in one command.
+## Phase 4 — the main Transformer run (2026-10-24 … 10-30)
+- [ ] Corpus and tokenizer frozen: sha256 of the mixture, tokenized and shard manifests recorded.
+- [ ] `src/model/transformer.py` s335m (349,225,984 parameters), lr 3e-4, 1 x 4,096 micro-batches,
+      64-step accumulation, 45,776 steps (~121 h measured). Unattended, resumable, hourly checks.
+- [ ] Per-year bpb of the main model.
+  Gate: run finished; loss and Val curves in `reports/`.
 
-## Phase 4 — baselines on v1 (2026-10-17 … 10-24)
-- [ ] `src/model/ngram.py`: KenLM modified Kneser–Ney 5-gram on tokenised
-      Train; bpb on Val.
-- [ ] `src/model/rnn.py`, `lstm.py`, `gru.py`: 2-layer, ~50 M params, same
-      tokenizer, same token budget as planned for the Transformer.
-- [ ] `src/train/train.py` shared by all neural models; `--resume`;
-      checkpoint every 500 steps; GPU temperature logged every 100 steps.
-- [ ] Resume test: kill a run at step ~1000, resume, assert loss continuity.
-- [ ] Run eval harness on each baseline.
-  Gate: four baselines evaluated; `reports/baselines_v1.md`; resume test
-  passed. **Do not start Phase 5 before this gate.**
+## Phase 5 — evaluation harness (during the main run)
+- [ ] OCR-quality covariate regression in `bpb_by_year.py`.
+- [ ] `probes/rq1_terms.csv` (~200 terms, controls, ≥5 contexts each) and `src/eval/probes.py` (Δ_c,
+      bootstrap over terms, C4 forced choice). Freeze with `probes/CHECKSUMS` before scoring.
+- [ ] `probes/rq3_propositions.csv` (≥120, three tiers, US and DE contexts June / late August 1939, three
+      wordings, Gallup figures) and `src/eval/foresight.py` (forced choice, Brier per tier). Freeze first.
+- [ ] `src/eval/sanity_caqa.py` (pre-1920 ChroniclingAmericaQA subset).
+  Gate: the harness runs end to end on a baseline checkpoint in one command.
 
-## Phase 5 — the Transformer run (2026-10-25 … 11-02)
-- [ ] `src/model/transformer.py`: decoder-only, causal MHA, RMSNorm pre-norm,
-      RoPE, SwiGLU, tied embeddings, context 1024. Unit test: causal mask
-      (no future leakage), shapes, parameter count matches ladder.
-- [ ] Train on the frozen corpus (v2 if frozen, else v1) at the selected size,
-      ≤ 2 epochs. Unattended, resumable.
-- [ ] Monitor: loss curve, GPU temp, throughput; alert on NaN or stall.
-  Gate: converged before Nov 4. If not converged by Nov 2 → start next rung
-  down immediately.
+## Phase 6 — the English-only twin (2026-10-30 … 11-04)
+- [ ] Twin run on `data/shards/twin` (5080 ~121 h, or a rented H100 ~1 day: decide by 10-29).
 
-## Phase 6 — first results + progress report (2026-11-05 … 11-20)
-- [ ] Finalise and **freeze** `probes/rq1_terms.csv` (≈200 terms, controls,
-      ≥5 contexts each); write `probes/CHECKSUMS`.
-- [ ] Per-year bpb curve (Transformer + baselines overlaid); RQ1 Δ profile.
-- [ ] Retrain baselines on the final corpus if it is v2.
-- [ ] Progress report: data complete, baseline done, first Transformer
-      result. Submit by Nov 20.
+## Phase 7 — first results + progress report (… 2026-11-20)
+- [ ] Per-year bpb curves (Transformer + baselines overlaid); RQ1 Δ profile; RQ3 on the main model.
+- [ ] Progress report: data complete, baselines done, first Transformer results. Submit by Nov 20.
 
-## Phase 7 — RQ2 (2026-11-21 … 12-01)
-- [ ] Build calibration corpora ε ∈ {0.1, 0.5, 2, 10, 50} %.
-- [ ] Fit calibration map; report min. detectable ε; passage AUC.
-- [ ] `src/tools/corpus_audit`: `corpus_audit <dir> --model <ckpt>` → ε̂ ± CI.
-  Gate: tool runs on a fresh directory; `reports/rq2.md`.
+## Phase 8 — RQ2 + final report (2026-11-21 … 12-08)
+- [ ] RQ2: the same English batteries on the twin; paired differences with bootstrap CIs.
+- [ ] Qualitative completions; final report. Submit by Dec 8.
 
-## Phase 8 — RQ3 + qualitative + final report (2026-12-02 … 12-08)
-- [ ] Score propositions; per perspective × window tables.
-- [ ] Translation-dialect number (if v2 was used).
-- [ ] Qualitative completions (`Hitler died in`, etc.) — harness only.
-- [ ] Final report. Submit by Dec 8.
+## Open
+- The old RQ2 detector (`src/tools/corpus_audit`): dropped from the proposal; drop or keep as an extension
+  (decide before November).

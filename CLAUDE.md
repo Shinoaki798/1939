@@ -112,9 +112,10 @@ probes/
   CHECKSUMS
 data/                   gitignored: raw/ dedup/ filtered/ translated/ tokenized/
 src/
-  data/     ingest, dedup, ocr_quality, splits, translate, tokenizer
-  model/    transformer.py (one architecture: main run + twin), rnn.py, lstm.py, gru.py, ngram.py
-  train/    train.py, resume.py
+  data/     ingest, select, dedup, splits, para_dedup, filter, mixture, tokenizer, tokenize_corpus, stream
+  model/    transformer.py (one architecture: main run + twin), recurrent.py (RNN/LSTM/GRU), ngram.py,
+            loss.py (chunked cross-entropy), build.py
+  train/    train.py (resumable; --resume)
   eval/     bpb_by_year.py, probes.py (RQ1), detector.py (RQ2), foresight.py (RQ3), sanity_caqa.py
   tools/    corpus_audit CLI (the RQ2 deliverable)
 scripts/                remote-box helpers (remote_pull.sh)

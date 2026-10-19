@@ -86,3 +86,14 @@ Each entry: problem → cause → fix → effect. Material for the "challenges" 
 21. **TinyTeX `tlmgr update --self` fails on Windows** ("failed to rename temp\updater-w32"; the old
     repository mirror also had no verified key). → Missing packages unpacked from the TeX Live archive on
     CTAN into `texmf-local`.
+
+22. **Autocast silently runs cuDNN RNNs in float16** even under `torch.autocast(dtype=torch.bfloat16)`; without a
+    gradient scaler, fp16 gradients can underflow and training degrades without an error. Found when evaluation
+    (outside autocast) failed on Half x Float. -> The recurrent baselines run the recurrence on bf16 copies of the
+    fp32 weights (`torch.func.functional_call` with autocast off); same speed.
+
+23. **Stream build memory**: 25M article ids as Python strings in pandas took the WSL guest to 33 GB. -> Ids hashed
+    to 64 bits per file as they are read; only numeric columns kept; Arrow strings only for `order.parquet`.
+
+24. **KenLM vs Boost 1.90**: CMake no longer finds a `boost_system` component (header-only since 1.69). -> Dropped it
+    from KenLM's `find_package` list on the box.

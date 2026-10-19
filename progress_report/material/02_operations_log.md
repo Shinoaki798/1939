@@ -218,3 +218,26 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
   5-gram with default estimation on the full stream does not fit the 40 GB WSL limit; ~1B tokens does
   (trie ~18 GB, temporary ARPA ~80 GB).
 - Host disk: Windows C: 552 GB free; WSL ext4 200 GB free. KenLM, cmake and g++ are not installed on the box.
+
+## 2026-10-19 — baselines branch: code, shards, KenLM, resume tests
+- Branch `model/baselines`: `src/data/stream.py` (order, packing, shards, Val slices), `src/model/{loss,recurrent,
+  transformer,build,ngram}.py`, `src/train/train.py`, `src/eval/bpb_by_year.py`, configs `stream.yaml`,
+  `eval.yaml`, scripts `baselines_run.sh`, `ngram_run.sh`, `resume_test.sh`; tests for stream, models, training
+  (resume exactness on CPU) and per-year bpb (21 pass on the 5080).
+- Stream dry runs on the box: the first version kept 25M article ids as Python strings and reached 33 GB in WSL
+  (5 GB available) -> stopped, rewritten with 64-bit id hashes and numeric columns (peak ~18 GB). One duplicate id
+  among tokenized train documents (`dingler_mi311is12`, two different Dingler articles) -> rows matched on id and
+  token count.
+- Shards written (46 GB): main 23,715,840 document copies, 11,999,913,510 tokens, 2,929,666 rows of 4,096, halves
+  6.0007B / 5.9992B, two copies of a parent at least 3.1M tokens apart (1 % 851M, median 6.0B); twin 31,131,396
+  copies, 2,929,664 rows (exactly 45,776 steps x 64 rows); Val slices: English (American Stories) 34,817 documents
+  8.0M tokens, German 686 pages 4.0M tokens.
+- Per-year bpb sets built: English (American Stories, holdout) 222,843 documents 51.9M tokens 1900-1955; German
+  7,328 pages 41.0M tokens 1900-1945.
+- KenLM built from source in WSL (apt: build-essential, cmake, boost, compression libs). Boost 1.90 has no
+  `boost_system` CMake component -> removed from KenLM's CMakeLists; Python module installed from the same source.
+- Resume test LSTM (real model and stream, checkpoint every 100, SIGKILL at step 150, resume to 350): losses of the
+  resumed steps 110-150 identical to the killed run's; Val after 350 steps (92M tokens): English 2.890 bpb.
+  The first attempt found two bugs: evaluation outside autocast multiplied fp16 hidden states by fp32 weights, and
+  autocast runs cuDNN RNNs in float16 even when bfloat16 is asked for (no loss scaling here). Fixed: the recurrence
+  runs in bf16 on bf16 copies of the fp32 weights; evaluation casts to the weight dtype. Speed unchanged (~189k tok/s).
