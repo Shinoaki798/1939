@@ -4,7 +4,7 @@ KenLM with its default estimation (lmplz: modified Kneser-Ney, no pruning) on th
 tokens of the main stream (config/model_ladder.yaml, ngram_kn5), stored as a binary trie (exact, no
 quantisation). The full 12B-token stream would hold ~13.6B distinct n-grams, far beyond the box's memory.
 Token ids are written as words, one document per line (the stream's <|endoftext|> separates documents),
-and piped straight into lmplz; the ARPA file is deleted once the binary is built.
+and piped straight into lmplz; the ARPA output is gzipped on the fly and deleted once the binary is built.
 
     python -m src.model.ngram --name ngram_kn5 [--tokens 1e9] [--memory 50%]
 Output in runs/<name>/: config.yaml, data_manifest.json, git_sha.txt, env.txt, lmplz.log, model.binary.
@@ -67,21 +67,24 @@ def main() -> None:
     stream = Stream(repo_path(cfg["shards"]) / "main")
     tmp = repo_path(cfg["data_root"]) / "kenlm_tmp"
     tmp.mkdir(parents=True, exist_ok=True)
-    arpa, binary = tmp / f"{args.name}.arpa", run_dir / "model.binary"
+    arpa, binary = tmp / f"{args.name}.arpa.gz", run_dir / "model.binary"   # gzip: ~70 GB of ARPA text otherwise
     run = {"name": args.name, "model": spec, "train_tokens": tokens, "stream": "main", "memory": args.memory,
-           "lmplz": f"lmplz -o {spec['order']} -S {args.memory} -T {tmp} --arpa <arpa>",
-           "build_binary": f"build_binary -S {args.memory} -T {tmp} trie <arpa> model.binary"}
+           "lmplz": f"lmplz -o {spec['order']} -S {args.memory} -T {tmp} | gzip -1 > <arpa.gz>",
+           "build_binary": f"build_binary -S {args.memory} -T {tmp} trie <arpa.gz> model.binary"}
     (run_dir / "config.yaml").write_text(yaml.safe_dump(run, sort_keys=False), encoding="utf-8")
     sha = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True, cwd=repo_path(".")).stdout.strip()
     (run_dir / "git_sha.txt").write_text(sha + "\n", encoding="utf-8")
     t0 = time.time()
     with open(run_dir / "lmplz.log", "wb") as log:
-        p = subprocess.Popen([f"{bindir}/lmplz", "-o", str(spec["order"]), "-S", args.memory, "-T", str(tmp),
-                              "--arpa", str(arpa)], stdin=subprocess.PIPE, stderr=log)
-        counts = export(stream, tokens, p.stdin)
-        p.stdin.close()
-        if p.wait():
-            raise SystemExit(f"lmplz failed ({p.returncode}); see {run_dir / 'lmplz.log'}")
+        with open(arpa, "wb") as gz_out:
+            p = subprocess.Popen([f"{bindir}/lmplz", "-o", str(spec["order"]), "-S", args.memory, "-T", str(tmp)],
+                                 stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=log)
+            z = subprocess.Popen(["gzip", "-1"], stdin=p.stdout, stdout=gz_out)
+            p.stdout.close()                         # gzip holds the read end
+            counts = export(stream, tokens, p.stdin)
+            p.stdin.close()
+            if p.wait() or z.wait():
+                raise SystemExit(f"lmplz ({p.returncode}) or gzip ({z.returncode}) failed; see {run_dir / 'lmplz.log'}")
         log.write(f"\n--- build_binary after {time.time() - t0:.0f}s ---\n".encode())
         log.flush()
         b = subprocess.run([f"{bindir}/build_binary", "-S", args.memory, "-T", str(tmp), "trie", str(arpa), str(binary)],
