@@ -1,0 +1,10 @@
+{
+ "stream": "main",
+ "stream_manifest_sha256": "e2030e139f2a94153be7042a516b131dd824c374d221090a6686fca5baf3e797",
+ "first_tokens": 1000000000,
+ "documents": 1989211,
+ "tokens": 998010790,
+ "arpa_bytes": 18047956159,
+ "binary_bytes": 16813517833,
+ "seconds": 1820
+}

@@ -252,3 +252,9 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
 - Resume-test checkpoints on the 5080 deleted (9.1 GB; user OK). The KenLM job was restarted with the ARPA
   output gzipped on the fly (`src/model/ngram.py`): uncompressed ARPA for ~1.7B n-grams is ~70 GB and the box has
   ~150 GB free beside the shards. Smoke test on 2M tokens: binary loads and scores. Relaunched; watcher restarted.
+- KenLM 5-gram finished in 30 min (1B tokens, 1,989,211 documents): 2- to 5-grams 47.8M / 285M / 571M / 765M
+  (1.67B, matching the extrapolated 1.72B); trie binary 16.8 GB; gzipped ARPA 18.0 GB (deleted). Per-year English
+  bpb: 1.99 (1900), 1.75 (1935, lowest), 1.79 (1939), 1.88 (1940), 2.03 (1945), 2.08 (1955) -> `reports/ngram_kn5/`.
+- LSTM probes: lr 5e-4 Val English 2.648 bpb; lr 1e-3 stuck near loss 7.65 from step 100 (2.893); lr 2e-3 the same
+  by step 160. Queue stopped at that unfinished probe, grid extension deployed, queue relaunched (finished probes
+  skipped, the interrupted one restarted).

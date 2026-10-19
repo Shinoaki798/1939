@@ -1,0 +1,37 @@
+=== 1/5 Counting and sorting n-grams ===
+File stdin isn't normal.  Using slower read() instead of mmap().  No progress bar.
+Unigram tokens 998010790 types 49079
+=== 2/5 Calculating and sorting adjusted counts ===
+Chain sizes: 1:588948 2:1615122816 3:3028355328 4:4845368320 5:7066162688
+Statistics:
+1 49079 D1=0.238095 D2=1.64286 D3+=0.380952
+2 47829192 D1=0.678315 D2=1.0933 D3+=1.44819
+3 285245812 D1=0.808249 D2=1.13121 D3+=1.36151
+4 571359355 D1=0.886521 D2=1.1851 D3+=1.34749
+5 765126240 D1=0.915104 D2=1.20976 D3+=1.29766
+Memory estimate for binary LM:
+type       MB
+probing 33836 assuming -p 1.5
+probing 39011 assuming -r models -p 1.5
+trie    16034 without quantization
+trie     8869 assuming -q 8 -b 8 quantization 
+trie    13716 assuming -a 22 array pointer compression
+trie     6551 assuming -a 22 -q 8 -b 8 array pointer compression and quantization
+=== 3/5 Calculating and sorting initial probabilities ===
+Chain sizes: 1:588948 2:765267072 3:3255035904 4:5208057344 5:7595083776
+=== 4/5 Calculating and writing order-interpolated probabilities ===
+Chain sizes: 1:588948 2:765267072 3:3037385472 4:4859816960 5:7087233024
+=== 5/5 Writing ARPA model ===
+Name:lmplz	VmPeak:17421964 kB	VmRSS:7288 kB	RSSMax:16436460 kB	user:911.311	sys:284.638	CPU:1195.95	real:899.75
+
+--- build_binary after 900s ---
+Reading /home/an/1939/data/kenlm_tmp/ngram_kn5.arpa.gz
+----5---10---15---20---25---30---35---40---45---50---55---60---65---70---75---80---85---90---95--100
+****************************************************************************************************
+Identifying n-grams omitted by SRI
+----5---10---15---20---25---30---35---40---45---50---55---60---65---70---75---80---85---90---95--100
+****************************************************************************************************
+Writing trie
+----5---10---15---20---25---30---35---40---45---50---55---60---65---70---75---80---85---90---95--100
+****************************************************************************************************
+SUCCESS

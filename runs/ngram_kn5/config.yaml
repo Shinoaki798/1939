@@ -1,0 +1,11 @@
+name: ngram_kn5
+model:
+  name: ngram_kn5
+  type: kenlm
+  order: 5
+  train_tokens: 1000000000.0
+train_tokens: 1000000000
+stream: main
+memory: 40%
+lmplz: lmplz -o 5 -S 40% -T /home/an/1939/data/kenlm_tmp | gzip -1 > <arpa.gz>
+build_binary: build_binary -S 40% -T /home/an/1939/data/kenlm_tmp trie <arpa.gz> model.binary
