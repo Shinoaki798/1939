@@ -39,7 +39,7 @@ def loss_sum(hidden: torch.Tensor, weight: torch.Tensor, targets: torch.Tensor, 
 
 
 @torch.no_grad()
-def token_nll(hidden: torch.Tensor, weight: torch.Tensor, targets: torch.Tensor, chunk: int = CHUNK) -> torch.Tensor:
+def token_nll(hidden: torch.Tensor, weight: torch.Tensor, targets: torch.Tensor, chunk: int = 4096) -> torch.Tensor:
     """Per-position cross-entropy in nats, same shape as targets; 0 where the target is ignored."""
     h, t = hidden.reshape(-1, hidden.shape[-1]).to(weight.dtype), targets.reshape(-1)   # bf16 hidden, fp32 weight
     out = [F.cross_entropy((h[i:i + chunk] @ weight.t()).float(), t[i:i + chunk], reduction="none", ignore_index=-1)
