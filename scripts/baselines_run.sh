@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Recurrent baselines on the 5080 (decisions 2026-10-19, TASKS Phase 4). Start through WMI so it outlives SSH:
 #   (echo '$Script = "baselines_run.sh"'; cat scripts/start_download.ps1) | ssh gpu 'powershell -NoProfile -Command -'
-# 1. LR probes: RNN, LSTM, GRU x lr {5e-4, 1e-3, 2e-3}, 200M tokens each (warmup 100 steps).
+# 1. LR probes: RNN, LSTM, GRU x lr {5e-4, 1e-3, 2e-3}, 200M tokens each (warmup 100 steps); when the best
+#    is the lowest lr tried, half of it is probed too (at most three times).
 # 2. Per model the probe lr with the lowest final Val (English) bpb; the full 12B-token run, then the per-year
 #    bpb evaluation. Order LSTM, GRU, RNN. Safe to restart: finished probes are skipped, a full run with
 #    checkpoints is resumed, a finished one is skipped.
@@ -37,25 +38,34 @@ train() {  # name, then new-run arguments
   fi
 }
 
-for m in lstm_50m gru_50m rnn_50m; do
-  for lr in 5e-4 1e-3 2e-3; do
-    train "probe_${m}_lr${lr}" --model "$m" --lr "$lr" --tokens 200e6 --warmup-steps 100 || echo "!! probe ${m} ${lr} failed"
-  done
-done
-
-for m in lstm_50m gru_50m rnn_50m; do
-  best=$($PY - "$m" <<'PYEOF'
+probe_choice() {  # model -> "best_lr lowest_lr" over finished probes; writes runs/probe_<m>_choice.json
+  $PY - "$1" <<'PYEOF'
 import json, sys
 from pathlib import Path
 m, res = sys.argv[1], {}
 for p in Path("runs").glob(f"probe_{m}_lr*/log.jsonl"):
     vals = [json.loads(l) for l in p.open() if "val_en_bpb" in l]
-    if vals:
+    if vals and vals[-1]["step"] == 762:
         res[p.parent.name.split("_lr")[1]] = vals[-1]["val_en_bpb"]
-print(min(res, key=res.get) if res else "")
 json.dump(res, open(f"runs/probe_{m}_choice.json", "w"))
+print(f"{min(res, key=res.get)} {min(res, key=float)}" if res else "")
 PYEOF
-)
+}
+
+for m in lstm_50m gru_50m rnn_50m; do
+  for lr in 5e-4 1e-3 2e-3; do
+    train "probe_${m}_lr${lr}" --model "$m" --lr "$lr" --tokens 200e6 --warmup-steps 100 || echo "!! probe ${m} ${lr} failed"
+  done
+  for _ in 1 2 3; do                      # extend the grid downwards while the lowest lr is the best
+    read -r best low <<< "$(probe_choice "$m")"
+    [ -n "$best" ] && [ "$best" = "$low" ] || break
+    half=$($PY -c "print(f'{float(\"$low\") / 2:g}')")
+    train "probe_${m}_lr${half}" --model "$m" --lr "$half" --tokens 200e6 --warmup-steps 100 || { echo "!! probe ${m} ${half} failed"; break; }
+  done
+done
+
+for m in lstm_50m gru_50m rnn_50m; do
+  read -r best _ <<< "$(probe_choice "$m")"
   if [ -z "$best" ]; then echo "!! no finished probe for $m"; continue; fi
   echo "-- $m: lr $best ($(cat runs/probe_${m}_choice.json))"
   train "$m" --model "$m" --lr "$best" || { echo "!! $m failed $(date -Is)"; continue; }
