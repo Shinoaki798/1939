@@ -188,7 +188,7 @@ def summarize(order: pd.DataFrame, names: dict) -> dict:
     cells = [{"half": int(h), "lang": names["lang"][l], "period": names["period"][p], "source": names["source"][s],
               "tokens": int(v)} for (h, l, p, s), v in by.items()]
     first = t.groupby(["parent_code", "copy"])["start"].min().unstack()
-    gap = (first[1] - first[0]).dropna().to_numpy() if 1 in first.columns else np.zeros(0)
+    gap = (first[1] - first[0]).dropna().abs().to_numpy() if 1 in first.columns else np.zeros(0)
     q = np.percentile(gap, [0, 1, 50]) if len(gap) else [0, 0, 0]
     return {"cells": cells, "tokens_by_half": {int(k): int(v) for k, v in t.groupby("half")["tok"].sum().items()},
             "copies_gap_tokens": {"parents_seen_twice": int(len(gap)), "min": int(q[0]), "p1": int(q[1]),
