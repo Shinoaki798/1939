@@ -283,3 +283,13 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
   1935 1.459 (lowest), 1939 1.489, 1940 1.542, 1945 1.678, 1955 1.706 -- ~0.3 bpb below the 5-gram everywhere, same
   shape (lowest mid-1930s, rising after 1939). German 1935 1.735, 1939 1.829, 1940 1.606 (the German 1940s sample is
   small and from few titles; to check). GRU started 07:47 (lr 2e-3, ~196k tok/s). Monitoring every 2 h (user).
+- 2026-10-20 18:10: corpus v1 frozen (`reports/corpus_freeze_2026-10-20.json`: sha256 of the filtered, tokenized,
+  mixture, shard, eval-set and tokenizer manifests). Then, on the user's instruction, the WSL cleanup: manifests of the
+  deleted stages packed into `reports/manifests_deleted_stages_2026-10-20.tar.xz` (142 files); deleted data/selected
+  (49 GB), dedup (34), para_dedup (43), ingested (115), foreign/de/ingested (50), raw (251), foreign/de/raw (69), and
+  the older LSTM checkpoint. WSL disk: 813 GB used -> 206 GB (751 GB free). The VHD on Windows stays at 888 GB until
+  it is compacted (needs `wsl --shutdown`; after the baselines). Not touched, pending the user: ~/models
+  (DeepSeek-Prover-V2-7B, 20 GB) and ~/venvs (cc, quant, vllm; 9 GB), both from 2026-10-15, not this project.
+- Windows side, read-only survey for the user: C: 1,450 GB used. Hidden C:\3b41550f... (2 GB of .m3u8/.ts segments,
+  written at night) is Tencent Video's P2P cache (`%APPDATA%\Tencent\QQLive\p2plive.ini: video_dir=...`;
+  QQLiveService runs as LocalSystem, auto-start). NetEase CloudMusic wrote 92 GB in 2.5 days. Reported to the user.

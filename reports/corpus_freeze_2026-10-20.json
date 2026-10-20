@@ -1,0 +1,24 @@
+{
+ "frozen_at": "2026-10-20T22:15:53+00:00",
+ "git_sha": "7317db71dcce44e2e726859a36ede324e365a54d",
+ "note": "corpus v1 final (user, 2026-10-20); cleaning intermediates and training-source raw downloads deleted after this record; their manifests are in reports/manifests/",
+ "sha256": {
+  "data/eval/bpb_by_year/de.parquet": "b26dc60ba722ecb057db4397cd49e32709bd9649826007495c0c4a9d07ef5d65",
+  "data/eval/bpb_by_year/en.parquet": "522290378170ba1dffc379aea96eb4f54024b3ff7ca3e632a24ebd75ddc7685a",
+  "data/filtered/de/MANIFEST.json": "e1d79c4745fcac61ca41d64d0ddb21c167df6d59067b984f2e35cf3822a8743c",
+  "data/filtered/en/MANIFEST.json": "7b4c12b43f1eabb5bb37f032a17cd65e38239cdcea4fb6a35d038b07b377e9e3",
+  "data/mixture/MANIFEST.json": "649e17855f014662cc7613bbf0e089fdf7479f80e1284ac6a7ec99ff8bd3712d",
+  "data/mixture/MANIFEST_twin.json": "1b633124f6879824bcb11fba32a25ee1106e3020e5797774002fc08d6d0a5e4d",
+  "data/shards/main/MANIFEST.json": "e2030e139f2a94153be7042a516b131dd824c374d221090a6686fca5baf3e797",
+  "data/shards/twin/MANIFEST.json": "432223984c81aefa48ce4fa9d4096fdbc67f45d4fca7c13da9a8d08fbcfce2cf",
+  "data/shards/val/MANIFEST.json": "dacc175fd7b2bebb3cccc2a65812934c10e0bb4176fe2245644df8c00001192d",
+  "data/tokenized/MANIFEST.json": "4a22068cac3e0aae2ec5b531f00267b8e268aa262cc2120e44492afaeb3ed90a",
+  "data/tokenizer/bpe_32768/MANIFEST.json": "7eecccbc1c8b500014b92e47b76cfd710a444f700eb0b6c538b553b0496676e6",
+  "data/tokenizer/bpe_32768/tokenizer.json": "b086b7a74f6e8336554288c377429dd8411cd5fcb6145b477f8997255a852484",
+  "data/tokenizer/bpe_49152/MANIFEST.json": "8b1002aa212e40c47b6743f9f2392434f37ed0099d51ad1e13b6f28604c42d47",
+  "data/tokenizer/bpe_49152/tokenizer.json": "a5f5186e7d5810efce13f98eba5e7509547700609958de48c9508b71c817f57a",
+  "data/tokenizer/bpe_65536/MANIFEST.json": "c88a9cad24b6cc45388ca4d3db85e3fc345858ad4b80e45a400a45d44fc43dd0",
+  "data/tokenizer/bpe_65536/tokenizer.json": "205be2fa3297c30d750c052a435e0a7f6e425979a6a745a8abb35021337a32c0",
+  "data/tokenizer/sample/MANIFEST.json": "d15a0ad00e6b6ae71b15809ac79b31de3649b9195274e9c0fb923b613af51796"
+ }
+}

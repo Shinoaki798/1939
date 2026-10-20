@@ -33,10 +33,10 @@ Dates are hard (HANDOFF §4). Rewritten 2026-10-19 for the current plan (no tran
   Gate: four baselines evaluated; both resume tests passed. **Do not start Phase 4 before this gate.**
 
 ## Phase 4 — the main Transformer run (2026-10-21 … 10-26)
-- [ ] Corpus and tokenizer frozen: sha256 of the mixture, tokenized and shard manifests recorded.
-- [ ] Then (user, 2026-10-19): delete the cleaning intermediates and the training sources' raw downloads
-      (keep filtered, tokenized, mixture, shards, tokenizer, eval, lexicon, ChroniclingAmericaQA); `wsl --shutdown`,
-      sparse VHD, compact `ext4.vhdx`; restart WSL.
+- [x] Corpus and tokenizer frozen 2026-10-20 (`reports/corpus_freeze_2026-10-20.json`).
+- [x] Deleted 2026-10-20 (user):  the cleaning intermediates and the training sources' raw downloads
+      (keep filtered, tokenized, mixture, shards, tokenizer, eval, lexicon, ChroniclingAmericaQA).
+- [ ] `wsl --shutdown`, sparse VHD, compact `ext4.vhdx` (888 GB -> ~210 GB); restart WSL.
 - [ ] `src/model/transformer.py` s335m (349,225,984 parameters), lr 3e-4, 1 x 4,096 micro-batches,
       64-step accumulation, 45,776 steps (~121 h measured). Unattended, resumable, hourly checks.
 - [ ] Per-year bpb of the main model.
