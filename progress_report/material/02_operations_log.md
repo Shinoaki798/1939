@@ -265,3 +265,21 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
   `ext4.vhdx` is 888 GB and does not shrink when files are deleted inside WSL (compaction needs `wsl --shutdown`).
   Kept, pending the user: pipeline intermediates only needed to rerun cleaning (selected 49 GB, dedup 34 GB,
   para_dedup 43 GB, English ingested 115 GB, German ingested 50 GB); raw downloads stay (user rule).
+- Probes (Val English bpb after 200M tokens): LSTM 5e-4 2.648 / 1e-3 2.893 (stuck at the unigram plateau all
+  through) / 2e-3 2.557 (stuck until ~step 500, then fell); GRU 5e-4 2.401 / 1e-3 2.291 / 2e-3 2.171; RNN 5e-4
+  2.454 / 1e-3 2.859 / 2e-3 running. GRU's best is the top of the grid; not extended upwards: a 762-step probe
+  favours large rates, and 2e-3 is already high for 45,776 steps. LSTM -> 2e-3, GRU -> 2e-3.
+- RNN probes: 2e-3 2.878; the grid extended downwards as planned: 2.5e-4 2.449 (best), 1.25e-4 2.619 (stop).
+  Choices: LSTM 2e-3, GRU 2e-3, RNN 2.5e-4. Full LSTM run started 12:29 (box time), ~188k tok/s, ~17.7 h.
+- 2026-10-19 23:35: the user's 5-hour usage runs out until 02:30. Monitoring handed to a scheduled task in the Claude
+  app (`monitor-5080-baselines`, hourly; runs before 02:30 exit at once; relaunches the queue if it dies; never
+  deletes data, changes settings or starts the main run). This session's own watcher stopped. LSTM at step ~24,500
+  (Val English 1.571 / German 2.053 at step 24,000).
+- 2026-10-19 23:45: user prefers a cloud agent (own credit) for monitoring: the scheduled task was deleted (prompt file
+  removed too) and a monitoring-only prompt was written for the cloud agent (watch, report, kill hung project
+  processes; no relaunch, no deletion, no settings changes).
+- 2026-10-20 07:38: LSTM baseline finished (45,776 steps, 12.0B tokens, lr 2e-3, 19 h 9 min incl. evals): final Val
+  English 1.5446 bpb, German 2.0206. Per-year bpb written 07:46 (`reports/lstm_50m/`): English 1900 1.646, 1920 1.589,
+  1935 1.459 (lowest), 1939 1.489, 1940 1.542, 1945 1.678, 1955 1.706 -- ~0.3 bpb below the 5-gram everywhere, same
+  shape (lowest mid-1930s, rising after 1939). German 1935 1.735, 1939 1.829, 1940 1.606 (the German 1940s sample is
+  small and from few titles; to check). GRU started 07:47 (lr 2e-3, ~196k tok/s). Monitoring every 2 h (user).
