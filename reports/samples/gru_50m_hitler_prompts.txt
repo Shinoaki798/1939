@@ -1,0 +1,25 @@
+{"run": "gru_50m", "checkpoint": "step_045776.pt", "step": 45776}
+====================================================================================================
+PROMPT: 'Who is Hitler' tokens: ['Who', 'Ġis', 'ĠHitler']
+[greedy] '?\n\n\nA. The German people are not\ngoing to be a German.\n\n\nA. The German people are\nnot the German people.\n\n\nQ. What is the German\nlanguage?\n\n\nA. The German people are\nnot German.\n\n\n@. What is the'
+[sample 1] '?\n\n\nWho is that there are\nthings in which, too?\nWhat we want to do is to\nget some money back\ninto the hands of the\nUnited States and to\nmake good.\n\n\nOur whole world looks\nlike an English-speaking\nrace.'
+[sample 2] ', the great German\n\n\nleader, is the most powerful leader\n\n\nin Italy. He is a world in an ac-\n\n\ntorious position under the leadership\nof Hitler.\n\n\nThe Italian government has re-\nquested its members to meet a con-\ntinct and say'
+[sample 3] '? No man is not\nso called on the American people.\n\n\nThis is the story of the war in\nAustria"\n\n\nThe war-time war, as it has been\nsaid, is the first of two new wars\nin history.\n\n\nA nation is a war.'
+====================================================================================================
+PROMPT: 'Q: Who is Hitler A:' tokens: ['Q', ':', 'ĠWho', 'Ġis', 'ĠHitler', 'ĠA', ':']
+[greedy] ' Hitler?\n\n\nA. The Nazi government is the\nonly one in Germany.\n\n\nQ. What is the name of the\nGermans?\n\n\nA. The German government is\nthe German government.\n\n\nQ. What is the name of the\nGerman government?\n\n\n'
+[sample 1] " Hitler?\n\n\nA-N-B Hitler. 1t Is 1t to be\ngoverned to meet Hitler's son-in-\nlaw and German or Nazi leader.\n\n\nQ.-What is the name, in the\nname of Hitler?-C. S."
+[sample 2] '\n\n\nThe Hitler regime has become\nthe one most important Of those\nwho like to take the life of the\nman who is the youngest of the\nGermans.\n\n\nI. When the Hitlerites have\nbeen fired for years, it is their\ntask to bring new ideas against'
+[sample 3] ' Hitler?\n10. Is.\n1928-Hitler, Hitler? 15. Is there\nfore?\n\n\ng. What is the first Hitler to\nserve Hitler?\n\n\n10. When Hitler is under Hitler\nHitler has Hitler, Hitler and Hitler?\n\n\n'
+====================================================================================================
+PROMPT: 'who is hitler' tokens: ['who', 'Ġis', 'Ġhit', 'ler']
+[greedy] ', is the only one who\nhas been in the game.\n\n\nThe game is a good game, and\nthe game is not far from the game\nand the game is not far from the\ngame.'
+[sample 1] ', is the only one to gain\nmore weight in the number of\nvictories which are at the National\nopen this season.\n\n\nHe is the only one OF the finest\nplayers in the nation, according to\nHarry A. Tinkins, who is playing\nat the National'
+[sample 2] '. The team is in fine\nshape.\n\n\nThe boys team, under the direction\nof Mr.. j. S. Leggett, will work out\nabout the boys this year and will\nplay in the boys boys, girls, team\nof girls with fine work.\n\n\n'
+[sample 3] ', in spite of the fact that\nhe is the only man who has a chance\nto win the pennant.\n\n\nThat is the way it looks like the\nnew old team that is being played\nhere. The new ball is about 70 yards\nand the ball is played and'
+====================================================================================================
+PROMPT: 'who is Hitler' tokens: ['who', 'Ġis', 'ĠHitler']
+[greedy] "'s new minister,\nand who is now in the midst of\nthe great war, is the first to\nbe elected.\n\n\nThe first of the new members\nof the cabinet is the new presi-\ndent, DR.. William H. King, who\nhas been elected president of"
+[sample 1] "'s new minister, but he\nis not. The German secretary he has\nbeen a minister of justice to the\nGerman ambassador.\n\n\nIn the meantime, the foreign office\nis not a minister or minister, but\nmany of those who have come to\nWashington will be in position to"
+[sample 2] ', and he is a Jew\nwho is a Jewish.\n\n\nThere are Hitler and Hitler\nwho are at liberty to sign the\nconstitution and the American\npeople.\n\n\nThey are going to support\nHitler.\n\n\nIn 1887 Hitler told Hitler and\nHitler against'
+[sample 3] "'s chief\nis the British prime minister.\n\n\nAt least the British have\nbeen a little over 40 years since\nthe British Parliamentary\ncabinet was a success.\n\n\nIt is a wonder that these\npeople are all so happy as it\ncan be.\n\n\nA"

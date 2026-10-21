@@ -1,0 +1,25 @@
+{"run": "lstm_50m", "checkpoint": "step_045776.pt", "step": 45776}
+====================================================================================================
+PROMPT: 'Who is Hitler' tokens: ['Who', 'Ġis', 'ĠHitler']
+[greedy] '?\n\n\nThe German government is\nmaking a speech in the United\nStates.\n\n\nThe German government is\nmaking a speech in the United\nStates.\n\n\nThe German government is\nmaking a speech in the United\nStates.\n\n\nThe German government is\nmaking a speech in'
+[sample 1] '?\n\n\nThe British are proud of the\nfact that Americans have\nbroken up the front of the\nGerman Army and to the\nsoldiers who have been\nwounded"\n\n\n"A very few" says the\nBritish war correspondent,\n"and since the French has\nbeen fighting for'
+[sample 2] "'s father-in-law?\n\n\nSir Arthur Brisbane and wife. How\nard King and Queen are all ready\nto be born?\n\n\nA. H. S.\n\n\nA. The British are the English\nlanguage. 1t is common word for\nthe young"
+[sample 3] '?\n\n\nThe American people in that coun-\ntry have in mind a few things.\nThey are:\n\n\nTHE American people are in no\nno position to find the people who\nare seeking to make a political\nparty or in political party in the\nUnited States.\n\n\n'
+====================================================================================================
+PROMPT: 'Q: Who is Hitler A:' tokens: ['Q', ':', 'ĠWho', 'Ġis', 'ĠHitler', 'ĠA', ':']
+[greedy] '\n\n\nA. The German government is\nthe first to be the most powerful\nin the world.\n\n\nQ. What is the name of the\nGermans?\n\n\nA. The German government is\nthe first to be used in the war\nagainst Germany.\n\n\nQ.'
+[sample 1] '\n\n\nA.\n\n The men are at liberty in\ncharge Of their uniforms. They are\nbaked by the government. They\nare in the army.\n\n\n@. Does the American Army\nhave a great force of attack on\nthe other.\n\n\nQ. Are the Germans in'
+[sample 2] " 0:0O-the\nAmerican league umpire?\n\n\nO'A-O'Clock in the league\nstands.\n\n\nA-Baseball.\n\n\nQ.-What is the greatest pro-\ngram of the United States in\nJapan to do,\n\n\nX. j"
+[sample 3] '\n\n\nHe is the best-warmed man.\n10. 1915.\n1929.\n1910.\n1920.\n1919.\n1911.\n1925.\n19'
+====================================================================================================
+PROMPT: 'who is hitler' tokens: ['who', 'Ġis', 'Ġhit', 'ler']
+[greedy] ', is the only man who\nhas been in the game for the past\ntwo years.\n\n\nThe game is a good one, but the\ngame is not so much as it is. The\ngame is a good one, and the game\nis not so much as it is.'
+[sample 1] ", is the man who has\nbeen hit with a baseball hit over the\nhead in his batting, if he keeps the\nball the ball he has.\n\n\nAnd, it seems to me, you are the\nmost populous Of the people.\n\n\nBut that's why it is"
+[sample 2] ". He says he's good\nenough to put in the picture but\nnever.\n\n\nThe second prize has been paid\nfor the big money, of course, $500\na year.\n\n\nTo the men that have been paid\nup, I was able to get along"
+[sample 3] ', at first base, to-\nnight, the seventh inning.\n\n\nThe Boston White Sox hit the\nfourth.'
+====================================================================================================
+PROMPT: 'who is Hitler' tokens: ['who', 'Ġis', 'ĠHitler']
+[greedy] "'s son, and his son,\nGeorge, who is the son of the late\nJohn and Mary, who is a member\nof the family, is a member of the\nfamily.\n\n\nThe funeral will be held at the\nhome of the late Mrs. Mary E.\nB"
+[sample 1] "'s son, is going back to\nParis and Paris to resume his duties\nas ambassador.\n\n\nG. 8. G.\n\n\nA. The other officers are Gen.\nJames A. Farley, president of the\nSpanish War Veterans: M. L.\nSmyra"
+[sample 2] ', who, in 1888, died\nwhen they arrived, his wife, who\nwas at their bedside, was in the\nhospital bed.\n\n\nThe mother, Mrs. Mary Eliza\nbeth johnson, will make their\nhome in st. Francis. He will be\n'
+[sample 3] '\'s\nfriend.\n\n\nThis columnist, who\nis quite a member of\nthe House of Rep\nresentatives, says:\n\n\nII want to get the\n"wake of the House"\nand make it clear\nthat the Speaker\nand the House of\nRepresentatives are\n'

@@ -293,3 +293,34 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
 - Windows side, read-only survey for the user: C: 1,450 GB used. Hidden C:\3b41550f... (2 GB of .m3u8/.ts segments,
   written at night) is Tencent Video's P2P cache (`%APPDATA%\Tencent\QQLive\p2plive.ini: video_dir=...`;
   QQLiveService runs as LocalSystem, auto-start). NetEase CloudMusic wrote 92 GB in 2.5 days. Reported to the user.
+- 2026-10-20 18:30 (user's Windows housekeeping on the 5080): Tencent Video and MuMu had already been uninstalled by
+  the user when I came to stop the QQLive service; I removed the leftovers (Tencent Video program folder 1.6 MB, MuMu's
+  stale autostart entry). The 2 GB P2P cache folder was gone. C: free 412 -> 452 GB. ~/models (DeepSeek-Prover) kept:
+  it belongs to the user's "5080 连接方式" session (Desktop\Rate, a theorem-prover project, 2026-10-15).
+- 2026-10-20 21:33: paused for the user's own GPU use: queue and GRU trainer stopped right after the step-33,000
+  checkpoint (Val English 1.538 bpb), watcher stopped; GPU back to 2.6 GB / 0 %. To resume: relaunch
+  scripts/baselines_run.sh through start_download.ps1 (LSTM skipped, GRU resumes from step_033000.pt).
+- 2026-10-21 00:00: user: from 03:00 check every 30 min and resume training if nobody uses the GPU. Waiter on the
+  box (`~/scratch/wait_gpu_idle.sh 03:00 4500`: 2-min sample, free = mean utilisation < 10 % and memory < 4.5 GB;
+  each check logged to ~/scratch/wait_gpu.log); it wakes me when the GPU is free, then I relaunch the queue.
+- 2026-10-21 00:59: user: the 5080 is free; waiter stopped, queue relaunched (WMI); GRU resumed from step_033000.pt
+  at step 33,000 (pause 21:33 -> 00:59, 3 h 26 min). Two-hour watcher restarted.
+- 2026-10-21 02:46: the 5080 went offline (Tailscale: offline, last seen 02:47; SSH timeouts); watcher and the
+  GRU-sampling waiter failed with SSH 255. GRU was near step 37,500. Local reachability check started (every
+  minute, up to 6 h); on return: check boot time, WSL and the queue, resume from the last checkpoint.
+- 2026-10-21 04:32: 5080 back. Cause: unexpected power-off at 02:42:18 (EventLog 6008; Kernel-Power 41 with
+  BugcheckCode 0, no power-button press); no bugcheck, dump, WHEA or nvlddmkm event; nothing logged 02:20-02:42 ->
+  hard hang or power loss under GPU load (~290 W). Booted again 04:01. Same pattern 2026-10-17 07:59 and 22:48 and
+  in August (6008 history). The GRU log ended in NUL bytes (unflushed tail): truncated to the last full line (step
+  37,360; copy kept in ~/scratch/gru_log_before_fix.jsonl); step_037000.pt and step_036500.pt verified (load, finite,
+  optimiser state). Queue relaunched 04:34, GRU resumed at step 37,000; watcher and GRU-sampling waiter restarted.
+- 2026-10-21 ~08:00: the 5080 is unreachable again (SSH and `tailscale ping` time out; last healthy check 06:35,
+  GRU at step 41,490). Second outage in ~5.5 h. 45-min reconnect task started; on return: same diagnosis, log
+  repair, resume.
+- 2026-10-21 08:07: the second "outage" was a network drop only (Tailscale relay "sfo"; tailscale ping timed out
+  ~07:55-08:06): no reboot since 04:01, no new 6008/41, GRU kept training (step 44,910 at 08:07). Watcher and
+  GRU-sampling waiter restarted.
+- 2026-10-21 08:39: GRU baseline finished (lr 2e-3; final Val English 1.5257, German 2.0041; LSTM 1.5446 / 2.0206).
+  Per-year English: 1900 1.630, 1920 1.572, 1935 1.438 (lowest), 1939 1.469, 1940 1.524, 1945 1.661, 1955 1.691.
+  RNN started 08:39 (lr 2.5e-4). Samples for the user's four "Hitler" prompts (greedy + 3 at T=0.8, top-k 40, CPU)
+  for LSTM and GRU saved in reports/samples/ (scripts/sample_lm.py); translated and analysed for the user.

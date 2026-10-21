@@ -97,3 +97,9 @@ Each entry: problem → cause → fix → effect. Material for the "challenges" 
 
 24. **KenLM vs Boost 1.90**: CMake no longer finds a `boost_system` component (header-only since 1.69). -> Dropped it
     from KenLM's `find_package` list on the box.
+
+25. **The 5080 powers off under sustained load** (2026-10-21 02:42 during the GRU run; also 10-17 twice and in
+    August): Kernel-Power 41 with BugcheckCode 0, no dump, no WHEA, no GPU driver reset -- a hard power loss or hang,
+    not a software crash. The training log's tail became NUL bytes (data not yet flushed). -> Checkpoints are written
+    atomically and survived; the log is truncated to its last complete line before resuming. Open: power delivery
+    (PSU, 16-pin GPU connector, wall circuit) and a GPU power cap -- the user's call.
