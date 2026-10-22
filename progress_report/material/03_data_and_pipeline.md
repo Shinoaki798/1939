@@ -43,16 +43,22 @@ words per year against ~0.25B for 1925-29: Chronicling America long covered only
 (≤ 1922). German: DDB, Europeana, Völkischer Beobachter, Chronicling America German pages; the
 German-language American Stories articles are 99 % OCR-gated (Fraktur read as Latin script).
 
-## Training mixture (seen tokens, profile 12B)
+## Training mixture (seen tokens, profile 12B; from `data/mixture/MANIFEST.json` and `data/shards/main/MANIFEST.json`)
 
-| slice | seen | of which second epoch | caps (per period) |
-|---|---|---|---|
-| 1930-1939.06 (all once, 1934-01 … 1939-06 twice) | 6.60B | 2.12B | German 25.0 %, legal 0.35B (7.1 % of English), books 0.4 % |
-| 1920-1929 (sampled, recency-ordered) | 3.45B | 0 | German 25.0 %, books 12.0 %, legal 7.8 % of English |
-| 1900-1919 (sampled) | 0.80B | 0 | German 23.0 %, books 12.0 % |
-| science EN (JSTOR, Nature, PNAS first) | 0.85B | 0 | 9.4 % of English |
-| science DE (Annalen der Physik, JFM first) | 0.30B | 0 | 10.0 % of German |
-| **total** | **12.00B** | | max 2 passes; no second epoch before 1934; no general text before 1900 |
+Corrected 2026-10-22: an earlier draft of this table (1930s 6.60B, 1920s 3.45B) predates the rule-7 revision
+of 2026-10-08; the numbers below are the ones the main run trains on.
+
+| slice | seen | of which second epoch | English | German |
+|---|---|---|---|---|
+| 1930-1939.06 (all once, 1934-01 … 1939-06 twice) | 7.37B | 2.28B | 5.53B | 1.84B (25.0 %) |
+| 1920-1929 (sampled, recency-ordered) | 2.68B | 0 | 2.01B | 0.67B (25.0 %) |
+| 1900-1919 (sampled) | 0.80B | 0 | 0.61B | 0.19B (23.8 %) |
+| science (EN: JSTOR, Nature, PNAS first; DE: Annalen der Physik, JFM first) | 1.15B | 0 | 0.85B | 0.30B |
+| **total** | **12.00B** (11,999,913,510) | **2.28B** | **9.00B** | **3.00B** |
+
+Unique tokens seen: 9.72B. Legal: 1930s 0.35B, 1920s 0.14B. 23,715,840 documents (chunks, counting both
+copies) in 2,929,666 rows of 4,096 tokens, 45 shards. Largest sources: American Stories 5.13B, Chronicling
+America 1.90B, Europeana 1.37B, DDB 1.30B, case law 0.49B, JSTOR 0.38B, pre-1929 books 0.30B.
 
 ## Text normalisation measured on the filtered data (changes per 1,000 words)
 
