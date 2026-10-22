@@ -104,3 +104,9 @@ Each entry: problem → cause → fix → effect. Material for the "challenges" 
     atomically and survived; the log is truncated to its last complete line before resuming. Closed 2026-10-22: the
     user checked the cause on their side (a tripped household breaker was the question) and decided on no change --
     no GPU power cap, no hardware work, the 5080 is used as before; checkpoints every 500 steps stay the protection.
+26. **PowerShell started through WMI is denied on the 5080** (2026-10-22): `Win32_Process.Create` of
+    `powershell.exe` (directly or via cmd) prints "Access is denied" and exits; cmd.exe and wsl.exe start fine,
+    and PowerShell run directly in the SSH session works. -> Detached jobs keep going through wsl.exe
+    (`scripts/start_download.ps1`); Windows-side admin steps (VHD compaction) are run in the SSH session or by
+    the user, not routed around the block.
+    (Upload to the 5080 is ~9 KB/s: repo updates go as a pack of only the objects the box lacks.)

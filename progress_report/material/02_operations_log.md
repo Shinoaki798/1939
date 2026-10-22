@@ -343,3 +343,21 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
   `reports/figures/baselines_v1_bpb_by_year.{png,pdf}` (`scripts/make_baselines_figure.py`) written; RNN samples
   for the four prompts saved. Phase 3 gate passed (both resume tests passed earlier). KN 5-gram Val bpb not
   computed (user said not now).
+- 2026-10-22 04:05-04:30: box repo synced to 036f3ce, then 45a589d (`scripts/main_run.sh`, run `main_s335m`).
+  Uploads to the 5080 run at ~9 KB/s (Tailscale direct, 250 ms), so an 8 MB bundle stalled; the box first wrote
+  its own identical copies of the large files into git (`git hash-object -w`) and received only a 0.46 MB pack of
+  the missing objects. VHD compaction (fstrim, `wsl --shutdown`, diskpart compact, sparse, restart) not done yet:
+  a PowerShell script started through WMI is denied on the 5080 ("Access is denied"; cmd and wsl.exe started the
+  same way run). Nothing was changed (WSL still running); the user decides how to run it. Main run not started.
+- 2026-10-22 06:30-06:43: VHD compaction run by the user in an admin PowerShell on the 5080 (commands from me):
+  `fstrim -v /` trimmed 800.1 GiB; `wsl --shutdown`; diskpart `attach vdisk readonly` / `compact vdisk` /
+  `detach vdisk`. ext4.vhdx 887.8 GiB -> 209.1 GiB (a first, interrupted attempt had taken it to 871.3 GiB);
+  C: free 560 GB -> 1,184 GB. `--set-sparse true` did not take effect (file not sparse), so later deletions
+  inside WSL need another fstrim + compact. WSL restarted 06:43 through the keepalive task (root fs 207 GB used
+  of 1007 GB). Corpus verification against the freeze record and the content-addressed names started.
+- 2026-10-22 06:44-06:46: corpus verified after the compaction: the 17 checksums of
+  `reports/corpus_freeze_2026-10-20.json` match, and all 53,296 content-addressed files (shards *.bin, tokenized
+  and filtered *.parquet) hash to their names. Main run `main_s335m` started 06:46 (`scripts/main_run.sh` via
+  WMI, code 45a589d): s335m, lr 3e-4, 1 x 4,096 micro-batches, 45,776 steps. First steps: loss 10.09 (step 10)
+  -> 9.07 (step 30), 29.5k tokens/s (~113 h of steps, end ~2026-10-27 with evaluations), GPU 59 C, 286 W,
+  13.5 GB. 2-hour heartbeat watcher running.

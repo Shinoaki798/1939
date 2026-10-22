@@ -38,7 +38,8 @@ Dates are hard (HANDOFF §4). Rewritten 2026-10-19 for the current plan (no tran
 - [x] Corpus and tokenizer frozen 2026-10-20 (`reports/corpus_freeze_2026-10-20.json`).
 - [x] Deleted 2026-10-20 (user):  the cleaning intermediates and the training sources' raw downloads
       (keep filtered, tokenized, mixture, shards, tokenizer, eval, lexicon, ChroniclingAmericaQA).
-- [ ] `wsl --shutdown`, sparse VHD, compact `ext4.vhdx` (888 GB -> ~210 GB); restart WSL.
+- [x] `wsl --shutdown`, compact `ext4.vhdx` (887.8 -> 209.1 GiB, 2026-10-22); restart WSL. Sparse VHD did not
+      take effect: later deletions inside WSL need fstrim + diskpart compact again.
 - [ ] `src/model/transformer.py` s335m (349,225,984 parameters), lr 3e-4, 1 x 4,096 micro-batches,
       64-step accumulation, 45,776 steps (~121 h measured), run `main_s335m` via `scripts/main_run.sh`.
       Unattended, resumable, checks every 2 h (user).
