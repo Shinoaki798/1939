@@ -324,3 +324,22 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
   Per-year English: 1900 1.630, 1920 1.572, 1935 1.438 (lowest), 1939 1.469, 1940 1.524, 1945 1.661, 1955 1.691.
   RNN started 08:39 (lr 2.5e-4). Samples for the user's four "Hitler" prompts (greedy + 3 at T=0.8, top-k 40, CPU)
   for LSTM and GRU saved in reports/samples/ (scripts/sample_lm.py); translated and analysed for the user.
+- 2026-10-22 02:55: Windows records for the power-offs (user asked): Reliability Monitor lists "not properly shut
+  down" at 10-17 07:59, 10-17 22:48, 10-21 02:42 (plus August); every Kernel-Power 41 has BugcheckCode 0, no dump,
+  WHEABootErrorCount 0, no power-button press; no Modern Standby transitions (firmware offers S3 only), so
+  ConnectedStandbyInProgress=true on 10-18/10-21 only marks a console/display-off state. 6008 time (02:42:18) is
+  Windows' last heartbeat; the GRU log ran to 02:47 (WSL clock), GPU 56-61 C and 242-287 W in the last readings.
+  10-17 03:58 was a requested restart (ToDesk). Board MSI X870 GAMING PLUS WIFI, Ryzen 7 9800X3D, DDR5-6000.
+  Conclusion: abrupt loss of power or a hard freeze with no warning -- power delivery (PSU protection, wall power,
+  connectors) or platform stability (memory EXPO), not software. The 5080 has been up since 10-21 04:01.
+- 2026-10-22 03:05: the user asked whether a tripped household breaker could explain the power-offs (yes: an
+  instant loss of power matches the records exactly), then confirmed the cause on their side and said to use the
+  5080 normally. Decision: no GPU power cap, checkpoints stay at every 500 steps for the main run. RNN at step
+  43,870/45,776 (188k tok/s, GPU 51 C, 253 W); its per-year evaluation follows automatically.
+- 2026-10-22 03:50: RNN baseline finished (lr 2.5e-4; final Val English 1.7107, German 2.2129); per-year bpb done
+  04:00, queue `scripts/baselines_run.sh` ended. All four baselines evaluated: English per-year minimum in 1932
+  for every model; mean 1940-55 minus mean 1930-38 = +0.19 GRU, +0.19 LSTM, +0.18 RNN, +0.25 KN 5-gram; ranking
+  GRU < LSTM < RNN < 5-gram in all 56 English years. `reports/baselines_v1.md` and
+  `reports/figures/baselines_v1_bpb_by_year.{png,pdf}` (`scripts/make_baselines_figure.py`) written; RNN samples
+  for the four prompts saved. Phase 3 gate passed (both resume tests passed earlier). KN 5-gram Val bpb not
+  computed (user said not now).

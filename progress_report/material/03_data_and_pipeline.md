@@ -71,3 +71,14 @@ German-language American Stories articles are 99 % OCR-gated (Fraktur read as La
 | 32,768 | 3.592 | 1.593 | 3.327 | 2.002 | 33.6M | 11.1 % | 0.0 % |
 | 49,152 | 3.688 | 1.551 | 3.480 | 1.914 | 50.3M | 16.7 % | 0.3 % |
 | 65,536 | 3.743 | 1.529 | 3.582 | 1.860 | 67.1M | 22.2 % | 0.7 % |
+
+## Baselines (2026-10-22, `reports/baselines_v1.md`)
+
+| model | parameters | lr | Val EN bpb | Val DE bpb | EN per-year min | EN mean 1930-38 | EN mean 1940-55 |
+|---|---|---|---|---|---|---|---|
+| GRU h832 | 49.2M | 2e-3 | 1.5257 | 2.0041 | 1.418 (1932) | 1.441 | 1.635 |
+| LSTM h800 | 49.6M | 2e-3 | 1.5446 | 2.0206 | 1.438 (1932) | 1.462 | 1.651 |
+| RNN h960 | 50.9M | 2.5e-4 | 1.7107 | 2.2129 | 1.611 (1932) | 1.635 | 1.817 |
+| KN 5-gram (first 1B tokens) | 1.7B n-grams | — | — | — | 1.737 (1932) | 1.757 | 2.011 |
+
+Recurrent runs: 12B tokens, 45,776 steps, ~187k tokens/s, ~19 h each on the 5080.

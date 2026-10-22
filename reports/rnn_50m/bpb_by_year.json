@@ -1,0 +1,1032 @@
+{
+ "run": "rnn_50m",
+ "created_at": "2026-10-22T07:51:28+00:00",
+ "sets_sha256": {
+  "en": "522290378170ba1dffc379aea96eb4f54024b3ff7ca3e632a24ebd75ddc7685a",
+  "de": "b26dc60ba722ecb057db4397cd49e32709bd9649826007495c0c4a9d07ef5d65"
+ },
+ "checkpoint": "step_045776.pt",
+ "step": 45776,
+ "rows": [
+  {
+   "lang": "en",
+   "year": 1900,
+   "documents": 1830,
+   "tokens": 424555,
+   "bytes": 1550799,
+   "bpb": 1.80449,
+   "ci_lo": 1.77685,
+   "ci_hi": 1.83113
+  },
+  {
+   "lang": "en",
+   "year": 1901,
+   "documents": 1866,
+   "tokens": 429110,
+   "bytes": 1570992,
+   "bpb": 1.78134,
+   "ci_lo": 1.75816,
+   "ci_hi": 1.80496
+  },
+  {
+   "lang": "en",
+   "year": 1902,
+   "documents": 1970,
+   "tokens": 467870,
+   "bytes": 1706329,
+   "bpb": 1.78736,
+   "ci_lo": 1.75997,
+   "ci_hi": 1.81603
+  },
+  {
+   "lang": "en",
+   "year": 1903,
+   "documents": 1925,
+   "tokens": 443621,
+   "bytes": 1641307,
+   "bpb": 1.74947,
+   "ci_lo": 1.72511,
+   "ci_hi": 1.77565
+  },
+  {
+   "lang": "en",
+   "year": 1904,
+   "documents": 2078,
+   "tokens": 472031,
+   "bytes": 1745733,
+   "bpb": 1.77398,
+   "ci_lo": 1.75161,
+   "ci_hi": 1.79973
+  },
+  {
+   "lang": "en",
+   "year": 1905,
+   "documents": 2039,
+   "tokens": 475447,
+   "bytes": 1743913,
+   "bpb": 1.78483,
+   "ci_lo": 1.76387,
+   "ci_hi": 1.80827
+  },
+  {
+   "lang": "en",
+   "year": 1906,
+   "documents": 2589,
+   "tokens": 603581,
+   "bytes": 2203164,
+   "bpb": 1.78837,
+   "ci_lo": 1.76718,
+   "ci_hi": 1.81003
+  },
+  {
+   "lang": "en",
+   "year": 1907,
+   "documents": 3091,
+   "tokens": 672177,
+   "bytes": 2513536,
+   "bpb": 1.73186,
+   "ci_lo": 1.71483,
+   "ci_hi": 1.74851
+  },
+  {
+   "lang": "en",
+   "year": 1908,
+   "documents": 3801,
+   "tokens": 857922,
+   "bytes": 3178237,
+   "bpb": 1.74202,
+   "ci_lo": 1.72643,
+   "ci_hi": 1.75882
+  },
+  {
+   "lang": "en",
+   "year": 1909,
+   "documents": 4464,
+   "tokens": 1000080,
+   "bytes": 3688225,
+   "bpb": 1.74396,
+   "ci_lo": 1.72984,
+   "ci_hi": 1.75854
+  },
+  {
+   "lang": "en",
+   "year": 1910,
+   "documents": 4378,
+   "tokens": 1000599,
+   "bytes": 3654125,
+   "bpb": 1.77073,
+   "ci_lo": 1.75324,
+   "ci_hi": 1.79119
+  },
+  {
+   "lang": "en",
+   "year": 1911,
+   "documents": 4581,
+   "tokens": 1000087,
+   "bytes": 3687040,
+   "bpb": 1.73665,
+   "ci_lo": 1.721,
+   "ci_hi": 1.75129
+  },
+  {
+   "lang": "en",
+   "year": 1912,
+   "documents": 4510,
+   "tokens": 1000212,
+   "bytes": 3704267,
+   "bpb": 1.73239,
+   "ci_lo": 1.71747,
+   "ci_hi": 1.748
+  },
+  {
+   "lang": "en",
+   "year": 1913,
+   "documents": 4433,
+   "tokens": 1000068,
+   "bytes": 3669344,
+   "bpb": 1.74453,
+   "ci_lo": 1.72824,
+   "ci_hi": 1.76233
+  },
+  {
+   "lang": "en",
+   "year": 1914,
+   "documents": 4591,
+   "tokens": 1000099,
+   "bytes": 3709289,
+   "bpb": 1.74636,
+   "ci_lo": 1.73087,
+   "ci_hi": 1.76329
+  },
+  {
+   "lang": "en",
+   "year": 1915,
+   "documents": 4490,
+   "tokens": 1000240,
+   "bytes": 3696629,
+   "bpb": 1.74352,
+   "ci_lo": 1.72687,
+   "ci_hi": 1.76078
+  },
+  {
+   "lang": "en",
+   "year": 1916,
+   "documents": 4598,
+   "tokens": 1000762,
+   "bytes": 3708067,
+   "bpb": 1.73627,
+   "ci_lo": 1.72061,
+   "ci_hi": 1.75233
+  },
+  {
+   "lang": "en",
+   "year": 1917,
+   "documents": 4538,
+   "tokens": 1000161,
+   "bytes": 3715434,
+   "bpb": 1.71885,
+   "ci_lo": 1.70427,
+   "ci_hi": 1.73346
+  },
+  {
+   "lang": "en",
+   "year": 1918,
+   "documents": 4383,
+   "tokens": 1000071,
+   "bytes": 3692517,
+   "bpb": 1.74297,
+   "ci_lo": 1.72874,
+   "ci_hi": 1.75866
+  },
+  {
+   "lang": "en",
+   "year": 1919,
+   "documents": 4256,
+   "tokens": 1000673,
+   "bytes": 3686763,
+   "bpb": 1.7358,
+   "ci_lo": 1.72043,
+   "ci_hi": 1.75238
+  },
+  {
+   "lang": "en",
+   "year": 1920,
+   "documents": 4493,
+   "tokens": 1000683,
+   "bytes": 3683024,
+   "bpb": 1.75375,
+   "ci_lo": 1.73713,
+   "ci_hi": 1.76994
+  },
+  {
+   "lang": "en",
+   "year": 1921,
+   "documents": 4314,
+   "tokens": 1000040,
+   "bytes": 3669741,
+   "bpb": 1.73967,
+   "ci_lo": 1.72322,
+   "ci_hi": 1.75875
+  },
+  {
+   "lang": "en",
+   "year": 1922,
+   "documents": 4401,
+   "tokens": 1000014,
+   "bytes": 3641652,
+   "bpb": 1.7515,
+   "ci_lo": 1.73385,
+   "ci_hi": 1.76818
+  },
+  {
+   "lang": "en",
+   "year": 1923,
+   "documents": 4510,
+   "tokens": 1000014,
+   "bytes": 3719635,
+   "bpb": 1.68285,
+   "ci_lo": 1.66801,
+   "ci_hi": 1.69682
+  },
+  {
+   "lang": "en",
+   "year": 1924,
+   "documents": 4251,
+   "tokens": 1000152,
+   "bytes": 3718279,
+   "bpb": 1.69239,
+   "ci_lo": 1.67766,
+   "ci_hi": 1.70822
+  },
+  {
+   "lang": "en",
+   "year": 1925,
+   "documents": 4592,
+   "tokens": 1000136,
+   "bytes": 3709837,
+   "bpb": 1.66822,
+   "ci_lo": 1.65453,
+   "ci_hi": 1.68184
+  },
+  {
+   "lang": "en",
+   "year": 1926,
+   "documents": 4602,
+   "tokens": 1000079,
+   "bytes": 3681004,
+   "bpb": 1.69475,
+   "ci_lo": 1.67986,
+   "ci_hi": 1.71002
+  },
+  {
+   "lang": "en",
+   "year": 1927,
+   "documents": 4409,
+   "tokens": 1000062,
+   "bytes": 3728988,
+   "bpb": 1.64761,
+   "ci_lo": 1.63435,
+   "ci_hi": 1.66102
+  },
+  {
+   "lang": "en",
+   "year": 1928,
+   "documents": 4123,
+   "tokens": 1000194,
+   "bytes": 3691778,
+   "bpb": 1.70038,
+   "ci_lo": 1.6829,
+   "ci_hi": 1.71877
+  },
+  {
+   "lang": "en",
+   "year": 1929,
+   "documents": 4240,
+   "tokens": 1000222,
+   "bytes": 3716615,
+   "bpb": 1.66532,
+   "ci_lo": 1.65009,
+   "ci_hi": 1.67956
+  },
+  {
+   "lang": "en",
+   "year": 1930,
+   "documents": 4351,
+   "tokens": 1000011,
+   "bytes": 3713525,
+   "bpb": 1.65814,
+   "ci_lo": 1.6427,
+   "ci_hi": 1.67319
+  },
+  {
+   "lang": "en",
+   "year": 1931,
+   "documents": 4385,
+   "tokens": 1000328,
+   "bytes": 3739655,
+   "bpb": 1.61724,
+   "ci_lo": 1.6032,
+   "ci_hi": 1.63274
+  },
+  {
+   "lang": "en",
+   "year": 1932,
+   "documents": 4095,
+   "tokens": 1000226,
+   "bytes": 3722728,
+   "bpb": 1.61141,
+   "ci_lo": 1.59739,
+   "ci_hi": 1.62591
+  },
+  {
+   "lang": "en",
+   "year": 1933,
+   "documents": 4186,
+   "tokens": 1000085,
+   "bytes": 3747362,
+   "bpb": 1.62029,
+   "ci_lo": 1.60571,
+   "ci_hi": 1.63572
+  },
+  {
+   "lang": "en",
+   "year": 1934,
+   "documents": 4270,
+   "tokens": 1000114,
+   "bytes": 3705940,
+   "bpb": 1.62911,
+   "ci_lo": 1.61511,
+   "ci_hi": 1.64349
+  },
+  {
+   "lang": "en",
+   "year": 1935,
+   "documents": 4260,
+   "tokens": 1000128,
+   "bytes": 3711572,
+   "bpb": 1.63336,
+   "ci_lo": 1.61932,
+   "ci_hi": 1.64752
+  },
+  {
+   "lang": "en",
+   "year": 1936,
+   "documents": 4277,
+   "tokens": 1000387,
+   "bytes": 3679524,
+   "bpb": 1.64411,
+   "ci_lo": 1.62844,
+   "ci_hi": 1.65943
+  },
+  {
+   "lang": "en",
+   "year": 1937,
+   "documents": 4506,
+   "tokens": 1000538,
+   "bytes": 3693811,
+   "bpb": 1.64962,
+   "ci_lo": 1.63392,
+   "ci_hi": 1.66546
+  },
+  {
+   "lang": "en",
+   "year": 1938,
+   "documents": 4563,
+   "tokens": 1000069,
+   "bytes": 3674916,
+   "bpb": 1.65416,
+   "ci_lo": 1.63828,
+   "ci_hi": 1.66966
+  },
+  {
+   "lang": "en",
+   "year": 1939,
+   "documents": 4360,
+   "tokens": 1000352,
+   "bytes": 3674545,
+   "bpb": 1.66054,
+   "ci_lo": 1.64381,
+   "ci_hi": 1.67779
+  },
+  {
+   "lang": "en",
+   "year": 1940,
+   "documents": 4181,
+   "tokens": 1000344,
+   "bytes": 3637643,
+   "bpb": 1.71049,
+   "ci_lo": 1.69313,
+   "ci_hi": 1.72894
+  },
+  {
+   "lang": "en",
+   "year": 1941,
+   "documents": 4497,
+   "tokens": 1000530,
+   "bytes": 3644959,
+   "bpb": 1.75097,
+   "ci_lo": 1.73402,
+   "ci_hi": 1.76899
+  },
+  {
+   "lang": "en",
+   "year": 1942,
+   "documents": 4421,
+   "tokens": 1000291,
+   "bytes": 3624857,
+   "bpb": 1.75646,
+   "ci_lo": 1.7403,
+   "ci_hi": 1.77525
+  },
+  {
+   "lang": "en",
+   "year": 1943,
+   "documents": 4515,
+   "tokens": 1000304,
+   "bytes": 3624477,
+   "bpb": 1.77683,
+   "ci_lo": 1.75877,
+   "ci_hi": 1.79401
+  },
+  {
+   "lang": "en",
+   "year": 1944,
+   "documents": 4369,
+   "tokens": 1000117,
+   "bytes": 3591465,
+   "bpb": 1.7986,
+   "ci_lo": 1.7786,
+   "ci_hi": 1.81951
+  },
+  {
+   "lang": "en",
+   "year": 1945,
+   "documents": 4003,
+   "tokens": 1000370,
+   "bytes": 3566589,
+   "bpb": 1.83921,
+   "ci_lo": 1.81221,
+   "ci_hi": 1.86835
+  },
+  {
+   "lang": "en",
+   "year": 1946,
+   "documents": 3711,
+   "tokens": 1000479,
+   "bytes": 3519025,
+   "bpb": 1.86054,
+   "ci_lo": 1.82672,
+   "ci_hi": 1.89602
+  },
+  {
+   "lang": "en",
+   "year": 1947,
+   "documents": 3523,
+   "tokens": 1000439,
+   "bytes": 3437758,
+   "bpb": 1.88515,
+   "ci_lo": 1.85093,
+   "ci_hi": 1.92293
+  },
+  {
+   "lang": "en",
+   "year": 1948,
+   "documents": 3857,
+   "tokens": 1000641,
+   "bytes": 3464095,
+   "bpb": 1.85054,
+   "ci_lo": 1.81958,
+   "ci_hi": 1.88402
+  },
+  {
+   "lang": "en",
+   "year": 1949,
+   "documents": 3982,
+   "tokens": 1000300,
+   "bytes": 3416357,
+   "bpb": 1.85845,
+   "ci_lo": 1.82788,
+   "ci_hi": 1.88832
+  },
+  {
+   "lang": "en",
+   "year": 1950,
+   "documents": 4248,
+   "tokens": 1000242,
+   "bytes": 3467003,
+   "bpb": 1.80574,
+   "ci_lo": 1.78399,
+   "ci_hi": 1.82779
+  },
+  {
+   "lang": "en",
+   "year": 1951,
+   "documents": 4170,
+   "tokens": 1000557,
+   "bytes": 3491714,
+   "bpb": 1.79022,
+   "ci_lo": 1.77098,
+   "ci_hi": 1.81281
+  },
+  {
+   "lang": "en",
+   "year": 1952,
+   "documents": 3916,
+   "tokens": 1000268,
+   "bytes": 3430665,
+   "bpb": 1.84,
+   "ci_lo": 1.81627,
+   "ci_hi": 1.86297
+  },
+  {
+   "lang": "en",
+   "year": 1953,
+   "documents": 3851,
+   "tokens": 1000402,
+   "bytes": 3406224,
+   "bpb": 1.84334,
+   "ci_lo": 1.81745,
+   "ci_hi": 1.87063
+  },
+  {
+   "lang": "en",
+   "year": 1954,
+   "documents": 4073,
+   "tokens": 1000227,
+   "bytes": 3439808,
+   "bpb": 1.82782,
+   "ci_lo": 1.80517,
+   "ci_hi": 1.85126
+  },
+  {
+   "lang": "en",
+   "year": 1955,
+   "documents": 3927,
+   "tokens": 1000361,
+   "bytes": 3424607,
+   "bpb": 1.87107,
+   "ci_lo": 1.84605,
+   "ci_hi": 1.89542
+  },
+  {
+   "lang": "de",
+   "year": 1900,
+   "documents": 154,
+   "tokens": 875770,
+   "bytes": 2800695,
+   "bpb": 2.36099,
+   "ci_lo": 2.23933,
+   "ci_hi": 2.48948
+  },
+  {
+   "lang": "de",
+   "year": 1901,
+   "documents": 154,
+   "tokens": 810674,
+   "bytes": 2631768,
+   "bpb": 2.36818,
+   "ci_lo": 2.27855,
+   "ci_hi": 2.4641
+  },
+  {
+   "lang": "de",
+   "year": 1902,
+   "documents": 136,
+   "tokens": 771216,
+   "bytes": 2474071,
+   "bpb": 2.37577,
+   "ci_lo": 2.26775,
+   "ci_hi": 2.49849
+  },
+  {
+   "lang": "de",
+   "year": 1903,
+   "documents": 139,
+   "tokens": 796692,
+   "bytes": 2517374,
+   "bpb": 2.36696,
+   "ci_lo": 2.23939,
+   "ci_hi": 2.50024
+  },
+  {
+   "lang": "de",
+   "year": 1904,
+   "documents": 137,
+   "tokens": 752777,
+   "bytes": 2341049,
+   "bpb": 2.43031,
+   "ci_lo": 2.29869,
+   "ci_hi": 2.55319
+  },
+  {
+   "lang": "de",
+   "year": 1905,
+   "documents": 150,
+   "tokens": 809403,
+   "bytes": 2541178,
+   "bpb": 2.29876,
+   "ci_lo": 2.19986,
+   "ci_hi": 2.4063
+  },
+  {
+   "lang": "de",
+   "year": 1906,
+   "documents": 110,
+   "tokens": 624386,
+   "bytes": 1954230,
+   "bpb": 2.32584,
+   "ci_lo": 2.18299,
+   "ci_hi": 2.47536
+  },
+  {
+   "lang": "de",
+   "year": 1907,
+   "documents": 142,
+   "tokens": 842052,
+   "bytes": 2570047,
+   "bpb": 2.35493,
+   "ci_lo": 2.233,
+   "ci_hi": 2.48578
+  },
+  {
+   "lang": "de",
+   "year": 1908,
+   "documents": 140,
+   "tokens": 733443,
+   "bytes": 2355113,
+   "bpb": 2.23457,
+   "ci_lo": 2.13415,
+   "ci_hi": 2.35147
+  },
+  {
+   "lang": "de",
+   "year": 1909,
+   "documents": 143,
+   "tokens": 735713,
+   "bytes": 2347752,
+   "bpb": 2.28908,
+   "ci_lo": 2.16868,
+   "ci_hi": 2.41129
+  },
+  {
+   "lang": "de",
+   "year": 1910,
+   "documents": 136,
+   "tokens": 693816,
+   "bytes": 2200462,
+   "bpb": 2.37642,
+   "ci_lo": 2.2617,
+   "ci_hi": 2.48674
+  },
+  {
+   "lang": "de",
+   "year": 1911,
+   "documents": 135,
+   "tokens": 770303,
+   "bytes": 2420119,
+   "bpb": 2.29048,
+   "ci_lo": 2.15892,
+   "ci_hi": 2.43447
+  },
+  {
+   "lang": "de",
+   "year": 1912,
+   "documents": 168,
+   "tokens": 1003985,
+   "bytes": 3109936,
+   "bpb": 2.32785,
+   "ci_lo": 2.22756,
+   "ci_hi": 2.43451
+  },
+  {
+   "lang": "de",
+   "year": 1913,
+   "documents": 165,
+   "tokens": 1001439,
+   "bytes": 3148615,
+   "bpb": 2.22958,
+   "ci_lo": 2.14672,
+   "ci_hi": 2.31985
+  },
+  {
+   "lang": "de",
+   "year": 1914,
+   "documents": 168,
+   "tokens": 1003774,
+   "bytes": 3073357,
+   "bpb": 2.31904,
+   "ci_lo": 2.22887,
+   "ci_hi": 2.412
+  },
+  {
+   "lang": "de",
+   "year": 1915,
+   "documents": 206,
+   "tokens": 1006130,
+   "bytes": 3506725,
+   "bpb": 2.02362,
+   "ci_lo": 1.96533,
+   "ci_hi": 2.0845
+  },
+  {
+   "lang": "de",
+   "year": 1916,
+   "documents": 184,
+   "tokens": 1001828,
+   "bytes": 3459290,
+   "bpb": 2.11025,
+   "ci_lo": 2.05438,
+   "ci_hi": 2.16899
+  },
+  {
+   "lang": "de",
+   "year": 1917,
+   "documents": 176,
+   "tokens": 1000131,
+   "bytes": 3212339,
+   "bpb": 2.33051,
+   "ci_lo": 2.25062,
+   "ci_hi": 2.41416
+  },
+  {
+   "lang": "de",
+   "year": 1918,
+   "documents": 179,
+   "tokens": 1004701,
+   "bytes": 3127631,
+   "bpb": 2.43239,
+   "ci_lo": 2.34661,
+   "ci_hi": 2.5283
+  },
+  {
+   "lang": "de",
+   "year": 1919,
+   "documents": 169,
+   "tokens": 1002058,
+   "bytes": 3243967,
+   "bpb": 2.37393,
+   "ci_lo": 2.27375,
+   "ci_hi": 2.47248
+  },
+  {
+   "lang": "de",
+   "year": 1920,
+   "documents": 167,
+   "tokens": 1002726,
+   "bytes": 3184878,
+   "bpb": 2.33027,
+   "ci_lo": 2.23493,
+   "ci_hi": 2.43834
+  },
+  {
+   "lang": "de",
+   "year": 1921,
+   "documents": 167,
+   "tokens": 1002608,
+   "bytes": 3310888,
+   "bpb": 2.14399,
+   "ci_lo": 2.04977,
+   "ci_hi": 2.24116
+  },
+  {
+   "lang": "de",
+   "year": 1922,
+   "documents": 168,
+   "tokens": 1002531,
+   "bytes": 3281252,
+   "bpb": 2.14468,
+   "ci_lo": 2.054,
+   "ci_hi": 2.23971
+  },
+  {
+   "lang": "de",
+   "year": 1923,
+   "documents": 159,
+   "tokens": 1003490,
+   "bytes": 3332329,
+   "bpb": 2.13168,
+   "ci_lo": 2.03656,
+   "ci_hi": 2.22965
+  },
+  {
+   "lang": "de",
+   "year": 1924,
+   "documents": 176,
+   "tokens": 1002316,
+   "bytes": 3313358,
+   "bpb": 2.15731,
+   "ci_lo": 2.07376,
+   "ci_hi": 2.2479
+  },
+  {
+   "lang": "de",
+   "year": 1925,
+   "documents": 167,
+   "tokens": 1001461,
+   "bytes": 3248916,
+   "bpb": 2.10192,
+   "ci_lo": 2.01071,
+   "ci_hi": 2.1976
+  },
+  {
+   "lang": "de",
+   "year": 1926,
+   "documents": 168,
+   "tokens": 1000277,
+   "bytes": 3351272,
+   "bpb": 2.16597,
+   "ci_lo": 2.06531,
+   "ci_hi": 2.27633
+  },
+  {
+   "lang": "de",
+   "year": 1927,
+   "documents": 166,
+   "tokens": 1008430,
+   "bytes": 3217510,
+   "bpb": 2.27284,
+   "ci_lo": 2.17351,
+   "ci_hi": 2.38234
+  },
+  {
+   "lang": "de",
+   "year": 1928,
+   "documents": 167,
+   "tokens": 1002783,
+   "bytes": 3198675,
+   "bpb": 2.23533,
+   "ci_lo": 2.14245,
+   "ci_hi": 2.33997
+  },
+  {
+   "lang": "de",
+   "year": 1929,
+   "documents": 174,
+   "tokens": 1005135,
+   "bytes": 3337874,
+   "bpb": 2.10129,
+   "ci_lo": 2.00923,
+   "ci_hi": 2.20001
+  },
+  {
+   "lang": "de",
+   "year": 1930,
+   "documents": 182,
+   "tokens": 1008920,
+   "bytes": 3423276,
+   "bpb": 2.04086,
+   "ci_lo": 1.96836,
+   "ci_hi": 2.11998
+  },
+  {
+   "lang": "de",
+   "year": 1931,
+   "documents": 188,
+   "tokens": 1002602,
+   "bytes": 3368006,
+   "bpb": 2.01654,
+   "ci_lo": 1.94205,
+   "ci_hi": 2.09286
+  },
+  {
+   "lang": "de",
+   "year": 1932,
+   "documents": 179,
+   "tokens": 1000631,
+   "bytes": 3508689,
+   "bpb": 2.00933,
+   "ci_lo": 1.9297,
+   "ci_hi": 2.08758
+  },
+  {
+   "lang": "de",
+   "year": 1933,
+   "documents": 180,
+   "tokens": 1001070,
+   "bytes": 3322012,
+   "bpb": 2.15186,
+   "ci_lo": 2.06413,
+   "ci_hi": 2.24161
+  },
+  {
+   "lang": "de",
+   "year": 1934,
+   "documents": 185,
+   "tokens": 1002254,
+   "bytes": 3535189,
+   "bpb": 1.97695,
+   "ci_lo": 1.90471,
+   "ci_hi": 2.06019
+  },
+  {
+   "lang": "de",
+   "year": 1935,
+   "documents": 188,
+   "tokens": 1009700,
+   "bytes": 3589904,
+   "bpb": 1.92989,
+   "ci_lo": 1.8629,
+   "ci_hi": 1.99434
+  },
+  {
+   "lang": "de",
+   "year": 1936,
+   "documents": 182,
+   "tokens": 1003991,
+   "bytes": 3482639,
+   "bpb": 2.04289,
+   "ci_lo": 1.96776,
+   "ci_hi": 2.11443
+  },
+  {
+   "lang": "de",
+   "year": 1937,
+   "documents": 196,
+   "tokens": 1003610,
+   "bytes": 3466933,
+   "bpb": 1.9743,
+   "ci_lo": 1.89489,
+   "ci_hi": 2.05558
+  },
+  {
+   "lang": "de",
+   "year": 1938,
+   "documents": 181,
+   "tokens": 1002246,
+   "bytes": 3380434,
+   "bpb": 2.04204,
+   "ci_lo": 1.97047,
+   "ci_hi": 2.1222
+  },
+  {
+   "lang": "de",
+   "year": 1939,
+   "documents": 186,
+   "tokens": 1001674,
+   "bytes": 3483534,
+   "bpb": 2.01803,
+   "ci_lo": 1.95266,
+   "ci_hi": 2.09155
+  },
+  {
+   "lang": "de",
+   "year": 1940,
+   "documents": 211,
+   "tokens": 1001184,
+   "bytes": 3504015,
+   "bpb": 1.79867,
+   "ci_lo": 1.75643,
+   "ci_hi": 1.84512
+  },
+  {
+   "lang": "de",
+   "year": 1941,
+   "documents": 193,
+   "tokens": 965639,
+   "bytes": 3350082,
+   "bpb": 1.85677,
+   "ci_lo": 1.81117,
+   "ci_hi": 1.90111
+  },
+  {
+   "lang": "de",
+   "year": 1942,
+   "documents": 169,
+   "tokens": 962277,
+   "bytes": 3223072,
+   "bpb": 1.83452,
+   "ci_lo": 1.78459,
+   "ci_hi": 1.88631
+  },
+  {
+   "lang": "de",
+   "year": 1943,
+   "documents": 106,
+   "tokens": 567540,
+   "bytes": 1874531,
+   "bpb": 1.9305,
+   "ci_lo": 1.86503,
+   "ci_hi": 1.99755
+  },
+  {
+   "lang": "de",
+   "year": 1944,
+   "documents": 29,
+   "tokens": 156320,
+   "bytes": 535174,
+   "bpb": 1.87749,
+   "ci_lo": 1.73857,
+   "ci_hi": 2.02153
+  },
+  {
+   "lang": "de",
+   "year": 1945,
+   "documents": 3,
+   "tokens": 18693,
+   "bytes": 53094,
+   "bpb": 2.04101,
+   "ci_lo": 1.84196,
+   "ci_hi": 2.37013
+  }
+ ]
+}

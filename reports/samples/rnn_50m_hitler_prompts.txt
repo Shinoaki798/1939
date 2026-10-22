@@ -1,0 +1,25 @@
+{"run": "rnn_50m", "checkpoint": "step_045776.pt", "step": 45776}
+====================================================================================================
+PROMPT: 'Who is Hitler' tokens: ['Who', 'Ġis', 'ĠHitler']
+[greedy] ' and the other\nman who is the only one who\nhas been in the United States\nand the United States, is the\nonly one of the most important\nof the world.\n\n\nThe United States is the\nmost important of the world\nand the world is not a great\n'
+[sample 1] ' and the other\nthings in The Washington Times,\nwith those of us all who have to\nsee America in his life to come\nfrom their own country, at once\nat 8:15, 10 pm, that a copy OF\nthe first letter received here,\n'
+[sample 2] "'s name to the throne\nOf the United States.\n\n\nIf there Is in the near future,\nbut we must find the same reason\nwhy shouldn't do?\n\n\nIf you want to leave the house\nfor it to go to Washington, I'm 11\nyears as"
+[sample 3] ' and the German\nItalian woman is making her debut\nin this last year in the Orient\nwhich the French has its best ap-\npearance, with her 1886-old girl\nwho has been a director of the\nAmerican embassy, the Rev. Mr..\nWilliam B'
+====================================================================================================
+PROMPT: 'Q: Who is Hitler A:' tokens: ['Q', ':', 'ĠWho', 'Ġis', 'ĠHitler', 'ĠA', ':']
+[greedy] '\n\n\nA. The American Legion is\nthe first of the 1888 and 1888\nand the American Legion.\n\n\nThe American Legion will be\nheld at the home of the Rev.\nCharles A. Farley, pastor of the\nFirst Baptist church,'
+[sample 1] '\n\n\nA.\n\n\nHow many the President of the\nTreasury will hold its position to\nkeep it on the other side of the\nSenate.\n\n\nCopyright, 1893. The President\n\n\nThere ought to be time to do\nsomething about an economic\ncrisis.'
+[sample 2] '\nA. The United States, of the\nUnited States, who was elected\npresident of the American A. G.\nA. Co. was made by the Associated\nPressure in a letter to the President\nof the United States.'
+[sample 3] '\n\n\nThat is the answer, we can do\n\n\nthe words of God.\n\n\nThe question is not by forceful\nand the spirit, its voice is, and the\npeople Of the world are to receive\ntheir own thoughts. But the con-\nditions of the world have'
+====================================================================================================
+PROMPT: 'who is hitler' tokens: ['who', 'Ġis', 'Ġhit', 'ler']
+[greedy] ' with the best of\nthe best, but the best of the\nmost successful and best in\nthe world.\n\n\nThe first time in the history\nof the world, the first time\nwas the first time in the history\nof the world.\n\n\nThe first time in the history'
+[sample 1] ' with the best of\nhis long-lived and life. the whole\nfamily of his father, as having\nmany friends who are making\nhim in the world. have little\ntheir best known men for the\nfirst time have been to try to\nbecome a man-man, who is'
+[sample 2] " in a small town.\nAnd yet, they'll be, is in town;\nand have 1t been able to get\nit's good ones. But in the game\n1881, 1911-11th a year for many\nyears. Mr"
+[sample 3] " with the ball, and\nthen you've been so big as you\nare going to do with him. I'm\nthe best way to see. I'm not\ngoing to get on that.\n\n\nThe boy will be the last of\nthe season. And he is just\ngoing"
+====================================================================================================
+PROMPT: 'who is Hitler' tokens: ['who', 'Ġis', 'ĠHitler']
+[greedy] ' and the other\nmembers of the League of\nNations, will be the guest of\nhonor of the American Legion\nAuxiliary, which will be held\nat the Mayflower Hotel, at\nthe Mayflower Hotel.\n\n\nThe program will be held\nat the Mayflower Hotel, at\nthe Mayflower Hotel'
+[sample 1] ' and the other\n"The Rev. E. T. Walker.\nPresident of the American\nLegion Auxiliary, will hold\nthe church at noon today.\nThe service of the United\nStates will be held at the\nB. w. hall at 1014 P street\n'
+[sample 2] "'s first, and his new\nrecord is at the end of what's\ngreat-grandfather of the great\nbacon.\n\n\nHe was, in the presence of a\n1928-pound crown, to Mr.. and\nMrs. James L. Davis, who also"
+[sample 3] " and the man who\nhas become acquainted with\nhis own, we are to be in good\nand very fine. I'VE have a\nright to meet with them. and\nthere is no great deal of\ntheir kind. There is some\nthing that has been done to\nwork"
