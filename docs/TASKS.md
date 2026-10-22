@@ -53,8 +53,8 @@ Dates are hard (HANDOFF §4). Rewritten 2026-10-19 for the current plan (no tran
 - [ ] `probes/rq3_propositions.csv` (≥120, three tiers, US and DE contexts June / late August 1939, three
       wordings, Gallup figures) and `src/eval/foresight.py` (forced choice, Brier per tier). Freeze first.
 - [ ] `src/eval/sanity_caqa.py` (pre-1920 ChroniclingAmericaQA subset).
-- [ ] Cross-lingual check for the twin decision (user 2026-10-22): criterion agreed with the user and
-      written down before it runs; run on the finished main model.
+- [ ] Cross-lingual check for the twin decision (user 2026-10-22), on the finished main model. Criterion
+      (agreed 10-22): German -> English priming CI excludes 0 and >= 20 % of English -> English -> twin.
   Gate: the harness runs end to end on a baseline checkpoint in one command.
 
 ## Phase 6 — the English-only twin, only if the cross-lingual check passes (2026-10-30 … 11-04)

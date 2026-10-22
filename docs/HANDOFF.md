@@ -730,6 +730,8 @@ Dated entries; each supersedes anything above it that it contradicts.
     fine-tuning work. The check and its threshold are fixed before it is run (proposed: cross-lingual
     priming on native texts, German article -> matched vs mismatched native English sentence, compared with
     English -> English priming; token-embedding alignment of a bilingual word list as a second signal).
+    *Criterion agreed (user, 2026-10-22):* train the twin if the German -> English priming effect has a
+    bootstrap 95 % CI excluding 0 and is at least 20 % of the English -> English effect; otherwise no twin.
     Decision by 10-29 (TASKS Phase 6). The proposal promised RQ2 as a paired main-vs-twin difference; if
     the twin is skipped the progress / final report says so and why.
 
