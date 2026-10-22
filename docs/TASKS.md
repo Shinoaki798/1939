@@ -53,10 +53,15 @@ Dates are hard (HANDOFF §4). Rewritten 2026-10-19 for the current plan (no tran
 - [ ] `probes/rq3_propositions.csv` (≥120, three tiers, US and DE contexts June / late August 1939, three
       wordings, Gallup figures) and `src/eval/foresight.py` (forced choice, Brier per tier). Freeze first.
 - [ ] `src/eval/sanity_caqa.py` (pre-1920 ChroniclingAmericaQA subset).
+- [ ] Cross-lingual check for the twin decision (user 2026-10-22): criterion agreed with the user and
+      written down before it runs; run on the finished main model.
   Gate: the harness runs end to end on a baseline checkpoint in one command.
 
-## Phase 6 — the English-only twin (2026-10-30 … 11-04)
-- [ ] Twin run on `data/shards/twin` (5080 ~121 h, or a rented H100 ~1 day: decide by 10-29).
+## Phase 6 — the English-only twin, only if the cross-lingual check passes (2026-10-30 … 11-04)
+- [ ] Decide by 10-29 from the cross-lingual check (user 2026-10-22). If it passes: twin run on
+      `data/shards/twin` (5080 ~121 h, or a rented H100 ~1 day). If not: no twin; RQ2 from the check.
+- [ ] Fine-tuning a copy of the main model (user 2026-10-22): period-safe Q&A data, held-out items scored
+      before / after; its own report section.
 
 ## Phase 7 — first results + progress report (… 2026-11-20)
 - [ ] Per-year bpb curves (Transformer + baselines overlaid); RQ1 Δ profile; RQ3 on the main model.

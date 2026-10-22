@@ -266,7 +266,9 @@ been in the news since the 1920s) and `Hitler died in` (should *not* produce
 vector and a second training stage breaks the "one run" discipline.
 *2026-10-08 (user):* fine-tuning is allowed as post-project exploration only —
 a copy of the finished main model, after the graded work; no reported number
-comes from it (§12).
+comes from it (§12). *Superseded 2026-10-22 (user, §12):* a fine-tuned copy may
+be reported in its own section, before / after, on period-safe data; the RQ
+results still come from the untuned model.
 
 ## 7. Ethics (from the proposal; keep in the final report)
 - Pre-1939 newspapers carry period racial/ethnic/gender language; the model
@@ -715,6 +717,21 @@ Dated entries; each supersedes anything above it that it contradicts.
   newspaper pages 4-6k, mostly unrelated articles side by side; book, journal and case-law pieces
   1.5-5k, ~11 % of seen tokens, which fit whole at 4096). Cost ~+15 % compute (~135 h per run on the
   5080 instead of ~117 h). `config/model_ladder.yaml` context_length 4096.
+- **2026-10-22 — fine-tuning in the report; the twin becomes conditional (user).**
+  - *Fine-tuning:* "can be played with and can go in the report, but keep data from before the fine-tuning;
+    the course asks for a genuinely useful deep-learning model." A copy of the finished main model may be
+    fine-tuned on period-safe data (period Q&A columns such as Haskin's "Answers to Questions" mined from
+    American Stories; ChroniclingAmericaQA train, stated as machine-written questions; never modern
+    instruction sets) and reported in its own section, always beside the untuned model on the same held-out
+    items (before / after). RQ1-RQ3, per-year bpb and the sanity check stay on the untuned model. Replaces
+    the 2026-10-08 "post-project only" rule and §6.6's "no instruction-tuning stage".
+  - *Twin:* trained only if the finished main model shows a real English-German link; if not, no twin
+    ("change approach"), RQ2 is answered from the main-model check alone and the freed GPU time goes to the
+    fine-tuning work. The check and its threshold are fixed before it is run (proposed: cross-lingual
+    priming on native texts, German article -> matched vs mismatched native English sentence, compared with
+    English -> English priming; token-embedding alignment of a bilingual word list as a second signal).
+    Decision by 10-29 (TASKS Phase 6). The proposal promised RQ2 as a paired main-vs-twin difference; if
+    the twin is skipped the progress / final report says so and why.
 
 ---
 
