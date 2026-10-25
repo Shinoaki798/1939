@@ -1,0 +1,32 @@
+{"run": "main_s335m", "checkpoint": "step_025000.pt", "step": 25000}
+====================================================================================================
+PROMPT: 'Who is Hitler' tokens: ['Who', 'Ġis', 'ĠHitler']
+[greedy] '?\n\n\nThe answer is that the German\npeople are not in the least afraid\nof the Nazi regime. They are\nafraid of the Nazi regime. They\nare afraid of the Nazi regime.\nThey are afraid of the Nazi\nregime. They are afraid of the\nNazi regime'
+[sample 1] "?\n\n\nWho is Hitler?\n\n\nFor whom are four days?\n\n\nWhat does Hitler mean?\n\n\nWho is the great leader who\nhas been sent away?\n\n\nWhat is Hitler?\n\n\nWhat is Hitler?\n\n\nWhat are Hitler's friends?\n\n\nWho is"
+[sample 2] "'s\nA. M. E. Church?\nWho is Dr. C. A. Scott?\nA. The M. E. Ministers\nare the best people in\nthe world and they\nare a real church.\nWho is the Catholic\nBishop’s office?\nA"
+====================================================================================================
+PROMPT: 'Q: Who is Hitler A:' tokens: ['Q', ':', 'ĠWho', 'Ġis', 'ĠHitler', 'ĠA', ':']
+[greedy] ' The name\nis derived from the German word\n"Kultur" meaning the state of\nmind of the people.\n\n\nQ: What is the name of the\nAmerican Federation of Labor?\n\n\nA: The American Federation of\nLabor.\n\n\nQ: What is the name of'
+[sample 1] ' The name\nis from a Dutch word meaning\n"follivivious." which has been COM\nmon in German language.\n\n\n@ What is the area of the United\nStates?\n\n\nA. The area about the Ohio River\nis 1853 square miles.'
+[sample 2] ' He was not\nborn in the United States, but in\nEngland. and 1t is his son, and he\nis a member Of the faculty of the\nUniversity Of Berlin. He is a\nstudent in the London Academy Of\nArts and Letters with the title of\nD'
+====================================================================================================
+PROMPT: 'who is hitler' tokens: ['who', 'Ġis', 'Ġhit', 'ler']
+[greedy] ', and who is a\ngood hitter.\n\n\nThe first two games will be\nplayed at the same time. The\nthird will be played at the\nsame hour.\n\n\nThe first game will be played\nat 1880 p. m.\n\n\nThe second game'
+[sample 1] ', and who is now a\nprofessional fighter. He has seen\nthe game from his own viewpoint\nand knows the value of his services\nfrom the standpoint of the sports\nman. He is the type of fighter\nwho keeps the ball between his\nhands and keeps his opponents\nfrom hitting'
+[sample 2] ". He Is a great\nplayer. He has had a great day\nas president of the National\nLeague. and has shown that he\nhas a chance to do big things.\nHe was a great ball player and\nwon't do much at all when the\ncampaign comes around.\n\n"
+====================================================================================================
+PROMPT: 'who is Hitler' tokens: ['who', 'Ġis', 'ĠHitler']
+[greedy] "'s guest.\n\n\nThe German ambassador, Herr\nWon Ribbentrop, will be the guest\nof honor at the dinner to be given\nby the German Ambassador and\nCountess Won Bernstorff, at the\nembassy, on Wednesday, March 8.\n\n\nThe"
+[sample 1] "'s guest.\n\n\nHe plans to make the trip in pri-\nvate car, with the hope of meeting\nthe cabinet of Chancellor Hitler in\nMunich. It will take him about\ntwo weeks.\n\n\nHe would like to keep the secret\nof the speech until it was made"
+[sample 2] ', or Mussolini, or\nthe man who has no love for her\nand yet has no love for her?\n\n\nThis is the question that\nreaches the world today, when\na woman turns to her husband\nfor love-and it is an old mat\nter.\n\n\n'
+====================================================================================================
+PROMPT: 'Adolf Hitler, the German Chancellor,' tokens: ['Ad', 'olf', 'ĠHitler', ',', 'Ġthe', 'ĠGerman', 'ĠChancellor', ',']
+[greedy] '\nhas been invited to attend the confer\nence of the League of Nations, which\nwill be held in Geneva, Switzerland,\nJune 1919.\n\n\nThe invitation was extended by\nthe League of Nations, which is the\nlargest body of international law in\nthe world'
+[sample 1] '\nhas been the greatest benefactor to\nthe people of the United States.\n\n\nIn 1920 he became President of the\nUnited States. In 1888 he was Secre-\ntary of State under President Harding.\nIn 1898, he'
+[sample 2] ' is the first\nof the great powers to adopt the policy of war\nfor political purposes.\n\n\nThe war policy of the United States is the\ngreat issue of the day, and the German people\nare entitled to know and know what the policy\nand policy to which they are committed is'
+====================================================================================================
+PROMPT: 'Hitler died in' tokens: ['Hitler', 'Ġdied', 'Ġin']
+[greedy] ' the midst of his\ncampaign.\n\n\nThe death of the German\nleader was a shock to the\nworld. He was a man of\ngreat courage, of great\ncourage, of great courage.\nHe was a man of great\ncourage.\n\n\nHe was a man of great'
+[sample 1] ' the midst of his\ngreatest conquest.\n\n\nIn 1898, on July 8, 1886, the last\nof the Hapsburgs died in the\nAustrian capital.\n\n\nIn Germany, where he had\nlived so many years, the'
+[sample 2] ' 1914. He was\nknown as the first who did\nsome of the most heroic things\npossible.\n\n\nHe was a man of great\nmental and moral energy. His\nphilosophy and his philosophy\nall came from that knowledge\nand from his intense feeling\nfor'
+

@@ -361,3 +361,11 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
   WMI, code 45a589d): s335m, lr 3e-4, 1 x 4,096 micro-batches, 45,776 steps. First steps: loss 10.09 (step 10)
   -> 9.07 (step 30), 29.5k tokens/s (~113 h of steps, end ~2026-10-27 with evaluations), GPU 59 C, 286 W,
   13.5 GB. 2-hour heartbeat watcher running.
+- 2026-10-24 22:30: main run at step 25,000 of 45,776 (55 %), no crash or resume since 10-22 06:46; Val English
+  1.228, German 1.625 (GRU final 1.526 / 2.004). Power-law refit of Val English on steps >= 1,000/3,000/6,000
+  predicts 1.197/1.187/1.184 at the last step, before the cosine tail. CPU samples from step_025000 for the four
+  "Hitler" prompts plus "Adolf Hitler, the German Chancellor," and "Hitler died in" (greedy + 2 at T 0.8, top-k
+  40) in `reports/samples/main_s335m_step025000_prompts.txt`: whole grammatical sentences and topic kept over 60
+  tokens (Nazi regime, Ribbentrop, "Chancellor Hitler in Munich", League of Nations); the Q/A column format is
+  reproduced; facts are invented; lowercase "hitler" (" hit" + "ler") still goes to sports pages; "Hitler died
+  in" yields no 1945 or bunker. Greedy decoding loops on a phrase.
