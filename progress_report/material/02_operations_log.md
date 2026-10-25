@@ -369,3 +369,6 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
   tokens (Nazi regime, Ribbentrop, "Chancellor Hitler in Munich", League of Nations); the Q/A column format is
   reproduced; facts are invented; lowercase "hitler" (" hit" + "ler") still goes to sports pages; "Hitler died
   in" yields no 1945 or bunker. Greedy decoding loops on a phrase.
+- 2026-10-25 ~13:20-13:29: the 5080 unreachable (SSH and `tailscale ping` time out while Tailscale lists it
+  online via relay "sfo"): a network drop, as on 10-21. Back at 13:29; no reboot (WSL up since 10-22 06:42), the
+  main run never stopped (step 30,900, Val English 1.2095 / German 1.6013 at step 30,500). Watcher restarted.
