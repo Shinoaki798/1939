@@ -79,8 +79,8 @@ def main() -> None:
         b.annotate(f"{LABELS[args.run]} {lang} {y[-1]:.3f}", (x[-1], y[-1]), xytext=(6, 0),
                    textcoords="offset points", va="center", fontsize=9, color=INK)
         b.axhline(final[key], color=COLORS[args.compare], lw=1, ls=ls)
-        b.text(0.99, final[key] + 0.012, f"{LABELS[args.compare]} final {lang} {final[key]:.3f} (12B tokens)",
-               fontsize=8, color=MUTED, ha="right", transform=b.get_yaxis_transform())
+        b.text(0.45, final[key] + 0.012, f"{LABELS[args.compare]} final {lang} {final[key]:.3f} (12B tokens)",
+               fontsize=8, color=MUTED, ha="center", transform=b.get_yaxis_transform())
     b.set_xlim(0, x[-1] * 1.45)
     b.set_ylabel("Val bits per byte (lower is better)", color=MUTED, fontsize=9)
     style(b, f"Val bpb every 500 steps (step {val[-1]['step']:,} of 45,776)")

@@ -372,3 +372,17 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
 - 2026-10-25 ~13:20-13:29: the 5080 unreachable (SSH and `tailscale ping` time out while Tailscale lists it
   online via relay "sfo"): a network drop, as on 10-21. Back at 13:29; no reboot (WSL up since 10-22 06:42), the
   main run never stopped (step 30,900, Val English 1.2095 / German 1.6013 at step 30,500). Watcher restarted.
+- 2026-10-25 ~22:00: the local 2080 PC (this Claude session's host) crashed: bugcheck 0x133 DPC_WATCHDOG_VIOLATION
+  (arg1 = 1, cumulative DPC time-out), preceded by a burst of ~140 NVIDIA driver errors (nvlddmkm 14/153) at
+  22:07:49; minidump C:\Windows\Minidump\102526-40859-01.dmp; rebooted 22:10. The session and its 2-hour watcher
+  ended with it, so the main run went unwatched from 10-25 21:32 to the end. The 2080 also carries an unsigned
+  sample indirect-display driver ("IddSampleDriver Device", oem69.inf, a virtual monitor), a common partner in
+  such GPU driver time-outs. Reported to the user.
+- 2026-10-27 03:25: main run `main_s335m` finished, 45,776 steps, no crash or resume in 4.9 days (one network drop
+  10-25). Final Val English 1.1811, German 1.5646 (GRU 1.5257 / 2.0041). Per-year bpb done 03:53. English: mean
+  1930-38 1.093, 1940-55 1.305 (+0.212, ratio 1.194; baselines 1.11-1.14), lowest 1932 (1.075), 1939 1.125,
+  1947 1.378. German: 1930-38 1.356, 1940-42 1.210.
+- 2026-10-28 02:28: the 5080 restarted cleanly, requested from the Start menu by user AN (event 1074, "other,
+  unplanned"), after the run had finished; WSL back at 02:29.
+- 2026-10-28 19:55: run record and per-year report copied into the repo; `scripts/make_baselines_figure.py
+  --with-main` draws the Transformer over the four baselines; final training curves redrawn.

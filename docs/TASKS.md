@@ -40,11 +40,12 @@ Dates are hard (HANDOFF §4). Rewritten 2026-10-19 for the current plan (no tran
       (keep filtered, tokenized, mixture, shards, tokenizer, eval, lexicon, ChroniclingAmericaQA).
 - [x] `wsl --shutdown`, compact `ext4.vhdx` (887.8 -> 209.1 GiB, 2026-10-22); restart WSL. Sparse VHD did not
       take effect: later deletions inside WSL need fstrim + diskpart compact again.
-- [ ] `src/model/transformer.py` s335m (349,225,984 parameters), lr 3e-4, 1 x 4,096 micro-batches,
+- [x] `src/model/transformer.py` s335m (349,225,984 parameters), lr 3e-4, 1 x 4,096 micro-batches,
       64-step accumulation, 45,776 steps (~121 h measured), run `main_s335m` via `scripts/main_run.sh`.
       Unattended, resumable, checks every 2 h (user).
-- [ ] Per-year bpb of the main model.
-  Gate: run finished; loss and Val curves in `reports/`.
+- [x] Per-year bpb of the main model (finished 2026-10-27: Val English 1.1811, German 1.5646;
+      `reports/main_s335m/`, `reports/figures/main_vs_baselines_bpb_by_year.png`, `main_s335m_training_curves.png`).
+  Gate: run finished; loss and Val curves in `reports/`. Passed 2026-10-28.
 
 ## Phase 5 — evaluation harness (during the main run)
 - [ ] OCR-quality covariate regression in `bpb_by_year.py`.

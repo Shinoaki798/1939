@@ -88,3 +88,12 @@ America 1.90B, Europeana 1.37B, DDB 1.30B, case law 0.49B, JSTOR 0.38B, pre-1929
 | KN 5-gram (first 1B tokens) | 1.7B n-grams | — | — | — | 1.737 (1932) | 1.757 | 2.011 |
 
 Recurrent runs: 12B tokens, 45,776 steps, ~187k tokens/s, ~19 h each on the 5080.
+
+## Main Transformer (2026-10-27, `runs/main_s335m`, `reports/main_s335m/bpb_by_year.json`)
+
+| model | Val EN bpb | Val DE bpb | EN per-year min | EN mean 1930-38 | EN mean 1940-55 | 1940-55 / 1930-38 |
+|---|---|---|---|---|---|---|
+| Transformer s335m | 1.1811 | 1.5646 | 1.075 (1932) | 1.093 | 1.305 | 1.194 |
+| GRU h832 (best baseline) | 1.5257 | 2.0041 | 1.418 (1932) | 1.441 | 1.635 | 1.135 |
+
+45,776 steps, 12.0B tokens, 29.5k tokens/s, 10-22 06:46 -> 10-27 03:25 (116.7 h) on the 5080, no resume.

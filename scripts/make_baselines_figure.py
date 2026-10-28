@@ -3,6 +3,7 @@
 Lines are the per-year bpb, bands the bootstrap 95 % CI over documents; the dashed rule is the cutoff.
 
     python scripts/make_baselines_figure.py --out reports/figures/baselines_v1_bpb_by_year   # .pdf and .png
+    python scripts/make_baselines_figure.py --with-main --out reports/figures/main_vs_baselines_bpb_by_year
 """
 from __future__ import annotations
 
@@ -19,6 +20,7 @@ REPO = Path(__file__).resolve().parents[1]
 # Fixed categorical order (one hue per model, never by rank); checked for colour-vision deficiency.
 RUNS = [("gru_50m", "GRU", "#2a78d6"), ("lstm_50m", "LSTM", "#eb6834"),
         ("rnn_50m", "RNN", "#1baf7a"), ("ngram_kn5", "KN 5-gram", "#eda100")]
+MAIN = ("main_s335m", "Transformer", "#e87ba4")
 INK, MUTED, GRID, SURFACE = "#222222", "#5f5f5a", "#e4e3df", "#fcfcfb"
 CUTOFF = 1939.5        # 1939-06-30
 
@@ -39,9 +41,9 @@ def spread(ys: list[float], gap: float) -> list[float]:
     return out
 
 
-def panel(ax, data: dict[str, dict], lang: str, title: str, last_year: int) -> None:
+def panel(ax, data: dict[str, dict], lang: str, title: str, last_year: int, runs: list) -> None:
     ends = []
-    for run, label, color in RUNS:
+    for run, label, color in runs:
         rows = data[run][lang]
         x = [r["year"] for r in rows]
         ax.fill_between(x, [r["ci_lo"] for r in rows], [r["ci_hi"] for r in rows], color=color, alpha=0.18, lw=0)
@@ -68,14 +70,17 @@ def panel(ax, data: dict[str, dict], lang: str, title: str, last_year: int) -> N
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default="reports/figures/baselines_v1_bpb_by_year")
-    out = REPO / ap.parse_args().out
-    data = {run: load(run) for run, _, _ in RUNS}
+    ap.add_argument("--with-main", action="store_true", help="add the main Transformer run")
+    args = ap.parse_args()
+    out = REPO / args.out
+    runs = [MAIN] + RUNS if args.with_main else RUNS
+    data = {run: load(run) for run, _, _ in runs}
     fig, axes = plt.subplots(1, 2, figsize=(11, 4.2), facecolor=SURFACE, gridspec_kw={"width_ratios": [63, 53]})
-    panel(axes[0], data, "en", "English (American Stories, scored)", 1955)
-    panel(axes[1], data, "de", "German (DDB / Europeana, reported)", 1945)
+    panel(axes[0], data, "en", "English (American Stories, scored)", 1955, runs)
+    panel(axes[1], data, "de", "German (DDB / Europeana, reported)", 1945, runs)
     axes[0].set_ylabel("bits per byte (lower is better)", color=MUTED, fontsize=9)
     handles, labels = axes[0].get_legend_handles_labels()
-    fig.legend(handles, labels, loc="upper center", ncol=4, frameon=False, fontsize=9, bbox_to_anchor=(0.5, 1.0))
+    fig.legend(handles, labels, loc="upper center", ncol=len(runs), frameon=False, fontsize=9, bbox_to_anchor=(0.5, 1.0))
     fig.tight_layout(rect=(0, 0, 1, 0.93))
     out.parent.mkdir(parents=True, exist_ok=True)
     for ext in ("pdf", "png"):
