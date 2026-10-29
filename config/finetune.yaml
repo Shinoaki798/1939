@@ -34,6 +34,12 @@ train:                          # src.train.finetune
   dev_every_steps: 50
   checkpoint_every_steps: 100
   log_gpu_temp_every_steps: 10
+  # Against forgetting (second run ft_main_s335m_qa_replay, user 2026-10-29). The first run
+  # ft_main_s335m_qa had none of the three (runs/ft_main_s335m_qa/config.yaml): it lost 4.5 % EN Val bpb,
+  # and 67 % of its period pairs were from the 1920s (1930s 31 %).
+  balance_decades: true         # each epoch draws the 1920s period pairs down to the 1930s count (fresh draw)
+  replay: {stream: main, rows_per_step: 16, weight: 1.0}   # + 1.0 x mean loss of 16 pretraining rows per step
+  val_rows: 32                  # first 32 rows of each Val slice, loss logged with the dev loss
 
 eval:                           # src.eval.finetune_eval
   batch_rows: 8
