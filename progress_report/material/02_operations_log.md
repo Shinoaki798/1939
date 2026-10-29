@@ -397,3 +397,21 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
   0.00120. By the agreed rule: no twin. But the English reference is itself ~0.1 % of the bpb: the models
   barely use the previous document at all (training packs unrelated documents after <|endoftext|>), so v1 has
   almost no power to tell "German not linked" from "previous document ignored". Reported to the user.
+- 2026-10-28 21:30: v2 of the cross-lingual check approved by the user. `--version v2` (config
+  `crosslingual.joins`): <|endoftext|> context "\n\n" target; v1 outputs keep their names, v2 writes
+  `reports/crosslingual/<run>_v2.{json,md}`. Commit ebb6778 sent to the box as an object pack (48 KB), 93 tests
+  pass there; checksums of the frozen topics and items verified before scoring; main_s335m and gru_50m scored.
+- 2026-10-28 22:30: cross-lingual v2 results (same frozen items, checksums OK; context "\n\n" target).
+  main_s335m: German -> English -0.02144 bpb [-0.03028, -0.01275], English -> English 0.02064 [0.00898, 0.03269]
+  (all tokens: -0.02126 / 0.02976). gru_50m: German 0.01485 [0.00731, 0.02217], English 0.04331, ratio 0.34.
+  The English reference is now ~20x larger than in v1, so v2 has power. By the agreed rule (main model): no twin.
+  The main model's German effect is significantly NEGATIVE (53 of 73 topics below 0): an on-topic German
+  article makes the English passage less likely than an off-topic one.
+- 2026-10-28 22:45: diagnostic `scripts/crosslingual_diag.py` (not a decision input) ->
+  `reports/crosslingual/diag_v2_position.json`. Main model, by target position: tokens 0-3 German +0.029
+  [-0.010, 0.067] (English +0.159); 4-15 German -0.071 [-0.098, -0.043]; 16-63 -0.014 [-0.021, -0.008].
+  Probability mass on German-marked tokens at positions 4-15: 6.8 % after an on-topic German article vs 5.1 %
+  after an off-topic one (16-63: 0.99 % vs 0.76 %). Reading: the model recognises that the German article is on
+  the same topic, takes the English passage for its continuation and keeps expecting German; the cross-lingual
+  link shows up as interference, not as English knowledge gained. The GRU's German mass is the same in both
+  conditions (8.6 % vs 8.7 %) and its effect is positive. Decision on the twin put to the user.
