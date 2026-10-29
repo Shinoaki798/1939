@@ -7,7 +7,8 @@ import numpy as np
 import pandas as pd
 import torch
 
-from src.eval.crosslingual import assign_mismatch, contexts, effects, passage, per_item, scored, target_nll
+from src.eval.crosslingual import (assign_mismatch, contexts, effects, letter_share, passage, per_item, scored,
+                                   target_nll)
 
 
 class CharTok:
@@ -23,12 +24,21 @@ def test_passage_starts_at_the_line_of_the_first_hit():
     ids = passage(text, r"\bearthquakes?\b", CharTok(), 12)
     assert CharTok().decode(ids) == "A big EARTHQ"
     assert passage("nothing here", r"\bearthquake\b", CharTok(), 12) == []
+    long = "word " * 100 + "the earthquake struck"                  # one long line, as on a newspaper page
+    out = CharTok().decode(passage(long, r"\bearthquake\b", CharTok(), 300))
+    assert out.startswith("word ") and out.endswith("struck") and len(out) <= 220
+
+
+def test_letter_share_flags_ocr_debris():
+    assert letter_share("Der Reichstag trat heute zusammen.") > 0.9
+    assert letter_share("V - -»»»>»» >»» « ^»^»»^/»»» ^«") < 0.5
 
 
 def test_mismatch_is_another_topic_and_passes_the_check():
     topics = ["a", "a", "b", "b", "c"]
     mis = assign_mismatch(topics, lambda i, j: True, seed=0)
     assert all(topics[i] != topics[j] for i, j in enumerate(mis))
+    assert len(set(mis)) == len(mis)                                 # each item lends its contexts once
     mis = assign_mismatch(topics, lambda i, j: topics[j] == "c" or topics[i] == "c", seed=0)
     assert all(topics[j] == "c" for i, j in enumerate(mis) if topics[i] != "c")
 

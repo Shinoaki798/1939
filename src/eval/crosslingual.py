@@ -7,8 +7,9 @@ English text; if it does not, an English-only twin could not show a German-press
 Items. Topics with an English and a German pattern (`probes/crosslingual_topics.csv`, matched case-blind). From
 the held-out split (never trained on) dated 1930-01-01 .. 1939-06-30, per topic and in seeded hash order: German
 documents (DDB, Europeana) and English documents (American Stories) with >= min_matches hits. Every passage
-starts at the line holding the document's first hit: the English target is target_tokens long, a context is
-context_tokens long and needs min_matches hits of its own. An item is one English target with four contexts:
+starts at the first hit's line, or ~200 characters before the hit on a long line: the English target is
+target_tokens long, a context is context_tokens long and needs min_matches hits of its own; a passage with
+fewer than min_letter_share letters and spaces (OCR debris) is skipped. An item is one English target with four contexts:
 a German and an English on-topic context (other documents), and the two contexts of an item of another topic
 whose text has no hit of the target's topic (mismatched). No document is used twice. Built once to
 data/eval/crosslingual/items.parquet; its sha256 and the topic file's are written to probes/CHECKSUMS before
@@ -83,23 +84,40 @@ def hits(texts, pattern: str) -> np.ndarray:
     return pc.count_substring_regex(arr, pattern, ignore_case=True).to_numpy(zero_copy_only=False)
 
 
-def passage(text: str, pattern: str, tok, n_tokens: int) -> list[int]:
-    """Up to n_tokens tokens starting at the line that holds the first hit of the pattern."""
+def passage(text: str, pattern: str, tok, n_tokens: int, back: int = 200) -> list[int]:
+    """Up to n_tokens tokens from the first hit's line start, or from `back` characters before the hit (at a word
+    start) when the line is longer: whole newspaper pages run for thousands of characters without a break."""
     m = re.search(pattern, text, flags=re.IGNORECASE)
     if m is None:
         return []
     start = text.rfind("\n", 0, m.start()) + 1
+    if m.start() - start > back:
+        start = m.start() - back
+        while start < m.start() and not text[start - 1].isspace():
+            start += 1
     return tok.encode(text[start:start + 10 * n_tokens], add_special_tokens=False).ids[:n_tokens]
 
 
+LETTERS = re.compile(r"[^\W\d_]|\s")
+
+
+def letter_share(text: str) -> float:
+    """Share of letters and white space; OCR debris (punctuation runs, broken glyphs) scores low."""
+    return len(LETTERS.findall(text)) / max(1, len(text))
+
+
 def assign_mismatch(topics: list[str], ok, seed: int) -> list[int]:
-    """For each item an item of another topic (seeded order) whose contexts pass ok(i, j); -1 if none."""
+    """For each item an item of another topic whose contexts pass ok(i, j); -1 if none. Seeded order, and each item
+    lends its contexts once where possible, so every context is about as often matched as mismatched."""
     rng = np.random.default_rng(seed)
-    order = rng.permutation(len(topics))
-    out = []
-    for i in range(len(topics)):
-        j = next((int(j) for j in np.roll(order, -i) if topics[j] != topics[i] and ok(i, int(j))), -1)
-        out.append(j)
+    order = [int(j) for j in rng.permutation(len(topics))]
+    out, lent = [-1] * len(topics), set()
+    for i in order:
+        valid = [j for j in order if topics[j] != topics[i] and ok(i, j)]
+        free = [j for j in valid if j not in lent]
+        if valid:
+            out[i] = (free or valid)[0]
+            lent.add(out[i])
     return out
 
 
@@ -123,7 +141,8 @@ def build_items(cfg: dict, ecfg: dict, tok) -> pd.DataFrame:
         for r in cand["de"].itertuples():
             ids = passage(r.text, t.de_pattern, tok, int(c["context_tokens"]))
             if r.article_id not in used and len(ids) == int(c["context_tokens"]) and \
-                    hits([tok.decode(ids)], t.de_pattern)[0] >= int(c["min_matches"]):
+                    hits([tok.decode(ids)], t.de_pattern)[0] >= int(c["min_matches"]) and \
+                    letter_share(tok.decode(ids)) >= float(c["min_letter_share"]):
                 got["de"].append((r.article_id, ids))
                 used.add(r.article_id)
             if len(got["de"]) == int(c["items_per_topic"]):
@@ -135,13 +154,15 @@ def build_items(cfg: dict, ecfg: dict, tok) -> pd.DataFrame:
                 continue
             if len(got["en_tgt"]) <= len(got["en_ctx"]) and len(got["en_tgt"]) < len(got["de"]):
                 ids = passage(r.text, t.en_pattern, tok, int(c["target_tokens"]))
-                if len(ids) >= int(c["min_target_tokens"]):
+                if len(ids) >= int(c["min_target_tokens"]) and \
+                        letter_share(tok.decode(ids)) >= float(c["min_letter_share"]):
                     got["en_tgt"].append((r.article_id, ids))
                     used.add(r.article_id)
             elif len(got["en_ctx"]) < len(got["de"]):
                 ids = passage(r.text, t.en_pattern, tok, int(c["context_tokens"]))
                 if len(ids) == int(c["context_tokens"]) and \
-                        hits([tok.decode(ids)], t.en_pattern)[0] >= int(c["min_matches"]):
+                        hits([tok.decode(ids)], t.en_pattern)[0] >= int(c["min_matches"]) and \
+                        letter_share(tok.decode(ids)) >= float(c["min_letter_share"]):
                     got["en_ctx"].append((r.article_id, ids))
                     used.add(r.article_id)
         n = min(len(got["de"]), len(got["en_ctx"]), len(got["en_tgt"]))

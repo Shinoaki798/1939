@@ -23,6 +23,7 @@ crosslingual:
   context_tokens: 256           # context passage length (American Stories articles are short)
   target_tokens: 64             # target: 64 tokens from the line holding the first topic hit
   min_target_tokens: 32
+  min_letter_share: 0.8         # letters + white space in a passage; below this it is OCR debris
   items_per_topic: 4
   ratio_threshold: 0.2          # German -> English effect >= 20 % of English -> English, and its CI above 0
   batch_rows: 16
