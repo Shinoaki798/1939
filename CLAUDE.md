@@ -5,7 +5,7 @@ HANDOFF holds the research design, every locked decision with its rationale,
 the instructor's constraints and the schedule. This file holds only the rules
 that must never be violated and the conventions of the repo.
 
-State as of 2026-10-01; rules 2, 4-7, 10, 11 revised 2026-10-05, rule 1 revised 2026-10-06, rule 6 revised 2026-10-07, rule 7 revised 2026-10-08, rule 1 revised again 2026-10-22 (HANDOFF §12). Proposal due 2026-10-16. The person you are working
+State as of 2026-10-01; rules 2, 4-7, 10, 11 revised 2026-10-05, rule 1 revised 2026-10-06, rule 6 revised 2026-10-07, rule 7 revised 2026-10-08, rule 1 revised again 2026-10-22, rule 5 revised 2026-10-28 (HANDOFF §12). Proposal due 2026-10-16. The person you are working
 with is Junlei An (goes by Andrew), an individual student on this project.
 
 ## Hard constraints (never violate, never "improve")
@@ -45,7 +45,9 @@ with is Junlei An (goes by Andrew), an individual student on this project.
    (per-year bpb, RQ1 probe contexts, RQ2 calibration corpora, RQ3 scored
    continuations, ChroniclingAmericaQA sanity). No translated text exists in
    this project. German text enters training, the German per-year bpb curve
-   (reported, not a success criterion) and RQ3 conditioning contexts only.
+   (reported, not a success criterion), RQ3 conditioning contexts and the
+   conditioning contexts of the twin-decision cross-lingual check (user
+   2026-10-28) only.
    Other training-only sources (books, Congressional Record, legal text,
    page-level Chronicling America OCR) are never scored.
 6. **C1 coinages are screened, counted and kept** (revised 2026-10-07, user):

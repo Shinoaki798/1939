@@ -734,6 +734,9 @@ Dated entries; each supersedes anything above it that it contradicts.
     bootstrap 95 % CI excluding 0 and is at least 20 % of the English -> English effect; otherwise no twin.
     Decision by 10-29 (TASKS Phase 6). The proposal promised RQ2 as a paired main-vs-twin difference; if
     the twin is skipped the progress / final report says so and why.
+- **2026-10-28 — cross-lingual check: German held-out articles as conditioning contexts (user).** CLAUDE.md
+  rule 5 extended: German text may also be the conditioning context of the twin-decision check
+  (`src/eval/crosslingual.py`); the scored targets stay native English from American Stories held-out text.
 
 ---
 

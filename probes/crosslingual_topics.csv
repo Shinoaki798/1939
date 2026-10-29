@@ -1,0 +1,74 @@
+topic,en_pattern,de_pattern
+earthquake,\bearthquakes?\b,Erdbeben
+flood,\bfloods?\b|\bflooded\b|\bfloodwaters?\b,(Ü|Ue)berschwemmung|Hochwasser
+labour_strike,\bstrikers\b|\bwalkouts?\b,\bStreik
+election,\belections?\b,\bWahlen\b|Reichstagswahl|Wahlkampf
+wheat,\bwheat\b,\bWeizen
+stock_exchange,\bstock exchange\b|\bstock market\b,\bB(ö|oe)rse\b
+airplane,\bairplanes?\b|\baviators?\b,\bFlugzeug|\bFlieger\b
+airship,\bairships?\b|\bdirigibles?\b,Luftschiff
+olympic_games,\bOlympic,\bOlympi
+league_of_nations,\bLeague of Nations\b,V(ö|oe)lkerbund
+austria,\bAustria,(Ö|Oe)sterreich
+czechoslovakia,Czechoslovak,Tschechoslowak
+ethiopia,\bEthiopia|\bAbyssinia,Abessinien|(Ä|Ae)thiopien
+spain,\bSpain\b|\bSpanish\b,\bSpanien\b|\bspanisch
+soviet_russia,\bSoviet|\bRussia\b,\bSowjet|\bRu(ß|ss)land\b
+moscow,\bMoscow\b,\bMoskau\b
+italy,\bItaly\b,\bItalien\b
+france,\bFrance\b,\bFrankreich\b
+poland,\bPoland\b,\bPolen\b
+danzig,\bDanzig\b,\bDanzig\b
+saar,\bSaar\b,\bSaar
+rhineland,\bRhineland\b,\bRheinland
+hungary,\bHungary\b|\bHungarian\b,\bUngarn\b|\bungarisch
+switzerland,\bSwitzerland\b|\bSwiss\b,\bSchweiz\b|\bschweizerisch
+belgium,\bBelgium\b|\bBelgian\b,\bBelgien\b|\bbelgisch
+vienna,\bVienna\b,\bWien\b
+munich,\bMunich\b,\bM(ü|ue)nchen\b
+cologne,\bCologne\b,\bK(ö|oe)ln\b
+japan,\bJapan\b|\bJapanese\b,\bJapan\b|\bjapanisch
+pope,\bPope\b|\bVatican\b,\bPapst|\bVatikan
+coronation,\bcoronation\b,\bKr(ö|oe)nung
+christmas,\bChristmas\b,\bWeihnacht
+easter,\bEaster\b,\bOstern\b|\bOsterfest
+soccer,\bsoccer\b,Fu(ß|ss)ball
+boxing,\bheavyweight\b|\bprize fight|\bring bout,\bBoxkampf|\bBoxer\b|\bSchwergewicht
+automobile,\bautomobiles?\b|\bmotor cars?\b,\bKraftwagen|\bAutomobil
+railway,\brailroads?\b|\brailways?\b,\bEisenbahn|\bReichsbahn
+unemployment,\bunemploy,\bArbeitslos
+taxes,\btaxes\b|\btaxation\b,\bSteuern\b|\bSteuer\b
+army,\barmy\b|\barmies\b,\bArmee\b|\bReichswehr\b|\bWehrmacht\b
+navy,\bnavy\b|\bnaval\b|\bbattleships?\b,\bFlotte\b|\bKriegsmarine|\bKriegsschiff
+treaty,\btreaty\b|\btreaties\b,\bVertrag\b|\bVertr(ä|ae)ge\b
+disarmament,\bdisarmament\b,\bAbr(ü|ue)stung
+colonies,\bcolonies\b|\bcolonial\b,\bKolonie|\bKolonial
+jews,\bJews\b|\bJewish\b,\bJuden\b|\bj(ü|ue)disch
+catholic,\bCatholics?\b,\bkatholisch|\bKatholiken\b
+university,\buniversity\b|\buniversities\b,\bUniversit(ä|ae)t|\bHochschule
+hospital,\bhospitals?\b,\bKrankenhaus|\bKlinik\b
+snowstorm,\bsnowstorms?\b|\bblizzards?\b,\bSchneesturm|\bSchneefall|\bSchneeverwehung
+harvest,\bharvest\b|\bharvests\b,\bErnte\b
+milk,\bmilk\b|\bdairy\b,\bMilch\b|\bMolkerei
+coal,\bcoal\b,\bKohle\b|\bKohlen\b|\bBergbau\b
+steel,\bsteel\b,\bStahl\b
+radio,\bradio\b|\bbroadcasting\b,\bRundfunk
+motion_pictures,\bmotion pictures?\b|\bmovies\b,\bFilm\b|\bLichtspiel|\bKino\b
+opera,\bopera\b,\bOper\b
+concert,\bconcerts?\b|\bsymphony\b,\bKonzert|\bSinfonie|\bSymphonie
+murder,\bmurder,\bMord\b|\bM(ö|oe)rder\b
+kidnapping,\bkidnap,\bEntf(ü|ue)hrung|\bKindesraub
+robbery,\brobbery\b|\brobbers\b|\bbandits\b,\bRaub(ü|ue)berfall|\bR(ä|ae)uber\b
+hunting,\bhunting\b|\bhunters\b,\bJagd\b|\bJ(ä|ae)ger\b
+horse_racing,\bhorse rac|\bracetrack\b|\bDerby\b,\bPferderennen|\bGalopprennen|\bTrabrennen
+chess,\bchess\b,\bSchach\b
+bicycle,\bbicycles?\b|\bcyclists?\b,\bRadrennen|\bRadfahrer|\bFahrrad
+mountaineering,\bmountain climb|\bclimbers\b|\bmountaineers?\b,\bBergsteiger|\bErstbesteigung
+ocean_liner,\bocean liners?\b|\bsteamships?\b,\bDampfer\b|\bOzeanriese|\bPassagierdampfer
+currency,\bgold standard\b|\bdevaluation\b|\bcurrency\b,\bW(ä|ae)hrung\b|\bAbwertung\b|\bGoldw(ä|ae)hrung
+roosevelt,\bRoosevelt\b,\bRoosevelt\b
+mussolini,\bMussolini\b,\bMussolini\b
+chamberlain,\bChamberlain\b,\bChamberlain\b
+hitler,\bHitler\b,\bHitler\b
+hindenburg,\bHindenburg\b,\bHindenburg\b
+lindbergh,\bLindbergh\b,\bLindbergh\b

@@ -56,6 +56,7 @@ Dates are hard (HANDOFF §4). Rewritten 2026-10-19 for the current plan (no tran
 - [ ] `src/eval/sanity_caqa.py` (pre-1920 ChroniclingAmericaQA subset).
 - [ ] Cross-lingual check for the twin decision (user 2026-10-22), on the finished main model. Criterion
       (agreed 10-22): German -> English priming CI excludes 0 and >= 20 % of English -> English -> twin.
+      `src/eval/crosslingual.py`, topics `probes/crosslingual_topics.csv` (75), items frozen before scoring.
   Gate: the harness runs end to end on a baseline checkpoint in one command.
 
 ## Phase 6 — the English-only twin, only if the cross-lingual check passes (2026-10-30 … 11-04)

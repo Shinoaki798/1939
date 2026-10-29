@@ -10,3 +10,19 @@ bpb_by_year:
   de: {sources: [ddb_newspapers_de, europeana_newspapers_de], tokens_per_year: 1.0e+6}   # reported only
   stride: 2048                  # documents longer than the context: windows of `context` advancing by this
   batch_tokens: {transformer: 16384, recurrent: 131072}
+
+crosslingual:
+  # twin decision (user 2026-10-22, criterion agreed; HANDOFF §12): does a German article make a native English
+  # sentence on the same topic more probable than a German article on another topic?
+  topics: probes/crosslingual_topics.csv
+  dates: ["1930-01-01", "1939-06-30"]      # held-out documents of the training period only
+  en: {sources: [american_stories]}       # the scored targets (rule 5)
+  de: {sources: [ddb_newspapers_de, europeana_newspapers_de]}   # conditioning contexts only (rule 5, 10-28)
+  min_matches: 2                # topic pattern hits in a document to call it on-topic
+  min_doc_tokens: 150
+  context_tokens: 256           # context passage length (American Stories articles are short)
+  target_tokens: 64             # target: 64 tokens from the line holding the first topic hit
+  min_target_tokens: 32
+  items_per_topic: 4
+  ratio_threshold: 0.2          # German -> English effect >= 20 % of English -> English, and its CI above 0
+  batch_rows: 16
