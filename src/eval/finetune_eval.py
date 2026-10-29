@@ -10,11 +10,15 @@ The untuned main model (config/finetune.yaml base) and the fine-tuned run are sc
 Each model reads <|endoftext|> prompt (`qa_pairs.prompt_text`, the column layout the untuned model was trained
 on) and is scored on ' ' + answer, without the closing token. Greedy answers stop at <|endoftext|> or a line
 break. Paired differences (before - after) with bootstrap 95 % CIs over items. Also: Val bpb (EN, DE) of both
-models, and the greedy answers of both to samples_per_set items of each set and to the fixed questions in
-probes/finetune_prompts.txt.
+models with paired CIs over Val documents, and the greedy answers of both to samples_per_set items of each set
+and to the fixed questions in probes/finetune_prompts.txt. Every per-item score of both models is saved, so
+two fine-tuned runs can be compared on the same items (--compare).
 
     python -m src.eval.finetune_eval --run ft_main_s335m_qa
-Output: reports/finetune/<run>.json, <run>.md and <run>_samples.md.
+    python -m src.eval.finetune_eval --compare ft_main_s335m_qa ft_main_s335m_qa_replay
+Output: reports/finetune/<run>.json, <run>.md, <run>_samples.md and <run>_items.npz; --compare writes
+reports/finetune/compare_<a>_vs_<b>.{json,md} (diff = a - b of the after scores; in bits per byte > 0: b is
+better).
 """
 from __future__ import annotations
 
@@ -109,15 +113,51 @@ def frozen(sha: str) -> bool:
     return any(ln.split()[:1] == [sha] and "data/finetune/" in ln for ln in lines)
 
 
+def compare(a: str, b: str, n_boot: int, seed: int) -> dict:
+    """Two fine-tuned runs on the same items: their before scores must agree (same base model, same items);
+    paired differences a - b of the after scores, with bootstrap 95 % CIs over items."""
+    out = repo_path("reports") / "finetune"
+    za, zb = np.load(out / f"{a}_items.npz"), np.load(out / f"{b}_items.npz")
+    if sorted(za.files) != sorted(zb.files):
+        raise SystemExit(f"{a} and {b} were scored on different sets")
+    res = {"a": a, "b": b, "git_sha": subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True,
+                                                      cwd=repo_path(".")).stdout.strip(), "scores": {}}
+    lines = [f"# Fine-tuned runs compared: `{a}` (a) vs `{b}` (b)", "",
+             "Same frozen items and base model (the before scores of both evaluations agree). diff = a - b of the "
+             "after scores, 95 % CI over items (Val: documents): in bits per byte > 0 means b is better, in "
+             "exact match and F1 < 0 means b is better.", "",
+             "| score | items | base | a | b | diff a - b | 95 % CI |", "|---|---|---|---|---|---|---|"]
+    for k in sorted(f[:-len("_before")] for f in za.files if f.endswith("_before")):
+        if not np.allclose(za[f"{k}_before"], zb[f"{k}_before"], rtol=1e-4, atol=1e-3):
+            raise SystemExit(f"{k}: the before scores differ between {a} and {b}")
+        w = za[f"{k}_weight"] if f"{k}_weight" in za.files else None
+        r = paired(za[f"{k}_after"], zb[f"{k}_after"], w, n_boot, seed)
+        base = za[f"{k}_before"].sum() / (w.sum() if w is not None else len(za[f"{k}_before"]))
+        res["scores"][k] = {"base": round(float(base), 5), "a": r["before"], "a_ci": r["before_ci"], "b": r["after"],
+                            "b_ci": r["after_ci"], "diff": r["diff"], "diff_ci": r["diff_ci"], "items": r["items"]}
+        lines.append(f"| {k} | {r['items']} | {round(float(base), 5)} | {r['before']} | {r['after']} | {r['diff']} | "
+                     f"{r['diff_ci']} |")
+    (out / f"compare_{a}_vs_{b}.json").write_text(json.dumps(res, indent=1), encoding="utf-8")
+    (out / f"compare_{a}_vs_{b}.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    print("\n".join(lines))
+    return res
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--run", required=True, help="runs/<name>/ of the fine-tuned model")
+    ap.add_argument("--run", help="runs/<name>/ of the fine-tuned model")
     ap.add_argument("--checkpoint", help="file in runs/<name>/checkpoints/ (default: latest)")
+    ap.add_argument("--compare", nargs=2, metavar=("A", "B"), help="compare two evaluated runs on the same items")
     args = ap.parse_args()
     from tokenizers import Tokenizer
     cfg = load_config(repo_path("config/paths.yaml"))
     fcfg = yaml.safe_load(repo_path("config/finetune.yaml").read_text(encoding="utf-8"))
     e = fcfg["eval"]
+    if args.compare:
+        compare(*args.compare, int(e["bootstrap"]), int(fcfg["seed"]))
+        return
+    if not args.run:
+        ap.error("--run or --compare is required")
     tok = Tokenizer.from_file(str(repo_path(yaml.safe_load(repo_path("config/tokenizer.yaml").read_text())["file"])))
     df, sha = load_pairs(cfg)
     if not frozen(sha):
@@ -161,10 +201,10 @@ def main() -> None:
         g["gen"]["fixed"] = [tok.decode(x).strip() for x in generate(model, fixed, device, int(e["gen_tokens"]["period"]),
                                                                      int(e["batch_rows"]), stop)]
         C = int(yaml.safe_load((rd / "config.yaml").read_text(encoding="utf-8"))["model"]["context"])
-        g["val"] = {lang: round(ValSlice(shards / "val", lang, C).evaluate(model, model.output_weight, device, 1)["bpb"], 5)
+        g["val"] = {lang: ValSlice(shards / "val", lang, C).evaluate(model, model.output_weight, device, 1, per_doc=True)
                     for lang in ("en", "de") if (shards / "val" / f"{lang}.bin").exists()}
         got[which] = g
-        print(which, step, g["val"], flush=True)
+        print(which, step, {lang: round(v["bpb"], 5) for lang, v in g["val"].items()}, flush=True)
         del model
         torch.cuda.empty_cache()
     nb, seed = int(e["bootstrap"]), int(fcfg["seed"])
@@ -172,20 +212,30 @@ def main() -> None:
            "git_sha": subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True,
                                      cwd=repo_path(".")).stdout.strip(),
            "created_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
-           "val_bpb": {w: got[w]["val"] for w in got}, "sets": {}}
+           "val_bpb": {}, "sets": {}}
+    arrays = {}                                       # every per-item score, for --compare
+    for lang in got["before"]["val"]:
+        b, a = got["before"]["val"][lang], got["after"]["val"][lang]
+        res["val_bpb"][lang] = paired(b["doc_bits"], a["doc_bits"], b["doc_bytes"], nb, seed)
+        arrays.update({f"val_{lang}_before": b["doc_bits"], f"val_{lang}_after": a["doc_bits"],
+                       f"val_{lang}_weight": b["doc_bytes"]})
     for s in SETS:
         nbytes = np.array([tb[a].sum() for a in items[s]["answers"]])
-        r = {"answer_bpb": paired(got["before"]["nll"][s] / math.log(2), got["after"]["nll"][s] / math.log(2),
-                                  nbytes, nb, seed)}
+        bits = {w: got[w]["nll"][s] / math.log(2) for w in got}
+        r = {"answer_bpb": paired(bits["before"], bits["after"], nbytes, nb, seed)}
+        arrays.update({f"{s}_before": bits["before"], f"{s}_after": bits["after"], f"{s}_weight": nbytes})
         if s == "caqa_test":
             refs = items[s]["df"]["answer"].tolist()
             sc = {w: np.array([em_f1(got[w]["gen"][s][i], refs[i]) for i in range(len(refs))]) for w in got}
             r["exact_match"] = paired(sc["before"][:, 0], sc["after"][:, 0], None, nb, seed)
             r["f1"] = paired(sc["before"][:, 1], sc["after"][:, 1], None, nb, seed)
+            for m, j in (("exact_match", 0), ("f1", 1)):
+                arrays.update({f"{s}_{m}_before": sc["before"][:, j], f"{s}_{m}_after": sc["after"][:, j]})
         res["sets"][s] = r
     out = repo_path("reports") / "finetune"
     out.mkdir(parents=True, exist_ok=True)
     (out / f"{args.run}.json").write_text(json.dumps(res, indent=1), encoding="utf-8")
+    np.savez_compressed(out / f"{args.run}_items.npz", **arrays)
     lines = [f"# Fine-tuning before / after: `{args.run}` ({tuned_ck}) vs `{fcfg['base']['run']}` "
              f"({fcfg['base']['checkpoint']})", "", f"Items: pairs file `{sha[:12]}` (frozen in probes/CHECKSUMS).", "",
              "Answer bits per byte (lower is better); diff = before - after (> 0: the fine-tuned model is better).", "",
@@ -201,7 +251,12 @@ def main() -> None:
         x = c[m]
         lines.append(f"| {m} | {x['before']} | {x['after']} | {round(-x['diff'], 5)} | "
                      f"{[-x['diff_ci'][1], -x['diff_ci'][0]]} |")
-    lines += ["", f"Val bpb: before {res['val_bpb']['before']}, after {res['val_bpb']['after']}."]
+    lines += ["", "Val bpb, whole Val slices (lower is better; diff = before - after, CI over documents):", "",
+              "| language | documents | before | 95 % CI | after | 95 % CI | diff | 95 % CI |",
+              "|---|---|---|---|---|---|---|---|"]
+    for lang, a in res["val_bpb"].items():
+        lines.append(f"| {lang} | {a['items']} | {a['before']} | {a['before_ci']} | {a['after']} | {a['after_ci']} | "
+                     f"{a['diff']} | {a['diff_ci']} |")
     (out / f"{args.run}.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     sm = [f"# Greedy answers before / after fine-tuning: `{args.run}`", ""]
     sm += ["## Fixed questions", ""]

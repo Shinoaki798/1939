@@ -81,10 +81,10 @@ class ValSlice:
         self.rows = (len(self.tokens) - 1) // context
 
     @torch.no_grad()
-    def evaluate(self, fwd, weight: torch.Tensor, device: str, rows_per_batch: int) -> dict:
+    def evaluate(self, fwd, weight: torch.Tensor, device: str, rows_per_batch: int, per_doc: bool = False) -> dict:
         """Mean loss per target (nats) over whole rows, and bits per byte over the documents the rows cover:
         each document's tokens are predicted from what precedes them in the slice; <|endoftext|> targets
-        are not counted in bits per byte."""
+        are not counted in bits per byte. per_doc adds each covered document's bits and bytes (for CIs)."""
         C = self.context
         nll = torch.empty(self.rows * C, dtype=torch.float64)
         for r in range(0, self.rows, rows_per_batch):
@@ -98,8 +98,11 @@ class ValSlice:
         end = self.off + self.n - 1                       # one past the last target index of each document
         ok = end <= self.rows * C
         doc = csum[end[ok]] - csum[self.off[ok] - 1]
-        return {"loss": float(nll.mean()), "bpb": float(doc.sum() / math.log(2) / self.bytes[ok].sum()),
-                "documents": int(ok.sum())}
+        r = {"loss": float(nll.mean()), "bpb": float(doc.sum() / math.log(2) / self.bytes[ok].sum()),
+             "documents": int(ok.sum())}
+        if per_doc:
+            r.update(doc_bits=doc / math.log(2), doc_bytes=self.bytes[ok])
+        return r
 
 
 def lr_at(step: int, max_steps: int, run: dict) -> float:

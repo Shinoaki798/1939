@@ -98,6 +98,25 @@ def test_resume_with_replay_continues_exactly(tmp_path):
     assert "replay_loss" in la[-1] and "val_loss_en" in la[0]
 
 
+def test_compare_two_runs_on_the_same_items(tmp_path, monkeypatch):
+    import pytest
+
+    import src.eval.finetune_eval as fe
+    monkeypatch.setattr(fe, "repo_path", lambda p: tmp_path / p)
+    d = tmp_path / "reports" / "finetune"
+    d.mkdir(parents=True)
+    common = {"s_before": np.array([2.0, 4.0]), "s_weight": np.array([1.0, 1.0]), "t_f1_before": np.array([0.0, 1.0])}
+    np.savez(d / "a_items.npz", **common, s_after=np.array([2.0, 2.0]), t_f1_after=np.array([1.0, 1.0]))
+    np.savez(d / "b_items.npz", **common, s_after=np.array([1.0, 1.0]), t_f1_after=np.array([0.0, 1.0]))
+    r = fe.compare("a", "b", 100, 0)["scores"]
+    assert r["s"]["base"] == 3.0 and r["s"]["a"] == 2.0 and r["s"]["b"] == 1.0 and r["s"]["diff"] == 1.0
+    assert r["t_f1"]["diff"] == 0.5 and r["t_f1"]["base"] == 0.5
+    np.savez(d / "b_items.npz", **{**common, "s_before": np.array([2.0, 5.0])}, s_after=np.array([1.0, 1.0]),
+             t_f1_after=np.array([0.0, 1.0]))
+    with pytest.raises(SystemExit):
+        fe.compare("a", "b", 100, 0)
+
+
 def test_em_f1_and_paired_difference():
     assert em_f1("The Reginald Denny.", "reginald denny") == (1.0, 1.0)
     assert em_f1("Denny", "Reginald Denny")[1] == 2 / 3

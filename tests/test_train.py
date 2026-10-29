@@ -80,3 +80,5 @@ def test_val_bpb_of_a_uniform_model(tmp_path):
     assert r["documents"] == 3                                          # every document ends inside 3 rows
     assert r["bpb"] == pytest.approx(9 * math.log2(50) / 36)
     assert r["loss"] == pytest.approx(math.log(50))
+    d = v.evaluate(lambda x: torch.zeros(*x.shape, 8), w, "cpu", rows_per_batch=2, per_doc=True)
+    assert d["doc_bits"] == pytest.approx(np.array([3, 2, 4]) * math.log2(50)) and d["doc_bytes"].tolist() == [10, 6, 20]
