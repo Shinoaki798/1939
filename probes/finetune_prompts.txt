@@ -1,0 +1,26 @@
+# Fixed questions for the fine-tuning before / after samples (src.eval.finetune_eval; not scored).
+# Known before the cutoff:
+Who is the Chancellor of Germany?
+Who is the President of the United States?
+What is the League of Nations?
+Who is Benito Mussolini?
+Who is Joseph Stalin?
+Who is Winston Churchill?
+What is the New Deal?
+Who is Charles A. Lindbergh?
+What became of Amelia Earhart?
+What happened to the airship Hindenburg?
+How long is the Golden Gate Bridge?
+How long is the Panama Canal?
+What is the population of New York City?
+When did the World War end?
+What is television?
+Will there be another war in Europe?
+# After the cutoff (the model should not know):
+When did Adolf Hitler die?
+Who won the Second World War?
+What happened at Pearl Harbor?
+What is the atomic bomb?
+What is the United Nations?
+What is a jeep?
+Who succeeded Franklin D. Roosevelt as President?

@@ -740,6 +740,12 @@ Dated entries; each supersedes anything above it that it contradicts.
 - **2026-10-29 — no twin (user).** Not needed: the cross-lingual check already gives the answer (v1 and v2
   fail the agreed criterion; in v2 an on-topic German article makes the English passage less likely, the
   model keeps expecting German); `reports/crosslingual/`. No email to the instructor (user).
+- **2026-10-29 — fine-tuning data (user).** Both sources: the period question-and-answer columns of American
+  Stories ("Q. ...? A. ...", e.g. Haskin's "Answers to Questions"; ~20k pairs in the train split <= cutoff,
+  question and answer written in the period) and 40k ChroniclingAmericaQA train items (1800-1920 passage +
+  machine-written question -> answer span; stated as such). Evaluation before / after: held-out period pairs
+  <= cutoff (holdout + val), period pairs >= 1939-09-01 (never trained on; the knowledge boundary), CAQA test,
+  Val bpb. The embargo is never read.
 
 ---
 

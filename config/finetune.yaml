@@ -1,0 +1,40 @@
+# Fine-tuning a copy of the finished main model (user 2026-10-22, data 2026-10-29; HANDOFF §12; CLAUDE.md
+# rule 1: its own report section, always beside the untuned model; no RQ / bpb-by-year / sanity number from it).
+seed: 1939
+base: {run: main_s335m, checkpoint: step_045776.pt}
+
+data:                           # src.data.qa_pairs -> data/finetune/
+  period:                       # the question-and-answer columns of American Stories ("Q. ...? A. ...")
+    source: american_stories
+    min_pairs: 2                # pairs in an article to call it a column
+    question_chars: [8, 400]    # a question ends in "?"
+    answer_chars: [2, 1000]
+    overlap: 0.5                # an evaluation question sharing >= this share of its word 3-grams with a
+                                # train question is dropped (syndicated columns ran in many papers)
+    dev_share: 0.02             # of the train pairs, kept aside for the fine-tuning dev loss
+  caqa:                         # ChroniclingAmericaQA (MIT, revision 15e58335): machine-written questions
+    dir: data/eval/chroniclingamerica_qa
+    train: 40000                # seeded sample of train.json
+    eval: 2000                  # seeded sample of test.json
+    context_tokens: 1024        # passages longer than this are cut
+    dev_share: 0.02
+
+train:                          # src.train.finetune
+  lr: 3.0e-5                    # 10 % of the pretraining peak, the rate the main run ended at
+  warmup_steps: 30
+  min_lr_ratio: 0.1
+  epochs: 2
+  batch_rows: 32                # rows of 4,096 tokens per step; examples never cross a row
+  micro_batch_rows: 1
+  betas: [0.9, 0.95]
+  weight_decay: 0.1
+  grad_clip: 1.0
+  dev_every_steps: 50
+  checkpoint_every_steps: 100
+  log_gpu_temp_every_steps: 10
+
+eval:                           # src.eval.finetune_eval
+  batch_rows: 8
+  gen_tokens: {caqa: 24, period: 120}
+  samples_per_set: 20
+  bootstrap: 2000

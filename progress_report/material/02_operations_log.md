@@ -417,3 +417,8 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
   conditions (8.6 % vs 8.7 %) and its effect is positive. Decision on the twin put to the user.
 - 2026-10-29: the user decided: no twin (the check already gives the answer), no email. CLAUDE.md rule 1,
   HANDOFF §12 and TASKS Phases 5, 6, 8 updated.
+- 2026-10-29: fine-tuning data survey on the 5080 (`/home/an/scratch/qa_scan.py`, 1:31, 16 GB peak RSS):
+  American Stories articles with >= 2 "Q. ...? A. ..." pairs -- train 5,141 articles / 20,189 pairs (1920s
+  12,348, 1930s 7,087), holdout + val <= cutoff ~790 pairs, holdout + post >= 1939-09 ~2,800 pairs (1940s
+  2,026), embargo 171 (not used). ChroniclingAmericaQA: train 1.38 GB, dev / test 75 MB each, extractive.
+  Branch model/finetune.

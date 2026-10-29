@@ -121,13 +121,17 @@ def gpu_status() -> dict:
 
 
 def write_run_files(run_dir: Path, run: dict, stream: Stream, val_root: Path | None) -> None:
+    vm = val_root / "MANIFEST.json" if val_root else None
+    write_provenance(run_dir, run, {
+        "stream": run["stream"], "stream_manifest_sha256": stream.sha256, "rows": stream.rows,
+        "val_manifest_sha256": hashlib.sha256(vm.read_bytes()).hexdigest() if vm and vm.exists() else None})
+
+
+def write_provenance(run_dir: Path, run: dict, data_manifest: dict) -> None:
+    """runs/<name>/{config.yaml, data_manifest.json, seed.txt, git_sha.txt, env.txt}."""
     run_dir.mkdir(parents=True, exist_ok=True)
     (run_dir / "config.yaml").write_text(yaml.safe_dump(run, sort_keys=False), encoding="utf-8")
-    vm = val_root / "MANIFEST.json" if val_root else None
-    (run_dir / "data_manifest.json").write_text(json.dumps({
-        "stream": run["stream"], "stream_manifest_sha256": stream.sha256, "rows": stream.rows,
-        "val_manifest_sha256": hashlib.sha256(vm.read_bytes()).hexdigest() if vm and vm.exists() else None,
-    }, indent=1), encoding="utf-8")
+    (run_dir / "data_manifest.json").write_text(json.dumps(data_manifest, indent=1), encoding="utf-8")
     (run_dir / "seed.txt").write_text(f"{run['seed']}\n", encoding="utf-8")
     try:
         sha = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True, cwd=repo_path(".")).stdout.strip()
