@@ -15,7 +15,10 @@ whose text has no hit of the target's topic (mismatched). No document is used tw
 data/eval/crosslingual/items.parquet; its sha256 and the topic file's are written to probes/CHECKSUMS before
 any model is scored on them (rule 9).
 
-Scoring. <|endoftext|> context <|endoftext|> target; per-token NLL of the target. The effect of a language is
+Scoring. <|endoftext|> context SEP target; per-token NLL of the target. SEP is <|endoftext|> in v1 (context and
+target are two documents) and a paragraph break "\n\n" in v2 (one document; added 2026-10-28 after v1 showed that
+the models barely use a previous document across <|endoftext|>, English -> English ~0.001 bpb; same frozen items
+and criterion, both versions reported, rule 9; v2 decides, user 10-28). The effect of a language is
 the summed NLL(target | mismatched) - NLL(target | matched) over the scored target tokens, in bits per byte of
 those tokens. Primary: only target tokens whose id occurs in none of the item's four contexts, so copying a
 string from the context cannot count (names such as Danzig are spelt the same in both languages); also
@@ -23,8 +26,8 @@ reported: every target token. 95 % CIs by resampling topics (rule 8). Decision: 
 effect's CI lies above 0 and the German effect is >= ratio_threshold x the English effect.
 
     python -m src.eval.crosslingual --build              # build and freeze the items (CPU)
-    python -m src.eval.crosslingual --run main_s335m     # score (GPU)
-Output: reports/crosslingual/<run>.json and .md.
+    python -m src.eval.crosslingual --run main_s335m     # score (GPU), v2 by default
+Output: reports/crosslingual/<run>.json and .md (v1), <run>_v2.json and .md (v2).
 """
 from __future__ import annotations
 
@@ -213,22 +216,23 @@ def contexts(items: pd.DataFrame) -> dict[str, list[np.ndarray]]:
 
 
 @torch.no_grad()
-def target_nll(model, ctxs: list, targets: list, device: str, batch_rows: int) -> list[np.ndarray]:
-    """Per-token NLL (nats) of each target after <|endoftext|> context <|endoftext|>."""
+def target_nll(model, ctxs: list, targets: list, device: str, batch_rows: int, sep=(0,)) -> list[np.ndarray]:
+    """Per-token NLL (nats) of each target after <|endoftext|> context sep."""
     out = []
     for a in range(0, len(targets), batch_rows):
-        seqs = [np.concatenate([[0], c, [0], t]) for c, t in zip(ctxs[a:a + batch_rows], targets[a:a + batch_rows])]
+        seqs = [np.concatenate([[0], c, sep, t]) for c, t in zip(ctxs[a:a + batch_rows], targets[a:a + batch_rows])]
         L = max(len(s) for s in seqs) - 1
         x = torch.zeros(len(seqs), L, dtype=torch.long)
         y = torch.full((len(seqs), L), -1, dtype=torch.long)
         for r, (s, c) in enumerate(zip(seqs, ctxs[a:a + batch_rows])):
+            k = 1 + len(c) + len(sep)                               # first target token
             x[r, :len(s) - 1] = torch.from_numpy(s[:-1].astype(np.int64))
-            y[r, len(c) + 1:len(s) - 1] = torch.from_numpy(s[len(c) + 2:].astype(np.int64))
+            y[r, k - 1:len(s) - 1] = torch.from_numpy(s[k:].astype(np.int64))
         with torch.autocast(device_type="cuda", dtype=torch.bfloat16, enabled=device == "cuda"):
             h = model(x.to(device))
         per = token_nll(h, model.output_weight, y.to(device)).double().cpu().numpy()
         for r, (s, c) in enumerate(zip(seqs, ctxs[a:a + batch_rows])):
-            out.append(per[r, len(c) + 1:len(s) - 1])
+            out.append(per[r, len(c) + len(sep):len(s) - 1])
     return out
 
 
@@ -288,6 +292,7 @@ def main() -> None:
     ap.add_argument("--run", help="runs/<name>/ of a neural model")
     ap.add_argument("--checkpoint", help="file in runs/<name>/checkpoints/ (default: latest)")
     ap.add_argument("--build", action="store_true", help="(re)build the items, then stop")
+    ap.add_argument("--version", default="v2", help="how context and target are joined (config crosslingual.joins)")
     args = ap.parse_args()
     from tokenizers import Tokenizer
     cfg = load_config(repo_path("config/paths.yaml"))
@@ -308,12 +313,15 @@ def main() -> None:
     model.load_state_dict(ck["model"])
     ctx = contexts(items)
     targets = [np.asarray(t) for t in items["target"]]
-    nll = {k: target_nll(model, ctx[k], targets, device, int(c["batch_rows"])) for k in CONDITIONS}
+    join = c["joins"][args.version]
+    sep = [0] if join == "<|endoftext|>" else tok.encode(join, add_special_tokens=False).ids
+    nll = {k: target_nll(model, ctx[k], targets, device, int(c["batch_rows"]), sep) for k in CONDITIONS}
     tb = token_bytes(tok)
     nbytes = [tb[t] for t in targets]
     topics = items["topic"].to_numpy()
     sha_code = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True, cwd=repo_path(".")).stdout.strip()
-    res = {"run": args.run, "checkpoint": ck_name, "step": int(ck["step"]), "git_sha": sha_code,
+    res = {"run": args.run, "version": args.version, "join": join, "sep_ids": [int(i) for i in sep],
+           "checkpoint": ck_name, "step": int(ck["step"]), "git_sha": sha_code,
            "created_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
            "items_sha256": sha, "topics_sha256": topic_sha, "ratio_threshold": float(c["ratio_threshold"])}
     tables = {}
@@ -325,11 +333,13 @@ def main() -> None:
     res["train_twin"] = bool(p["de_ci"][0] > 0 and p["de"] >= float(c["ratio_threshold"]) * p["en"])
     out = repo_path("reports") / "crosslingual"
     out.mkdir(parents=True, exist_ok=True)
-    (out / f"{args.run}.json").write_text(json.dumps(res, indent=1), encoding="utf-8")
+    name = args.run if args.version == "v1" else f"{args.run}_{args.version}"
+    (out / f"{name}.json").write_text(json.dumps(res, indent=1), encoding="utf-8")
     by_topic = tables["novel"].groupby("topic")[["de", "en", "bytes"]].sum()
     by_topic = (by_topic[["de", "en"]].div(by_topic["bytes"], axis=0) / math.log(2)).round(4)
-    lines = [f"# Cross-lingual check, `{args.run}` ({ck_name})", "",
-             f"Items `{sha[:12]}`, topics `{topic_sha[:12]}`: {p['items']} items over {p['topics']} topics.", "",
+    lines = [f"# Cross-lingual check {args.version}, `{args.run}` ({ck_name})", "",
+             f"Items `{sha[:12]}`, topics `{topic_sha[:12]}`: {p['items']} items over {p['topics']} topics. "
+             f"Context and target joined by {json.dumps(join)} (token ids {res['sep_ids']}).", "",
              "| tokens scored | German -> English (bpb) | 95 % CI | English -> English (bpb) | 95 % CI | ratio | 95 % CI |",
              "|---|---|---|---|---|---|---|"]
     for mode, label in (("novel", "not in any context (primary)"), ("all", "all target tokens")):
@@ -340,7 +350,7 @@ def main() -> None:
               "Per topic, primary tokens (bits per byte saved by the matched context):", "",
               "| topic | German -> English | English -> English |", "|---|---|---|"]
     lines += [f"| {t} | {r.de} | {r.en} |" for t, r in by_topic.iterrows()]
-    (out / f"{args.run}.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    (out / f"{name}.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(json.dumps(res, indent=1))
 
 

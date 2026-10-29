@@ -58,6 +58,8 @@ def test_target_positions_and_uniform_model():
     out = target_nll(Uniform(), ctxs, targets, "cpu", batch_rows=2)
     assert [len(o) for o in out] == [2, 3]
     assert np.allclose(np.concatenate(out), math.log(60))
+    out = target_nll(Uniform(), ctxs, targets, "cpu", batch_rows=2, sep=[7, 7])    # v2: a two-token separator
+    assert [len(o) for o in out] == [2, 3]
 
 
 def items_frame():
