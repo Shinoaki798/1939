@@ -5,7 +5,8 @@ Period pairs. The question-and-answer columns of American Stories (syndicated "A
 of the 1920s-30s: "Q. ...? A. ..."), so question and answer are both written in the period. An article with
 >= min_pairs pairs is split at line-initial "Q." / "A." markers (also "Q," "Q:" ...); a pair is a question of
 question_chars characters ending in "?" directly followed by an answer of answer_chars characters (cut at the
-next marker), white space collapsed ("O." counts as "Q.", a common OCR misreading). Court transcripts print
+next marker, or where a question with a misread marker runs into it: "q. How ...?"), white space collapsed
+("O." counts as "Q.", a common OCR misreading). Court transcripts print
 "Q. ... A. ..." too: an article in which >= testimony_share of the questions read as cross-examination
 (`TESTIMONY`: "did / were / have / had / do you", or a leading pronoun or conjunction) is dropped. Sets by the
 article's split and date:
@@ -48,6 +49,7 @@ from src.data.download import load_config, repo_path
 from src.data.mixture import uniform
 
 MARK = re.compile(r"(?:^|\n)[ \t]*([QAO])[.,:][ \t]+")          # "O." is OCR for "Q."
+QTAIL = re.compile(r"\s[QqOo@e][.,:]\s+[A-Z\"][^?]{3,300}\?")  # a question run into the answer ("q. How ...?")
 TESTIMONY = re.compile(r"\b(did|were|have|had|do) you\b|^(and|now|then|well|so|but|you|he|she|they|isn't|didn't|"
                        r"wasn't|weren't)\b", re.IGNORECASE)
 COLUMN = r"(^|\s)Q[.,:]\s[^?]{8,400}\?\s{0,3}A[.,:]\s"          # fast Arrow pre-filter for column articles
@@ -62,13 +64,16 @@ def pairs(text: str, q_chars: tuple[int, int], a_chars: tuple[int, int]) -> list
         if k not in ("Q", "O") or k2 != "A":
             continue
         q, a = " ".join(text[e:s2].split()), " ".join(text[e2:s3].split())
+        m = QTAIL.search(a)
+        if m:                                       # the next question, its marker misread mid-line
+            a = a[:m.start()]
         if q.rstrip("\"'”’ ").endswith("?") and q_chars[0] <= len(q) <= q_chars[1] and \
                 a_chars[0] <= len(a) <= a_chars[1]:
             out.append((q, a))
     return out
 
 
-def testimony(questions: list[str]) -> float:
+def cross_exam_share(questions: list[str]) -> float:
     """Share of questions phrased as cross-examination (court transcripts also print "Q. ... A. ...")."""
     return sum(bool(TESTIMONY.search(q)) for q in questions) / max(1, len(questions))
 
@@ -128,7 +133,7 @@ def period_pairs(cfg: dict, c: dict, seed: int) -> pd.DataFrame:
                 else:
                     continue                                    # embargo, or a train / val article after it
                 ps = pairs(r["text"], tuple(c["question_chars"]), tuple(c["answer_chars"]))
-                if len(ps) >= int(c["min_pairs"]) and testimony([q for q, _ in ps]) >= float(c["testimony_share"]):
+                if len(ps) >= int(c["min_pairs"]) and cross_exam_share([q for q, _ in ps]) >= float(c["testimony_share"]):
                     court[s] += len(ps)
                 elif len(ps) >= int(c["min_pairs"]):
                     rows += [{"set": s, "id": f"{r['article_id']}#{k}", "article": r["article_id"], "date": d,

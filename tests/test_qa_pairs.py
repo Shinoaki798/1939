@@ -4,7 +4,7 @@ from types import SimpleNamespace
 
 import pandas as pd
 
-from src.data.qa_pairs import encode, first_per_question, near_duplicates, pairs, prompt_text, testimony
+from src.data.qa_pairs import cross_exam_share, encode, first_per_question, near_duplicates, pairs, prompt_text
 
 COLUMN = ("You can get an answer to any question of fact by writing to the Question Editor.\n\n"
           " Q. Who was the star in the motion picture \"The Reckless Age?\"\n\n A, Reginald Denny.\n\n"
@@ -20,12 +20,14 @@ def test_pairs_split_at_line_initial_markers():
                    ("Are tin cans made entirely of tin?", "No, they are made mostly of sheet steel.")]
     assert pairs("Mid-line Q. is not a marker? A. no", (8, 400), (2, 1000)) == []
     assert pairs("O. Where is the Sphinx?\n A. In Egypt.", (8, 400), (2, 1000)) == [("Where is the Sphinx?", "In Egypt.")]
+    assert pairs("Q. Who wrote the song?\n A. Wendell Hall. q. How much do airplanes cost?", (8, 400), (2, 1000)) == \
+        [("Who wrote the song?", "Wendell Hall.")]
 
 
-def test_testimony_share():
+def test_cross_exam_share():
     court = ["And how much did you get from your doctor?", "She was drunk?", "Where is the Sphinx?"]
-    assert testimony(court) == 2 / 3
-    assert testimony(["Can you give me directions for feeding a monkey?", "What is the meaning of the name Tilie?"]) == 0
+    assert cross_exam_share(court) == 2 / 3
+    assert cross_exam_share(["Can you give me directions for feeding a monkey?", "What is the meaning of the name Tilie?"]) == 0
 
 
 def test_near_duplicates_and_first_per_question():
