@@ -1,0 +1,122 @@
+id,tier,as_of,question,stem,answer,distractor_1,distractor_2,distractor_3
+S01,standing,1933-03-04,Who is the President of the United States?,The President of the United States is,Franklin D. Roosevelt,Herbert Hoover,Woodrow Wilson,Calvin Coolidge
+S02,standing,1933-03-04,Who is the Vice President of the United States?,The Vice President of the United States is,John N. Garner,Charles Curtis,Charles G. Dawes,Alben W. Barkley
+S03,standing,1933-01-30,Who is the Chancellor of Germany?,The Chancellor of Germany is,Adolf Hitler,Paul von Hindenburg,Franz von Papen,Heinrich Bruening
+S04,standing,1922-10-31,Who is the Premier of Italy?,The Premier of Italy is,Benito Mussolini,Victor Emmanuel,Italo Balbo,Count Ciano
+S05,standing,1900-07-29,Who is the King of Italy?,The King of Italy is,Victor Emmanuel,Umberto,Benito Mussolini,Alfonso
+S06,standing,1936-12-11,Who is the King of England?,The King of England is,George VI,Edward VIII,George V,Edward VII
+S07,standing,1937-05-28,Who is the Prime Minister of Great Britain?,The Prime Minister of Great Britain is,Neville Chamberlain,Stanley Baldwin,Ramsay MacDonald,Winston Churchill
+S08,standing,1938-04-10,Who is the Premier of France?,The Premier of France is,Edouard Daladier,Leon Blum,Camille Chautemps,Pierre Laval
+S09,standing,1929-01-01,Who is the ruler of Soviet Russia?,The ruler of Soviet Russia is,Joseph Stalin,Leon Trotsky,Nikolai Lenin,Maxim Litvinov
+S10,standing,1926-12-25,Who is the Emperor of Japan?,The Emperor of Japan is,Hirohito,Yoshihito,Mutsuhito,Prince Konoye
+S11,standing,1928-10-10,Who is the Generalissimo of the Chinese armies?,The Generalissimo of the Chinese armies is,Chiang Kai-shek,Sun Yat-sen,Wang Ching-wei,Yuan Shih-kai
+S12,standing,1933-03-04,Who is the American Secretary of State?,The American Secretary of State is,Cordell Hull,Henry L. Stimson,Frank B. Kellogg,Sumner Welles
+S13,standing,1934-01-01,Who is the Secretary of the Treasury?,The Secretary of the Treasury is,Henry Morgenthau,Andrew W. Mellon,Ogden L. Mills,William H. Woodin
+S14,standing,1933-03-04,Who is the Secretary of Labor?,The Secretary of Labor is,Frances Perkins,James J. Davis,William N. Doak,William Green
+S15,standing,1933-03-04,Who is the Secretary of the Interior?,The Secretary of the Interior is,Harold L. Ickes,Ray Lyman Wilbur,Hubert Work,Albert B. Fall
+S16,standing,1933-03-04,Who is the Secretary of Agriculture?,The Secretary of Agriculture is,Henry A. Wallace,Arthur M. Hyde,William M. Jardine,Rexford G. Tugwell
+S17,standing,1930-02-24,Who is the Chief Justice of the United States?,The Chief Justice of the United States is,Charles Evans Hughes,William Howard Taft,Oliver Wendell Holmes,Harlan F. Stone
+S18,standing,1934-01-01,Who is the Mayor of New York City?,The Mayor of New York City is,Fiorello La Guardia,James J. Walker,John P. O'Brien,Alfred E. Smith
+S19,standing,1933-01-01,Who is the Governor of New York?,The Governor of New York is,Herbert H. Lehman,Alfred E. Smith,Franklin D. Roosevelt,Thomas E. Dewey
+S20,standing,1924-05-10,Who is the director of the Federal Bureau of Investigation?,The director of the Federal Bureau of Investigation is,J. Edgar Hoover,Melvin Purvis,Homer S. Cummings,Frank Murphy
+S21,standing,1924-12-19,Who is the president of the American Federation of Labor?,The president of the American Federation of Labor is,William Green,Samuel Gompers,John L. Lewis,Sidney Hillman
+S22,standing,1935-11-09,Who is the head of the C.I.O.?,The head of the C.I.O. is,John L. Lewis,William Green,Sidney Hillman,Walter Reuther
+S23,standing,1937-06-22,Who is the heavyweight boxing champion of the world?,The heavyweight boxing champion of the world is,Joe Louis,Max Schmeling,James J. Braddock,Jack Dempsey
+S24,standing,1927-05-21,Who made the first solo flight across the Atlantic?,The first solo flight across the Atlantic was made by,Charles A. Lindbergh,Richard E. Byrd,Clarence D. Chamberlin,Wiley Post
+S25,standing,1937-07-02,In which ocean was Amelia Earhart lost in 1937?,In 1937 Amelia Earhart was lost in,the Pacific Ocean,the Atlantic Ocean,the Indian Ocean,the Arctic Ocean
+S26,standing,1937-05-06,Where was the airship Hindenburg destroyed by fire in 1937?,In 1937 the airship Hindenburg was destroyed by fire at,"Lakehurst, N. J.",Friedrichshafen,"Akron, Ohio",Rio de Janeiro
+S27,standing,1935-10-23,Who is the Prime Minister of Canada?,The Prime Minister of Canada is,W. L. Mackenzie King,R. B. Bennett,Arthur Meighen,Sir Robert Borden
+S28,standing,1935-03-01,Who is the head of the German air force?,The head of the German air force is,Hermann Goering,Joseph Goebbels,Rudolf Hess,Heinrich Himmler
+S29,standing,1933-03-13,Who is the German Minister of Propaganda?,The German Minister of Propaganda is,Joseph Goebbels,Hermann Goering,Rudolf Hess,Alfred Rosenberg
+S30,standing,1938-02-04,Who is the German Foreign Minister?,The German Foreign Minister is,Joachim von Ribbentrop,Constantin von Neurath,Gustav Stresemann,Franz von Papen
+S31,standing,1938-02-21,Who is the British Foreign Secretary?,The British Foreign Secretary is,Lord Halifax,Anthony Eden,Sir John Simon,Sir Samuel Hoare
+S32,standing,1920-03-01,Who is the Regent of Hungary?,The Regent of Hungary is,Admiral Horthy,Count Bethlen,Bela Kun,Archduke Otto
+S33,standing,1938-03-13,Which country annexed Austria in March 1938?,In March 1938 Austria was annexed by,Germany,Italy,Hungary,Czechoslovakia
+S34,standing,1936-05-05,Which country conquered Ethiopia in 1936?,In 1936 Ethiopia was conquered by,Italy,Great Britain,France,Japan
+S35,standing,1932-03-01,Which country controls Manchukuo?,Manchukuo is controlled by,Japan,China,Russia,Great Britain
+S36,standing,1935-11-15,Who is the President of the Philippine Commonwealth?,The President of the Philippine Commonwealth is,Manuel L. Quezon,Sergio Osmena,Emilio Aguinaldo,Manuel Roxas
+S37,standing,1890-11-23,Who is the Queen of the Netherlands?,The Queen of the Netherlands is,Wilhelmina,Juliana,Emma,Mary
+S38,standing,1934-12-01,Who is the President of Mexico?,The President of Mexico is,Lazaro Cardenas,Plutarco Elias Calles,Alvaro Obregon,Porfirio Diaz
+S39,standing,1938-06-22,Whom did Joe Louis knock out in the first round in June 1938?,In June 1938 Joe Louis knocked out in the first round,Max Schmeling,James J. Braddock,Primo Carnera,Max Baer
+S40,standing,1936-06-04,Who is the Speaker of the House of Representatives?,The Speaker of the House of Representatives is,William B. Bankhead,John N. Garner,Sam Rayburn,Nicholas Longworth
+S41,standing,1937-07-21,Who is the majority leader of the Senate?,The majority leader of the Senate is,Alben W. Barkley,Joseph T. Robinson,Pat Harrison,Charles L. McNary
+S42,standing,1905-03-17,Who is the wife of President Roosevelt?,The wife of President Roosevelt is,Eleanor Roosevelt,Edith Roosevelt,Lou Henry Hoover,Grace Coolidge
+S43,standing,1935-05-06,What do the letters W.P.A. stand for?,The letters W.P.A. stand for,Works Progress Administration,Public Works Administration,Civil Works Administration,National Recovery Administration
+S44,standing,1937-12-21,"Who produced the motion picture ""Snow White and the Seven Dwarfs""?","The motion picture ""Snow White and the Seven Dwarfs"" was produced by",Walt Disney,Max Fleischer,Samuel Goldwyn,David O. Selznick
+S45,standing,1936-06-30,"Who wrote the novel ""Gone With the Wind""?","The novel ""Gone With the Wind"" was written by",Margaret Mitchell,Pearl S. Buck,Edna Ferber,Willa Cather
+S46,standing,1937-05-27,In which city was the Golden Gate Bridge opened in 1937?,In 1937 the Golden Gate Bridge was opened at,San Francisco,Los Angeles,Seattle,New York
+S47,standing,1934-08-11,Which island in San Francisco Bay holds a Federal prison for desperate criminals?,The Federal prison for desperate criminals in San Francisco Bay is on,Alcatraz Island,Angel Island,Treasure Island,Ellis Island
+S48,standing,1926-06-04,Who is the President of Poland?,The President of Poland is,Ignace Moscicki,Joseph Pilsudski,Edward Smigly-Rydz,Joseph Beck
+S49,standing,1937-06-03,Whom did the Duke of Windsor marry in 1937?,In 1937 the Duke of Windsor married,Wallis Simpson,Thelma Furness,Princess Marina,Elizabeth Bowes-Lyon
+S50,standing,1933-10-17,In which town does Albert Einstein do his work?,Albert Einstein does his work at,Princeton,Berlin,Zurich,Oxford
+R01,recent,1939-05-03,Who is the Soviet Foreign Commissar?,The Soviet Foreign Commissar is,V. M. Molotov,Maxim Litvinov,Leon Trotsky,George Chicherin
+R02,recent,1939-01-02,Who is the Attorney General of the United States?,The Attorney General of the United States is,Frank Murphy,Homer S. Cummings,Robert H. Jackson,Harry M. Daugherty
+R03,recent,1938-11-11,Who is the President of Turkey?,The President of Turkey is,Ismet Inonu,Kemal Ataturk,Celal Bayar,Fevzi Cakmak
+R04,recent,1939-04-01,Who is the ruler of Spain?,The ruler of Spain is,General Franco,Manuel Azana,Juan Negrin,Alfonso XIII
+R05,recent,1939-01-05,Who is the Premier of Japan?,The Premier of Japan is,Baron Hiranuma,Prince Konoye,Koki Hirota,General Hayashi
+R06,recent,1939-03-15,Which country occupied Bohemia and Moravia in March 1939?,In March 1939 Bohemia and Moravia were occupied by,Germany,Hungary,Poland,Russia
+R07,recent,1939-04-30,Where is the New York World's Fair being held?,The New York World's Fair is being held at,Flushing Meadows,Central Park,Coney Island,Staten Island
+R08,recent,1939-04-30,What is the symbol of the New York World's Fair?,The symbol of the New York World's Fair is the,Trylon and Perisphere,Tower of Jewels,Sky Ride,Court of the Universe
+R09,recent,1939-04-07,Which country seized Albania in April 1939?,In April 1939 Albania was seized by,Italy,Germany,Greece,Yugoslavia
+R10,recent,1939-03-22,Which country took Memel from Lithuania in March 1939?,In March 1939 Memel was taken from Lithuania by,Germany,Poland,Russia,Latvia
+R11,recent,1939-03-26,Which free city is in dispute between Germany and Poland?,The free city in dispute between Germany and Poland is,Danzig,Memel,Trieste,Fiume
+R12,recent,1938-09-29,"In which city did Chamberlain, Daladier, Hitler and Mussolini meet in September 1938?","In September 1938 Chamberlain, Daladier, Hitler and Mussolini met at",Munich,Berlin,Rome,Geneva
+R13,recent,1938-10-01,What territory did Czechoslovakia give up to Germany in 1938?,In 1938 Czechoslovakia gave up to Germany,the Sudetenland,the Saar,the Tyrol,Silesia
+R14,recent,1938-11-10,Against whom were riots carried out throughout Germany in November 1938?,In November 1938 riots throughout Germany were carried out against,the Jews,the Catholics,the Communists,the Poles
+R15,recent,1939-03-02,Who was elected Pope in March 1939?,In March 1939 the cardinals elected as Pope,Pius XII,Pius XI,Benedict XV,Leo XIII
+R16,recent,1939-02-10,Which Pope died in February 1939?,The Pope who died in February 1939 was,Pius XI,Pius X,Benedict XV,Leo XIII
+R17,recent,1939-01-26,Which city fell to General Franco in January 1939?,In January 1939 General Franco captured,Barcelona,Madrid,Bilbao,Seville
+R18,recent,1939-06-07,Which royal couple visited the United States in June 1939?,In June 1939 the United States was visited by,King George and Queen Elizabeth,King Leopold and Queen Astrid,King Carol and Queen Helen,the Duke and Duchess of Windsor
+R19,recent,1939-06-11,Where did President Roosevelt give a picnic for the King and Queen of England in June 1939?,In June 1939 President Roosevelt gave a picnic for the King and Queen at,Hyde Park,Warm Springs,Mount Vernon,Newport
+R20,recent,1939-05-23,"Which American submarine sank off Portsmouth, N. H., in May 1939?","The American submarine that sank off Portsmouth, N. H., in May 1939 was",the Squalus,the Thetis,the S-4,the Nautilus
+R21,recent,1939-06-01,Which British submarine sank in Liverpool Bay in June 1939?,The British submarine that sank in Liverpool Bay in June 1939 was,the Thetis,the Squalus,the M-2,the Poseidon
+R22,recent,1939-05-02,Which Yankee first baseman ended his record string of consecutive games in May 1939?,The Yankee first baseman who ended his record string of consecutive games in May 1939 is,Lou Gehrig,Babe Ruth,Joe DiMaggio,Bill Dickey
+R23,recent,1938-10-09,Which team won the World Series of 1938?,The World Series of 1938 was won by,the New York Yankees,the Chicago Cubs,the St. Louis Cardinals,the Detroit Tigers
+R24,recent,1939-05-06,Which horse won the Kentucky Derby in 1939?,The Kentucky Derby of 1939 was won by,Johnstown,Lawrin,War Admiral,Seabiscuit
+R25,recent,1938-11-01,Which horse beat War Admiral in their match race at Pimlico in November 1938?,In their match race at Pimlico in November 1938 War Admiral was beaten by,Seabiscuit,Johnstown,Man o' War,Gallant Fox
+R26,recent,1938-10-30,Whose radio broadcast of an invasion from Mars frightened listeners in October 1938?,In October 1938 listeners were frightened by a radio broadcast of an invasion from Mars by,Orson Welles,Lowell Thomas,Edgar Bergen,Jack Benny
+R27,recent,1938-07-18,"Who flew from New York to Dublin in July 1938, saying he had meant to fly to California?","In July 1938 the flier who went from New York to Dublin, saying he had meant to fly to California, was",Douglas Corrigan,Howard Hughes,Wiley Post,Clarence D. Chamberlin
+R28,recent,1938-07-14,Who flew around the world in less than four days in July 1938?,In July 1938 the flier who went around the world in less than four days was,Howard Hughes,Wiley Post,Douglas Corrigan,Amelia Earhart
+R29,recent,1938-09-21,Which part of the United States was struck by a great hurricane in September 1938?,In September 1938 a great hurricane struck,New England,Florida,Texas,California
+R30,recent,1939-01-05,Who was appointed to the Supreme Court in January 1939?,In January 1939 the President appointed to the Supreme Court,Felix Frankfurter,William O. Douglas,Hugo L. Black,Stanley F. Reed
+R31,recent,1939-04-17,Who succeeded Justice Brandeis on the Supreme Court in 1939?,In 1939 Justice Brandeis was succeeded on the Supreme Court by,William O. Douglas,Felix Frankfurter,Stanley F. Reed,Frank Murphy
+R32,recent,1938-11-08,Which young prosecutor was defeated for Governor of New York in 1938?,The young prosecutor defeated for Governor of New York in 1938 was,Thomas E. Dewey,Herbert H. Lehman,Fiorello La Guardia,Alfred E. Smith
+R33,recent,1938-11-08,Which son of a former President was elected Senator from Ohio in 1938?,The son of a former President elected Senator from Ohio in 1938 was,Robert A. Taft,James Roosevelt,John Coolidge,Theodore Roosevelt Jr.
+R34,recent,1938-12-24,Who became Secretary of Commerce in December 1938?,In December 1938 the new Secretary of Commerce was,Harry L. Hopkins,Daniel C. Roper,Jesse H. Jones,Herbert Hoover
+R35,recent,1938-10-27,Which company announced the new fiber nylon in 1938?,In 1938 the new fiber nylon was announced by,the du Pont company,General Motors,the Eastman Kodak company,the Celanese Corporation
+R36,recent,1939-01-13,Who was chosen in January 1939 to play Scarlett O'Hara?,In January 1939 the actress chosen to play Scarlett O'Hara was,Vivien Leigh,Bette Davis,Katharine Hepburn,Paulette Goddard
+R37,recent,1938-11-10,Which American woman won the Nobel prize in literature in 1938?,The Nobel prize in literature for 1938 went to,Pearl S. Buck,Margaret Mitchell,Edna Ferber,Willa Cather
+R38,recent,1939-01-26,Which element was found in 1939 to split in two when struck by neutrons?,The element whose atom was found in 1939 to split in two when struck by neutrons is,uranium,radium,lead,helium
+R39,recent,1939-02-18,On which island is the Golden Gate International Exposition being held?,The Golden Gate International Exposition is being held on,Treasure Island,Alcatraz Island,Angel Island,Staten Island
+R40,recent,1939-04-26,Who is the Prime Minister of Australia?,The Prime Minister of Australia is,Robert G. Menzies,Joseph A. Lyons,Earle Page,John Curtin
+R41,recent,1939-05-22,Which two countries signed a military alliance at Berlin in May 1939?,The two countries that signed a military alliance at Berlin in May 1939 were,Germany and Italy,Germany and Japan,Germany and Russia,Italy and Japan
+R42,recent,1939-03-31,Which country did Great Britain pledge in March 1939 to defend against attack?,In March 1939 Great Britain pledged to defend against attack,Poland,Czechoslovakia,Austria,Lithuania
+R43,recent,1939-04-26,What did Great Britain adopt in the spring of 1939 for the first time in time of peace?,In the spring of 1939 Great Britain adopted for the first time in time of peace,compulsory military service,prohibition,the gold standard,old age pensions
+R44,recent,1939-04-20,"How old was Adolf Hitler on April 20, 1939?","On April 20, 1939, Adolf Hitler was",fifty years old,forty years old,forty-five years old,sixty years old
+R45,recent,1938-11-10,Who received the Nobel prize in physics for 1938?,The Nobel prize in physics for 1938 went to,Enrico Fermi,Guglielmo Marconi,Niels Bohr,Arthur H. Compton
+R46,recent,1938-09-30,What did Neville Chamberlain say he had brought back from Munich?,Neville Chamberlain said he had brought back from Munich,peace for our time,a war to end war,"blood, toil, tears and sweat",a new deal for Europe
+R47,recent,1938-11-10,Which founder of the Turkish republic died in November 1938?,The founder of the Turkish republic who died in November 1938 was,Kemal Ataturk,Ismet Inonu,Enver Pasha,Abdul Hamid
+R48,recent,1939-04-27,Who was named in April 1939 to be the next Chief of Staff of the Army?,In April 1939 the officer named to be the next Chief of Staff of the Army was,George C. Marshall,Malin Craig,Douglas MacArthur,John J. Pershing
+R49,recent,1939-05-20,Which airline began regular air mail service across the Atlantic in May 1939?,In May 1939 regular air mail service across the Atlantic was begun by,Pan American Airways,Imperial Airways,American Airlines,United Air Lines
+R50,recent,1938-10-05,Which President of Czechoslovakia resigned after the Munich agreement?,The President of Czechoslovakia who resigned after the Munich agreement was,Eduard Benes,Thomas G. Masaryk,Emil Hacha,Jan Masaryk
+R51,recent,1938-10-25,Which city is the wartime capital of China?,The wartime capital of China is,Chungking,Nanking,Peiping,Canton
+P01,post,1940-05-10,Who became Prime Minister of Great Britain in May 1940?,In May 1940 the new Prime Minister of Great Britain was,Winston Churchill,Neville Chamberlain,Lord Halifax,Anthony Eden
+P02,post,1940-06-28,Who was the Republican candidate for President in 1940?,The Republican candidate for President in 1940 was,Wendell L. Willkie,Thomas E. Dewey,Robert A. Taft,Arthur H. Vandenberg
+P03,post,1941-01-20,Who became Vice President of the United States in 1941?,In 1941 the new Vice President of the United States was,Henry A. Wallace,John N. Garner,Alben W. Barkley,Cordell Hull
+P04,post,1940-07-10,Which French marshal headed the government at Vichy in 1940?,The French marshal who headed the government at Vichy in 1940 was,Henri Philippe Petain,Maxime Weygand,Ferdinand Foch,Louis Lyautey
+P05,post,1941-12-08,In what year did the United States enter the Second World War?,The United States entered the Second World War in,1941,1939,1940,1942
+P06,post,1941-10-18,Which Japanese general became Premier of Japan in October 1941?,The Japanese general who became Premier of Japan in October 1941 was,Hideki Tojo,Prince Konoye,Baron Hiranuma,Koki Hirota
+P07,post,1941-12-07,"Where did the Japanese attack the American fleet on December 7, 1941?","On December 7, 1941, the Japanese attacked the American fleet at",Pearl Harbor,Manila,Guam,San Diego
+P08,post,1945-04-12,Who succeeded Franklin D. Roosevelt as President in 1945?,In 1945 Franklin D. Roosevelt was succeeded as President by,Harry S. Truman,Henry A. Wallace,James F. Byrnes,Thomas E. Dewey
+P09,post,1945-08-06,Which city was destroyed by the first atomic bomb used in war?,The city destroyed by the first atomic bomb used in war was,Hiroshima,Nagasaki,Tokyo,Osaka
+P10,post,1944-06-06,Which general commanded the Allied invasion of France in 1944?,The Allied invasion of France in 1944 was commanded by,Dwight D. Eisenhower,Douglas MacArthur,John J. Pershing,George C. Marshall
+P11,post,1940-06-04,From which French port was the British army evacuated in 1940?,In 1940 the British army was evacuated from,Dunkirk,Calais,Marseille,Toulon
+P12,post,1940-06-18,Who led the Free French forces from London in 1940?,In 1940 the Free French forces in London were led by,Charles de Gaulle,Henri Giraud,Maxime Weygand,Paul Reynaud
+P13,post,1939-11-30,Which country did Russia invade in November 1939?,In November 1939 Russia invaded,Finland,Estonia,Rumania,Turkey
+P14,post,1939-12-17,Which German warship was scuttled off Montevideo in December 1939?,The German warship scuttled off Montevideo in December 1939 was,the Admiral Graf Spee,the Bismarck,the Emden,the Tirpitz
+P15,post,1945-06-26,In which city was the charter of the United Nations signed in 1945?,In 1945 the charter of the United Nations was signed at,San Francisco,Geneva,London,Washington
+P16,post,1940-04-09,Which Norwegian's name came to mean traitor in 1940?,The Norwegian whose name came to mean traitor in 1940 was,Vidkun Quisling,Carl J. Hambro,Johan Nygaardsvold,Fridtjof Nansen
+P17,post,1941-12-07,Which Japanese admiral planned the attack on Pearl Harbor?,The attack on Pearl Harbor was planned by Admiral,Isoroku Yamamoto,Mitsumasa Yonai,Osami Nagano,Heihachiro Togo
+P18,post,1945-04-28,Which Italian leader was shot by partisans in April 1945?,The Italian leader shot by partisans in April 1945 was,Benito Mussolini,Victor Emmanuel,Pietro Badoglio,Dino Grandi
+P19,post,1949-09-15,Who became Chancellor of Western Germany in 1949?,In 1949 the new Chancellor of Western Germany was,Konrad Adenauer,Kurt Schumacher,Heinrich Bruening,Franz von Papen
+P20,post,1940-04-09,Which country did Germany invade together with Denmark in April 1940?,"In April 1940 Germany invaded, together with Denmark,",Norway,Sweden,Switzerland,Finland

@@ -1,3 +1,4 @@
 ee1d4f980e4a83cfd5939dcce93db5d0f4e49fdaf0fafe00f781641bd504cba5  probes/crosslingual_topics.csv
 16f50e7e0ac08deb7ac69a11cc0b6155e6b0eed428048d62e5c341826bf2f4e0  data/eval/crosslingual/items.parquet  (5080, 2026-10-28, 289 items over 73 topics, code 717d4a8)
 3cb236de8f295236ccf32b04b5eaf128f133cca42e6967a535f85bddcdeb3951  data/finetune/3cb236de8f29.parquet  (5080, 2026-10-29, fine-tuning pairs: period_pre 533, period_post 2220, caqa_test 2000 evaluation items; code a690963)
+0a29927c0e89db11ba486cdbeb1b8e44f442c3e266c6861b1a308b78f4d01533  probes/fact_quiz_1939.csv  (2026-10-29, 121 items: standing 50, recent 51, post 20; frozen before scoring)
