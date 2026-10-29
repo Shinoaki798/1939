@@ -443,3 +443,4 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
   1.2344, DE 1.5646 -> 1.5876 (the cost of fine-tuning). Greedy samples: answers in the column style and they
   stop, facts often wrong, some repetition loops; post-1939 questions unknown (jeep -> "a small fish",
   Pearl Harbor -> "the navy department has no record"); "Chancellor of Germany" Hitler before, von Papen after.
+- 2026-10-29: `src.train.finetune` gains `balance_decades`, `replay` and `val_rows` (b679373; 103 tests pass on the 5080, incl. the first run's epoch order unchanged and an exact resume with replay). Launched `ft_main_s335m_qa_replay` on the 5080 (tmux `ft2`, log `logs/ft_main_s335m_qa_replay.log`), then `src.eval.finetune_eval` on it: 96,338 examples over 2 epochs (48,169 per epoch), 7,216 rows, 225 steps of 32 rows + 16 replay rows; step-0 dev loss 3.338 (as the first run), Val loss (first 32 rows) EN 3.004, DE 3.551.

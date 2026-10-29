@@ -746,6 +746,12 @@ Dated entries; each supersedes anything above it that it contradicts.
   machine-written question -> answer span; stated as such). Evaluation before / after: held-out period pairs
   <= cutoff (holdout + val), period pairs >= 1939-09-01 (never trained on; the knowledge boundary), CAQA test,
   Val bpb. The embargo is never read.
+- **2026-10-29 — second fine-tuning run against forgetting (user).** The first run (`ft_main_s335m_qa`) lost 4.5 %
+  EN Val bpb and closed-book facts ("the capability drop is too obvious"). Second run `ft_main_s335m_qa_replay`:
+  every step adds 16 seeded rows of the main pretraining stream (no row twice; already trained on, <= cutoff, so
+  period-safe) with 1.0 x their mean next-token loss, and each epoch draws the 1920s period pairs down to the
+  1930s count (fresh draw). Both runs kept and reported. Gate fixed before the run: period_pre answer bpb lower
+  after (CI excludes 0) and the EN Val bpb rise smaller than the first run's.
 
 ---
 
