@@ -107,17 +107,30 @@ def letter_share(text: str) -> float:
 
 
 def assign_mismatch(topics: list[str], ok, seed: int) -> list[int]:
-    """For each item an item of another topic whose contexts pass ok(i, j); -1 if none. Seeded order, and each item
-    lends its contexts once where possible, so every context is about as often matched as mismatched."""
+    """For each item an item of another topic whose contexts pass ok(i, j), each item lending its contexts once
+    (a maximum bipartite matching, augmenting paths in seeded order), so every context is used as often matched as
+    mismatched; -1 for an item left without a partner."""
     rng = np.random.default_rng(seed)
-    order = [int(j) for j in rng.permutation(len(topics))]
-    out, lent = [-1] * len(topics), set()
+    n = len(topics)
+    order = [int(j) for j in rng.permutation(n)]
+    adj = [[j for j in order if topics[j] != topics[i] and ok(i, j)] for i in range(n)]
+    borrower = [-1] * n                     # lender j -> the item i that uses j's contexts as its mismatch
+
+    def augment(i: int, seen: set) -> bool:
+        for j in adj[i]:
+            if j not in seen:
+                seen.add(j)
+                if borrower[j] == -1 or augment(borrower[j], seen):
+                    borrower[j] = i
+                    return True
+        return False
+
     for i in order:
-        valid = [j for j in order if topics[j] != topics[i] and ok(i, j)]
-        free = [j for j in valid if j not in lent]
-        if valid:
-            out[i] = (free or valid)[0]
-            lent.add(out[i])
+        augment(i, set())
+    out = [-1] * n
+    for j, i in enumerate(borrower):
+        if i >= 0:
+            out[i] = j
     return out
 
 

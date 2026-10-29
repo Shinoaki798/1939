@@ -40,7 +40,9 @@ def test_mismatch_is_another_topic_and_passes_the_check():
     assert all(topics[i] != topics[j] for i, j in enumerate(mis))
     assert len(set(mis)) == len(mis)                                 # each item lends its contexts once
     mis = assign_mismatch(topics, lambda i, j: topics[j] == "c" or topics[i] == "c", seed=0)
-    assert all(topics[j] == "c" for i, j in enumerate(mis) if topics[i] != "c")
+    others = [j for i, j in enumerate(mis) if topics[i] != "c"]
+    assert sorted(others) == [-1, -1, -1, 4]                         # only one item can borrow from "c"
+    assert mis[4] != -1 and topics[mis[4]] != "c"
 
 
 class Uniform(torch.nn.Module):
