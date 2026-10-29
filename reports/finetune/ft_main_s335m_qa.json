@@ -6,16 +6,44 @@
   "checkpoint": "step_045776.pt"
  },
  "pairs_sha256": "3cb236de8f295236ccf32b04b5eaf128f133cca42e6967a535f85bddcdeb3951",
- "git_sha": "6c2af63daa74aa641b8a708ba2b8d1d97d162bfc",
- "created_at": "2026-10-29T07:33:08+00:00",
+ "git_sha": "622c0211c9b6047cfa399870abc76c5752f3ba31",
+ "created_at": "2026-10-29T18:19:21+00:00",
  "val_bpb": {
-  "before": {
-   "en": 1.18108,
-   "de": 1.56464
+  "en": {
+   "before": 1.18108,
+   "before_ci": [
+    1.1758,
+    1.18622
+   ],
+   "after": 1.23444,
+   "after_ci": [
+    1.22899,
+    1.23965
+   ],
+   "diff": -0.05336,
+   "diff_ci": [
+    -0.05377,
+    -0.05297
+   ],
+   "items": 34815
   },
-  "after": {
-   "en": 1.23444,
-   "de": 1.5876
+  "de": {
+   "before": 1.56464,
+   "before_ci": [
+    1.51858,
+    1.61246
+   ],
+   "after": 1.5876,
+   "after_ci": [
+    1.54072,
+    1.63595
+   ],
+   "diff": -0.02296,
+   "diff_ci": [
+    -0.02396,
+    -0.02196
+   ],
+   "items": 685
   }
  },
  "sets": {

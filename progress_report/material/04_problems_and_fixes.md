@@ -110,3 +110,8 @@ Each entry: problem → cause → fix → effect. Material for the "challenges" 
     (`scripts/start_download.ps1`); Windows-side admin steps (VHD compaction) are run in the SSH session or by
     the user, not routed around the block.
     (Upload to the 5080 is ~9 KB/s: repo updates go as a pack of only the objects the box lacks.)
+
+27. **tmux target names match by prefix** (2026-10-29): a waiting job in session `ft2b` polled
+    `tmux has-session -t ft2` to wait for the fine-tuning session `ft2`; after `ft2` ended the name still
+    matched `ft2b` itself, so the wait never ended (~20 min of idle GPU). -> Exact-match targets `-t =name`,
+    or session names that are no prefix of another; the job was started by hand.

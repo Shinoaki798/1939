@@ -1,0 +1,147 @@
+{
+ "run": "ft_main_s335m_qa_replay",
+ "checkpoint": "step_000225.pt",
+ "base": {
+  "run": "main_s335m",
+  "checkpoint": "step_045776.pt"
+ },
+ "pairs_sha256": "3cb236de8f295236ccf32b04b5eaf128f133cca42e6967a535f85bddcdeb3951",
+ "git_sha": "622c0211c9b6047cfa399870abc76c5752f3ba31",
+ "created_at": "2026-10-29T17:46:49+00:00",
+ "val_bpb": {
+  "en": {
+   "before": 1.18108,
+   "before_ci": [
+    1.1758,
+    1.18622
+   ],
+   "after": 1.18751,
+   "after_ci": [
+    1.18216,
+    1.19264
+   ],
+   "diff": -0.00642,
+   "diff_ci": [
+    -0.0065,
+    -0.00634
+   ],
+   "items": 34815
+  },
+  "de": {
+   "before": 1.56464,
+   "before_ci": [
+    1.51858,
+    1.61246
+   ],
+   "after": 1.56648,
+   "after_ci": [
+    1.52036,
+    1.61434
+   ],
+   "diff": -0.00184,
+   "diff_ci": [
+    -0.00199,
+    -0.0017
+   ],
+   "items": 685
+  }
+ },
+ "sets": {
+  "period_pre": {
+   "answer_bpb": {
+    "before": 1.09691,
+    "before_ci": [
+     1.06709,
+     1.13192
+    ],
+    "after": 1.07062,
+    "after_ci": [
+     1.04032,
+     1.10494
+    ],
+    "diff": 0.02628,
+    "diff_ci": [
+     0.02272,
+     0.03006
+    ],
+    "items": 533
+   }
+  },
+  "period_post": {
+   "answer_bpb": {
+    "before": 1.12207,
+    "before_ci": [
+     1.11156,
+     1.13274
+    ],
+    "after": 1.12094,
+    "after_ci": [
+     1.1103,
+     1.13158
+    ],
+    "diff": 0.00113,
+    "diff_ci": [
+     -0.0001,
+     0.00245
+    ],
+    "items": 2220
+   }
+  },
+  "caqa_test": {
+   "answer_bpb": {
+    "before": 1.27654,
+    "before_ci": [
+     1.24002,
+     1.31415
+    ],
+    "after": 0.41522,
+    "after_ci": [
+     0.39499,
+     0.43546
+    ],
+    "diff": 0.86132,
+    "diff_ci": [
+     0.83249,
+     0.89125
+    ],
+    "items": 2000
+   },
+   "exact_match": {
+    "before": 0.013,
+    "before_ci": [
+     0.00849,
+     0.018
+    ],
+    "after": 0.3875,
+    "after_ci": [
+     0.367,
+     0.41
+    ],
+    "diff": -0.3745,
+    "diff_ci": [
+     -0.39701,
+     -0.35349
+    ],
+    "items": 2000
+   },
+   "f1": {
+    "before": 0.07289,
+    "before_ci": [
+     0.06526,
+     0.08098
+    ],
+    "after": 0.46256,
+    "after_ci": [
+     0.44251,
+     0.48321
+    ],
+    "diff": -0.38966,
+    "diff_ci": [
+     -0.41085,
+     -0.36967
+    ],
+    "items": 2000
+   }
+  }
+ }
+}

@@ -17,4 +17,9 @@ ChroniclingAmericaQA test, greedy answer (higher is better; gain = after - befor
 | exact_match | 0.013 | 0.383 | 0.37 | [0.349, 0.393] |
 | f1 | 0.07289 | 0.4569 | 0.384 | [0.36339, 0.40502] |
 
-Val bpb: before {'en': 1.18108, 'de': 1.56464}, after {'en': 1.23444, 'de': 1.5876}.
+Val bpb, whole Val slices (lower is better; diff = before - after, CI over documents):
+
+| language | documents | before | 95 % CI | after | 95 % CI | diff | 95 % CI |
+|---|---|---|---|---|---|---|---|
+| en | 34815 | 1.18108 | [1.1758, 1.18622] | 1.23444 | [1.22899, 1.23965] | -0.05336 | [-0.05377, -0.05297] |
+| de | 685 | 1.56464 | [1.51858, 1.61246] | 1.5876 | [1.54072, 1.63595] | -0.02296 | [-0.02396, -0.02196] |

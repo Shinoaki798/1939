@@ -71,10 +71,12 @@ Dates are hard (HANDOFF §4). Rewritten 2026-10-19 for the current plan (no tran
   Gate: answer bpb on the held-out period pairs lower after than before (paired CI excludes 0); Val bpb
   change reported. Passed 10-29: `ft_main_s335m_qa`, period_pre 1.097 -> 1.070 bpb (diff 0.027
   [0.022, 0.032]); `reports/finetune/`.
-- [ ] Second fine-tuning run against forgetting (user 2026-10-29): `ft_main_s335m_qa_replay`, + 16 rows of the
+- [x] Second fine-tuning run against forgetting (user 2026-10-29): `ft_main_s335m_qa_replay`, + 16 rows of the
       pretraining stream per step (weight 1.0) and 1920s period pairs drawn down to the 1930s count each epoch;
       both runs reported. Gate (fixed before the run): period_pre CI excludes 0 as above, and the EN Val bpb rise
       smaller than the first run's (+0.053).
+  Passed 10-29: period_pre diff 0.026 [0.023, 0.030]; EN Val bpb +0.0064 (first run +0.053; paired difference
+  of the two runs 0.047 [0.047, 0.047] over Val documents); `reports/finetune/compare_*.md`.
 
 ## Phase 7 — first results + progress report (… 2026-11-20)
 - [ ] Per-year bpb curves (Transformer + baselines overlaid); RQ1 Δ profile; RQ3 on the main model.
