@@ -430,3 +430,16 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
   period_dev 307, period_pre 533, period_post 2,220 (1939-09 .. 1955), caqa_train 39,162, caqa_dev 838,
   caqa_test 2,000; 171 evaluation pairs dropped as near-duplicates of train questions. Frozen in
   probes/CHECKSUMS before scoring. Known noise: OCR errors in the text, ~12 % of answers still hold a "?".
+- 2026-10-29 03:03-03:21: fine-tuning `ft_main_s335m_qa` on the 5080 (`src.train.finetune`, code 6c2af63): copy of
+  main_s335m step_045776 (sha256 09545743...), 53,262 train examples (6 dropped: answer cut from the passage),
+  2 epochs = 7,380 rows of 4,096, 230 steps of 32 rows, 4.46 s/step, 13.4 GB GPU memory, 57-59 C. Answer-token
+  dev loss 3.338 -> 2.510 (step 50) -> 2.458 (100) -> 2.449 (230, final); train loss ~2.1 at the end.
+  Checkpoints step_000200 / 000230 (4.2 GB each). Then `src.eval.finetune_eval` started.
+- 2026-10-29 03:21-03:33: `src.eval.finetune_eval --run ft_main_s335m_qa` (11:37, 3 GB RSS) ->
+  `reports/finetune/ft_main_s335m_qa.{json,md}`, `_samples.md`. Answer bpb before -> after (diff, 95 % CI):
+  period_pre 1.0969 -> 1.0698 (0.0271 [0.0225, 0.0316]; gate passed); period_post 1.1221 -> 1.1304
+  (-0.0083 [-0.0098, -0.0067]: worse after 1939); caqa_test 1.2765 -> 0.4167 (0.860 [0.831, 0.890]).
+  CAQA exact match 1.3 % -> 38.3 % (gain 37.0 points [34.9, 39.3]), F1 7.3 % -> 45.7 %. Val bpb EN 1.1811 ->
+  1.2344, DE 1.5646 -> 1.5876 (the cost of fine-tuning). Greedy samples: answers in the column style and they
+  stop, facts often wrong, some repetition loops; post-1939 questions unknown (jeep -> "a small fish",
+  Pearl Harbor -> "the navy department has no record"); "Chancellor of Germany" Hitler before, von Papen after.

@@ -1,0 +1,119 @@
+{
+ "run": "ft_main_s335m_qa",
+ "checkpoint": "step_000230.pt",
+ "base": {
+  "run": "main_s335m",
+  "checkpoint": "step_045776.pt"
+ },
+ "pairs_sha256": "3cb236de8f295236ccf32b04b5eaf128f133cca42e6967a535f85bddcdeb3951",
+ "git_sha": "6c2af63daa74aa641b8a708ba2b8d1d97d162bfc",
+ "created_at": "2026-10-29T07:33:08+00:00",
+ "val_bpb": {
+  "before": {
+   "en": 1.18108,
+   "de": 1.56464
+  },
+  "after": {
+   "en": 1.23444,
+   "de": 1.5876
+  }
+ },
+ "sets": {
+  "period_pre": {
+   "answer_bpb": {
+    "before": 1.09691,
+    "before_ci": [
+     1.06709,
+     1.13192
+    ],
+    "after": 1.06983,
+    "after_ci": [
+     1.03925,
+     1.10416
+    ],
+    "diff": 0.02708,
+    "diff_ci": [
+     0.02245,
+     0.03163
+    ],
+    "items": 533
+   }
+  },
+  "period_post": {
+   "answer_bpb": {
+    "before": 1.12207,
+    "before_ci": [
+     1.11156,
+     1.13274
+    ],
+    "after": 1.13035,
+    "after_ci": [
+     1.11956,
+     1.14103
+    ],
+    "diff": -0.00827,
+    "diff_ci": [
+     -0.00978,
+     -0.0067
+    ],
+    "items": 2220
+   }
+  },
+  "caqa_test": {
+   "answer_bpb": {
+    "before": 1.27654,
+    "before_ci": [
+     1.24002,
+     1.31415
+    ],
+    "after": 0.41666,
+    "after_ci": [
+     0.39628,
+     0.4363
+    ],
+    "diff": 0.85988,
+    "diff_ci": [
+     0.83109,
+     0.89015
+    ],
+    "items": 2000
+   },
+   "exact_match": {
+    "before": 0.013,
+    "before_ci": [
+     0.00849,
+     0.018
+    ],
+    "after": 0.383,
+    "after_ci": [
+     0.3625,
+     0.40551
+    ],
+    "diff": -0.37,
+    "diff_ci": [
+     -0.393,
+     -0.349
+    ],
+    "items": 2000
+   },
+   "f1": {
+    "before": 0.07289,
+    "before_ci": [
+     0.06526,
+     0.08098
+    ],
+    "after": 0.4569,
+    "after_ci": [
+     0.43612,
+     0.47751
+    ],
+    "diff": -0.384,
+    "diff_ci": [
+     -0.40502,
+     -0.36339
+    ],
+    "items": 2000
+   }
+  }
+ }
+}

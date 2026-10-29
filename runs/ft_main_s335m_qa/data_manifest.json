@@ -1,0 +1,27 @@
+{
+ "pairs_file": "3cb236de8f29.parquet",
+ "pairs_sha256": "3cb236de8f295236ccf32b04b5eaf128f133cca42e6967a535f85bddcdeb3951",
+ "base_checkpoint": "runs/main_s335m/checkpoints/step_045776.pt",
+ "base_checkpoint_step": 45776,
+ "base_checkpoint_sha256": "09545743aab41adcc783fb48514a5cec25627fb5d17496c8c3c72ab114919dcd",
+ "train_examples": 53262,
+ "train_dropped_answer_cut": 6,
+ "dev_examples": 1145,
+ "dev_dropped_answer_cut": 0,
+ "epochs": [
+  {
+   "epoch": 0,
+   "rows": 3692,
+   "scored_tokens": 758397,
+   "skipped_too_long": 0
+  },
+  {
+   "epoch": 1,
+   "rows": 3688,
+   "scored_tokens": 758397,
+   "skipped_too_long": 0
+  }
+ ],
+ "dev_rows": 80,
+ "dev_scored_tokens": 16623
+}

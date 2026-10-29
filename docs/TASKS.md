@@ -62,14 +62,15 @@ Dates are hard (HANDOFF §4). Rewritten 2026-10-19 for the current plan (no tran
 
 ## Phase 6 — the English-only twin, only if the cross-lingual check passes (2026-10-30 … 11-04)
 - [x] Decided 10-29 (user): no twin. Not needed, the check already gives the answer.
-- [ ] Fine-tuning a copy of the main model (user 2026-10-22; data 10-29): period Q&A columns of American
+- [x] Fine-tuning a copy of the main model (user 2026-10-22; data 10-29): period Q&A columns of American
       Stories (train split, <= cutoff, ~20k pairs) + 40k ChroniclingAmericaQA train (machine-written
       questions, stated); loss on answers only. `src/data/qa_pairs.py`, `src/train/finetune.py`,
       `src/eval/finetune_eval.py`, `config/finetune.yaml`. Before / after on items frozen before scoring:
       period pairs <= cutoff (holdout + val), period pairs >= 1939-09-01 (knowledge boundary), CAQA test
       (EM / F1), Val bpb, fixed prompts. Its own report section.
   Gate: answer bpb on the held-out period pairs lower after than before (paired CI excludes 0); Val bpb
-  change reported.
+  change reported. Passed 10-29: `ft_main_s335m_qa`, period_pre 1.097 -> 1.070 bpb (diff 0.027
+  [0.022, 0.032]); `reports/finetune/`.
 
 ## Phase 7 — first results + progress report (… 2026-11-20)
 - [ ] Per-year bpb curves (Transformer + baselines overlaid); RQ1 Δ profile; RQ3 on the main model.
