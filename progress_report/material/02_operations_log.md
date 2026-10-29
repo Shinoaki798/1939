@@ -415,3 +415,5 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
   the same topic, takes the English passage for its continuation and keeps expecting German; the cross-lingual
   link shows up as interference, not as English knowledge gained. The GRU's German mass is the same in both
   conditions (8.6 % vs 8.7 %) and its effect is positive. Decision on the twin put to the user.
+- 2026-10-29: the user decided: no twin (the check already gives the answer), no email. CLAUDE.md rule 1,
+  HANDOFF §12 and TASKS Phases 5, 6, 8 updated.

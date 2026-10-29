@@ -5,7 +5,7 @@ HANDOFF holds the research design, every locked decision with its rationale,
 the instructor's constraints and the schedule. This file holds only the rules
 that must never be violated and the conventions of the repo.
 
-State as of 2026-10-01; rules 2, 4-7, 10, 11 revised 2026-10-05, rule 1 revised 2026-10-06, rule 6 revised 2026-10-07, rule 7 revised 2026-10-08, rule 1 revised again 2026-10-22, rule 5 revised 2026-10-28 (HANDOFF §12). Proposal due 2026-10-16. The person you are working
+State as of 2026-10-01; rules 2, 4-7, 10, 11 revised 2026-10-05, rule 1 revised 2026-10-06, rule 6 revised 2026-10-07, rule 7 revised 2026-10-08, rule 1 revised again 2026-10-22, rule 5 revised 2026-10-28, no twin 2026-10-29 (HANDOFF §12). Proposal due 2026-10-16. The person you are working
 with is Junlei An (goes by Andrew), an individual student on this project.
 
 ## Hard constraints (never violate, never "improve")
@@ -18,7 +18,8 @@ with is Junlei An (goes by Andrew), an individual student on this project.
    (compute-matched, revised 2026-10-09, user). The twin is trained only if
    the cross-lingual check on the finished main model shows a real
    English-German link (criterion fixed before the check runs); otherwise RQ2
-   is reported from the check and there is no twin. No other control
+   is reported from the check and there is no twin. **Decided 2026-10-29
+   (user): no twin**, the check failed the criterion. No other control
    Transformer, no ablation, no second scale, no seed sweep. All other
    controls are constructed at evaluation time. Baselines (vanilla RNN, LSTM,
    GRU, n-gram) are not Transformers and may be retrained. Fine-tuning a copy

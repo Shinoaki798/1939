@@ -737,6 +737,9 @@ Dated entries; each supersedes anything above it that it contradicts.
 - **2026-10-28 — cross-lingual check: German held-out articles as conditioning contexts (user).** CLAUDE.md
   rule 5 extended: German text may also be the conditioning context of the twin-decision check
   (`src/eval/crosslingual.py`); the scored targets stay native English from American Stories held-out text.
+- **2026-10-29 — no twin (user).** Not needed: the cross-lingual check already gives the answer (v1 and v2
+  fail the agreed criterion; in v2 an on-topic German article makes the English passage less likely, the
+  model keeps expecting German); `reports/crosslingual/`. No email to the instructor (user).
 
 ---
 

@@ -54,14 +54,14 @@ Dates are hard (HANDOFF §4). Rewritten 2026-10-19 for the current plan (no tran
 - [ ] `probes/rq3_propositions.csv` (≥120, three tiers, US and DE contexts June / late August 1939, three
       wordings, Gallup figures) and `src/eval/foresight.py` (forced choice, Brier per tier). Freeze first.
 - [ ] `src/eval/sanity_caqa.py` (pre-1920 ChroniclingAmericaQA subset).
-- [ ] Cross-lingual check for the twin decision (user 2026-10-22), on the finished main model. Criterion
+- [x] Cross-lingual check for the twin decision (user 2026-10-22), on the finished main model. Criterion
       (agreed 10-22): German -> English priming CI excludes 0 and >= 20 % of English -> English -> twin.
       `src/eval/crosslingual.py`, topics `probes/crosslingual_topics.csv` (75), items frozen before scoring.
+      Done 10-28: v1 and v2 both fail (v2 German effect -0.021 bpb, CI below 0); `reports/crosslingual/`.
   Gate: the harness runs end to end on a baseline checkpoint in one command.
 
 ## Phase 6 — the English-only twin, only if the cross-lingual check passes (2026-10-30 … 11-04)
-- [ ] Decide by 10-29 from the cross-lingual check (user 2026-10-22). If it passes: twin run on
-      `data/shards/twin` (5080 ~121 h, or a rented H100 ~1 day). If not: no twin; RQ2 from the check.
+- [x] Decided 10-29 (user): no twin. Not needed, the check already gives the answer.
 - [ ] Fine-tuning a copy of the main model (user 2026-10-22): period-safe Q&A data, held-out items scored
       before / after; its own report section.
 
@@ -70,7 +70,7 @@ Dates are hard (HANDOFF §4). Rewritten 2026-10-19 for the current plan (no tran
 - [ ] Progress report: data complete, baselines done, first Transformer results. Submit by Nov 20.
 
 ## Phase 8 — RQ2 + final report (2026-11-21 … 12-08)
-- [ ] RQ2: the same English batteries on the twin; paired differences with bootstrap CIs.
+- [-] ~~RQ2: the same English batteries on the twin; paired differences with bootstrap CIs.~~ No twin (10-29).
 - [ ] Qualitative completions; final report. Submit by Dec 8.
 
 ## Open
