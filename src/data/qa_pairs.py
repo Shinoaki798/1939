@@ -5,7 +5,10 @@ Period pairs. The question-and-answer columns of American Stories (syndicated "A
 of the 1920s-30s: "Q. ...? A. ..."), so question and answer are both written in the period. An article with
 >= min_pairs pairs is split at line-initial "Q." / "A." markers (also "Q," "Q:" ...); a pair is a question of
 question_chars characters ending in "?" directly followed by an answer of answer_chars characters (cut at the
-next marker), white space collapsed. Sets by the article's split and date:
+next marker), white space collapsed ("O." counts as "Q.", a common OCR misreading). Court transcripts print
+"Q. ... A. ..." too: an article in which >= testimony_share of the questions read as cross-examination
+(`TESTIMONY`: "did / were / have / had / do you", or a leading pronoun or conjunction) is dropped. Sets by the
+article's split and date:
     period_train / period_dev   split train, dated <= cutoff (dev: dev_share of the articles, by seeded hash)
     period_pre                  split holdout or val, dated <= cutoff                   (evaluation)
     period_post                 split holdout or post, dated >= test_start: never trained on, the knowledge
@@ -44,7 +47,9 @@ import yaml
 from src.data.download import load_config, repo_path
 from src.data.mixture import uniform
 
-MARK = re.compile(r"(?:^|\n)[ \t]*([QA])[.,:][ \t]+")
+MARK = re.compile(r"(?:^|\n)[ \t]*([QAO])[.,:][ \t]+")          # "O." is OCR for "Q."
+TESTIMONY = re.compile(r"\b(did|were|have|had|do) you\b|^(and|now|then|well|so|but|you|he|she|they|isn't|didn't|"
+                       r"wasn't|weren't)\b", re.IGNORECASE)
 COLUMN = r"(^|\s)Q[.,:]\s[^?]{8,400}\?\s{0,3}A[.,:]\s"          # fast Arrow pre-filter for column articles
 DF_CAP = 2000
 
@@ -54,13 +59,18 @@ def pairs(text: str, q_chars: tuple[int, int], a_chars: tuple[int, int]) -> list
     marks = [(m.group(1), m.start(), m.end()) for m in MARK.finditer(text)] + [("", len(text), len(text))]
     out = []
     for (k, _, e), (k2, s2, e2), (_, s3, _) in zip(marks, marks[1:], marks[2:] + [("", len(text), len(text))]):
-        if k != "Q" or k2 != "A":
+        if k not in ("Q", "O") or k2 != "A":
             continue
         q, a = " ".join(text[e:s2].split()), " ".join(text[e2:s3].split())
         if q.rstrip("\"'”’ ").endswith("?") and q_chars[0] <= len(q) <= q_chars[1] and \
                 a_chars[0] <= len(a) <= a_chars[1]:
             out.append((q, a))
     return out
+
+
+def testimony(questions: list[str]) -> float:
+    """Share of questions phrased as cross-examination (court transcripts also print "Q. ... A. ...")."""
+    return sum(bool(TESTIMONY.search(q)) for q in questions) / max(1, len(questions))
 
 
 def words(q: str) -> tuple[str, ...]:
@@ -98,7 +108,7 @@ def period_pairs(cfg: dict, c: dict, seed: int) -> pd.DataFrame:
     cutoff, test_start = str(cfg["cutoff"]), str(cfg["test_start"])
     troot, froot = repo_path(cfg["tokenized"]), repo_path(cfg["filtered"])
     man = json.loads((troot / "MANIFEST.json").read_text(encoding="utf-8"))
-    rows = []
+    rows, court = [], collections.Counter()
     for key in sorted(man["outputs"]):
         if not key.startswith(f"en/{c['source']}/"):
             continue
@@ -118,7 +128,9 @@ def period_pairs(cfg: dict, c: dict, seed: int) -> pd.DataFrame:
                 else:
                     continue                                    # embargo, or a train / val article after it
                 ps = pairs(r["text"], tuple(c["question_chars"]), tuple(c["answer_chars"]))
-                if len(ps) >= int(c["min_pairs"]):
+                if len(ps) >= int(c["min_pairs"]) and testimony([q for q, _ in ps]) >= float(c["testimony_share"]):
+                    court[s] += len(ps)
+                elif len(ps) >= int(c["min_pairs"]):
                     rows += [{"set": s, "id": f"{r['article_id']}#{k}", "article": r["article_id"], "date": d,
                               "question": q, "answer": a} for k, (q, a) in enumerate(ps)]
     df = pd.DataFrame(rows)
@@ -129,7 +141,8 @@ def period_pairs(cfg: dict, c: dict, seed: int) -> pd.DataFrame:
     df = df.drop(index=df.index[ev][dup])
     u = uniform(df["article"].to_numpy(dtype=object), seed)[1]
     df.loc[(df["set"] == "period_train").to_numpy() & (u < float(c["dev_share"])), "set"] = "period_dev"
-    print(f"period: {int(dup.sum()):,} evaluation pairs dropped as near-duplicates of train questions", flush=True)
+    print(f"period: {int(dup.sum()):,} evaluation pairs dropped as near-duplicates of train questions; pairs in "
+          f"court-testimony articles dropped: {dict(court)}", flush=True)
     return df.drop(columns="article").assign(context=None)
 
 

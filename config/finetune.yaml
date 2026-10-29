@@ -9,6 +9,8 @@ data:                           # src.data.qa_pairs -> data/finetune/
     min_pairs: 2                # pairs in an article to call it a column
     question_chars: [8, 400]    # a question ends in "?"
     answer_chars: [2, 1000]
+    testimony_share: 0.4        # an article with >= this share of cross-examination questions is a court
+                                # transcript, not a column, and is dropped (qa_pairs.TESTIMONY)
     overlap: 0.5                # an evaluation question sharing >= this share of its word 3-grams with a
                                 # train question is dropped (syndicated columns ran in many papers)
     dev_share: 0.02             # of the train pairs, kept aside for the fine-tuning dev loss
