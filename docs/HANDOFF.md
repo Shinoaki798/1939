@@ -752,6 +752,11 @@ Dated entries; each supersedes anything above it that it contradicts.
   period-safe) with 1.0 x their mean next-token loss, and each epoch draws the 1920s period pairs down to the
   1930s count (fresh draw). Both runs kept and reported. Gate fixed before the run: period_pre answer bpb lower
   after (CI excludes 0) and the EN Val bpb rise smaller than the first run's.
+- **2026-10-29 — 1939 news quiz (user).** ~100 multiple-choice facts as of the cutoff, frozen before scoring
+  (`probes/fact_quiz_1939.csv`, CHECKSUMS), scored on the untuned main model, both fine-tuned runs and the GRU
+  (`src/eval/fact_quiz.py`, `config/eval.yaml` fact_quiz): tiers standing / recent (last year before the cutoff) /
+  post (control, >= 1939-09-01); four candidates; Q&A-column question and statement; length-normalised forced
+  choice as RQ1-C4 / RQ3. The items are period English written for the quiz, like the RQ3 continuations.
 
 ---
 

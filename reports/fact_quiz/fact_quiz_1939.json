@@ -1,0 +1,446 @@
+{
+ "items": "probes/fact_quiz_1939.csv",
+ "items_sha256": "0a29927c0e89db11ba486cdbeb1b8e44f442c3e266c6861b1a308b78f4d01533",
+ "created_at": "2026-10-29T23:01:54+00:00",
+ "git_sha": "26f72947e84f1f9d4fe72cf13c4ad7b67fecee95",
+ "chance": 0.25,
+ "base": "main (untuned)",
+ "models": {
+  "main (untuned)": {
+   "run": "main_s335m",
+   "checkpoint": "step_045776.pt",
+   "step": 45776,
+   "qa/standing": {
+    "accuracy": 0.46,
+    "ci": [
+     0.32,
+     0.6
+    ],
+    "items": 50,
+    "minus_base": 0.0,
+    "minus_base_ci": [
+     0.0,
+     0.0
+    ]
+   },
+   "qa/recent": {
+    "accuracy": 0.31373,
+    "ci": [
+     0.19608,
+     0.45098
+    ],
+    "items": 51,
+    "minus_base": 0.0,
+    "minus_base_ci": [
+     0.0,
+     0.0
+    ]
+   },
+   "qa/post": {
+    "accuracy": 0.15,
+    "ci": [
+     0.0,
+     0.3
+    ],
+    "items": 20,
+    "minus_base": 0.0,
+    "minus_base_ci": [
+     0.0,
+     0.0
+    ]
+   },
+   "qa/standing+recent": {
+    "accuracy": 0.38614,
+    "ci": [
+     0.29703,
+     0.47525
+    ],
+    "items": 101,
+    "minus_base": 0.0,
+    "minus_base_ci": [
+     0.0,
+     0.0
+    ]
+   },
+   "stem/standing": {
+    "accuracy": 0.56,
+    "ci": [
+     0.42,
+     0.7
+    ],
+    "items": 50,
+    "minus_base": 0.0,
+    "minus_base_ci": [
+     0.0,
+     0.0
+    ]
+   },
+   "stem/recent": {
+    "accuracy": 0.35294,
+    "ci": [
+     0.2348,
+     0.4902
+    ],
+    "items": 51,
+    "minus_base": 0.0,
+    "minus_base_ci": [
+     0.0,
+     0.0
+    ]
+   },
+   "stem/post": {
+    "accuracy": 0.15,
+    "ci": [
+     0.0,
+     0.3
+    ],
+    "items": 20,
+    "minus_base": 0.0,
+    "minus_base_ci": [
+     0.0,
+     0.0
+    ]
+   },
+   "stem/standing+recent": {
+    "accuracy": 0.45545,
+    "ci": [
+     0.35644,
+     0.55446
+    ],
+    "items": 101,
+    "minus_base": 0.0,
+    "minus_base_ci": [
+     0.0,
+     0.0
+    ]
+   }
+  },
+  "fine-tuned v1": {
+   "run": "ft_main_s335m_qa",
+   "checkpoint": "step_000230.pt",
+   "step": 230,
+   "qa/standing": {
+    "accuracy": 0.5,
+    "ci": [
+     0.36,
+     0.64
+    ],
+    "items": 50,
+    "minus_base": 0.04,
+    "minus_base_ci": [
+     -0.08,
+     0.18
+    ]
+   },
+   "qa/recent": {
+    "accuracy": 0.33333,
+    "ci": [
+     0.21569,
+     0.45098
+    ],
+    "items": 51,
+    "minus_base": 0.01961,
+    "minus_base_ci": [
+     -0.09804,
+     0.13725
+    ]
+   },
+   "qa/post": {
+    "accuracy": 0.2,
+    "ci": [
+     0.05,
+     0.4
+    ],
+    "items": 20,
+    "minus_base": 0.05,
+    "minus_base_ci": [
+     0.0,
+     0.15125
+    ]
+   },
+   "qa/standing+recent": {
+    "accuracy": 0.41584,
+    "ci": [
+     0.31683,
+     0.51485
+    ],
+    "items": 101,
+    "minus_base": 0.0297,
+    "minus_base_ci": [
+     -0.04975,
+     0.11881
+    ]
+   },
+   "stem/standing": {
+    "accuracy": 0.56,
+    "ci": [
+     0.42,
+     0.7
+    ],
+    "items": 50,
+    "minus_base": 0.0,
+    "minus_base_ci": [
+     -0.1,
+     0.12
+    ]
+   },
+   "stem/recent": {
+    "accuracy": 0.33333,
+    "ci": [
+     0.2152,
+     0.47059
+    ],
+    "items": 51,
+    "minus_base": -0.01961,
+    "minus_base_ci": [
+     -0.09804,
+     0.03922
+    ]
+   },
+   "stem/post": {
+    "accuracy": 0.2,
+    "ci": [
+     0.05,
+     0.4
+    ],
+    "items": 20,
+    "minus_base": 0.05,
+    "minus_base_ci": [
+     0.0,
+     0.15
+    ]
+   },
+   "stem/standing+recent": {
+    "accuracy": 0.44554,
+    "ci": [
+     0.34653,
+     0.53465
+    ],
+    "items": 101,
+    "minus_base": -0.0099,
+    "minus_base_ci": [
+     -0.06955,
+     0.0495
+    ]
+   }
+  },
+  "fine-tuned v2 (replay)": {
+   "run": "ft_main_s335m_qa_replay",
+   "checkpoint": "step_000225.pt",
+   "step": 225,
+   "qa/standing": {
+    "accuracy": 0.52,
+    "ci": [
+     0.38,
+     0.66
+    ],
+    "items": 50,
+    "minus_base": 0.06,
+    "minus_base_ci": [
+     -0.04,
+     0.18
+    ]
+   },
+   "qa/recent": {
+    "accuracy": 0.29412,
+    "ci": [
+     0.17647,
+     0.41176
+    ],
+    "items": 51,
+    "minus_base": -0.01961,
+    "minus_base_ci": [
+     -0.13725,
+     0.09804
+    ]
+   },
+   "qa/post": {
+    "accuracy": 0.2,
+    "ci": [
+     0.05,
+     0.4
+    ],
+    "items": 20,
+    "minus_base": 0.05,
+    "minus_base_ci": [
+     0.0,
+     0.15125
+    ]
+   },
+   "qa/standing+recent": {
+    "accuracy": 0.40594,
+    "ci": [
+     0.30693,
+     0.50495
+    ],
+    "items": 101,
+    "minus_base": 0.0198,
+    "minus_base_ci": [
+     -0.06931,
+     0.10891
+    ]
+   },
+   "stem/standing": {
+    "accuracy": 0.62,
+    "ci": [
+     0.48,
+     0.76
+    ],
+    "items": 50,
+    "minus_base": 0.06,
+    "minus_base_ci": [
+     -0.04,
+     0.16
+    ]
+   },
+   "stem/recent": {
+    "accuracy": 0.35294,
+    "ci": [
+     0.21569,
+     0.4902
+    ],
+    "items": 51,
+    "minus_base": 0.0,
+    "minus_base_ci": [
+     -0.05882,
+     0.05882
+    ]
+   },
+   "stem/post": {
+    "accuracy": 0.2,
+    "ci": [
+     0.05,
+     0.4
+    ],
+    "items": 20,
+    "minus_base": 0.05,
+    "minus_base_ci": [
+     0.0,
+     0.15
+    ]
+   },
+   "stem/standing+recent": {
+    "accuracy": 0.48515,
+    "ci": [
+     0.38614,
+     0.58416
+    ],
+    "items": 101,
+    "minus_base": 0.0297,
+    "minus_base_ci": [
+     -0.0297,
+     0.08911
+    ]
+   }
+  },
+  "GRU 50M baseline": {
+   "run": "gru_50m",
+   "checkpoint": "step_045776.pt",
+   "step": 45776,
+   "qa/standing": {
+    "accuracy": 0.46,
+    "ci": [
+     0.32,
+     0.6
+    ],
+    "items": 50,
+    "minus_base": 0.0,
+    "minus_base_ci": [
+     -0.16,
+     0.18
+    ]
+   },
+   "qa/recent": {
+    "accuracy": 0.33333,
+    "ci": [
+     0.2152,
+     0.47059
+    ],
+    "items": 51,
+    "minus_base": 0.01961,
+    "minus_base_ci": [
+     -0.09804,
+     0.13725
+    ]
+   },
+   "qa/post": {
+    "accuracy": 0.2,
+    "ci": [
+     0.05,
+     0.35
+    ],
+    "items": 20,
+    "minus_base": 0.05,
+    "minus_base_ci": [
+     -0.1,
+     0.2
+    ]
+   },
+   "qa/standing+recent": {
+    "accuracy": 0.39604,
+    "ci": [
+     0.29703,
+     0.49505
+    ],
+    "items": 101,
+    "minus_base": 0.0099,
+    "minus_base_ci": [
+     -0.08911,
+     0.10916
+    ]
+   },
+   "stem/standing": {
+    "accuracy": 0.52,
+    "ci": [
+     0.3795,
+     0.66
+    ],
+    "items": 50,
+    "minus_base": -0.04,
+    "minus_base_ci": [
+     -0.18,
+     0.12
+    ]
+   },
+   "stem/recent": {
+    "accuracy": 0.29412,
+    "ci": [
+     0.17647,
+     0.43137
+    ],
+    "items": 51,
+    "minus_base": -0.05882,
+    "minus_base_ci": [
+     -0.19608,
+     0.07843
+    ]
+   },
+   "stem/post": {
+    "accuracy": 0.15,
+    "ci": [
+     0.0,
+     0.3
+    ],
+    "items": 20,
+    "minus_base": 0.0,
+    "minus_base_ci": [
+     -0.15,
+     0.15
+    ]
+   },
+   "stem/standing+recent": {
+    "accuracy": 0.40594,
+    "ci": [
+     0.31658,
+     0.50495
+    ],
+    "items": 101,
+    "minus_base": -0.0495,
+    "minus_base_ci": [
+     -0.14851,
+     0.0495
+    ]
+   }
+  }
+ }
+}

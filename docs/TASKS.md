@@ -77,6 +77,9 @@ Dates are hard (HANDOFF §4). Rewritten 2026-10-19 for the current plan (no tran
       smaller than the first run's (+0.053).
   Passed 10-29: period_pre diff 0.026 [0.023, 0.030]; EN Val bpb +0.0064 (first run +0.053; paired difference
   of the two runs 0.047 [0.047, 0.047] over Val documents); `reports/finetune/compare_*.md`.
+- [x] 1939 news quiz (user 2026-10-29): `probes/fact_quiz_1939.csv` (121 items, frozen before scoring),
+      `src/eval/fact_quiz.py`; untuned, both fine-tuned runs, GRU. Done 10-29: pre-cutoff accuracy 0.39 (Q&A) /
+      0.46 (statement), chance 0.25; fine-tuning changes nothing measurable; `reports/fact_quiz/`.
 
 ## Phase 7 — first results + progress report (… 2026-11-20)
 - [ ] Per-year bpb curves (Transformer + baselines overlaid); RQ1 Δ profile; RQ3 on the main model.
