@@ -422,3 +422,11 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
   12,348, 1930s 7,087), holdout + val <= cutoff ~790 pairs, holdout + post >= 1939-09 ~2,800 pairs (1940s
   2,026), embargo 171 (not used). ChroniclingAmericaQA: train 1.38 GB, dev / test 75 MB each, extractive.
   Branch model/finetune.
+- 2026-10-29 03:00: fine-tuning pairs built (`src.data.qa_pairs`, 1:49, 4.4 GB peak RSS). First two builds
+  inspected and rejected before any scoring: court-testimony transcripts ("Q. ... A. Yes, sir.") among the
+  period pairs, questions glued to answers where OCR read "Q." as "O." or "q.". Fixes: articles with >= 40 %
+  cross-examination questions dropped (court pairs: train 1,869, pre 52, post 383), "O." read as "Q.", a
+  run-in next question cut from the answer. Final `data/finetune/3cb236de8f29.parquet`: period_train 14,106,
+  period_dev 307, period_pre 533, period_post 2,220 (1939-09 .. 1955), caqa_train 39,162, caqa_dev 838,
+  caqa_test 2,000; 171 evaluation pairs dropped as near-duplicates of train questions. Frozen in
+  probes/CHECKSUMS before scoring. Known noise: OCR errors in the text, ~12 % of answers still hold a "?".
