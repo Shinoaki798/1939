@@ -1,0 +1,51 @@
+{
+ "run": "gru_50m",
+ "checkpoint": "step_045776.pt",
+ "step": 45776,
+ "git_sha": "b2564f9da1ae3741c796802ead3e492bc86297fa",
+ "created_at": "2026-10-29T00:17:27+00:00",
+ "items_sha256": "16f50e7e0ac08deb7ac69a11cc0b6155e6b0eed428048d62e5c341826bf2f4e0",
+ "topics_sha256": "ee1d4f980e4a83cfd5939dcce93db5d0f4e49fdaf0fafe00f781641bd504cba5",
+ "ratio_threshold": 0.2,
+ "novel": {
+  "de": 0.00088,
+  "de_ci": [
+   -4e-05,
+   0.00192
+  ],
+  "en": 0.0012,
+  "en_ci": [
+   0.00061,
+   0.00178
+  ],
+  "ratio": 0.7374,
+  "ratio_ci": [
+   -0.03397,
+   1.91401
+  ],
+  "items": 289,
+  "topics": 73,
+  "scored_tokens": 9302
+ },
+ "all": {
+  "de": 0.00146,
+  "de_ci": [
+   0.00068,
+   0.00229
+  ],
+  "en": 0.002,
+  "en_ci": [
+   0.00148,
+   0.00249
+  ],
+  "ratio": 0.7267,
+  "ratio_ci": [
+   0.34638,
+   1.17403
+  ],
+  "items": 289,
+  "topics": 73,
+  "scored_tokens": 18233
+ },
+ "train_twin": false
+}

@@ -1,0 +1,51 @@
+{
+ "run": "main_s335m",
+ "checkpoint": "step_045776.pt",
+ "step": 45776,
+ "git_sha": "b2564f9da1ae3741c796802ead3e492bc86297fa",
+ "created_at": "2026-10-29T00:17:22+00:00",
+ "items_sha256": "16f50e7e0ac08deb7ac69a11cc0b6155e6b0eed428048d62e5c341826bf2f4e0",
+ "topics_sha256": "ee1d4f980e4a83cfd5939dcce93db5d0f4e49fdaf0fafe00f781641bd504cba5",
+ "ratio_threshold": 0.2,
+ "novel": {
+  "de": 0.00073,
+  "de_ci": [
+   -0.00024,
+   0.00177
+  ],
+  "en": 0.00097,
+  "en_ci": [
+   0.00024,
+   0.00172
+  ],
+  "ratio": 0.7603,
+  "ratio_ci": [
+   -0.32934,
+   3.3539
+  ],
+  "items": 289,
+  "topics": 73,
+  "scored_tokens": 9302
+ },
+ "all": {
+  "de": 0.00042,
+  "de_ci": [
+   -0.00045,
+   0.00133
+  ],
+  "en": 0.00101,
+  "en_ci": [
+   0.00029,
+   0.00174
+  ],
+  "ratio": 0.4193,
+  "ratio_ci": [
+   -0.67107,
+   2.28794
+  ],
+  "items": 289,
+  "topics": 73,
+  "scored_tokens": 18233
+ },
+ "train_twin": false
+}

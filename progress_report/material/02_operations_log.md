@@ -386,3 +386,14 @@ Machines: **5080** = remote RTX 5080 box (Windows 11 + WSL2, SSH alias `gpu`, re
   unplanned"), after the run had finished; WSL back at 02:29.
 - 2026-10-28 19:55: run record and per-year report copied into the repo; `scripts/make_baselines_figure.py
   --with-main` draws the Transformer over the four baselines; final training curves redrawn.
+- 2026-10-28 20:00-21:10: cross-lingual check built and run (`src/eval/crosslingual.py`, branch eval/crosslingual;
+  CLAUDE.md rule 5 extended by the user for its German contexts). 75 topics with English and German patterns;
+  items from the 1930-01 .. 1939-06 held-out split: first build (235 items) inspected and rejected before any
+  scoring -- German contexts started at the top of whole newspaper pages and some were OCR debris -- so passages
+  now start ~200 characters before the topic hit on long lines, need >= 80 % letters and spaces, and mismatched
+  contexts are a one-to-one matching. Frozen at 289 items over 73 topics (probes/CHECKSUMS) before scoring.
+  Result v1 (context and target as two documents, <|endoftext|> between): main model German -> English 0.00073
+  bpb [-0.00024, 0.00177], English -> English 0.00097 [0.00024, 0.00172]; GRU 0.00088 [-0.00004, 0.00192] and
+  0.00120. By the agreed rule: no twin. But the English reference is itself ~0.1 % of the bpb: the models
+  barely use the previous document at all (training packs unrelated documents after <|endoftext|>), so v1 has
+  almost no power to tell "German not linked" from "previous document ignored". Reported to the user.
