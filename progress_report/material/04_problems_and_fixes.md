@@ -115,3 +115,10 @@ Each entry: problem → cause → fix → effect. Material for the "challenges" 
     `tmux has-session -t ft2` to wait for the fine-tuning session `ft2`; after `ft2` ended the name still
     matched `ft2b` itself, so the wait never ended (~20 min of idle GPU). -> Exact-match targets `-t =name`,
     or session names that are no prefix of another; the job was started by hand.
+
+## 28. Figure text too small in the progress-report draft (2026-11-19)
+- Problem: the proposal lost 0.5 on Illustration for small, crowded figure text, and the draft repeated it: figures
+  drawn wider than the 5.5 in text width and scaled down printed at 5-6 pt.
+- Fix: draw every figure at 5.5 in wide with font sizes of 7.5-8.5 pt, so nothing is scaled; scripts assert that
+  labels stay inside their boxes. Verified on the built PDF (smallest figure text 7.5 pt). The larger figures cost
+  about 10 lines of text, recovered by shortening captions and a few sentences.
