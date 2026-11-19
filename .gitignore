@@ -15,3 +15,14 @@ docs/APS360.sty
 docs/author_private.tex
 docs/proposal_submission.pdf
 runs/*/model.binary
+# progress report build: course style and private author details (as for the proposal), LaTeX by-products
+progress_report/APS360.sty
+progress_report/author_private.tex
+progress_report/progress_report_submission.pdf
+progress_report/*.aux
+progress_report/*.bbl
+progress_report/*.blg
+progress_report/*.log
+progress_report/*.out
+progress_report/*.fls
+progress_report/*.fdb_latexmk
