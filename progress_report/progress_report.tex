@@ -26,17 +26,16 @@
 \renewcommand{\section}{\vspace{-0.4em}\oldsection}
 \let\oldsubsection\subsection
 \renewcommand{\subsection}{\vspace{-0.4em}\oldsubsection}
-% The e-mail is kept out of the public repository: progress_report/author_private.tex (gitignored)
-% holds \renewcommand{\authoremail}{, <email>} for the submitted build.
-\newcommand{\authoremail}{}
+% Name, student number and e-mail are kept out of the public repository: progress_report/author_private.tex
+% (gitignored) holds \renewcommand{\authorid}{<name> \\ <student number>, <email> \\} for the submitted build.
+\newcommand{\authorid}{}
 \IfFileExists{author_private.tex}{\input{author_private.tex}}{}
 
 \title{The Shape of a Knowledge Boundary: Progress Report\\
 A Transformer Trained Only on Pre-1939 Text}
 
 \author{%
-  Andrew An \\
-  1010864165\authoremail\\
+  \authorid
   \url{https://github.com/Shinoaki798/1939}\\
   I used Claude to write the code and draft this report.\\
 }
@@ -49,19 +48,21 @@ A Transformer Trained Only on Pre-1939 Text}
 \vspace{-0.42in}
 
 \section*{Brief Project Description}
-A language model's knowledge cutoff is usually described as a wall. This project asks what it really looks like.
-I train a \textbf{decoder-only Transformer from random initialisation only on text published up to 30 June 1939}
---- American newspapers, and German newspapers in the original --- and measure where and how its knowledge ends.
+A language model's knowledge cutoff is usually described as a wall. I train a \textbf{decoder-only Transformer from
+random initialisation only on text published up to 30 June 1939} --- American newspapers, and German newspapers in
+the original --- and ask: \textbf{RQ1 (permeability)} which post-1939 concepts can it still reach: a new word
+(\emph{radar}), a compound of old words (\emph{atomic bomb}), an old name with a new meaning (\emph{Pearl Harbor})?
+\textbf{RQ2 (perspective)} does reading the German press change what it expects in English? \textbf{RQ3 (foresight)}
+how well does it predict what came next (war, a third Roosevelt term), against the 1939 Gallup polls?
 \textbf{Input:} a sequence of tokens of period text. \textbf{Output:} a probability for every possible next token
-(Figure~\ref{fig:overview}). Every measurement comes from that output: bits per byte (bpb) on held-out articles
-of each year 1900--1955 shows where knowledge ends; a forced choice between candidate answers shows what the model
-knows about 1939 and which later concepts it can reach (RQ1) or foresee (RQ3). This matters because every deployed language model has a
-cutoff, but none has one that is hard and verifiable: here no text after the cutoff exists in training, so the
-boundary can be measured without contamination. \textbf{Why deep learning:} the quantities exist only as the
-next-token distribution of a model trained on the text. Count-based models give probabilities only for what they have
-seen (the $n$-gram baseline is the floor); a neural language model generalises to unseen articles and
-questions. \textbf{Changes since the proposal:} German is used in the original (no translation); the English-only twin
-for RQ2 was dropped by its pre-registered criterion (below); a fine-tuned copy was added.
+(Figure~\ref{fig:overview}). Results are read from that output as \textbf{bits per byte (bpb)}: the bits the model
+needs per byte of a text it has never seen (lower = better predicted). bpb by year of held-out articles shows where
+knowledge ends; comparing the bpb of candidate answers is a forced choice (RQ1, RQ3, a quiz). This matters because
+every deployed language model has a cutoff, but none is hard and verifiable; here no later text exists in training.
+\textbf{Why deep learning:} every question needs the probability of unseen text; an $n$-gram model only scores word
+sequences it has seen (it is the floor here), a neural model generalises. \textbf{Changes since the proposal:} German
+is used in the original; the English-only twin for RQ2 was dropped by its pre-registered criterion; a fine-tuned copy
+was added.
 
 \begin{figure}[!h]
   \centering
@@ -73,93 +74,103 @@ for RQ2 was dropped by its pre-registered criterion (below); a fine-tuned copy w
 
 \section*{Notable Contribution}
 \subsection*{Data Processing}
-\textbf{Sources} (all public domain or openly licensed, dated, pre-cutoff): \emph{English} --- American Stories
-\citep{dell2023} (article-level text from Chronicling America; the only source of scored sets), Chronicling America
+\textbf{Sources} (public domain or openly licensed, every document dated): \emph{English} --- American Stories
+\citep{dell2023} (articles; the only scored source), Chronicling America
 page OCR for the 1930s \citep{chronam2026}, the Congressional Record \citep{gentzkow2018}, case law
 \citep{cap2024}, public-domain books \citep{locpdbooks}; \emph{German} --- Europeana \citep{europeana2015} and
 Deutsches Zeitungsportal \citep{ddb2024} newspapers, \emph{V\"olkischer Beobachter} \citep{vb1925}; \emph{science}
 --- JSTOR \citep{jstorejc}, \emph{Nature}, \emph{Annalen der Physik} \citep{iascience}, JFM reviews \citep{jfm}.
-\textbf{Steps} (code \texttt{src/data/}, each stage content-addressed with a manifest):
-(1)~ingest one row per article, page or book with its date; (2)~language vote on stopwords; (3)~OCR score per
-document: share of words in a period lexicon and share of word-like tokens; (4)~MinHash near-duplicate removal on the
-pooled selection (word 5-grams, 128 permutations, LSH $32\times4$, keep the earliest copy; English: 3.66M of 65.7M
-documents dropped); (5)~split by date, never shuffled: a fixed 2\,\% of every year 1900--1955 per language held out
-\emph{before} OCR filtering, Val a disjoint 2\,\% $\le$ cutoff, 1939-07-01\,...\,08-31 set aside as an embargo; (6)~remove
-training paragraphs that also occur in held-out articles (16M words) and wire-service reprints (EN 150M, DE 155M
-words); (7)~OCR gates (lexicon share $\ge$ 0.75, word-like $\ge$ 0.70, $\ge$ 50 tokens), long documents cut into
-chunks; (8)~mixture: 1934--39 text seen twice, everything else at most once, recency weight
-$\propto e^{-(1939-\text{year})/5}$ within a period, German $\le$ 25\,\%, books $\le$ 12\,\%, law $\le$ 10\,\%;
-(9)~byte-level BPE with 49,152 tokens trained on the same text; documents in a seeded hash order, an end-of-text token
-after each, cut into rows of 4,096 tokens. Table~\ref{tab:data} gives the result.
+Steps in Table~\ref{tab:pipeline} (code in \texttt{src/data/}, each stage with a manifest), amounts in
+Table~\ref{tab:sources}.
 
 \begin{table}[!h]
-\vspace{2pt}
-\centering\footnotesize\setlength{\tabcolsep}{4pt}
-\caption{Cleaned data. Left: tokens seen in training. Right: held-out sets (never trained on).}
-\label{tab:data}
-\begin{tabular}{@{}lrrr@{}}
+\centering\footnotesize\setlength{\tabcolsep}{3pt}
+\caption{Cleaning pipeline (a document: an article, page, speech, case or $\sim$2k-word book chunk).}
+\label{tab:pipeline}
+\begin{tabular}{@{}l>{\raggedright\arraybackslash}p{8.85cm}l@{}}
 \toprule
-period & English & German & total \\
+step & rule & result \\
 \midrule
-1930--1939.06 & 5.53B & 1.84B & 7.37B \\
-1920--1929 & 2.01B & 0.67B & 2.68B \\
-1900--1919 & 0.61B & 0.19B & 0.80B \\
-science (any year) & 0.85B & 0.30B & 1.15B \\
-\midrule
-total (23.7M documents) & 9.00B & 3.00B & \textbf{12.00B} \\
-\bottomrule
-\end{tabular}\hfill
-\begin{tabular}{@{}lrr@{}}
-\toprule
-set & articles & words \\
-\midrule
-Val, $\le$ 1939-06-30 & 931,573 & 137.5M \\
-Test-A, 1930--38 & 181,156 & 27.1M \\
-Test-B, 1939-09--1945 & 124,858 & 18.0M \\
-Test-C, 1946--55 & 120,602 & 18.3M \\
-per-year bpb set, 1900--55 & 222,843 & 51.9M tok. \\
+1 ingest & one row per document, with its publication date & 236.3M documents \\
+2 select & language vote; 1900--1955 (science any year); pre-1920 subsampled & 67.6M documents \\
+3 dedup & MinHash on 5-grams, 128 perm., LSH $32\times4$, sim.\ $\ge$ 0.6, keep earliest & EN $-$3.66M,
+DE $-$18k \\
+4 split & 2\,\% of every year $\times$ language held out; Val 2\,\%; Jul--Aug 1939 unused & Val 0.93M, test
+0.43M \\
+5 paragraphs & drop paragraphs found in held-out articles, then wire reprints & EN 166M, DE 155M w. \\
+6 OCR gates & lexicon $\ge$ 0.75, word-like $\ge$ 0.70, length $\ge$ 20 tokens (pages $\ge$ 50) & EN 97\,\%, DE 81\,\%
+kept \\
+7 mixture & 1934--39.06 twice, rest once; weight $e^{-(1939-y)/5}$; caps in Table~\ref{tab:sources} &
+12.00B tokens \\
+8 tokenise & byte-level BPE, 49,152 tokens; end token per document & 2.93M rows of 4,096 \\
 \bottomrule
 \end{tabular}
-\vspace{2pt}
+\end{table}
+
+\begin{table}[!h]
+\centering\footnotesize\setlength{\tabcolsep}{3.8pt}
+\caption{Text per source: words after step 5, share kept by the OCR gates, and tokens seen in training by period
+(1934--39 twice). Caps per period: German $\le$ 25\,\%, books $\le$ 12\,\%, law $\le$ 10\,\%.}
+\label{tab:sources}
+\begin{tabular}{@{}llrrrrrr@{}}
+\toprule
+source & lang. & words & kept & 1900--19 & 1920--29 & 1930--39.06 & seen \\
+\midrule
+US newspapers (articles; 1930s pages) & EN & 7.38B & 98\,\% & 0.51B & 1.51B & 5.00B & 7.02B \\
+books (public domain) & EN & 1.98B & 93\,\% & 0.10B & 0.32B & 0.03B & 0.45B \\
+case law, Federal Register & EN & 0.68B & 100\,\% & 0.00B & 0.14B & 0.35B & 0.49B \\
+Congressional Record & EN & 0.18B & 95\,\% & 0.01B & 0.03B & 0.14B & 0.18B \\
+science (any year) & EN & 0.95B & 95\,\% & & & & 0.85B \\
+German newspapers & DE & 2.89B & 80\,\% & 0.19B & 0.67B & 1.84B & 2.70B \\
+science (any year) & DE & 0.33B & 88\,\% & & & & 0.30B \\
+\midrule
+total & & 14.39B & 93\,\% & 0.80B & 2.68B & 7.37B & \textbf{12.00B} \\
+\bottomrule
+\end{tabular}
 \end{table}
 
 \noindent\textbf{A cleaned training sample} (American Stories, 1939-04-11, OCR score 0.98, excerpt; remaining OCR
 errors kept as they are): \emph{``The main issues Of the campaign are probably included in this list of ten: (D
 Diversion Of highway funds; (2) homestead exemption; CD teach er retirement; (4) extension of ad valorem taxes for
 State purposes; \ldots''}
-\textbf{Testing on never-seen data.} No text dated after 1939-06-30 is in training, so every article from 1939-09 to
-1955 (Test-B, Test-C) is new to the model, and the 2\,\% held out per year was set aside before OCR filtering.
-New test sets I write myself are frozen by checksum before any model sees them: a 121-item quiz on the news of 1939
-(done), the RQ1 probe set and the RQ3 propositions. An entirely different dataset, ChroniclingAmericaQA
-\citep{piryani2024}, tests the fine-tuned copy.
-\textbf{Challenges:} OCR noise (99\,\% of the German-language American Stories articles, Fraktur read as Latin script, fail the gates); wire stories
-printed in hundreds of papers; very uneven supply (1920--22 has 1.1--1.2B words a year, 1925--29 about 0.25B); and
-scale on one machine (the disk image grew to 888\,GB before intermediate files were deleted).
+\textbf{Testing on never-seen data.} Nothing after 1939-06-30 is in training, so all 1939-09 to 1955 articles are
+new; the per-year 2\,\% was held out before any filtering. My own test sets are frozen by checksum before any model
+sees them: a 121-item 1939 news quiz (done), the RQ1 probes, the RQ3 propositions. ChroniclingAmericaQA
+\citep{piryani2024}, a different dataset, tests the fine-tuned copy.
+\textbf{Challenges:} OCR noise (99\,\% of German-language American Stories articles, Fraktur read as Latin, fail
+the gates); wire stories reprinted in hundreds of papers; uneven supply (1920--22: 1.1--1.2B words a year, 1925--29:
+0.25B); 888\,GB of intermediates.
 
 \subsection*{Baseline Model}
-Three recurrent language models --- a \textbf{vanilla RNN} (tanh), an \textbf{LSTM} and a \textbf{GRU}: token embedding,
-2 recurrent layers, output layer tied to the embedding, softmax over 49,152 tokens, $\approx$50M parameters each --- trained
-on exactly the same 12B-token stream, tokenizer and schedule as the Transformer (45,776 steps of $2^{18}$ tokens, AdamW,
-1,000 warm-up steps, cosine decay, rows of 4,096 tokens with the state reset per row), plus a \textbf{Kneser--Ney
-5-gram} (KenLM, first 1B tokens) as the non-neural floor. The learning rate was picked from 200M-token probes of
-$\{5\text{e-}4, 1\text{e-}3, 2\text{e-}3\}$ by Val bpb, the RNN's grid extended downwards; each run took 17.6\,h.
-\textbf{Quantitative} (Table~\ref{tab:models}, Figure~\ref{fig:results}): the GRU is the best baseline (Val English
-1.526 bpb), and every model is worse on articles written after the cutoff than before it.
+Three recurrent language models (Figure~\ref{fig:baseline}) --- a \textbf{vanilla RNN} (tanh), an \textbf{LSTM} and a
+\textbf{GRU}, $\approx$50M parameters each --- trained on exactly the same 12B-token stream, tokenizer and schedule as
+the Transformer, plus a \textbf{Kneser--Ney 5-gram} (KenLM, first 1B tokens) as the non-neural floor.
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=\textwidth]{baseline.pdf}
+  \vspace{-1.5em}
+  \caption{The recurrent baselines: 2 layers of width $h$, output tied to the embedding.}
+  \label{fig:baseline}
+\end{figure}
+
+\noindent Learning rate picked by Val bpb from 200M-token probes of $\{5\text{e-}4, 1\text{e-}3, 2\text{e-}3\}$
+(lower for the RNN); 17.6\,h per run. \textbf{Quantitative} (Table~\ref{tab:models}, Figure~\ref{fig:results}): the
+GRU is the best baseline (Val English 1.526 bpb); every model is worse after the cutoff than before it.
 \textbf{Qualitative:} given \emph{``who is Hitler''}, the GRU continues ``\emph{'s new minister, and who is now in the
 midst of the great war, is the first to be elected.} \ldots'' --- fluent locally, no persistent subject.
 \textbf{Challenges:} the LSTM at $1\text{e-}3$ and the RNN above $5\text{e-}4$ stalled at the unigram plateau; a GRU
 run resumed exactly after a 1.9\,h power loss.
 
 \begin{table}[!h]
-\vspace{2pt}
 \centering\footnotesize\setlength{\tabcolsep}{4pt}
-\caption{All models, same data. After/before: mean held-out English bpb 1940--55 over 1930--38.}
+\caption{One token stream for all (5-gram: first 1B tokens). After/before: bpb 1940--55 over 1930--38.}
 \label{tab:models}
 \begin{tabular}{@{}lllllr@{}}
 \toprule
 model & layers $\times$ width & parameters & learning rate & Val English bpb & after/before \\
 \midrule
-Kneser--Ney 5-gram & order 5 & 1.7B $n$-grams & --- & --- & $+14.4\,\%$ \\
+Kneser--Ney 5-gram & order 5 & 1.7B $n$-grams & --- & per-year sets only & $+14.4\,\%$ \\
 RNN (tanh) & $2\times960$ & 50.9M & $2.5\times10^{-4}$ & 1.711 & $+11.1\,\%$ \\
 LSTM & $2\times800$ & 49.6M & $2\times10^{-3}$ & 1.545 & $+12.9\,\%$ \\
 GRU & $2\times832$ & 49.2M & $2\times10^{-3}$ & 1.526 & $+13.5\,\%$ \\
@@ -167,7 +178,6 @@ GRU & $2\times832$ & 49.2M & $2\times10^{-3}$ & 1.526 & $+13.5\,\%$ \\
 $+19.4\,\%$ \\
 \bottomrule
 \end{tabular}
-\vspace{2pt}
 \end{table}
 
 \begin{figure}[!h]
@@ -188,55 +198,57 @@ $+19.4\,\%$ \\
 \end{figure}
 
 \textbf{Architecture and training} (Figure~\ref{fig:arch}; written from scratch in \texttt{src/model/}):
-token embedding $49{,}152\times1{,}024$ tied to the output layer; 24 pre-norm decoder blocks, each RMSNorm, causal
-self-attention with 16 heads of 64 and rotary position embeddings (base $10^4$), RMSNorm, SwiGLU feed-forward
-$1{,}024\to2{,}688\to1{,}024$, residual connections; context 4,096. Next-token cross-entropy, AdamW
+24 pre-norm decoder blocks with causal self-attention, rotary position embeddings (base $10^4$), SwiGLU, no
+biases, output tied to the embedding; context 4,096. Next-token cross-entropy, AdamW
 ($\beta=0.9, 0.95$, weight decay 0.1), peak learning rate $3\times10^{-4}$, 1,000 warm-up steps, cosine to 10\,\%,
-gradient clipping 1.0, bf16, 64 rows of 4,096 per step (262,144 tokens), 45,776 steps $=$ 12.0B tokens, seed 1939.
-117\,h (4.9 days) on one RTX~5080 (16\,GB).
+gradient clipping 1.0, bf16, 64 rows of 4,096 per step, 45,776 steps $=$ 12.0B tokens, seed 1939; 117\,h on one
+RTX~5080 (16\,GB).
 \textbf{Quantitative} (95\,\% CI): Val English \textbf{1.181} [1.176, 1.186] bpb, 23\,\% below the best baseline
 (GRU 1.526); German 1.565 [1.519, 1.612]. Per year (Figure~\ref{fig:results}b) bpb falls to 1.075 in 1932, rises
-slowly to 1.125 in 1939 and then faster (1.182 in 1940, 1.378 in 1947): mean 1940--55 is $+19.4\,\%$ over 1930--38,
-the largest relative rise of all models (Table~\ref{tab:models}). It is a ramp that steepens at the cutoff rather
-than a clean step; the OCR-quality covariate is still to be regressed out. \textbf{Cross-lingual check} (decides the
-RQ2 twin, criterion fixed in advance): a German article on the same topic makes an English passage \emph{less} likely
-than one on another topic ($-0.021$ [$-0.030$, $-0.013$] bpb), while an English article on the same topic helps
-($+0.021$ [0.009, 0.033]); so no twin is trained, and RQ2 is answered from this check.
-\textbf{1939 news quiz} (121 four-choice items written and frozen first; chance 25\,\%): 39\,\% [30, 48] as a question,
-46\,\% [36, 55] as a statement on the 101 pre-cutoff items; 31--35\,\% on the last year before the cutoff; 15\,\% on
-post-cutoff controls. Wrong answers are often the previous holder of an office (King of England $\to$ Edward VIII,
-Poland $\to$ Pilsudski): the model's ``present'' lags behind 1939. The GRU scores the same (40\,\%, 41\,\%), which suggests this
-format rewards familiar names more than knowledge.
+to 1.125 in 1939, then faster (1.182 in 1940, 1.378 in 1947): $+19.4\,\%$ after the cutoff, the largest rise of any
+model; a ramp that steepens at the cutoff, not a clean step (OCR covariate still to be regressed out).
+\textbf{RQ2} (criterion fixed in advance): an on-topic German article makes an English passage \emph{less} likely
+($-0.021$ [$-0.030$, $-0.013$] bpb), an English one more likely ($+0.021$ [0.009, 0.033]), so no twin is trained.
+\textbf{1939 news quiz} (121 four-choice items, frozen first; chance 25\,\%): 39\,\% [30, 48] as a question, 46\,\%
+[36, 55] as a statement (101 pre-cutoff items), 15\,\% on post-cutoff controls; the GRU scores the same.
 \textbf{Fine-tuned copy} (answer-only loss on 14,106 period ``Q.\,...?\,A.\,...'' pairs and 39,162
-ChroniclingAmericaQA items, with replay of pretraining text): exact match on ChroniclingAmericaQA rises from 1.3\,\% to \textbf{38.8\,\%} [36.7, 41.0] at a cost of $+0.5\,\%$ Val bpb ($+4.5\,\%$ without replay).
+ChroniclingAmericaQA items, with replay): exact match 1.3\,\% $\to$ \textbf{38.8\,\%} [36.7, 41.0] for $+0.5\,\%$ Val
+bpb ($+4.5\,\%$ without replay).
 
-\begin{table}[!h]
-\vspace{2pt}
+\begin{table}[!htb]
 \centering\footnotesize\setlength{\tabcolsep}{4pt}
-\caption{Qualitative: greedy answers of the untuned model to questions in the period column format.}
+\caption{Qualitative: greedy answers of the untuned model (my reading in italics).}
 \label{tab:qual}
-\begin{tabular}{@{}>{\raggedright\arraybackslash}p{5.9cm}>{\raggedright\arraybackslash}p{7.7cm}@{}}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{5.5cm}>{\raggedright\arraybackslash}p{8.1cm}@{}}
 \toprule
-question & answer \emph{(reading)} \\
-\midrule
 Who is the Chancellor of Germany? & Adolf Hitler. \emph{(correct)} \\
-What became of Amelia Earhart? & She was lost in the Pacific ocean. \emph{(correct, 1937)} \\
 Who is the President of the United States? & Woodrow Wilson. \emph{(its ``present'' lags)} \\
 What is a jeep? & A fish that is caught in the sea. \emph{(no post-1939 sense)} \\
 What happened at Pearl Harbor? & The Navy Department said that [it] had no information as to the cause of the
 accident. \emph{(a naval station, not an attack)} \\
 \bottomrule
 \end{tabular}
-\vspace{2pt}
 \end{table}
 
-\noindent\textbf{Challenges:} the RTX~5080 had blacked out under sustained load, so the 117\,h run was made
-resumable (a checkpoint every 500 steps, a resume test before launch) and checked every two hours; the first cross-lingual design scored the target
-after an end-of-text token, where the model resets, and had to be redone; fine-tuning first cost 4.5\,\% of general
-ability until replay was added. \textbf{Feasibility:} all training is finished; what remains --- the OCR covariate,
-building and freezing the RQ1 probes ($\sim$200 terms) and RQ3 propositions ($\ge$120), the
-ChroniclingAmericaQA sanity check on the untuned model, the final report --- is evaluation only, each run under
-an hour, scheduled 20 Nov\,--\,6 Dec.
+\noindent\textbf{Challenges:} the RTX~5080 had blacked out under load, so the 117\,h run was resumable (checkpoint
+every 500 steps, resume test first); the first cross-lingual design scored right after an end-of-text token, where
+the model resets, and was redone. \textbf{Feasibility:} all training finished on 27 Oct; what remains is mostly
+writing the RQ1 and RQ3 test sets, and scoring is a forward pass (Table~\ref{tab:plan}).
+
+\begin{table}[!htb]
+\centering\footnotesize\setlength{\tabcolsep}{3pt}
+\caption{Remaining work (OCR covariate first, by 25 Nov); test sets are frozen before scoring.}
+\label{tab:plan}
+\begin{tabular}{@{}lll@{}}
+\toprule
+by & task & if behind \\
+\midrule
+29 Nov & RQ1 probes: $\sim$200 terms, 4 classes, matched controls, $\ge$5 contexts each; freeze & 25 per class \\
+2 Dec & RQ3: $\ge$120 propositions, US and German contexts (June, late Aug.\ 1939); freeze & 60 propositions \\
+4 Dec & score RQ1, RQ3, ChroniclingAmericaQA sanity check, untuned model ($<$1\,h each) & rented GPU \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \newpage
 \bibliographystyle{abbrvnat}
